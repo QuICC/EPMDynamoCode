@@ -1,0 +1,4 @@
+This directory contains a few "configuration headers". The ".h" extension has be used to emphasis that these are not C++ headers, but are more like a set of macros/includes required for setting up the code.
+
+SmartPointer.h:
+   This file contains macros related to the implementation of the smart pointers. 

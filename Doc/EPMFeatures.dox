@@ -1,2 +1,30 @@
 /** \page epmFeatures Features
+ *
+ * - Full spectral expansion
+ *    - Spherical harmonics for the angular variables
+ *       - Fast fourier transform for the longitudinal component
+ *       - Gauss-Legendre quadrature for the latitudinal component
+ *    - Radial basis
+ *       - Gauss-Chebyshev quadrature for worland polynomials.
+ *
+ * - Timestepping:
+ *    - Predictor/Corrector scheme
+ *    - Adaptive timestep
+ *
+ * - HDF5 I/O:
+ *   - State files
+ *   - Imposed fields / source fields
+ *   - HDF5 Paraview visualisation format
+ *   - Parallel reading/writing
+ *
+ * - XML parameters file
+ *
+ * - MPI parallelisation: 
+ *
+ * - Memory usage:
+ *
+ * - Boundary conditions:
+ *    - Only homogeneous boundary conditions
+ *
+ * - Simple ASCII diagnostic files
 */

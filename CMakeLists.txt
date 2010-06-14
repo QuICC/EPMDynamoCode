@@ -92,17 +92,17 @@ MARK_AS_ADVANCED(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION)
 
 # Use Boost shared_ptr implementation
 if(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
-   add_definitions("-DEPMDYNAMO_BOOST_SHPTR")
+   add_definitions("-DEPMDYNAMO_BOOST_SMARTPTR")
 # Use TR1 shared_ptr implementation
 elseif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "TR1")
-   add_definitions("-DEPMDYNAMO_TR1_SHPTR")
+   add_definitions("-DEPMDYNAMO_TR1_SMARTPTR")
 # Use C++0x shared_ptr implementation
 elseif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "c++0x")
-   add_definitions("-DEPMDYNAMO_CXX0X_SHPTR")
+   add_definitions("-DEPMDYNAMO_CXX0X_SMARTPTR")
    set(EPMDYNAMO_USE_CXX0X ON)
 # Use Boost shared_ptr implementation by default
 else(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
-   add_definitions("-DEPMDYNAMO_BOOST_SHPTR")
+   add_definitions("-DEPMDYNAMO_BOOST_SMARTPTR")
 endif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
 
 
