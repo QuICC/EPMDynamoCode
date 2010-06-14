@@ -1,0 +1,23 @@
+/** \page epmTestSuite Test Suite
+ *
+ * The goal of these tests is to make sure the implementation of the different algorithms is done correctly. There are different categories of tests:
+ *
+ *    - \subpage epmTSUnitTests :Simple unit tests to verify that the implementation is working.
+ *          The prefix for the programs is: <b>unit_*</b>.
+ *
+ *    - \subpage epmTSPrecisionTests : These tests check the precision of the computations.
+ *          The prefix for the programs is: <b>prec_*</b>.
+ *
+ *    - \subpage epmTSSpeedTests : These are some speed comparisons of different implementations/options.
+ *          The prefix for the programs is: <b>speed_*</b>.
+ *
+ *    - \subpage epmTSParallelisationTests : These tests are used to check the parallelisation setup.
+ *          The prefix for the programs is: <b>para_*</b>.
+ *
+ *    - \subpage epmTSPhysicalTests : These tests are physical/mathematical benchmark tests. These are most likely going to require much
+ *       more computational power but allow to a bigger part of the code
+ *          The prefix for the programs is: <b>phys_*</b>.
+ *
+ *    - \subpage epmTSExperimentalTests : These are test cases for experimental parts of the code.
+ *          The prefix for the programs is: <b>exp_*</b>.
+*/

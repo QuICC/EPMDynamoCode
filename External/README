@@ -1,0 +1,15 @@
+This directory contains sources/binaries/etc of third party tools that are required.
+
+This is not for big commonly used libraries, but will most certainly contain Eigen and similar things.
+
+eigen2/ :
+   The used Eigen library. The library is small is thus included in the code tree. In this way, where ever the code is used the same version of the library will be used.
+
+eigen3/ :
+   Eigen 3.0 is currently under heavy development and introduced a lot of performance improvements. The new library also changed its API. At some point the migration will be done to use Eigen 3.0.
+
+Interfaces/:
+   This directory will contain interface C++ header to libraries that require it. Currently it only contains a LAPACK interface.
+
+rapidxml/:
+   Rapid xml is a small xml library used for reading the parameter files.

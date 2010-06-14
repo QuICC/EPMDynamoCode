@@ -1,0 +1,10 @@
+This directory contains all the implemented programs/simulation/tools.
+
+Tools:
+   GenerateState: Generate the initial state file.
+   GenerateCSCS: Convert state file to CSCS Paraview visualisation hdf5 file.
+
+Simulations:
+   DynamoRun: Full MHD dynamo simulation
+   MagnetoConvectionRun: Magneto-convection simulation.
+   ThermalConvectionRun: Thermal convection simulation
