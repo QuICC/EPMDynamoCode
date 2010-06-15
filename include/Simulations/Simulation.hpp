@@ -23,10 +23,10 @@ namespace EPMDynamo {
     *
     * The setup and actual definition of the different steps are done in by the TSimImpl object.
     *
-    * \tparam TSimTraits General simulation traits
+    * \tparam TSimType Type of simulation
     * \tparam TSimImpl Actual implementation of the simulation
     */
-   template <typename TSimTraits, template<typename > class TSimImpl> class Simulation: public TSimImpl<TSimTraits>
+   template <typename TSimType, template<typename > class TSimImpl> class Simulation: public TSimImpl<TSimType>
    {
       public:
          /**
@@ -61,12 +61,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimTraits, template<typename > class TSimImpl> Simulation<TSimTraits, TSimImpl>::Simulation()
-      : TSimImpl<TSimTraits>()
+   template <typename TSimType, template<typename > class TSimImpl> Simulation<TSimType, TSimImpl>::Simulation()
+      : TSimImpl<TSimType>()
    {
    }
 
-   template <typename TSimTraits, template<typename > class TSimImpl> void Simulation<TSimTraits, TSimImpl>::init()
+   template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::init()
    {
       try{
          // Initialise the simulation equations
@@ -95,7 +95,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimTraits, template<typename > class TSimImpl> void Simulation<TSimTraits, TSimImpl>::run()
+   template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::run()
    {
       // Execute last initialisation before run
       this->preRun();
@@ -148,7 +148,7 @@ namespace EPMDynamo {
       this->mSimControl.synchronize();
    }
 
-   template <typename TSimTraits, template<typename > class TSimImpl> void Simulation<TSimTraits, TSimImpl>::finalise()
+   template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::finalise()
    {
       // Print timestepping infos
       this->mSimControl.printInfo();

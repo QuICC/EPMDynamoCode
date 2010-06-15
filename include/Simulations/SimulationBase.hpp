@@ -15,6 +15,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Domain/SimulationTruncation.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControl.hpp"
 #include "IO/IOSystem.hpp"
 
@@ -23,16 +24,16 @@ namespace EPMDynamo {
    /**
     * @brief Implements the implementation independent part of a simulation
     *
-    * \tparam  TSimTraits General simulation traits
+    * \tparam TSimType General simulation type
     */
-   template <typename TSimTraits> class SimulationBase
+   template <typename TSimType> class SimulationBase
    {
       public:
          /// Typedef for the transform type
-         typedef  typename TSimTraits::TransformType   TransformType;
+         typedef  typename SimulationTraits<TSimType>::TransformType  TransformType;
 
          /// Typedef for the equation parameters type
-         typedef  typename TSimTraits::EqParamsType   EqParamsType;
+         typedef  typename TSimType::EqParamsType   EqParamsType;
 
          /**
           * @brief Simple empty destructor
@@ -68,7 +69,7 @@ namespace EPMDynamo {
          /**
           * @brief SimulationBase control
           */
-         SimulationControl<TSimTraits>   mSimControl;
+         SimulationControl<TSimType>   mSimControl;
 
          /**
           * @brief Number of steps required for a transform
@@ -135,20 +136,20 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimTraits> SimulationBase<TSimTraits>::SimulationBase()
+   template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
       : mIOSys(), mpSTrunc(TSim::createSTrunc(mIOSys.aTrunc())), mTransform(mpSTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0)
    {
       // Finish initialisation of the truncation object by setting the physical grid values
       this->mTransform.initRTPDomains(this->mpSTrunc);
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::initOutput()
+   template <typename TSimType> void SimulationBase<TSimType>::initOutput()
    {
       // Initialise all the create writers
       this->mIOSys.initWriters();
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::combineRTPTransforms(const int entry)
+   template <typename TSimType> void SimulationBase<TSimType>::combineRTPTransforms(const int entry)
    {
       #ifdef EPMDYNAMO_GROUPED_ONESTEP
          this->mTransform.spectralSHManipulator().initiateGroupedBSend(entry);
@@ -162,7 +163,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_GROUPED_TWOSTEP
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::combineSpectralTransforms(const int entry)
+   template <typename TSimType> void SimulationBase<TSimType>::combineSpectralTransforms(const int entry)
    {
       #ifdef EPMDYNAMO_GROUPED_TWOSTEP
          #ifndef EPMDYNAMO_GROUPED_ONESTEP
@@ -176,7 +177,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_GROUPED_ONESTEP
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::configureWSHManipulator(const int maxFPacks, const int maxBPacks, bool state)
+   template <typename TSimType> void SimulationBase<TSimType>::configureWSHManipulator(const int maxFPacks, const int maxBPacks, bool state)
    {
       // Set the number of packs
       mTransform.spectralSHManipulator().setMaxPacks(maxFPacks, maxBPacks);
@@ -191,7 +192,7 @@ namespace EPMDynamo {
       mTransform.spectralSHManipulator().setup();
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::configureSHManipulator(const int maxFPacks, const int maxBPacks, bool state)
+   template <typename TSimType> void SimulationBase<TSimType>::configureSHManipulator(const int maxFPacks, const int maxBPacks, bool state)
    {
       #ifdef EPMDYNAMO_TWOSTEP
          // Set the number of packs
@@ -208,7 +209,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_TWOSTEP
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::configureNestedManipulators()
+   template <typename TSimType> void SimulationBase<TSimType>::configureNestedManipulators()
    {
       #ifdef EPMDYNAMO_GROUPED_TWOSTEP
          // Set the WSH manipulator to be aware of nested grouped communication
@@ -220,7 +221,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_GROUPED_TWOSTEP
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::writeFiles()
+   template <typename TSimType> void SimulationBase<TSimType>::writeFiles()
    {
       if(this->mSimControl.tsParams().isNextStep())
       {
@@ -240,7 +241,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::preRun()
+   template <typename TSimType> void SimulationBase<TSimType>::preRun()
    {
       // Write loaded state to HDF5 file (this can be important if the truncations were not the same)
       this->mIOSys.writeHDF5();
@@ -252,7 +253,7 @@ namespace EPMDynamo {
       this->mSimControl.preRun();
    }
 
-   template <typename TSimTraits> void SimulationBase<TSimTraits>::postRun()
+   template <typename TSimType> void SimulationBase<TSimType>::postRun()
    {
       // Write the state to HDF5 file before finishing
       this->mIOSys.writeHDF5();

@@ -13,21 +13,24 @@
 
 // Project includes
 //
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControlBase.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief Implementation of simulation controller
+    *
+    * \tparam TSimType Type of simulation
     */
-   template <typename TSimTraits> class SimulationControl: public SimulationControlBase
+   template <typename TSimType> class SimulationControl: public SimulationControlBase
    {
       public:
          /// Typedef for the Timestep control type
-         typedef  typename TSimTraits::TimestepTraits::TimestepControl   TimestepControl;
+         typedef  typename SimulationTraits<TSimType>::TimestepTraits::TimestepControl   TimestepControl;
 
          /// Typedef for the equation parameters type
-         typedef  typename TSimTraits::EqParamsType   EqParamsType;
+         typedef  typename TSimType::EqParamsType   EqParamsType;
 
          /**
           * @brief Constructor
@@ -77,22 +80,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimTraits> inline typename SimulationControl<TSimTraits>::TimestepControl& SimulationControl<TSimTraits>::tsControl()
+   template <typename TSimType> inline typename SimulationControl<TSimType>::TimestepControl& SimulationControl<TSimType>::tsControl()
    {
       return this->mTSControl;
    }
 
-   template <typename TSimTraits> SimulationControl<TSimTraits>::SimulationControl(DynamoFloat t, DynamoFloat dt, const EqParamsType& eqParams, int maxtstep, int aRate, int sRate, DynamoFloat wall)
+   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(DynamoFloat t, DynamoFloat dt, const EqParamsType& eqParams, int maxtstep, int aRate, int sRate, DynamoFloat wall)
       : SimulationControlBase(t, dt, maxtstep, aRate, sRate, wall), mTSControl(mTSParams, eqParams)
    {
    }
 
-   template <typename TSimTraits> SimulationControl<TSimTraits>::SimulationControl(const Array& time, const EqParamsType& eqParams, const ArrayI& runI, const Array& run)
+   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(const Array& time, const EqParamsType& eqParams, const ArrayI& runI, const Array& run)
       : SimulationControlBase(time, runI, run), mTSControl(mTSParams, eqParams)
    {
    }
 
-   template <typename TSimTraits> void SimulationControl<TSimTraits>::update()
+   template <typename TSimType> void SimulationControl<TSimType>::update()
    {
       // Check convergence of time integration
       this->tsControl().checkConvergence(this->tsCounter().step());
