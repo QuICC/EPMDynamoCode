@@ -1,0 +1,20 @@
+/** \page epmRequirements Requirements
+ *
+ * There are a few requirements to get the code running:
+ *
+ *    - C++ compiler: GCC, Intel or Pathscale (other compilers seem to have problems with Eigen's templates)
+ *
+ *    - MPI 2
+ *
+ *    - HDF5 parallel
+ *
+ *    - Eigen: Is provided as part of the the code tree
+ *
+ *    - RapidXML: Is provided as part of the code tree
+ *
+ *    - LAPACK
+ *
+ *    - FFTW
+ *
+ *    - Boost: shared_ptr (unless TR1 or C++x0 is available), StaticAssert
+*/

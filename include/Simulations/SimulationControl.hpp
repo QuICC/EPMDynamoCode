@@ -34,6 +34,7 @@ namespace EPMDynamo {
           *
           * \param t Initial time
           * \param dt Reached timestep
+          * \param eqParams Equation parameters
           * \param maxtstep Maximum number of timesteps
           * \param aRate ASCII save rate
           * \param sRate State file save rate
@@ -45,6 +46,7 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * \param time Time related values: (0) Initial time, (1) Reached timestep
+          * \param eqParams Equation parameters
           * \param runI Run related values (integer type): (0) Maximum number of timsteps, (1) ASCII save rate, (2) State file save rate
           * \param run Run related values (float type): (0) Wall time
           */
