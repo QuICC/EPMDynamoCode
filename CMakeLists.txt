@@ -106,10 +106,6 @@ else(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
 endif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
 
 
-# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-
 ###################################################
 #------------- MPI PARALLELISATION ---------------#
 ###################################################
@@ -117,30 +113,39 @@ endif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
 #
 # Introduce MPI step in Spherical Harmonics transform ?
 #
-option(EPMDYNAMO_SH_MPI "Compile MPI spherical harmonics transform version of the code?" OFF)
-if(EPMDYNAMO_SH_MPI)
-   add_definitions("-DEPMDYNAMO_SH_MPI")
-endif(EPMDYNAMO_SH_MPI)
+option(EPMDYNAMO_SPLIT_SH "Use MPI spherical harmonics transform version?" OFF)
+if(EPMDYNAMO_SPLIT_SH)
+   add_definitions("-DEPMDYNAMO_SPLIT_SH")
+endif(EPMDYNAMO_SPLIT_SH)
 
 #
 # Introduce MPI step in Radial transform ?
 #
-option(EPMDYNAMO_RADIAL_MPI "Compile MPI radial transform version of the code?" OFF)
-if(EPMDYNAMO_RADIAL_MPI)
-   add_definitions("-DEPMDYNAMO_RADIAL_MPI")
-endif(EPMDYNAMO_RADIAL_MPI)
+option(EPMDYNAMO_SPLIT_RADIAL "Use MPI radial transform version?" OFF)
+if(EPMDYNAMO_SPLIT_RADIAL)
+   add_definitions("-DEPMDYNAMO_SPLIT_RADIAL")
+endif(EPMDYNAMO_SPLIT_RADIAL)
 
-if(EPMDYNAMO_SH_MPI AND NOT EPMDYNAMO_RADIAL_MPI)
+#
+# Spherical harmonics splitting is only possible if radial transform is also
+# split (for the moment)
+#
+if(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
    message(SEND_ERROR "Only parallelising the SH transform is not supported yet")
-endif(EPMDYNAMO_SH_MPI AND NOT EPMDYNAMO_RADIAL_MPI)
+endif(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
 
 #
 # If any of the previous settings is on activate MPI flag
 #
-if(EPMDYNAMO_SH_MPI OR EPMDYNAMO_RADIAL_MPI)
+if(EPMDYNAMO_SPLIT_SH OR EPMDYNAMO_SPLIT_RADIAL)
    set(EPMDYNAMO_MPI ON)
    add_definitions("-DEPMDYNAMO_MPI")
-endif(EPMDYNAMO_SH_MPI OR EPMDYNAMO_RADIAL_MPI)
+endif(EPMDYNAMO_SPLIT_SH OR EPMDYNAMO_SPLIT_RADIAL)
+
+
+# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
+# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
+# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
 
 #
 # Use the tubular splitting if two mpi steps are requested

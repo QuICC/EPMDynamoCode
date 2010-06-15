@@ -7,6 +7,7 @@
 
 // System includes
 //
+#include <boost/static_assert.hpp>
 
 // External includes
 //
@@ -132,6 +133,66 @@ namespace EPMDynamo {
           * \bug This methods needs to be rename and cleaned out
           */
          void combineSpectralTransforms(const int entry);
+
+         /**
+         * @name Methods that need to be overloaded in implementation
+         */
+         //@{
+
+         /**
+          * @brief Initialise the fields
+          */
+         void initFields();
+
+         /**
+          * @brief Add HDF5 output files
+          */
+         void addHDF5Output();
+
+         /**
+          * @brief Add ASCII output files
+          */
+         void addASCIIOutput();
+
+         /**
+          * @brief Initialise the equations
+          */
+         void initEquations();
+
+         /**
+          * @brief Update equations RTP values
+          *
+          * \param step Step in the transform for multistep trransforms
+          */
+         void updateEquationsRTP(const int step);
+
+         /**
+          * @brief Update equations RHS
+          */
+         void updateEquationsRHS();
+
+         /**
+          * @brief Transform equations RHS
+          *
+          * \param step Step in the transform for multistep trransforms
+          */
+         void transformEquationsRHS(const int step);
+
+         /**
+          * @brief Include external influence
+          */
+         void addExternalInfluence();
+
+         /**
+          * @brief Timestep the equations
+          */
+         void timestepEquations();
+
+         /**
+          * @brief Configure the transforms
+          */
+         void configureTransforms();
+         //@}
 
       private:
    };
@@ -260,6 +321,56 @@ namespace EPMDynamo {
 
       // Execute early simulation control finalisation operations
       this->mSimControl.postRun();
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::initFields()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::addHDF5Output()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::addASCIIOutput()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::initEquations()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::updateEquationsRTP(const int step)
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::updateEquationsRHS()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::transformEquationsRHS(const int step)
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::addExternalInfluence()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::timestepEquations()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::configureTransforms()
+   {
+      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
    }
 
 }

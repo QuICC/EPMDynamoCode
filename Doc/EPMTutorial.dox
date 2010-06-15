@@ -1,2 +1,10 @@
 /** \page epmTutorial Tutorial
+ *
+ * \section epmTutIntro Introduction
+ *
+ * \section epmTutConfig Configuration
+ *
+ * \section epmTutCompile Compilation
+ *
+ * \section epmTutSimImpl  Implementation of a new simulation
 */

@@ -36,19 +36,19 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the transform type
-         #ifdef EPMDYNAMO_RADIAL_MPI
-            #ifdef EPMDYNAMO_SH_MPI
+         #ifdef EPMDYNAMO_SPLIT_RADIAL
+            #ifdef EPMDYNAMO_SPLIT_SH
                typedef  TorPolSpectralSHTransform<TSimType, MPISpectralSHTTraits, MPISHTTraits>   TransformType;
             #else
                typedef  TorPolSpectralSHTransform<TSimType, MPISpectralSHTTraits, SerialSHTTraits>   TransformType;
-            #endif //EPMDYNAMO_SH_MPI
+            #endif //EPMDYNAMO_SPLIT_SH
          #else
-            #ifdef EPMDYNAMO_SH_MPI
+            #ifdef EPMDYNAMO_SPLIT_SH
                typedef  TorPolSpectralSHTransform<TSimType, SerialSpectralSHTTraits, MPISHTTraits>   TransformType;
             #else
                typedef  TorPolSpectralSHTransform<TSimType, SerialSpectralSHTTraits, SerialSHTTraits>   TransformType;
-            #endif //EPMDYNAMO_SH_MPI
-         #endif //EPMDYNAMO_RADIAL_MPI
+            #endif //EPMDYNAMO_SPLIT_SH
+         #endif //EPMDYNAMO_SPLIT_RADIAL
 
          /// Typedef for the operator type
          typedef  DenseOperator  OperatorType;
