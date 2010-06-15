@@ -1,0 +1,104 @@
+/** \file TransportDiffusion.hpp
+ *  \brief Implementation of the transport diffusion equation
+ */
+
+#ifndef TRANSPORTDIFFUSION_HPP
+#define TRANSPORTDIFFUSION_HPP
+
+// System includes
+//
+
+// External includes
+//
+
+// Project includes
+//
+#include "Simulations/SimulationTraits.hpp"
+#include "General/EPMTypedefs.hpp"
+#include "Equations/EquationParameters.hpp"
+#include "Equations/Transport/TransportBase.hpp"
+
+namespace EPMDynamo {
+
+   /**
+    * @brief General representation of the Transport equation with only diffusion included
+    *
+    * \tparam TSimType Type of the simulation
+    * \tparam TSimTraits Traits of the simulation implementation
+    */
+   template <typename TSimType, template <typename> class TSimTraits> class TransportDiffusion: public TransportBase<TSimType, TSimTraits>
+   {
+      public:
+         /// Typedef from Simulation trait to local transform type
+         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+
+         /**
+         * @brief Constructor
+         *
+         * @param rC Codensity scalar (stored as reference)
+         * @param transform Transform object (stored as reference)
+         * \param tsteps Timestep parameters
+         * @param params Simulation equation parameters
+         */
+         TransportDiffusion(typename TSimTraits<TSim>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params);
+
+         /**
+         * @brief Simple empty destructor
+         */
+         virtual ~TransportDiffusion() {};
+
+         /**
+          * @brief Update RTP values of the equation
+          *
+          * \param step Current step in a multistep transform
+          */
+         void updateRTP(const int step);
+
+         /**
+          * @brief Update RHS of the equation
+          */
+         void updateRHS();
+
+         /**
+          * @brief Transform RHS of the equation
+          *
+          * \param step Current step in a multistep transform
+          */
+         void transformRHS(const int step);
+         
+      protected:
+
+      private:
+   };
+
+   template <typename TSimType, template <typename> class TSimTraits> TransportDiffusion<TSimType, TSimTraits>::TransportDiffusion(typename TSimTraits<TSim>::CodType &rC, typename TransportDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
+      : TransportBase<TSimType, TSimTraits>(rC, transform, tsteps, params)
+   {
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::updateRTP(const int step)
+   {
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::updateRHS()
+   {
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::transformRHS(const int step)
+   {
+      if(step == 0)
+      {
+         // Set the non linear terms to zero
+         int nL = this->mrX.oc().perturbation().nL();
+         const int l0 = this->mrX.oc().perturbation().minL();
+
+         for(int l = l0; l < nL; ++l)
+         {
+            this->mNTerms.rOc().rPerturbation().rLShell(l).setConstant(0.0);
+         }
+      }
+   }
+
+}
+
+#endif // TRANSPORTDIFFUSION_HPP

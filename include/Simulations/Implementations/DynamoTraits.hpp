@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "General/Typedefs.hpp"
+#include "General/EPMTypedefs.hpp"
 #include "PhysicalFields/CodensityScalar.hpp"
 #include "PhysicalFields/MagneticField.hpp"
 #include "PhysicalFields/VelocityField.hpp"

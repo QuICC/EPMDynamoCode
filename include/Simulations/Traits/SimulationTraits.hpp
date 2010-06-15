@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "General/Typedefs.hpp"
+#include "General/EPMTypedefs.hpp"
 #include "Timestepping/PredictorCorrector/PCSchemeTraits.hpp"
 #include "Transforms/SpectralSH/TorPolSpectralSHTransform.hpp"
 #include "Transforms/SpectralSH/SerialSpectralSHTTraits.hpp"
