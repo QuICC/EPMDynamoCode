@@ -16,7 +16,7 @@
 #include "Simulations/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
-#include "Equations/EquationParameters.hpp"
+#include "Equations/Parameters/EquationParameters.hpp"
 #include "Equations/ScalarTimeEquation.hpp"
 
 namespace EPMDynamo {

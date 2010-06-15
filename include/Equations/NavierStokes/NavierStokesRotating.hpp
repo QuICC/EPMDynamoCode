@@ -16,7 +16,7 @@
 #include "Simulations/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
-#include "Equations/EquationParameters.hpp"
+#include "Equations/Parameters/EquationParameters.hpp"
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "Timestepping/WithPoissonTStep.hpp"
 

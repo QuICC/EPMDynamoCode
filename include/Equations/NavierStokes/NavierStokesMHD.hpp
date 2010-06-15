@@ -16,7 +16,7 @@
 #include "Simulations/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesMagnetic.hpp"
-#include "Equations/EquationParameters.hpp"
+#include "Equations/Parameters/EquationParameters.hpp"
 
 namespace EPMDynamo {
 
