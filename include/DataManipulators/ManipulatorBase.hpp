@@ -15,7 +15,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
 
@@ -31,11 +31,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           * \param nFTmp Number of required forward storage units
           * \param nBTmp Number of required backward storage units
           */
-         ManipulatorBase(const SmartSTrunc pSTrunc, const int nFTmp, const int nBTmp);
+         ManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp);
 
          /**
           * @brief Destructor
@@ -162,7 +162,7 @@ namespace EPMDynamo {
          /**
           * @brief Truncation information
           */
-         SmartSTrunc mpSTrunc;
+         SmartTruncation mpTrunc;
 
          /**
           * @brief Number of forward tempory storage scalars
@@ -293,8 +293,8 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TForward, typename TBackward> ManipulatorBase<TForward, TBackward>::ManipulatorBase(const SmartSTrunc pSTrunc, const int nFTmp, const int nBTmp)
-      : mpSTrunc(pSTrunc), mNFTmp(nFTmp), mNBTmp(nBTmp), mPacks(0), mPacksCounter(0), mFirstEntry(true), mDynamicPacks(true), mMaxFPacks(0), mMaxBPacks(0)
+   template <typename TForward, typename TBackward> ManipulatorBase<TForward, TBackward>::ManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp)
+      : mpTrunc(pTrunc), mNFTmp(nFTmp), mNBTmp(nBTmp), mPacks(0), mPacksCounter(0), mFirstEntry(true), mDynamicPacks(true), mMaxFPacks(0), mMaxBPacks(0)
    {
       // Init the temporary storage
       this->initStorage();
@@ -313,12 +313,12 @@ namespace EPMDynamo {
    {
       for(int i=0; i < this->mNFTmp; ++i)
       {
-         this->mFTmp.push_back(TForward(this->mpSTrunc));
+         this->mFTmp.push_back(TForward(this->mpTrunc));
       }
 
       for(int i=0; i < this->mNBTmp; ++i)
       {
-         this->mBTmp.push_back(TBackward(this->mpSTrunc));
+         this->mBTmp.push_back(TBackward(this->mpTrunc));
       }
    }
 

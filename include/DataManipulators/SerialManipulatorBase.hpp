@@ -15,7 +15,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "DataManipulators/ManipulatorBase.hpp"
 
 namespace EPMDynamo {
@@ -32,11 +32,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           * \param nFTmp Number of required forward storage units
           * \param nBTmp Number of required backward storage units
           */
-         SerialManipulatorBase(const SmartSTrunc pSTrunc, const int nFTmp, const int nBTmp);
+         SerialManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp);
 
          /**
           * @brief Destructor
@@ -154,8 +154,8 @@ namespace EPMDynamo {
       this->mBTmpQueue.push(&tmp);
    }
 
-   template <typename TForward, typename TBackward> SerialManipulatorBase<TForward, TBackward>::SerialManipulatorBase(const SmartSTrunc pSTrunc, const int nFTmp, const int nBTmp)
-      : ManipulatorBase<TForward, TBackward>(pSTrunc, nFTmp, nBTmp)
+   template <typename TForward, typename TBackward> SerialManipulatorBase<TForward, TBackward>::SerialManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp)
+      : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp)
    {
    }
 

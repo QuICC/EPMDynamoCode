@@ -153,10 +153,10 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> DynamoSimulation<TSimType>::DynamoSimulation()
-      : mCFLFactor(1.0), mCodC(this->mpSTrunc, this->mTransform), mMagB(this->mpSTrunc, this->mTransform), mVelV(this->mpSTrunc, this->mTransform), mInduction(mMagB, mVelV, this->mTransform, this->mSimControl.tsParams()), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mMagB, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCFLFactor(1.0), mCodC(this->mpTrunc, this->mTransform), mMagB(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mInduction(mMagB, mVelV, this->mTransform, this->mSimControl.tsParams()), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mMagB, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
       // Set the CFL factor to L*(L+1)
-      int l = this->mpSTrunc->sim()->hoz()->nL();
+      int l = this->mpTrunc->sim()->hoz()->nL();
       this->mCFLFactor = static_cast<DynamoFloat>(l*(l+1));
    }
 

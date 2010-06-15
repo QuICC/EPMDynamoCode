@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "GeneralScalars/FDSHOrderScalar.hpp"
 #include "GeneralScalars/FDSHRadialScalar.hpp"
 #include "GeneralScalars/FDSHDegreeScalar.hpp"
@@ -33,9 +33,9 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           */
-         SerialFDSHManipulator(const SmartSTrunc pSTrunc);
+         SerialFDSHManipulator(const SmartTruncation pTrunc);
 
          /**
           * @brief Destructor
@@ -65,8 +65,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TForward> SerialFDSHManipulator<TForward>::SerialFDSHManipulator(const SmartSTrunc pSTrunc)
-      : SerialManipulatorBase<TForward, FDSHDegreeScalar>(pSTrunc, 3, 3)
+   template <typename TForward> SerialFDSHManipulator<TForward>::SerialFDSHManipulator(const SmartTruncation pTrunc)
+      : SerialManipulatorBase<TForward, FDSHDegreeScalar>(pTrunc, 3, 3)
    {
    }
 

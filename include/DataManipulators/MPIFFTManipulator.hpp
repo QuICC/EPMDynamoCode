@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "GeneralScalars/FFTFlatScalar.hpp"
 #include "GeneralScalars/FFTOrderScalar.hpp"
 #include "DataManipulators/MPIManipulatorBase.hpp"
@@ -32,9 +32,9 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           */
-         MPIFFTManipulator(const SmartSTrunc pSTrunc);
+         MPIFFTManipulator(const SmartTruncation pTrunc);
 
          /**
           * @brief Destructor

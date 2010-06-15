@@ -15,7 +15,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControl.hpp"
 #include "IO/IOSystem.hpp"
@@ -53,9 +53,9 @@ namespace EPMDynamo {
          IOSystem    mIOSys;
 
          /**
-          * @brief Shared pointer to the simulation truncation
+          * @brief Shared pointer to the truncation
           */
-         SmartSTrunc  mpSTrunc;
+         SmartTruncation  mpTrunc;
 
          /**
           * @brief Real space <-> spectral space transform object
@@ -198,10 +198,10 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
-      : mIOSys(), mpSTrunc(TSim::createSTrunc(mIOSys.aTrunc())), mTransform(mpSTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0)
+      : mIOSys(), mpTrunc(TSim::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0)
    {
       // Finish initialisation of the truncation object by setting the physical grid values
-      this->mTransform.initRTPDomains(this->mpSTrunc);
+      this->mTransform.initRTPDomains(this->mpTrunc);
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::initOutput()

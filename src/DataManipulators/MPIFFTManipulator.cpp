@@ -17,8 +17,8 @@
 
 namespace EPMDynamo {
 
-   MPIFFTManipulator::MPIFFTManipulator(const SmartSTrunc pSTrunc)
-      : MPIManipulatorBase<FFTFlatScalar, FFTOrderScalar>(pSTrunc, 2, 2)
+   MPIFFTManipulator::MPIFFTManipulator(const SmartTruncation pTrunc)
+      : MPIManipulatorBase<FFTFlatScalar, FFTOrderScalar>(pTrunc, 2, 2)
    {
       // initialise the MPI datatypes
       this->initTypes();
@@ -29,7 +29,7 @@ namespace EPMDynamo {
 
    void MPIFFTManipulator::initTypes()
    {
-      int nCore = mpSTrunc->para().nCore();
+      int nCore = mpTrunc->para().nCore();
       for(int i = 0; i < nCore; ++i)
       {
          std::map<FFTFlatScalar *, MPI_Datatype>  tFMap;
@@ -74,11 +74,11 @@ namespace EPMDynamo {
       double key;
 
       // Create the list of local indexes
-      int r0 = this->mpSTrunc->local()->rtp()->r0();
-      int nR = this->mpSTrunc->local()->rtp()->nR();
-      ArrayI localNth = this->mpSTrunc->local()->rtp()->nThArray();
-      ArrayI localTh0 = this->mpSTrunc->local()->rtp()->th0Array();
-      int nM = this->mpSTrunc->sim()->hoz()->nM();
+      int r0 = this->mpTrunc->local()->rtp()->r0();
+      int nR = this->mpTrunc->local()->rtp()->nR();
+      ArrayI localNth = this->mpTrunc->local()->rtp()->nThArray();
+      ArrayI localTh0 = this->mpTrunc->local()->rtp()->th0Array();
+      int nM = this->mpTrunc->sim()->hoz()->nM();
 
       // Create the list of local indexes
       for(int n=0; n < nR; ++n)
@@ -100,14 +100,14 @@ namespace EPMDynamo {
       }
 
       // Create the list of remote indexes
-      int nTh = this->mpSTrunc->sim()->hoz()->nTh();
-      ArrayI   remoteMs = this->mpSTrunc->remote(coreID)->fdsh()->mArray();
-      for(int m=0; m < this->mpSTrunc->remote(coreID)->fdsh()->nM(); ++m)
+      int nTh = this->mpTrunc->sim()->hoz()->nTh();
+      ArrayI   remoteMs = this->mpTrunc->remote(coreID)->fdsh()->mArray();
+      for(int m=0; m < this->mpTrunc->remote(coreID)->fdsh()->nM(); ++m)
       {
          m_ = remoteMs(m);
-         for(int n=0; n < this->mpSTrunc->remote(coreID)->fdsh()->nR(m); ++n)
+         for(int n=0; n < this->mpTrunc->remote(coreID)->fdsh()->nR(m); ++n)
          {
-            n_ = mpSTrunc->remote(coreID)->fdsh()->r0(m) + n;
+            n_ = mpTrunc->remote(coreID)->fdsh()->r0(m) + n;
             for(int th=0; th < nTh; ++th)
             {
                key = n_*nFactor + th*thFactor + m_*mFactor;
@@ -178,15 +178,15 @@ namespace EPMDynamo {
       // Create the list of local indexes
       int r0;
       int nR;
-      int nTh = mpSTrunc->sim()->hoz()->nTh();
-      int nM = mpSTrunc->local()->fdsh()->nM();
+      int nTh = mpTrunc->sim()->hoz()->nTh();
+      int nM = mpTrunc->local()->fdsh()->nM();
 
       // Create the list of local indexes
-      ArrayI   localMs = mpSTrunc->local()->fdsh()->mArray();
+      ArrayI   localMs = mpTrunc->local()->fdsh()->mArray();
       for(int m=0; m < nM; ++m)
       {
-         r0 = mpSTrunc->local()->fdsh()->r0(m);
-         nR = mpSTrunc->local()->fdsh()->nR(m);
+         r0 = mpTrunc->local()->fdsh()->r0(m);
+         nR = mpTrunc->local()->fdsh()->nR(m);
          m_ = localMs(m);
          for(int n=0; n < nR; ++n)
          {
@@ -204,11 +204,11 @@ namespace EPMDynamo {
       }
 
       // Create the list of remote indexes
-      r0 = mpSTrunc->remote(coreID)->rtp()->r0();
-      nR = mpSTrunc->remote(coreID)->rtp()->nR();
-      ArrayI remoteNth = mpSTrunc->remote(coreID)->rtp()->nThArray();
-      ArrayI remoteTh0 = mpSTrunc->remote(coreID)->rtp()->th0Array();
-      nM = mpSTrunc->sim()->hoz()->nM();
+      r0 = mpTrunc->remote(coreID)->rtp()->r0();
+      nR = mpTrunc->remote(coreID)->rtp()->nR();
+      ArrayI remoteNth = mpTrunc->remote(coreID)->rtp()->nThArray();
+      ArrayI remoteTh0 = mpTrunc->remote(coreID)->rtp()->th0Array();
+      nM = mpTrunc->sim()->hoz()->nM();
       for(int n=0; n < nR; ++n)
       {
          n_ = n + r0;

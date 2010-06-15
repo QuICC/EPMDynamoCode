@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "GeneralScalars/FDSHOrderScalar.hpp"
 #include "GeneralScalars/FDSHRadialScalar.hpp"
 #include "GeneralScalars/FDSHDegreeScalar.hpp"
@@ -35,9 +35,9 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           */
-         MPIFDSHManipulator(const SmartSTrunc pSTrunc);
+         MPIFDSHManipulator(const SmartTruncation pTrunc);
 
          /**
           * @brief Empty destructor
@@ -71,8 +71,8 @@ namespace EPMDynamo {
          void buildBType(FDSHDegreeScalar &data, MPI_Datatype &type, const int coreID);
    };
 
-   template <typename TForward> MPIFDSHManipulator<TForward>::MPIFDSHManipulator(const SmartSTrunc pSTrunc)
-      : MPIManipulatorBase<TForward, FDSHDegreeScalar>(pSTrunc, 2, 2)
+   template <typename TForward> MPIFDSHManipulator<TForward>::MPIFDSHManipulator(const SmartTruncation pTrunc)
+      : MPIManipulatorBase<TForward, FDSHDegreeScalar>(pTrunc, 2, 2)
    {
       // initialise the MPI datatypes
       this->initTypes();
@@ -83,7 +83,7 @@ namespace EPMDynamo {
 
    template <typename TForward> void MPIFDSHManipulator<TForward>::initTypes()
    {
-      int nCore = this->mpSTrunc->para().nCore();
+      int nCore = this->mpTrunc->para().nCore();
       for(int i = 0; i < nCore; ++i)
       {
          std::map<TForward *, MPI_Datatype>  tFMap;
@@ -131,13 +131,13 @@ namespace EPMDynamo {
       // Create the list of local indexes
       int r0;
       int nR;
-      ArrayI   localMs = this->mpSTrunc->local()->fdsh()->mArray();
-      ArrayI   nL = this->mpSTrunc->local()->fdsh()->nLArray(this->mpSTrunc->sim()->hoz()->nL());
+      ArrayI   localMs = this->mpTrunc->local()->fdsh()->mArray();
+      ArrayI   nL = this->mpTrunc->local()->fdsh()->nLArray(this->mpTrunc->sim()->hoz()->nL());
       for(int m=0; m < localMs.size(); ++m)
       {
          m_ = localMs(m);
-         r0 = this->mpSTrunc->local()->fdsh()->r0(m);
-         nR = this->mpSTrunc->local()->fdsh()->nR(m);
+         r0 = this->mpTrunc->local()->fdsh()->r0(m);
+         nR = this->mpTrunc->local()->fdsh()->nR(m);
          for(int n=0; n < nR; ++n)
          {
             n_ = n + r0;
@@ -155,14 +155,14 @@ namespace EPMDynamo {
       }
 
       // Create the list of remote indexes
-      nR = this->mpSTrunc->sim()->rad()->nR();
-      ArrayI   remoteLs = this->mpSTrunc->remote(coreID)->spec()->lArray();
-      for(int l=0; l < this->mpSTrunc->remote(coreID)->spec()->nL(); ++l)
+      nR = this->mpTrunc->sim()->rad()->nR();
+      ArrayI   remoteLs = this->mpTrunc->remote(coreID)->spec()->lArray();
+      for(int l=0; l < this->mpTrunc->remote(coreID)->spec()->nL(); ++l)
       {
          l_ = remoteLs(l);
-         for(int m=0; m < this->mpSTrunc->remote(coreID)->spec()->nM(l); ++m)
+         for(int m=0; m < this->mpTrunc->remote(coreID)->spec()->nM(l); ++m)
          {
-            m_ = this->mpSTrunc->remote(coreID)->spec()->m(m,l);
+            m_ = this->mpTrunc->remote(coreID)->spec()->m(m,l);
             for(int n=0; n < nR; ++n)
             {
                n_ = n;
@@ -189,7 +189,7 @@ namespace EPMDynamo {
 
       // Create MPI displacement list
       int n, l, m;
-      int mp = this->mpSTrunc->sim()->hoz()->mp();
+      int mp = this->mpTrunc->sim()->hoz()->mp();
       int tot = 0;
       for(it = sorted.begin(); it != sorted.end(); ++it)
       {
@@ -228,14 +228,14 @@ namespace EPMDynamo {
       double key;
 
       // Create the list of local indexes
-      int nR = this->mpSTrunc->sim()->rad()->nR();
-      ArrayI   remoteLs = this->mpSTrunc->local()->spec()->lArray();
-      for(int l=0; l < this->mpSTrunc->local()->spec()->nL(); ++l)
+      int nR = this->mpTrunc->sim()->rad()->nR();
+      ArrayI   remoteLs = this->mpTrunc->local()->spec()->lArray();
+      for(int l=0; l < this->mpTrunc->local()->spec()->nL(); ++l)
       {
          l_ = remoteLs(l);
-         for(int m=0; m < this->mpSTrunc->local()->spec()->nM(l); ++m)
+         for(int m=0; m < this->mpTrunc->local()->spec()->nM(l); ++m)
          {
-            m_ = this->mpSTrunc->local()->spec()->m(m,l);
+            m_ = this->mpTrunc->local()->spec()->m(m,l);
             for(int n=0; n < nR; ++n)
             {
                n_ = n;
@@ -251,13 +251,13 @@ namespace EPMDynamo {
 
       // Create the list of remote indexes
       int r0;
-      ArrayI   localMs = this->mpSTrunc->remote(coreID)->fdsh()->mArray();
-      ArrayI   nL = this->mpSTrunc->remote(coreID)->fdsh()->nLArray(this->mpSTrunc->sim()->hoz()->nL());
+      ArrayI   localMs = this->mpTrunc->remote(coreID)->fdsh()->mArray();
+      ArrayI   nL = this->mpTrunc->remote(coreID)->fdsh()->nLArray(this->mpTrunc->sim()->hoz()->nL());
       for(int m=0; m < localMs.size(); ++m)
       {
          m_ = localMs(m);
-         r0 = this->mpSTrunc->remote(coreID)->fdsh()->r0(m);
-         nR = this->mpSTrunc->remote(coreID)->fdsh()->nR(m);
+         r0 = this->mpTrunc->remote(coreID)->fdsh()->r0(m);
+         nR = this->mpTrunc->remote(coreID)->fdsh()->nR(m);
          for(int n=0; n < nR; ++n)
          {
             n_ = n + r0;

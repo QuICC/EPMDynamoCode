@@ -17,8 +17,8 @@
 
 namespace EPMDynamo {
 
-   SerialFFTManipulator::SerialFFTManipulator(const SmartSTrunc pSTrunc)
-      : SerialManipulatorBase<FFTFlatScalar, FFTOrderScalar>(pSTrunc, 2, 2)
+   SerialFFTManipulator::SerialFFTManipulator(const SmartTruncation pTrunc)
+      : SerialManipulatorBase<FFTFlatScalar, FFTOrderScalar>(pTrunc, 2, 2)
    {
    }
 

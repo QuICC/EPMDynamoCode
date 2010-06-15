@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "GeneralScalars/FFTFlatScalar.hpp"
 #include "GeneralScalars/FFTOrderScalar.hpp"
 #include "DataManipulators/SerialManipulatorBase.hpp"
@@ -30,9 +30,9 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           */
-         SerialFFTManipulator(const SmartSTrunc pSTrunc);
+         SerialFFTManipulator(const SmartTruncation pTrunc);
 
          /**
           * @brief Destructor

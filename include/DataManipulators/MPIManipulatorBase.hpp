@@ -18,7 +18,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Domain/SimulationTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "DataManipulators/ManipulatorBase.hpp"
 
 namespace EPMDynamo {
@@ -43,11 +43,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * \param pSTrunc Pointer to the simulation truncation
+          * \param pTrunc Pointer to the truncation
           * \param nFTmp Number of required forward storage units
           * \param nBTmp Number of required backward storage units
           */
-         MPIManipulatorBase(const SmartSTrunc pSTrunc, const int nFTmp, const int nBTmp);
+         MPIManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp);
 
          /**
           * @brief Destructor
@@ -498,8 +498,8 @@ namespace EPMDynamo {
       return this->mPacks*this->mBSizes.at(id);
    }
 
-   template <typename TForward, typename TBackward> MPIManipulatorBase<TForward, TBackward>::MPIManipulatorBase(const SmartSTrunc pSTrunc, const int nFTmp, const int nBTmp)
-      : ManipulatorBase<TForward, TBackward>(pSTrunc, nFTmp, nBTmp), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mSpecialFEntry(-1), mSpecialBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
+   template <typename TForward, typename TBackward> MPIManipulatorBase<TForward, TBackward>::MPIManipulatorBase(const SmartTrunc pTrunc, const int nFTmp, const int nBTmp)
+      : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mSpecialFEntry(-1), mSpecialBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
    {
    }
 
@@ -568,7 +568,7 @@ namespace EPMDynamo {
    template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::initBufferSizes()
    {
       int sze;
-      int nCore = this->mpSTrunc->para().nCore();
+      int nCore = this->mpTrunc->para().nCore();
 
       for(int id = 0; id < nCore; ++id)
       {
@@ -721,7 +721,7 @@ namespace EPMDynamo {
          // Create Recv B requests
          for(unsigned int id = 0; id < this->sizeGroupB(); ++id)
          {
-            grpMe = (*std::find(this->mCPUGroupB.begin(), this->mCPUGroupB.end(), this->mpSTrunc->para().id()));
+            grpMe = (*std::find(this->mCPUGroupB.begin(), this->mCPUGroupB.end(), this->mpTrunc->para().id()));
             grpSrc = this->recvSrc(id, grpMe, this->sizeGroupB());
             src = this->idGroupB(grpSrc);
             tag = src;
@@ -731,7 +731,7 @@ namespace EPMDynamo {
          // Create Send F requests
          for(unsigned int id = 0; id < this->sizeGroupF(); ++id)
          {
-            tag = this->mpSTrunc->para().id();
+            tag = this->mpTrunc->para().id();
             grpMe = (*std::find(this->mCPUGroupF.begin(), this->mCPUGroupF.end(), tag));
             grpDest = this->sendDest(id, grpMe, this->sizeGroupF());
             dest = this->idGroupF(grpDest);
@@ -761,7 +761,7 @@ namespace EPMDynamo {
          // Create Recv F requests
          for(unsigned int id = 0; id < this->sizeGroupF(); ++id)
          {
-            grpMe = (*std::find(this->mCPUGroupF.begin(), this->mCPUGroupF.end(), this->mpSTrunc->para().id()));
+            grpMe = (*std::find(this->mCPUGroupF.begin(), this->mCPUGroupF.end(), this->mpTrunc->para().id()));
             grpSrc = this->recvSrc(id, grpMe, this->sizeGroupF());
             src = this->idGroupF(grpSrc);
             tag = src;
@@ -771,7 +771,7 @@ namespace EPMDynamo {
          // Create Send B requests
          for(unsigned int id = 0; id < this->sizeGroupB(); ++id)
          {
-            tag = this->mpSTrunc->para().id();
+            tag = this->mpTrunc->para().id();
             grpMe = (*std::find(this->mCPUGroupB.begin(), this->mCPUGroupB.end(), tag));
             grpDest = this->sendDest(id, grpMe, this->sizeGroupB());
             dest = this->idGroupB(grpDest);
