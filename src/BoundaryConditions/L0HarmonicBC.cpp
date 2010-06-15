@@ -1,0 +1,24 @@
+/** \file L0HarmonicBC.cpp
+ *  \brief Source of the l=0 harmonic boundary condition implementation
+ */
+
+// System includes
+//
+
+// External includes
+//
+
+// Class include
+//
+#include "BoundaryConditions/L0HarmonicBC.hpp"
+
+// Project includes
+//
+
+namespace EPMDynamo {
+
+   L0HarmonicBC::L0HarmonicBC(const int nL, const int nX)
+      : BoundaryCondition(nL, nX), mValue(1.0)
+   {
+   }
+}

@@ -8,5 +8,9 @@
  *
  * \section epmTutSimImpl  Implementation of a new simulation
  *
- * \section epmTutSimImpl  Implementation of a new equation
+ * \section epmTutEqImpl  Implementation of a new equation
+ *
+ * \section epmTutBCImpl  Implementation of a new boundary condition
+ *
+ * \section epmTutTStepImpl  Implementation of a new timestep scheme
 */

@@ -28,6 +28,7 @@ namespace EPMDynamo {
     * \tparam TTStepPol NEED TO CHANGE THIS
     *
     * \bug Need to change the implementation of the poisson solver
+    * \bug Poisson solver has not yet been moved into new tree
     */
    template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSim>::VelType, TTStepPol>  {
       public:
