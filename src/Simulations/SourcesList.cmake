@@ -1,4 +1,4 @@
 #
 # Set list of source files
 #
-set(${SrcSubDir}_Srcs SimulationControlBase.cpp)
+set(${SrcSubDir}_Srcs SimulationConstants.cpp SimulationControlBase.cpp)
