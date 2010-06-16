@@ -17,8 +17,8 @@
 
 namespace EPMDynamo {
 
-   SpectralFieldBase::SpectralFieldBase(SmartSTrunc pSTrunc)
-      : mpSTrunc(pSTrunc)
+   SpectralFieldBase::SpectralFieldBase(SmartTruncation pTrunc)
+      : mpTrunc(pTrunc)
    {
    }
 

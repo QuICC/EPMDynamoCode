@@ -29,7 +29,7 @@ namespace EPMDynamo {
    {
       public:
          /**
-         * @brief Construct the field with the given SpectralTruncation pointer
+         * @brief Construct the field with the given truncation pointer
          *
          * @param pTrunc Truncation information
          */

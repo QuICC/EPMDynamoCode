@@ -17,8 +17,8 @@
 
 namespace EPMDynamo {
 
-   RTPField::RTPField(const SmartSTrunc pSTrunc)
-      : RTPBase(pSTrunc), mRComponent(mpSTrunc), mThComponent(mpSTrunc), mPhComponent(mpSTrunc)
+   RTPField::RTPField(const SmartTruncation pTrunc)
+      : RTPBase(pTrunc), mRComponent(mpTrunc), mThComponent(mpTrunc), mPhComponent(mpTrunc)
    {
    }
 

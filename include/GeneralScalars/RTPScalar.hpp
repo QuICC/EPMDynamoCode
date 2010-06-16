@@ -33,7 +33,7 @@ namespace EPMDynamo {
    {
       public:
          /**
-         * @brief Constructs the scalar based on the given SpectralTruncation pointer
+         * @brief Constructs the scalar based on the given truncation pointer
          *
          * @param pTrunc truncation information
          */

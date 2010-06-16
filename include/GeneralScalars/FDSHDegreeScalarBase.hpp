@@ -27,7 +27,7 @@ namespace EPMDynamo {
    {
       public:
          /**
-         * @brief Stores the pointer to a SpectralTruncation object
+         * @brief Stores the pointer to a truncation object
          *
          * @param pTrunc Truncation information
          */
