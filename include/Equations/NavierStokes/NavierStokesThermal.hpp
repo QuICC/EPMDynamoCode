@@ -15,7 +15,7 @@
 //
 #include "Simulations/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
-#include "Equations/TorPolTimeEquation.hpp"
+#include "Equations/TorPolDiffusionEquation.hpp"
 #include "Equations/NavierStokes/NavierStokesRotating.hpp"
 
 namespace EPMDynamo {

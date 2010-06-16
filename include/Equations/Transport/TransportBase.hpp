@@ -17,7 +17,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
-#include "Equations/ScalarTimeEquation.hpp"
+#include "Equations/ScalarDiffusionEquation.hpp"
 
 namespace EPMDynamo {
 
@@ -27,7 +27,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportBase: public ScalarTimeEquation<TSimType, typename TSimTraits<TSim>::CodType >
+   template <typename TSimType, template <typename> class TSimTraits> class TransportBase: public ScalarDiffusionEquation<TSimType, typename TSimTraits<TSim>::CodType >
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -64,7 +64,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> TransportBase<TSimType, TSimTraits>::TransportBase(typename TSimTraits<TSim>::CodType &rC, typename TransportBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
-      : ScalarTimeEquation<TSimType, typename TSimTraits<TSim>::CodType >(rC, transform, tsteps, 1, 1.0, params.q())
+      : ScalarDiffusionEquation<TSimType, typename TSimTraits<TSim>::CodType >(rC, transform, tsteps, 1, 1.0, params.q())
    {
    }
 

@@ -143,7 +143,7 @@ namespace EPMDynamo {
       this->mBCCounter = nBCQ + nBCS + nBCT;
    }
 
-   template <typename TSimType, typename TFieldType> void ScalarTimeEquation<TSimType, TFieldType>::addQBC(SmartBC pBC)
+   template <typename TSimType, typename TFieldType> void QSTDiffusionEquation<TSimType, TFieldType>::addQBC(SmartBC pBC)
    {
       // Add Q component BC to list
       this->mQBCs.push_back(pBC);
@@ -152,7 +152,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType> void ScalarTimeEquation<TSimType, TFieldType>::addSBC(SmartBC pBC)
+   template <typename TSimType, typename TFieldType> void QSTDiffusionEquation<TSimType, TFieldType>::addSBC(SmartBC pBC)
    {
       // Add S component BC to list
       this->mSBCs.push_back(pBC);
@@ -161,7 +161,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType> void ScalarTimeEquation<TSimType, TFieldType>::addTBC(SmartBC pBC)
+   template <typename TSimType, typename TFieldType> void QSTDiffusionEquation<TSimType, TFieldType>::addTBC(SmartBC pBC)
    {
       // Add T component BC to list
       this->mTBCs.push_back(pBC);
