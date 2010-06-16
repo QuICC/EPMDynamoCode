@@ -1,5 +1,5 @@
 /** \file StressFreeTorBC.hpp
- *  \brief Implemenation of the stress free velocity boundary condition on the toroidal scalar
+ *  \brief Implementation of the stress free velocity boundary condition on the toroidal scalar
  */
 
 #ifndef STRESSFREETORBC_HPP

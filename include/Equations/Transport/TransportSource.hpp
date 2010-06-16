@@ -1,5 +1,5 @@
 /** \file TransportSource.hpp
- *  \brief Implemenation of transport diffusion with source term
+ *  \brief Implementation of transport diffusion with source term
  */
 
 #ifndef TRANSPORTSOURCE_HPP

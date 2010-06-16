@@ -1,13 +1,21 @@
 #
 # Set list of source files
 #
-set(${SrcSubDir}_Srcs CoreTruncationBase.cpp CoreTruncation.cpp 
-      LocalTruncation.cpp SimulationTruncation.cpp Truncation.cpp)
+set(${SrcSubDir}_Srcs
+      CoreTruncationBase.cpp
+      CoreTruncation.cpp 
+      LocalTruncation.cpp
+      SimulationTruncation.cpp
+      Truncation.cpp
+      )
 
 #
 # include source files from subdirectories
 #
-set(SrcSubSubDirs Core Simulation)
+set(SrcSubSubDirs
+      Core
+      Simulation
+      )
 
 foreach(SrcSubSubDir ${SrcSubSubDirs})
    set(SrcSubSubDirPath ${SrcSubDirPath}/${SrcSubSubDir})

@@ -1,5 +1,5 @@
 /** \file TimeEquation.hpp
- *  \brief General implemenation of a time dependend equation
+ *  \brief General implementation of a time dependend equation
  */
 
 #ifndef TIMEEQUATION_HPP

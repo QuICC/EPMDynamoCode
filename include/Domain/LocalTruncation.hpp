@@ -1,5 +1,5 @@
 /** \file LocalTruncation.hpp
- *  \brief Implemenation of the local truncation information
+ *  \brief Implementation of the local truncation information
  */
 
 #ifndef LOCALTRUNCATION_HPP
@@ -20,7 +20,7 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implemenation of the local (current core) truncation information
+    * \brief Implementation of the local (current core) truncation information
     */
    class LocalTruncation: public CoreTruncationBase
    {

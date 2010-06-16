@@ -1,5 +1,5 @@
 /** \file HomogeneousBC.cpp
- *  \brief Source of the Homogeneous boundary condition implemenation
+ *  \brief Source of the Homogeneous boundary condition implementation
  */
 
 // System includes

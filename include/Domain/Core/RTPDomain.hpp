@@ -1,5 +1,5 @@
 /** \file RTPDomain.hpp
- *  \brief Implemenation of the remote (core) wide RTP space domain information
+ *  \brief Implementation of the remote (core) wide RTP space domain information
  */
 
 #ifndef RTPDOMAIN_HPP
@@ -23,7 +23,7 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implemenation of the remote (core) wide RTP space domain information
+    * \brief Implementation of the remote (core) wide RTP space domain information
     */
    class RTPDomain: public RTPTruncation
    {

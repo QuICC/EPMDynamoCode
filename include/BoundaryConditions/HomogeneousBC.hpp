@@ -1,5 +1,5 @@
 /** \file HomogeneousBC.hpp
- *  \brief General implemenation for a homogeneous boundary condition
+ *  \brief General implementation for a homogeneous boundary condition
  */
 
 #ifndef HOMOGENEOUSBC_HPP

@@ -22,7 +22,7 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implemenation of the simulation wide horizontal domain information (truncation + grids)
+    * \brief Implementation of the simulation wide horizontal domain information (truncation + grids)
     */
    class HorizontalDomain: public HorizontalTruncation
    {

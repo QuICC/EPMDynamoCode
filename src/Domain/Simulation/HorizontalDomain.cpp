@@ -1,5 +1,5 @@
 /** \file HorizontalDomain.cpp
- *  \brief Source of the implemenation of the horizontal domain
+ *  \brief Source of the implementation of the horizontal domain
  */
 
 // System includes

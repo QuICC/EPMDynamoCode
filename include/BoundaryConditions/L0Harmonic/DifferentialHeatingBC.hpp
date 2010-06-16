@@ -1,5 +1,5 @@
 /** \file DifferentialHeatingBC.hpp
- *  \brief Implemenation of the l=0 differential heating boundary condition
+ *  \brief Implementation of the l=0 differential heating boundary condition
  */
 
 #ifndef DIFFERENTIALHEATINGBC_HPP

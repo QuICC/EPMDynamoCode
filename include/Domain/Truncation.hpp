@@ -109,7 +109,7 @@ namespace EPMDynamo {
          /**
           * @brief Split the workload
           *
-          * \bug Requires correct implemenation of the load splitters
+          * \bug Requires correct implementation of the load splitters
           */
          void splitLoad();
    };

@@ -1,5 +1,5 @@
 /** \file DDRadialBC.hpp
- *  \brief Implemenation of the homogeneous second radial derivative boundary condition
+ *  \brief Implementation of the homogeneous second radial derivative boundary condition
  */
 
 #ifndef DDRADIALBC_HPP
