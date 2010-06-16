@@ -17,7 +17,7 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
 # include source files from subsubdirectories
 #
 set(SrcSubSubSubDirs
-      CSCS
+      Visualisation
       Imposed
       Source
       State
