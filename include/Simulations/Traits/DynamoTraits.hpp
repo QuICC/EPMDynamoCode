@@ -35,7 +35,16 @@ namespace EPMDynamo {
          typedef MagneticField<TSimType>  MagType;
 
          /// Typedef for the velocity field type
-         typedef VelocityField<TSimType>   VelType;
+         typedef VelocityField<TSimType>   VelType; 
+
+         /// Does simulation required a codensity field
+         static const bool NeedCodensity = true;
+
+         /// Does simulation required a magnetic field
+         static const bool NeedMagnetic = true;
+
+         /// Does simulation required a velocity field
+         static const bool NeedVelocity = true;
    };
 
 }

@@ -19,10 +19,10 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/DynamoTraits.hpp"
+#include "Simulations/Traits/DynamoTraits.hpp"
 
-#include "IO/HDF5/StateFileReader.hpp"
-#include "IO/HDF5/CodSourceReader.hpp"
+#include "IO/HDF5/State/StateFileReader.hpp"
+#include "IO/HDF5/Codensity/CodSourceReader.hpp"
 #include "IO/HDF5/StateFileWriter.hpp"
 #include "IO/ASCII/EnergyFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
