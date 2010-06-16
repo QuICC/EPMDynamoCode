@@ -243,7 +243,6 @@ namespace EPMDynamo {
       }
 
       // Write the velocity coefficients
-      // Read velocity coefficients
       if(TSimTraits<TSimType>::NeedVelocity)
       {
          this->writeVelocity(this->mpVelV->oc().perturbation().tor().data(), this->mpVelV->oc().perturbation().pol().data());
