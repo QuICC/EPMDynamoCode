@@ -38,16 +38,12 @@ namespace EPMDynamo {
          virtual ~FFTFlatScalar() {};
 
          /**
-          * @brief No docu
-          *
-          * \todo Need documentation
+          * @brief Get the flat matrix storage
           */
          const MatrixZ&    flat() const;
 
          /**
-          * @brief No docu
-          *
-          * \todo Need documentation
+          * @brief Set the flat matrix storage
           */
          MatrixZ&    rFlat();
 
