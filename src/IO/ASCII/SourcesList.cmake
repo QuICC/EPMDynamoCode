@@ -1,0 +1,23 @@
+#
+# Create sources list
+#
+set(${SrcSubDir}_${SrcSubSubDir}_Srcs
+      ASCIIEWriter.cpp
+      ASCIIFile.cpp
+      ASCIINWriter.cpp
+      ASCIIReader.cpp
+      ASCIIRWriter.cpp 
+      ControlInterface.cpp
+      ControlInterfaceDefs.cpp
+      EnergyFileDefs.cpp
+      ParametersFileDefs.cpp
+      ParametersFile.cpp
+      SCIIWriter.cpp
+      SpectrumFileDefs.cpp
+      StdMessageDefs.cpp
+      StdMessage.cpp 
+      TimeFile.cpp
+      TimeFileDefs.cpp
+      XMLReaderDefs.cpp
+      XMLReader.cpp
+      )

@@ -87,22 +87,22 @@ namespace EPMDynamo {
           */
          std::string mExt;
 
-         /*
+         /**
           * @brief Rank of the IO core
           */
          const int mcIORank;
 
-         /*
+         /**
           * @brief Rank of the local cpu
           */
          int mRank;
 
-         /*
+         /**
           * @brief Is this a parallel version of the code?
           */
          bool mIsParallel;
 
-         /*
+         /**
           * @brief Is local cpu doing IO?
           */
          bool mDoesIO;
