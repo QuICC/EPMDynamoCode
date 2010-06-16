@@ -1,5 +1,5 @@
 /** \file SimulationTruncation.cpp
- *  This file contains the definitions of the SimulationTruncation class methods
+ *  \brief Source of the Simulation wide truncation information
  */
 
 // System includes

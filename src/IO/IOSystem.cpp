@@ -1,4 +1,5 @@
 /** \file IOSystem.cpp
+ *  \brief Source of the implementation of the IO control system
  */
 
 // System includes

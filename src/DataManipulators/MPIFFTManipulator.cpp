@@ -1,5 +1,5 @@
 /** \file MPIFFTManipulator.cpp
- *  This file contains the definitions of the MPIFFTManipulator class methods
+ *  \brief Source of the MPI FFT space data manipulator
  */
 
 // System includes

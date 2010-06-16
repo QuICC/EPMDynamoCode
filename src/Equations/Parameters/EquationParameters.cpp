@@ -1,5 +1,5 @@
 /** \file EquationParameters.cpp
- *  This file contains the definitions of the EquationParameters class methods
+ *  \brief Source of the implementation of the equation non dimensional parameters
  */
 
 // System includes

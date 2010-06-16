@@ -1,4 +1,5 @@
 /** \file ControlInterface.cpp
+ *  \brief Source of the external control interface implementation
  */
 
 // Configuration includes

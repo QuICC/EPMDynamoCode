@@ -1,4 +1,5 @@
-/** \file ParametersFile.hpp
+/** \file ParametersFile.hpp 
+ *  \brief Implementation of the parameters file reader
  */
 
 #ifndef PARAMETERSFILE_HPP
