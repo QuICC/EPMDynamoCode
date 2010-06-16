@@ -10,7 +10,7 @@
 
 // Class include
 //
-#include "IO/HDF5/SourceDefs.hpp"
+#include "IO/HDF5/Source/SourceDefs.hpp"
 
 // Project includes
 //

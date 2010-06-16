@@ -10,7 +10,7 @@
 
 // Class include
 //
-#include "IO/HDF5/StateFileDefs.hpp"
+#include "IO/HDF5/State/StateFileDefs.hpp"
 
 // Project includes
 //

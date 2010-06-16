@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "IO/HDF5/StateFileWriterBase.hpp"
+#include "IO/HDF5/State/StateFileWriterBase.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 
 namespace EPMDynamo {

@@ -12,11 +12,11 @@
 
 // Class include
 //
-#include "IO/HDF5/StateFileWriterBase.hpp"
+#include "IO/HDF5/State/StateFileWriterBase.hpp"
 
 // Project includes
 //
-#include "IO/HDF5/StateFileDefs.hpp"
+#include "IO/HDF5/State/StateFileDefs.hpp"
 
 namespace EPMDynamo {
 

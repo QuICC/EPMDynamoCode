@@ -12,16 +12,16 @@
 
 // Class include
 //
-#include "IO/HDF5/SourceReaderBase.hpp"
+#include "IO/HDF5/Source/SourceReaderBase.hpp"
 
 // Project includes
 //
-#include "IO/HDF5/SourceDefs.hpp"
+#include "IO/HDF5/Source/SourceDefs.hpp"
 
 namespace EPMDynamo {
 
-   SourceReaderBase::SourceReaderBase(std::string name, SmartSTrunc pSTrunc)
-      : SpectralHDF5Reader(SourceDefs::BASENAME + name, SourceDefs::EXTENSION, SourceDefs::HEADER, SourceDefs::VERSION, pSTrunc)
+   SourceReaderBase::SourceReaderBase(std::string name, SmartTruncation pTrunc)
+      : SpectralHDF5Reader(SourceDefs::BASENAME + name, SourceDefs::EXTENSION, SourceDefs::HEADER, SourceDefs::VERSION, pTrunc)
    {
    }
 

@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "IO/HDF5/StateFileReaderBase.hpp"
+#include "IO/HDF5/State/StateFileReaderBase.hpp"
 
 namespace EPMDynamo {
 
@@ -132,7 +132,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::VelType &codC, std::string name)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::VelType &velV, std::string name)
       : StateFileReaderBase(name, velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(velV)
    {
    }

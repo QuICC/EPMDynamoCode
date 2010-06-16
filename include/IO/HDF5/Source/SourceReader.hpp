@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "IO/HDF5/SourceReaderBase.hpp"
+#include "IO/HDF5/Source/SourceReaderBase.hpp"
 
 namespace EPMDynamo {
 
@@ -126,7 +126,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::VelType &codC, std::string name)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::VelType &velV, std::string name)
       : SourceReaderBase("vel", velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(velV)
    {
    }

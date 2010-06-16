@@ -12,16 +12,16 @@
 
 // Class include
 //
-#include "IO/HDF5/SourceWriterBase.hpp"
+#include "IO/HDF5/Source/SourceWriterBase.hpp"
 
 // Project includes
 //
-#include "IO/HDF5/SourceDefs.hpp"
+#include "IO/HDF5/Source/SourceDefs.hpp"
 
 namespace EPMDynamo {
 
-   SourceWriterBase::SourceWriterBase(std::string name, SmartSTrunc pSTrunc)
-      : SpectralHDF5NWriter(SourceDefs::BASENAME + name + "_NEW", SourceDefs::EXTENSION, SourceDefs::HEADER, SourceDefs::VERSION, pSTrunc)
+   SourceWriterBase::SourceWriterBase(std::string name, SmartTruncation pTrunc)
+      : SpectralHDF5NWriter(SourceDefs::BASENAME + name + "_NEW", SourceDefs::EXTENSION, SourceDefs::HEADER, SourceDefs::VERSION, pTrunc)
    {
    }
 
