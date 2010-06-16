@@ -65,12 +65,14 @@ namespace EPMDynamo {
       return H5T_NATIVE_DOUBLE;
    }
 
+   /// Specialised method for a complex<float>
    template <> inline hid_t HDF5TypesConv::atype<std::complex<float> >()
    {
       hsize_t dims = 2;
       return H5Tarray_create(H5T_NATIVE_FLOAT, 1, &dims);
    }
 
+   /// Specialised method for a complex<double>
    template <> inline hid_t HDF5TypesConv::atype<std::complex<double> >()
    {
       hsize_t dims = 2;

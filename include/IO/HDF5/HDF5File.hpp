@@ -30,8 +30,9 @@ namespace EPMDynamo {
          *
          * @param name File name
          * @param ext File extension
+         * @param header File header
          * @param version File version string
-         * @param flag Special hdf5 flags
+         * @param flags Special hdf5 flags
          */
          HDF5File(std::string name, std::string ext, std::string header, std::string version, const unsigned int flags);
 
