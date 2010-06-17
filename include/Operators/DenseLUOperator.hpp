@@ -1,5 +1,5 @@
 /** \file DenseLUOperator.hpp
- *  \brief Implemenation of a dense LU factorised (with full pivoting) operator
+ *  \brief Implementation of a dense LU factorised (with full pivoting) operator
  */
 
 #ifndef DENSELUOPERATOR_HPP
@@ -13,13 +13,13 @@
 
 // Project includes
 //
-#include "General/Typedefs.hpp"
+#include "General/EPMTypedefs.hpp"
 #include "Operators/DenseOperator.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implemenation of a dense LU factorised (with full pivoting) operator
+    * \brief Implementation of a dense LU factorised (with full pivoting) operator
     */
    class DenseLUOperator: public DenseOperator
    {

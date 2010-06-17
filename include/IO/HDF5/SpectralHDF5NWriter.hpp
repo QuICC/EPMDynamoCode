@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "General/Typedefs.hpp"
+#include "General/EPMTypedefs.hpp"
 #include "IO/HDF5/HDF5NWriter.hpp"
 #include "Domain/Truncation.hpp"
 

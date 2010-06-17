@@ -1,5 +1,5 @@
 /** \file RTPOperators.hpp
- *  \brief Implemenation of some RTP space computations
+ *  \brief Implementation of some RTP space computations
  */
 
 #ifndef RTPOPERATORS_HPP
@@ -23,11 +23,12 @@ namespace EPMDynamo {
    class RTPField;
 
    /**
-    * \brief Implemenation of some RTP space computations
+    * \brief Implementation of some RTP space computations
     *
     * This class provides some of the often used RTP space operations: cross product, dot product, radial projection, \f$\hat{z}\f$ cross product
     *
     * \bug Review these computations and write thoroughful tests
+    * \bug Replace multiple methods with a templated one using enum
     */
    class RTPOperators
    {
