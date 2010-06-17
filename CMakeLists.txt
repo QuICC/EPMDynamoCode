@@ -533,9 +533,22 @@ add_custom_target(cleanCodeDoc
 #
 # Generate Source file list
 #
-set(SrcSubDirs BoundaryConditions DataManipulators Domain Equations
-      General GeneralFields GeneralScalars GridGenerators IO Operators Parallelisers PhysicalFields
-      Polynomials Simulations Timestepping Transforms)
+set(SrcSubDirs
+      BoundaryConditions
+      DataManipulators
+      Domain
+      Equations
+      General
+      GeneralFields
+      GeneralScalars
+      GridGenerators
+      IO
+      Operators
+      Parallelisers
+      Polynomials
+      Simulations
+      Timestepping
+      Transforms)
 
 foreach(SrcSubDir ${SrcSubDirs})
    set(SrcSubDirPath ${SrcDir}/${SrcSubDir})
