@@ -161,7 +161,7 @@ namespace EPMDynamo {
       this->createBaseGroup();
 
       // Write real space grid to file
-      this->writeGrid(this->mpSTrunc->sim()->rad()->radGrid(), this->mpSTrunc->sim()->hoz()->thGrid(), this->mpSTrunc->sim()->hoz()->phGrid());
+      this->writeGrid(this->mpTrunc->sim()->rad()->radGrid(), this->mpTrunc->sim()->hoz()->thGrid(), this->mpTrunc->sim()->hoz()->phGrid());
 
       // Write the codensity real space values
       if(this->mpCodC != NULL)
