@@ -17,11 +17,11 @@
 
 namespace EPMDynamo {
 
-   FFTransformBase::FFTransformBase(SmartSTrunc pSTrunc)
-      : mSize(pSTrunc->sim()->hoz()->nPh()), mZRow(mSize/2 + 1), mHowmany(0), mReSize(0), mZSize(0), mScale(1.0)
+   FFTransformBase::FFTransformBase(SmartTruncation pTrunc)
+      : mSize(pTrunc->sim()->hoz()->nPh()), mZRow(mSize/2 + 1), mHowmany(0), mReSize(0), mZSize(0), mScale(1.0)
    {
       // Get size of transforms
-      this->mHowmany = (pSTrunc->local()->rtp()->nThArray().sum());
+      this->mHowmany = (pTrunc->local()->rtp()->nThArray().sum());
 
       // Init size array
       this->initSizes();
