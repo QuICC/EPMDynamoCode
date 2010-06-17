@@ -1,0 +1,62 @@
+/** \file CSCSFileTools.hpp
+ *  \brief Implementation of some tools required to create de CSCS visualisation output format
+ */
+
+#ifndef CSCSFILETOOLS_HPP
+#define CSCSFILETOOLS_HPP
+
+// System includes
+//
+#include <vector>
+
+// External includes
+//
+
+// Project includes
+//
+#include "General/EPMTypedefs.hpp"
+
+namespace EPMDynamo {
+
+   /**
+    * @brief Some tools to create the CSCS output file
+    *
+    * \bug The fields are not corrected at poles and origin
+    */
+   class CSCSFileTools
+   {
+      public:
+         /**
+          * @brief Adapt phi grid to CSCS output
+          *
+          * @param corrected Corrected phi grid values
+          * @param phi Input phi grid
+          */
+         static void padPhiGrid(Array &corrected, const Array &phi);
+
+         /**
+          * @brief Adapt RTP field to CSCS output
+          *
+          * @param corrected Corrected RTP field
+          * @param field Input field
+          * @param totNth Total number of theta points
+          * @param th0 Array of start index of theta points
+          * @param nTh Array of number of theta points
+          */
+         static void padRTPField(std::vector<Matrix> &corrected, const std::vector<Matrix> &field, const int totNth, const ArrayI &th0, const ArrayI &nTh);
+
+         /**
+         * @brief Destructor
+         */
+         virtual ~CSCSFileTools() {};
+
+      private:
+         /**
+         * @brief Empty destructor
+         */
+         CSCSFileTools();
+   };
+
+}
+
+#endif // CSCSFILETOOLS_HPP
