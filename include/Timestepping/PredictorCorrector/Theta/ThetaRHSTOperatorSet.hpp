@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 
 namespace EPMDynamo {
@@ -43,7 +43,7 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param pTrunc Truncation information
           */
-         ThetaRHSTOperatorSet(DynamoFloat a, DynamoFloat b, const BasisType &basis, SmartTruncation pTrunc);
+         ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
@@ -55,25 +55,25 @@ namespace EPMDynamo {
           *
           * @param dt   New timestep value
           */
-         virtual void update(DynamoFloat dt);
+         virtual void update(EPMFloat dt);
          
       protected:
 
       private:
    };
 
-   template <typename TSimType> ThetaRHSTOperatorSet<TSimType>::ThetaRHSTOperatorSet(DynamoFloat a, DynamoFloat b, const typename ThetaRHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc)
+   template <typename TSimType> ThetaRHSTOperatorSet<TSimType>::ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaRHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc)
       : ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::OperatorType>(a, b, basis, pTrunc)
    {
    }
 
-   template <typename TSimType> inline void ThetaRHSTOperatorSet<TSimType>::update(const DynamoFloat dt)
+   template <typename TSimType> inline void ThetaRHSTOperatorSet<TSimType>::update(const EPMFloat dt)
    {
       // Set multiplicative factor for Laplacian
-      DynamoFloat factor = this->mB*(1.0-this->mTheta);
+      EPMFloat factor = this->mB*(1.0-this->mTheta);
 
       // Set multiplicative factor for time matrix
-      DynamoFloat timeDiff = this->mA/dt;
+      EPMFloat timeDiff = this->mA/dt;
 
       // Update stored operators
       this->updateOperators(factor, timeDiff);

@@ -101,33 +101,33 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : SourceReaderBase("full", codC.trunc()), mpCodC(codC), mpMagB(magB), mpVelV(velV)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
+      : SourceReaderBase("full", codC.trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : SourceReaderBase("codVel", codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(velV)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV)
+      : SourceReaderBase("codVel", codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : SourceReaderBase("magVel", codC.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(velV)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
+      : SourceReaderBase("magVel", magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::CodType &codC, std::string name)
-      : SourceReaderBase("cod", codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(NULL)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::CodType &codC)
+      : SourceReaderBase("cod", codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::MagType &magB, std::string name)
-      : SourceReaderBase("mag", magB.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(NULL)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::MagType &magB)
+      : SourceReaderBase("mag", magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : SourceReaderBase("vel", velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(velV)
+   template <typename TSimType, template <typename> class TSimTraits> SourceReader<TSimType, TSimTraits>::SourceReader(typename TSimTraits<TSimType>::VelType &velV)
+      : SourceReaderBase("vel", velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
    {
    }
 

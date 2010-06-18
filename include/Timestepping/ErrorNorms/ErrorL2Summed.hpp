@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -33,7 +33,7 @@ namespace EPMDynamo {
           *
           * @param rVar Input variable
           */
-         static DynamoFloat computeNorm(const ScalarType& rVar);
+         static EPMFloat computeNorm(const ScalarType& rVar);
 
          /**
           * @brief Add new to old value
@@ -41,7 +41,7 @@ namespace EPMDynamo {
           * @param newNorm New error norm value
           * @param oldNorm Old error norm value
           */
-         static DynamoFloat updateNorm(const DynamoFloat newNorm, const DynamoFloat oldNorm);
+         static EPMFloat updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm);
 
       protected:
 
@@ -57,13 +57,13 @@ namespace EPMDynamo {
          virtual ~ErrorL2Summed() {};
    };
 
-   template <typename TSimType> inline DynamoFloat ErrorL2Summed<TSimType>::computeNorm(const typename ErrorL2Summed<TSimType>::ScalarType& rVar)
+   template <typename TSimType> inline EPMFloat ErrorL2Summed<TSimType>::computeNorm(const typename ErrorL2Summed<TSimType>::ScalarType& rVar)
    {
       //return rVar.l2Norm();
       return rVar.modalL2Norm();
    }
 
-   template <typename TSimType> inline DynamoFloat ErrorL2Summed<TSimType>::updateNorm(const DynamoFloat newNorm, const DynamoFloat oldNorm)
+   template <typename TSimType> inline EPMFloat ErrorL2Summed<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return newNorm + oldNorm;
    }

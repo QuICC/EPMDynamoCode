@@ -38,12 +38,12 @@ namespace EPMDynamo {
          /**
           * @brief Maximum timestep autorised by stability
           */
-         static const DynamoFloat MAX_CORRECTOR_TSTEP;
+         static const EPMFloat MAX_CORRECTOR_TSTEP;
 
          /**
           * @brief Maximum corrector norm value
           */
-         static const DynamoFloat MAX_CORRECTION_NORM;
+         static const EPMFloat MAX_CORRECTION_NORM;
 
          /**
           * @brief Use the last corrector correction as error diagnostic

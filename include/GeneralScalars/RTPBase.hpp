@@ -63,7 +63,7 @@ namespace EPMDynamo {
           *
           * @param n Radial index
           */
-         DynamoFloat radGrid(const int n) const;
+         EPMFloat radGrid(const int n) const;
 
          /**
           * @brief Array of radial grid points
@@ -76,7 +76,7 @@ namespace EPMDynamo {
           * @param j Theta index
           * @param n Radial index
           */
-         DynamoFloat cTh(const int j, const int n) const;
+         EPMFloat cTh(const int j, const int n) const;
 
          /**
           * @brief Get array of sin(theta) values
@@ -84,7 +84,7 @@ namespace EPMDynamo {
           * @param j Theta index
           * @param n Radial index
           */
-         DynamoFloat sTh(const int j, const int n) const;
+         EPMFloat sTh(const int j, const int n) const;
 
          /**
           * @brief Get the Spectral Truncation pointer
@@ -115,7 +115,7 @@ namespace EPMDynamo {
       return this->mpTrunc->sim()->hoz()->nPh();
    }
 
-   inline DynamoFloat RTPBase::radGrid(const int n) const
+   inline EPMFloat RTPBase::radGrid(const int n) const
    {
       return this->mpTrunc->local()->rtp()->radGrid(n);
    }
@@ -125,12 +125,12 @@ namespace EPMDynamo {
       return this->mpTrunc->local()->rtp()->radGrid();
    }
 
-   inline DynamoFloat RTPBase::cTh(const int j, const int n) const
+   inline EPMFloat RTPBase::cTh(const int j, const int n) const
    {
       return this->mpTrunc->local()->rtp()->cTh(j, n);
    }
 
-   inline DynamoFloat RTPBase::sTh(const int j, const int n) const
+   inline EPMFloat RTPBase::sTh(const int j, const int n) const
    {
       return this->mpTrunc->local()->rtp()->sTh(j, n);
    }

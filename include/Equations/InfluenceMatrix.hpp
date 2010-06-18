@@ -16,7 +16,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 #include "Operators/LaplacianBOperatorSet.hpp"
 
@@ -136,7 +136,7 @@ namespace EPMDynamo {
 
    template <typename TSimType> inline void InfluenceMatrix<TSimType>::storeSolution(const Array& sol, const int l)
    {
-      DynamoFloat bcVal = this->mrBasis.at(l).bpoly().dot(sol);
+      EPMFloat bcVal = this->mrBasis.at(l).bpoly().dot(sol);
 
       this->mSolutions.at(l) = sol/bcVal;
    }
@@ -149,7 +149,7 @@ namespace EPMDynamo {
 
       for(int l = l0; l < nL; ++l)
       {
-         DynamoComplex bcVal;
+         EPMComplex bcVal;
 
          for(int m =0; m <this->trunc()->local()->spec()->nM(l) ; ++m)
          {

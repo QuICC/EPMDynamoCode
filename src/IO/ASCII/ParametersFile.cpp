@@ -123,7 +123,7 @@ namespace EPMDynamo {
 
             this->readValue(this->mTruncArray(3), node, ParametersFileDefs::TRUNCMPXML);
 
-            this->readValue(mthis->TruncArray(4), node, ParametersFileDefs::TRUNCNCOREXML);
+            this->readValue(this->mTruncArray(4), node, ParametersFileDefs::TRUNCNCOREXML);
          } else
          {
             throw EPMException("ParametersFile::readTruncation", "Couldn't find tag!");

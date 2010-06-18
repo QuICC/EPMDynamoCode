@@ -15,7 +15,7 @@
 //
 #include "Domain/Truncation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 
 namespace EPMDynamo {
@@ -46,7 +46,7 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
           */
-         PCScheme(DynamoFloat a, DynamoFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         PCScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
@@ -68,7 +68,7 @@ namespace EPMDynamo {
           *
           * \bug Implicitness implementation and handling has to be cleaned!!
           */
-         void setTheta(DynamoFloat theta);
+         void setTheta(EPMFloat theta);
          
       protected:
          /**
@@ -107,12 +107,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TMethod> PCScheme<TSimType, TMethod>::PCScheme(DynamoFloat a, DynamoFloat b, const typename PCScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+   template <typename TSimType, template <typename> class TMethod> PCScheme<TSimType, TMethod>::PCScheme(EPMFloat a, EPMFloat b, const typename PCScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : TMethod<TSimType>(a, b, basis, tsteps, pTrunc), mTimeDiff(pTrunc) 
    {
    }
 
-   template <typename TSimType, template <typename> class TMethod> void PCScheme<TSimType, TMethod>::setTheta(DynamoFloat theta)
+   template <typename TSimType, template <typename> class TMethod> void PCScheme<TSimType, TMethod>::setTheta(EPMFloat theta)
    {
       // Set theta parameter in LHS operators
       this->mLHS.setTheta(theta);
@@ -128,9 +128,9 @@ namespace EPMDynamo {
       // Get minimu harmonic degrees
       const int l0 = this->oldNTerms().minL();
 
-      DynamoFloat err = 0.0;
-      DynamoFloat err2 = 0.0;
-      DynamoFloat dt = this->mrTStepParams.dt();
+      EPMFloat err = 0.0;
+      EPMFloat err2 = 0.0;
+      EPMFloat dt = this->mrTStepParams.dt();
 
       // Loop over degrees
       for(int l = l0; l < nL; ++l)

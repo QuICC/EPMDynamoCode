@@ -134,21 +134,21 @@ namespace EPMDynamo {
           *
           * @param n get Nth coefficient
           */
-         virtual DynamoFloat recurrenceA(const int n) const = 0;
+         virtual EPMFloat recurrenceA(const int n) const = 0;
 
          /**
           * @brief get the recurrence coefficient \f$b_n\f$
           *
           * @param n get Nth coefficient
           */
-         virtual DynamoFloat recurrenceB(const int n) const = 0;
+         virtual EPMFloat recurrenceB(const int n) const = 0;
 
          /**
           * @brief get the recurrence coefficient \f$c_n\f$
           *
           * @param n get Nth coefficient
           */
-         virtual DynamoFloat recurrenceC(const int n) const = 0;
+         virtual EPMFloat recurrenceC(const int n) const = 0;
 
          /**
           * @brief Set the grid points

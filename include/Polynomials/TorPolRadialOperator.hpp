@@ -95,18 +95,18 @@ namespace EPMDynamo {
           * @brief Get the integration operator from a QST T component to the Toroidal
           *          component
           */
-         const PolynomialOperator<CPOperator<DynamoFloat> >&  intgT2Tor() const;
+         const PolynomialOperator<CPOperator<EPMFloat> >&  intgT2Tor() const;
 
          /**
           * @brief Get the integration operator from a QST Q component to the Poloidal
           *          component
           */
-         const PolynomialOperator<CLPOperator<DynamoFloat> >&  intgQ2Pol() const;
+         const PolynomialOperator<CLPOperator<EPMFloat> >&  intgQ2Pol() const;
          
          /**
           * @brief Get the integration operator for the Curl projection
           */
-         const PolynomialOperator<CPOperator<DynamoFloat> >&  intgT2CurlProj() const;
+         const PolynomialOperator<CPOperator<EPMFloat> >&  intgT2CurlProj() const;
          
          /**
           * @brief Get the integration operator for the CurlCurl projection
@@ -149,37 +149,37 @@ namespace EPMDynamo {
           * @brief Get the projection operator from a Toroidal component to the Q
           * component of the curl
           */
-         const PolynomialOperator<CRPOperator<DynamoFloat> >&  projTor2CurlQ() const;
+         const PolynomialOperator<CRPOperator<EPMFloat> >&  projTor2CurlQ() const;
 
          /**
           * @brief Get the projection operator from a Toroidal component to the S
           * component of the curl
           */
-         const PolynomialOperator<CPOperator<DynamoFloat> >&  projTor2CurlS() const;
+         const PolynomialOperator<CPOperator<EPMFloat> >&  projTor2CurlS() const;
 
          /**
           * @brief Get the projection operator from a Poloidal component to the T
           * component of the curl
           */
-         const PolynomialOperator<CPOperator<DynamoFloat> >&  projPol2CurlT() const;
+         const PolynomialOperator<CPOperator<EPMFloat> >&  projPol2CurlT() const;
 
          /**
           * @brief Get the projection operator from the Poloidal component to the QST Q 
           *          component
           */
-         const PolynomialOperator<CRPOperator<DynamoFloat> >&  projPol2Q() const;
+         const PolynomialOperator<CRPOperator<EPMFloat> >&  projPol2Q() const;
 
          /**
           * @brief Get the projection operator from the Poloidal component to the QST S 
           *          component
           */
-         const PolynomialOperator<CPOperator<DynamoFloat> >&  projPol2S() const;
+         const PolynomialOperator<CPOperator<EPMFloat> >&  projPol2S() const;
 
          /**
           * @brief Get the projection operator from the Toroidal component to the QST T 
           *          component
           */
-         const PolynomialOperator<CPOperator<DynamoFloat> >&  projTor2T() const;
+         const PolynomialOperator<CPOperator<EPMFloat> >&  projTor2T() const;
 
          //
          // Spectral space operators
@@ -293,17 +293,17 @@ namespace EPMDynamo {
       return *this->mpIntg;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::intgT2Tor() const
+   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::intgT2Tor() const
    {
       return *this->mpIntgT2Tor;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CLPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::intgQ2Pol() const
+   template <typename TPolynomial> inline const PolynomialOperator<CLPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::intgQ2Pol() const
    {
       return *this->mpIntgQ2Pol;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::intgT2CurlProj() const
+   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::intgT2CurlProj() const
    {
       return *this->mpIntgT2CurlProj;
    }
@@ -342,32 +342,32 @@ namespace EPMDynamo {
       return *this->mpProj2GradTP;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CRPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::projTor2CurlQ() const
+   template <typename TPolynomial> inline const PolynomialOperator<CRPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::projTor2CurlQ() const
    {
       return *this->mpProjTor2CurlQ;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::projTor2CurlS() const
+   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::projTor2CurlS() const
    {
       return *this->mpProjTor2CurlS;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::projPol2CurlT() const
+   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::projPol2CurlT() const
    {
       return *this->mpProjPol2CurlT;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CRPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::projPol2Q() const
+   template <typename TPolynomial> inline const PolynomialOperator<CRPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::projPol2Q() const
    {
       return *this->mpProjPol2Q;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::projPol2S() const
+   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::projPol2S() const
    {
       return *this->mpProjPol2S;
    }
 
-   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<DynamoFloat> >& TorPolRadialOperator<TPolynomial>::projTor2T() const
+   template <typename TPolynomial> inline const PolynomialOperator<CPOperator<EPMFloat> >& TorPolRadialOperator<TPolynomial>::projTor2T() const
    {
       return *this->mpProjTor2T;
    }
@@ -425,13 +425,13 @@ namespace EPMDynamo {
       this->mpIntg = SmartPOp(new PolynomialOperator<POperator>(this->wPoly()));
 
       //
-      this->mpIntgT2Tor = SmartDPOp(new PolynomialOperator<CPOperator<DynamoFloat> >(-this->sll_1(), this->wPoly()));
+      this->mpIntgT2Tor = SmartDPOp(new PolynomialOperator<CPOperator<EPMFloat> >(-this->sll_1(), this->wPoly()));
 
       //
-      this->mpIntgQ2Pol = SmartDLPOp(new PolynomialOperator<CLPOperator<DynamoFloat> >(this->ll_1(), this->grid(), this->wPoly()));
+      this->mpIntgQ2Pol = SmartDLPOp(new PolynomialOperator<CLPOperator<EPMFloat> >(this->ll_1(), this->grid(), this->wPoly()));
 
       //
-      this->mpIntgT2CurlProj = SmartDPOp(new PolynomialOperator<CPOperator<DynamoFloat> >(-this->sll_1(), this->wPoly()));
+      this->mpIntgT2CurlProj = SmartDPOp(new PolynomialOperator<CPOperator<EPMFloat> >(-this->sll_1(), this->wPoly()));
 
       //
       this->mpIntgQ2CurlCurlProj = SmartLPOp(new PolynomialOperator<LPOperator>(this->mR_1, this->wPoly()));
@@ -452,22 +452,22 @@ namespace EPMDynamo {
       this->mpProj2GradTP = SmartRPOp(new PolynomialOperator<RPOperator>(this->mR_1, this->poly()));
 
       //
-      this->mpProjTor2CurlQ = SmartDRPOp(new PolynomialOperator<CRPOperator<DynamoFloat> >(this->ll(), this->mR_1, this->poly()));
+      this->mpProjTor2CurlQ = SmartDRPOp(new PolynomialOperator<CRPOperator<EPMFloat> >(this->ll(), this->mR_1, this->poly()));
 
       //
-      this->mpProjTor2CurlS = SmartDPOp(new PolynomialOperator<CPOperator<DynamoFloat> >(this->sll(), this->mR_1DRPoly));
+      this->mpProjTor2CurlS = SmartDPOp(new PolynomialOperator<CPOperator<EPMFloat> >(this->sll(), this->mR_1DRPoly));
 
       //
-      this->mpProjPol2CurlT = SmartDPOp(new PolynomialOperator<CPOperator<DynamoFloat> >(this->sll(), this->mLaplacianProj));
+      this->mpProjPol2CurlT = SmartDPOp(new PolynomialOperator<CPOperator<EPMFloat> >(this->sll(), this->mLaplacianProj));
 
       //
-      this->mpProjPol2Q = SmartDRPOp(new PolynomialOperator<CRPOperator<DynamoFloat> >(this->ll(), this->mR_1, this->poly()));
+      this->mpProjPol2Q = SmartDRPOp(new PolynomialOperator<CRPOperator<EPMFloat> >(this->ll(), this->mR_1, this->poly()));
 
       //
-      this->mpProjPol2S = SmartDPOp(new PolynomialOperator<CPOperator<DynamoFloat> >(this->sll(), this->mR_1DRPoly));
+      this->mpProjPol2S = SmartDPOp(new PolynomialOperator<CPOperator<EPMFloat> >(this->sll(), this->mR_1DRPoly));
 
       //
-      this->mpProjTor2T = SmartDPOp(new PolynomialOperator<CPOperator<DynamoFloat> >(-this->sll(), this->poly()));
+      this->mpProjTor2T = SmartDPOp(new PolynomialOperator<CPOperator<EPMFloat> >(-this->sll(), this->poly()));
 
       //
       this->mpSpecLaplacian = SmartPOp(new PolynomialOperator<POperator>(this->mLaplacianSpec));

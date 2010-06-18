@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "General/Typedefs.hpp"
-#include "Domain/SpectralTruncation.hpp"
+#include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
 

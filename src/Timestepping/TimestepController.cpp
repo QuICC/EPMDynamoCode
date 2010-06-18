@@ -18,7 +18,7 @@
 
 namespace EPMDynamo {
 
-   TimestepController::TimestepController(DynamoFloat beta1, DynamoFloat beta2, DynamoFloat alpha, TimestepParameters &params)
+   TimestepController::TimestepController(EPMFloat beta1, EPMFloat beta2, EPMFloat alpha, TimestepParameters &params)
       : mControllerBeta1(beta1), mControllerBeta2(beta2), mControllerAlpha(alpha), mrParams(params)
    {
    }
@@ -41,17 +41,17 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat TimestepController::nextTimestep(DynamoFloat errn, DynamoFloat errn_1)
+   EPMFloat TimestepController::nextTimestep(EPMFloat errn, EPMFloat errn_1)
    {
       // Include multiplicative for tolerance
-      DynamoFloat epsilon = TimestepConfig::TIMESTEP_ERROR_EPSILON;
+      EPMFloat epsilon = TimestepConfig::TIMESTEP_ERROR_EPSILON;
 
       // Get previous timestep
-      DynamoFloat hn_1 = this->mrParams.oldDt();
+      EPMFloat hn_1 = this->mrParams.oldDt();
       // Get current timestep
-      DynamoFloat hn = this->mrParams.dt();
+      EPMFloat hn = this->mrParams.dt();
       // Storage for new timestep
-      DynamoFloat hn1 = hn;
+      EPMFloat hn1 = hn;
 
       // Compute new step with first order controller
       hn1 *= std::pow(epsilon/errn, this->mControllerBeta1)*std::pow(epsilon/errn_1, this->mControllerBeta2)*std::pow(hn/hn_1, -this->mControllerAlpha);
@@ -59,7 +59,7 @@ namespace EPMDynamo {
       return hn1;
    }
 
-   void TimestepController::setControllerParameters(DynamoFloat kb1, DynamoFloat kb2, DynamoFloat a, int k)
+   void TimestepController::setControllerParameters(EPMFloat kb1, EPMFloat kb2, EPMFloat a, int k)
    {
       // Set beta_1 parameter
       this->mControllerBeta1 = kb1/static_cast<double>(k);
@@ -86,22 +86,22 @@ namespace EPMDynamo {
       this->setControllerParameters(H211B_KBETA1, H211B_KBETA2, H211B_ALPHA, k);
    }
 
-   const DynamoFloat TimestepController::ELEMENTARY_KBETA1 = 1.0;
+   const EPMFloat TimestepController::ELEMENTARY_KBETA1 = 1.0;
 
-   const DynamoFloat TimestepController::ELEMENTARY_KBETA2 = 0.0;
+   const EPMFloat TimestepController::ELEMENTARY_KBETA2 = 0.0;
 
-   const DynamoFloat TimestepController::ELEMENTARY_ALPHA = 0.0;
+   const EPMFloat TimestepController::ELEMENTARY_ALPHA = 0.0;
 
-   const DynamoFloat TimestepController::PI42_KBETA1 = 3.0/5.0;
+   const EPMFloat TimestepController::PI42_KBETA1 = 3.0/5.0;
 
-   const DynamoFloat TimestepController::PI42_KBETA2 = -1.0/5.0;
+   const EPMFloat TimestepController::PI42_KBETA2 = -1.0/5.0;
 
-   const DynamoFloat TimestepController::PI42_ALPHA = 0.0;
+   const EPMFloat TimestepController::PI42_ALPHA = 0.0;
 
-   const DynamoFloat TimestepController::H211B_KBETA1 = 1.0/4.0;
+   const EPMFloat TimestepController::H211B_KBETA1 = 1.0/4.0;
 
-   const DynamoFloat TimestepController::H211B_KBETA2 = 1.0/4.0;
+   const EPMFloat TimestepController::H211B_KBETA2 = 1.0/4.0;
 
-   const DynamoFloat TimestepController::H211B_ALPHA = 1.0/4.0;
+   const EPMFloat TimestepController::H211B_ALPHA = 1.0/4.0;
 
 }

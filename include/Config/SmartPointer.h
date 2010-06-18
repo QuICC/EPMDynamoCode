@@ -15,7 +15,7 @@
  * Macro allowing to use different implementations of the shared_ptr smart pointer.
  * Sets up the Boost version.
  */
-   #define EPMSHARED_PTR boost::shared_ptr;
+   #define EPMSHARED_PTR boost::shared_ptr
 #endif //EPMDYNAMO_BOOST_SMARTPTR
 
 // TR1 Version
@@ -26,7 +26,7 @@
  * Macro allowing to use different implementations of the shared_ptr smart pointer.
  * Sets up the TR1 version.
  */
-   #define EPMSHARED_PTR std::tr1::shared_ptr;
+   #define EPMSHARED_PTR std::tr1::shared_ptr
 #endif //EPMDYNAMO_TR1_SMARTPTR
 
 // C++0x Version
@@ -37,7 +37,7 @@
  * Macro allowing to use different implementations of the shared_ptr smart pointer.
  * Sets up the C++0x version.
  */
-   #define EPMSHARED_PTR std::shared_ptr;
+   #define EPMSHARED_PTR std::shared_ptr
 #endif //EPMDYNAMO_CXX0X_SMARTPTR
 
 #endif // SMARTPOINTER_H

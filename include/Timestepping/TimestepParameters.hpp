@@ -7,7 +7,7 @@
 
 // Configuration includes
 //
-@include "Config/SmartPointer.h"
+#include "Config/SmartPointer.h"
 
 // System includes
 //
@@ -36,7 +36,7 @@ namespace EPMDynamo {
           * @param time Current time
           * @param timestep Timestep length
           */
-         TimestepParameters(DynamoFloat time, DynamoFloat timestep);
+         TimestepParameters(EPMFloat time, EPMFloat timestep);
 
          /**
           * @brief Constructor
@@ -61,17 +61,17 @@ namespace EPMDynamo {
          /**
           * @brief Get the timestep value
           */
-         DynamoFloat dt() const;
+         EPMFloat dt() const;
 
          /**
           * @brief Get the previous timestep value
           */
-         DynamoFloat oldDt() const;
+         EPMFloat oldDt() const;
 
          /**
           * @brief Get the time value
           */
-         DynamoFloat time() const;
+         EPMFloat time() const;
 
          /**
           * @brief Set the timestep rejection status
@@ -93,7 +93,7 @@ namespace EPMDynamo {
           *
           * @param dt New timestep length
           */
-         void updateTimestep(DynamoFloat dt);
+         void updateTimestep(EPMFloat dt);
 
          /**
           * @brief Update time
@@ -105,7 +105,7 @@ namespace EPMDynamo {
           *
           * @param time Set time
           */
-         void setTime(const DynamoFloat time);
+         void setTime(const EPMFloat time);
 
          /**
           * @brief Print some information about run
@@ -118,7 +118,7 @@ namespace EPMDynamo {
           * @param order Order of the derivative
           * @param err New value of the error
           */
-         void updateDtError(const int order, DynamoFloat err);
+         void updateDtError(const int order, EPMFloat err);
 
          /**
           * @brief Reset the time derivative truncation error
@@ -132,19 +132,19 @@ namespace EPMDynamo {
           *
           * @param order Order of the derivative
           */
-         DynamoFloat dtError(const int order) const;
+         EPMFloat dtError(const int order) const;
 
          /**
           * @brief Get current global error value
           */
-         DynamoFloat error() const;
+         EPMFloat error() const;
 
          /**
           * @brief Update global error
           *
           * @param err New error
           */
-         void updateError(DynamoFloat err);
+         void updateError(EPMFloat err);
 
          /**
           * @brief Reset error to zero
@@ -173,22 +173,22 @@ namespace EPMDynamo {
          /**
           * @brief Simulation time
           */
-         DynamoFloat   mTime;
+         EPMFloat   mTime;
 
          /**
           * @brief Length of the timestep
           */
-         DynamoFloat   mTimestep;
+         EPMFloat   mTimestep;
 
          /**
           * @brief Length of the timestep
           */
-         DynamoFloat   mOldTimestep;
+         EPMFloat   mOldTimestep;
 
          /**
           * @brief Storage for general timestep error
           */
-         DynamoFloat mError;
+         EPMFloat mError;
 
          /**
           * @brief Store for the derivative truncation error
@@ -231,17 +231,17 @@ namespace EPMDynamo {
       this->mIsRejected = false;
    }
 
-   inline DynamoFloat TimestepParameters::time() const
+   inline EPMFloat TimestepParameters::time() const
    {
       return this->mTime;
    }
 
-   inline DynamoFloat TimestepParameters::dt() const
+   inline EPMFloat TimestepParameters::dt() const
    {
       return this->mTimestep;
    }
 
-   inline DynamoFloat TimestepParameters::oldDt() const
+   inline EPMFloat TimestepParameters::oldDt() const
    {
       return this->mOldTimestep;
    }
@@ -251,17 +251,17 @@ namespace EPMDynamo {
       this->mTime += this->mTimestep;
    }
 
-   inline void TimestepParameters::setTime(const DynamoFloat time)
+   inline void TimestepParameters::setTime(const EPMFloat time)
    {
       this->mTime = time;
    }
 
-   inline DynamoFloat TimestepParameters::error() const
+   inline EPMFloat TimestepParameters::error() const
    {
       return this->mError;
    }
 
-   inline DynamoFloat TimestepParameters::dtError(const int order) const
+   inline EPMFloat TimestepParameters::dtError(const int order) const
    {
       return this->mDtError(order-1);
    }

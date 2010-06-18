@@ -153,7 +153,7 @@ namespace EPMDynamo {
 
       Matrix   tmp(this->polyN(), ptsN);
 
-      DynamoFloat lfactor = static_cast<DynamoFloat>(this->l()*(this->l()+1));
+      EPMFloat lfactor = static_cast<EPMFloat>(this->l()*(this->l()+1));
       for(int n=0; n < this->polyN(); ++n)
       {
          for(int i=0; i < this->polyN(); ++i)

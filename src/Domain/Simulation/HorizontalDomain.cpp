@@ -27,8 +27,8 @@ namespace EPMDynamo {
 
    void HorizontalDomain::initPhiGrid()
    {
-      DynamoFloat dPh = 2.0*MathConstants::PI/static_cast<DynamoFloat>(this->mp());
-      dPh /= static_cast<DynamoFloat>(this->nPh());
+      EPMFloat dPh = 2.0*MathConstants::PI/static_cast<EPMFloat>(this->mp());
+      dPh /= static_cast<EPMFloat>(this->nPh());
 
       for(int i=0; i < this->mpPhGrid->size(); ++i)
       {

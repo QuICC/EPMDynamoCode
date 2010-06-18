@@ -38,7 +38,7 @@ namespace EPMDynamo {
          * \param Ra Rayleigh number
          * \param Ro Rossby number
          */
-         EquationParameters(DynamoFloat E, DynamoFloat q, DynamoFloat Ra, DynamoFloat Ro);
+         EquationParameters(EPMFloat E, EPMFloat q, EPMFloat Ra, EPMFloat Ro);
 
          /**
          * @brief Constructor
@@ -55,22 +55,22 @@ namespace EPMDynamo {
          /**
           * @brief Get the Rosby number
           */
-         DynamoFloat Ro() const; 
+         EPMFloat Ro() const; 
 
          /**
           * @brief Get the Ekman number
           */
-         DynamoFloat E() const;
+         EPMFloat E() const;
 
          /**
           * @brief Get the q number
           */
-         DynamoFloat q() const;
+         EPMFloat q() const;
 
          /**
           * @brief Get the Rayleigh number
           */
-         DynamoFloat Ra() const;
+         EPMFloat Ra() const;
          
       protected:
 
@@ -79,40 +79,40 @@ namespace EPMDynamo {
          /**
           * @brief The Ekman number
           */
-         DynamoFloat mE;
+         EPMFloat mE;
 
          /**
           * @brief The Roberts q number
           */
-         DynamoFloat mQ;
+         EPMFloat mQ;
 
          /**
           * @brief The Rayleigh number
           */
-         DynamoFloat mRa;
+         EPMFloat mRa;
 
          /**
           * @brief The Rosby number
           */
-         DynamoFloat mRo;
+         EPMFloat mRo;
    };
 
-   inline DynamoFloat EquationParameters::Ro() const
+   inline EPMFloat EquationParameters::Ro() const
    {
       return this->mRo;
    }
 
-   inline DynamoFloat EquationParameters::E() const
+   inline EPMFloat EquationParameters::E() const
    {
       return this->mE;
    }
 
-   inline DynamoFloat EquationParameters::q() const
+   inline EPMFloat EquationParameters::q() const
    {
       return this->mQ;
    }
 
-   inline DynamoFloat EquationParameters::Ra() const
+   inline EPMFloat EquationParameters::Ra() const
    {
       return this->mRa;
    }

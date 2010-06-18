@@ -77,7 +77,7 @@ namespace EPMDynamo {
    {
       // Set data type correctly
       HDF5TypesConv  genType;
-      hid_t type = genType.ptype<DynamoFloat>();
+      hid_t type = genType.ptype<EPMFloat>();
 
       // Compute size of the dataspace
       hsize_t dims = inArray.size();
@@ -117,7 +117,7 @@ namespace EPMDynamo {
 
       // Set data type correctly
       HDF5TypesConv  genType;
-      hid_t type = genType.ptype<DynamoFloat>();
+      hid_t type = genType.ptype<EPMFloat>();
 
       // Compute size of the dataspace
       hsize_t iDims[2];
@@ -196,7 +196,7 @@ namespace EPMDynamo {
 
       // Set data type correctly
       HDF5TypesConv  genType;
-      hid_t type = genType.atype<DynamoComplex>();
+      hid_t type = genType.atype<EPMComplex>();
 
       // Compute size of the dataspace
       hsize_t iDims[2];

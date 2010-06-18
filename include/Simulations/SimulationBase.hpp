@@ -16,6 +16,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
+#include "Equations/Parameters/EquationParameters.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControl.hpp"
 #include "IO/IOSystem.hpp"
@@ -32,9 +33,6 @@ namespace EPMDynamo {
       public:
          /// Typedef for the transform type
          typedef  typename SimulationTraits<TSimType>::TransformType  TransformType;
-
-         /// Typedef for the equation parameters type
-         typedef  typename TSimType::EqParamsType   EqParamsType;
 
          /**
           * @brief Simple empty destructor
@@ -65,7 +63,7 @@ namespace EPMDynamo {
          /**
           * @brief Equation parameters
           */
-         EqParamsType   mEqParams;
+         EquationParameters   mEqParams;
 
          /**
           * @brief SimulationBase control
@@ -198,7 +196,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
-      : mIOSys(), mpTrunc(TSim::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0)
+      : mIOSys(), mpTrunc(TSimType::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0)
    {
       // Finish initialisation of the truncation object by setting the physical grid values
       this->mTransform.initRTPDomains(this->mpTrunc);

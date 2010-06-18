@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 

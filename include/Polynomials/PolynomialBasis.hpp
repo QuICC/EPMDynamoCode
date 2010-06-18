@@ -78,7 +78,7 @@ namespace EPMDynamo {
           *
           * @param i Position in basis of the requested polynomial
           */
-         const T& at(const int i) const ;
+         const TPoly& at(const int i) const ;
 
       protected:
 
@@ -130,7 +130,7 @@ namespace EPMDynamo {
       return this->mParameters;
    }
 
-   template <typename TPoly> inline const T& PolynomialBasis<TPoly>::at(const int i) const 
+   template <typename TPoly> inline const TPoly& PolynomialBasis<TPoly>::at(const int i) const 
    {
       return this->mBasis.at(i);
    }

@@ -40,16 +40,22 @@ namespace EPMDynamo {
    {
       public:
          /// typedef for a homogeneous bounded operator
-         typedef  BoundedOperator<TOpType, BCType::Homogeneous> HBOperator;
+         typedef  BoundedOperator<TOpType, Homogeneous> HBOperator;
 
          /// typedef for a non homogeneous bounded operator
-         typedef  BoundedOperator<TOpType, BCType::NonHomogeneous> NHBOperator;
+         typedef  BoundedOperator<TOpType, NonHomogeneous> NHBOperator;
 
          /// typedef for a base bounded operator
          typedef  BoundedOperatorBase<TOpType> BOperatorBase;
 
          /// typedef for a smart pointer to a base bounded operator
          typedef  EPMSHARED_PTR<BOperatorBase> SmartBOperatorBase;
+
+         /// typedef for a smart pointer to a homogeneous bounded operator
+         typedef  EPMSHARED_PTR<HBOperator> SmartHBOperator;
+
+         /// typedef for a smart pointer to a non homogeneous bounded operator
+         typedef  EPMSHARED_PTR<HBOperator> SmartNHBOperator;
 
          /**
           * @brief Constructor
@@ -303,7 +309,7 @@ namespace EPMDynamo {
          bcRows.row(0) = this->mBCs.at(0)->getLHSBC(l).transpose();
 
          // Create smart pointer
-         pHOp = SmartHBOperator(new HomogeneousBOperator<TOpType>(this->nBC(), opSize, l));
+         pHOp = SmartHBOperator(new HBOperator(this->nBC(), opSize, l));
 
          // Add homogeneous operator
          this->mpOperators.push_back(pHOp);

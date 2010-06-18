@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "GeneralFields/FDSHShell.hpp"
+#include "GeneralScalars/FDSHShell.hpp"
 #include "Transforms/Polynomial/QuadratureBasis.hpp"
 #include "Polynomials/PolynomialOperator.hpp"
 

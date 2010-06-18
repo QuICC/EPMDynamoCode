@@ -107,7 +107,7 @@ namespace EPMDynamo {
       // Loop over the subdiagonal terms
       for(int n=1; n < ptsN; ++n)
       {
-         subdiag(n-1) = std::sqrt(static_cast<DynamoFloat>(n*n)/static_cast<DynamoFloat>(4*n*n-1));
+         subdiag(n-1) = std::sqrt(static_cast<EPMFloat>(n*n)/static_cast<EPMFloat>(4*n*n-1));
       }
    }
 

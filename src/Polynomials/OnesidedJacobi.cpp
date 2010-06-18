@@ -162,8 +162,8 @@ namespace EPMDynamo {
       x.setConstant(-1.0);
       x += 2.0*grid().cwise().pow(2);
 
-      DynamoFloat dalpha = this->alpha() + static_cast<DynamoFloat>(k);
-      DynamoFloat dbeta = this->beta() + static_cast<DynamoFloat>(k);
+      EPMFloat dalpha = this->alpha() + static_cast<EPMFloat>(k);
+      EPMFloat dbeta = this->beta() + static_cast<EPMFloat>(k);
 
       for(int n=0; n < k; ++n)
       {
@@ -183,15 +183,15 @@ namespace EPMDynamo {
       {
          for(int m=1; m <= k; ++m)
          {
-            rMat.row(n) *= (static_cast<DynamoFloat>(n)+this->alpha()+this->beta()+static_cast<DynamoFloat>(m));
+            rMat.row(n) *= (static_cast<EPMFloat>(n)+this->alpha()+this->beta()+static_cast<EPMFloat>(m));
          }
       }
    }
 
    void OnesidedJacobi::computeBoundaryDerivativeBase(Array& rMat, const int k) const
    {
-      DynamoFloat dalpha = this->alpha() + static_cast<DynamoFloat>(k);
-      DynamoFloat dbeta = this->beta() + static_cast<DynamoFloat>(k);
+      EPMFloat dalpha = this->alpha() + static_cast<EPMFloat>(k);
+      EPMFloat dbeta = this->beta() + static_cast<EPMFloat>(k);
 
       for(int n=0; n < k; ++n)
       {
@@ -211,7 +211,7 @@ namespace EPMDynamo {
       {
          for(int m=1; m <= k; ++m)
          {
-            rMat(n) *= (static_cast<DynamoFloat>(n)+this->alpha()+this->beta()+static_cast<DynamoFloat>(m));
+            rMat(n) *= (static_cast<EPMFloat>(n)+this->alpha()+this->beta()+static_cast<EPMFloat>(m));
          }
       }
    }
@@ -283,29 +283,29 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat OnesidedJacobi::recurrenceA(const int n) const
+   EPMFloat OnesidedJacobi::recurrenceA(const int n) const
    {
       return this->recurrenceA(n, this->alpha(), this->beta());
    }
 
-   DynamoFloat OnesidedJacobi::recurrenceB(const int n) const
+   EPMFloat OnesidedJacobi::recurrenceB(const int n) const
    {
       return this->recurrenceB(n, this->alpha(), this->beta());
    }
 
-   DynamoFloat OnesidedJacobi::recurrenceC(const int n) const
+   EPMFloat OnesidedJacobi::recurrenceC(const int n) const
    {
       return this->recurrenceC(n, this->alpha(), this->beta());
    }
 
-   DynamoFloat OnesidedJacobi::recurrenceA(const int n, const DynamoFloat alpha, const DynamoFloat beta) const
+   EPMFloat OnesidedJacobi::recurrenceA(const int n, const EPMFloat alpha, const EPMFloat beta) const
    {
       if(n > 1)
       {
-         DynamoFloat factorA;
-         DynamoFloat albe = alpha + beta;
-         DynamoFloat a2_b2 = alpha*alpha - beta*beta;
-         DynamoFloat rn = static_cast<DynamoFloat>(n);
+         EPMFloat factorA;
+         EPMFloat albe = alpha + beta;
+         EPMFloat a2_b2 = alpha*alpha - beta*beta;
+         EPMFloat rn = static_cast<EPMFloat>(n);
 
          factorA = (2*rn + albe - 1)*a2_b2/(2*rn*(rn + albe)*(2*rn + albe - 2.0));
 
@@ -319,14 +319,14 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat OnesidedJacobi::recurrenceB(const int n, const DynamoFloat alpha, const DynamoFloat beta) const
+   EPMFloat OnesidedJacobi::recurrenceB(const int n, const EPMFloat alpha, const EPMFloat beta) const
    {
-      DynamoFloat albe = alpha + beta;
+      EPMFloat albe = alpha + beta;
 
       if(n > 1)
       {
-         DynamoFloat factorB;
-         DynamoFloat rn = static_cast<DynamoFloat>(n);
+         EPMFloat factorB;
+         EPMFloat rn = static_cast<EPMFloat>(n);
 
          factorB = (2*rn + albe - 1)*(2*rn + albe)/(2*rn*(rn + albe));
 
@@ -341,13 +341,13 @@ namespace EPMDynamo {
 
    }
 
-   DynamoFloat OnesidedJacobi::recurrenceC(const int n, const DynamoFloat alpha, const DynamoFloat beta) const
+   EPMFloat OnesidedJacobi::recurrenceC(const int n, const EPMFloat alpha, const EPMFloat beta) const
    {
       if(n > 1)
       {
-         DynamoFloat factorC;
-         DynamoFloat albe = alpha + beta;
-         DynamoFloat rn = static_cast<DynamoFloat>(n);
+         EPMFloat factorC;
+         EPMFloat albe = alpha + beta;
+         EPMFloat rn = static_cast<EPMFloat>(n);
 
          factorC = (2*rn + albe)*(rn + alpha - 1.0)*(rn + beta - 1.0)/(rn*(rn + albe)*(2*rn + albe - 2.0));
 

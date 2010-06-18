@@ -102,32 +102,32 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedFieldReaderBase("full", codC.trunc()), mpCodC(codC), mpMagB(magB), mpVelV(velV)
+      : ImposedFieldReaderBase("full", codC.trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedFieldReaderBase("codVel", codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(velV)
+      : ImposedFieldReaderBase("codVel", codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedFieldReaderBase("magVel", codC.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(velV)
+      : ImposedFieldReaderBase("magVel", magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::CodType &codC)
-      : ImposedFieldReaderBase("cod", codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(NULL)
+      : ImposedFieldReaderBase("cod", codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::MagType &magB)
-      : ImposedFieldReaderBase("mag", magB.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(NULL)
+      : ImposedFieldReaderBase("mag", magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedFieldReaderBase("vel", velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(velV)
+      : ImposedFieldReaderBase("vel", velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
    {
    }
 

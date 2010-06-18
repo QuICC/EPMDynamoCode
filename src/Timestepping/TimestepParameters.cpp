@@ -18,7 +18,7 @@
 
 namespace EPMDynamo {
 
-   TimestepParameters::TimestepParameters(DynamoFloat time, DynamoFloat timestep)
+   TimestepParameters::TimestepParameters(EPMFloat time, EPMFloat timestep)
       : mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0), mDtError(2)
    {
       // Initialise the truncation errors to zero
@@ -28,7 +28,7 @@ namespace EPMDynamo {
       this->checkValues();
    }
 
-   void TimestepParameters::updateDtError(const int order, DynamoFloat err)
+   void TimestepParameters::updateDtError(const int order, EPMFloat err)
    {
       this->mDtError(order-1)+= err;
    }
@@ -38,7 +38,7 @@ namespace EPMDynamo {
       this->mDtError(order-1) = 0.0;
    }
  
-   void TimestepParameters::updateError(DynamoFloat err)
+   void TimestepParameters::updateError(EPMFloat err)
    {
       this->mError = err;
    }
@@ -62,7 +62,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepParameters::updateTimestep(DynamoFloat dt)
+   void TimestepParameters::updateTimestep(EPMFloat dt)
    {
       // Store previous timestep
       this->mOldTimestep = this->mTimestep;

@@ -17,7 +17,7 @@
 #include "General/EPMException.hpp"
 #include "Domain/Truncation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaMethod.hpp"
 #include "Equations/InfluenceMatrix.hpp"
@@ -49,7 +49,7 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
           */
-         ThetaPoissonMethod(DynamoFloat a, DynamoFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ThetaPoissonMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
@@ -61,7 +61,7 @@ namespace EPMDynamo {
           *
           * @param pBC Boundary condition
           */
-         void addInfluencBC(SmartBC pBC);
+         void addInfluenceBC(SmartBC pBC);
 
          /**
           * @brief Initialise the ThetaPoissonMethod
@@ -112,7 +112,7 @@ namespace EPMDynamo {
          /**
           * @brief Influence matrix
           */
-         InfluencMatrix<TSimType> mInfluence;
+         InfluenceMatrix<TSimType> mInfluence;
 
          /**
           * @brief Initialise the influenc matrix
@@ -130,7 +130,7 @@ namespace EPMDynamo {
          void useInfluenceSolution(ScalarType& rVar);
    };
 
-   template <typename TSimType> ThetaPoissonMethod<TSimType>::ThetaPoissonMethod(DynamoFloat a, DynamoFloat b, const typename ThetaPoissonMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+   template <typename TSimType> ThetaPoissonMethod<TSimType>::ThetaPoissonMethod(EPMFloat a, EPMFloat b, const typename ThetaPoissonMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-1), mInfluence(pTrunc, basis)
    {
    }
@@ -195,7 +195,7 @@ namespace EPMDynamo {
       ThetaMethod<TSimType>::solveCorrector();
 
       // Correct influence matrix solution
-      this->useInfluceSolution(this->mPreviousNTerms);
+      this->useInfluenceSolution(this->mPreviousNTerms);
    }
 
    template <typename TSimType> void ThetaPoissonMethod<TSimType>::initInfluence()

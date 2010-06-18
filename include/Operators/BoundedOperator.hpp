@@ -60,7 +60,7 @@ namespace EPMDynamo {
           *
           * \bug PolynomialOperator needs restructuring
           */
-         virtual void constructBOperator(const DynamoFloat factor, const PolynomialOperator<POperator>& polyOp);
+         virtual void constructBOperator(const EPMFloat factor, const PolynomialOperator<POperator>& polyOp);
 
          /**
           * @brief Solve linear equation
@@ -89,7 +89,7 @@ namespace EPMDynamo {
       this->mExt.build(bcRows);
    }
 
-   template <typename TOpType, BCType TBCType> void BoundedOperator<TOpType, TBCType>::constructBOperator(const DynamoFloat factor, const PolynomialOperator<POperator>& polyOp)
+   template <typename TOpType, BCType TBCType> void BoundedOperator<TOpType, TBCType>::constructBOperator(const EPMFloat factor, const PolynomialOperator<POperator>& polyOp)
    {
       this->mExt.restrictOperator(this->rOp(), factor, polyOp.op());
    }

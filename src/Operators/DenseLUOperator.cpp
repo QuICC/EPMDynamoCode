@@ -4,6 +4,7 @@
 
 // System includes
 //
+#include <assert.h>
 
 // External includes
 //
@@ -34,7 +35,7 @@ namespace EPMDynamo {
       dgetrf_(&rows, &cols, this->rOp().data(), &rows, this->rIpiv().data(), &info);
 
       // Test success of computation through assert
-      assert(info == 0):
+      assert(info == 0);
    }
 
    void DenseLUOperator::inverse()
@@ -49,7 +50,7 @@ namespace EPMDynamo {
       dgetri_(&n, this->rOp().data(), &n, this->rIpiv().data(), work.data(), &lwork, &info);
 
       // Test success of computation through assert
-      assert(info == 0):
+      assert(info == 0);
 
       // Set to optimal work size
       lwork = static_cast<int>(work(0));
@@ -59,7 +60,7 @@ namespace EPMDynamo {
       dgetri_(&n, this->rOp().data(), &n, this->rIpiv().data(), work.data(), &lwork, &info);
 
       // Test success of computation through assert
-      assert(info == 0):
+      assert(info == 0);
    }
 
    void DenseLUOperator::solveEquation(Array& vector)
@@ -78,7 +79,7 @@ namespace EPMDynamo {
       dgetrs_(&trans, &rows, &nCol, this->rOp().data(), &rows, this->rIpiv().data(), vector.data(), &rows, &info);
 
       // Test success of computation through assert
-      assert(info == 0):
+      assert(info == 0);
    }
 
 }

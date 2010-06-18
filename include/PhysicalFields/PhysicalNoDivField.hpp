@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/PhysicalNoDivBase.hpp"
 #include "GeneralFields/TorPolField.hpp"
 
@@ -150,7 +150,7 @@ namespace EPMDynamo {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nL(), 4); 
 
       ArrayI lArray = this->trunc()->sim()->hoz()->lArray();
-      spectrum.col(0) = lArray.cast<DynamoFloat>();
+      spectrum.col(0) = lArray.cast<EPMFloat>();
       
       spectrum.col(1) = torE + polE;
       spectrum.col(2) = torE;
@@ -169,7 +169,7 @@ namespace EPMDynamo {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nM(), 4); 
 
       ArrayI mArray = this->trunc()->sim()->hoz()->mArray();
-      spectrum.col(0) = mArray.cast<DynamoFloat>();
+      spectrum.col(0) = mArray.cast<EPMFloat>();
       
       spectrum.col(1) = torE + polE;
       spectrum.col(2) = torE;

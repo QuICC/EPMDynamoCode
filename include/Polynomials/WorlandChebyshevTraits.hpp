@@ -30,14 +30,14 @@ namespace EPMDynamo {
          /**
           * @brief Alpha parameter of the Jacobi polynomials for a Worland Chebyshev quadrature rule
           */
-         static const DynamoFloat ALPHA;
+         static const EPMFloat ALPHA;
 
          /**
           * @brief beta parameter of the Jacobi polynomials for a Worland Chebyshev quadrature rule
           *
           * This is only part of the parameter, the actual parameter is \f$\beta = l + BETA\f$
           */
-         static const DynamoFloat BETA;
+         static const EPMFloat BETA;
          
       protected:
 

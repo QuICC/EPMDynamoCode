@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
 #include "PhysicalFields/PhysicalNoDivField.hpp"
 

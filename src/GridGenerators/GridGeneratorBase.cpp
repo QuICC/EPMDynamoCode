@@ -40,7 +40,7 @@ namespace EPMDynamo {
    void GridGeneratorBase::sortGrid()
    {
       // Create a map to sort elements
-      std::map<DynamoFloat, DynamoFloat> sorter;
+      std::map<EPMFloat, EPMFloat> sorter;
 
       // fill map with grid points /weights pairs
       for(int i = 0; i < this->gridN(); ++i)
@@ -54,7 +54,7 @@ namespace EPMDynamo {
          throw EPMException("GridGeneratorBase::sortGrid", "Lost grid points during conversion!");
       }
 
-      std::map<DynamoFloat, DynamoFloat>::const_iterator  it;
+      std::map<EPMFloat, EPMFloat>::const_iterator  it;
 
       // Replace grid point values with reorder version
       int i = 0;

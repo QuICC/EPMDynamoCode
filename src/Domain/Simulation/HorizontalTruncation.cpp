@@ -18,9 +18,9 @@
 
 namespace EPMDynamo {
 
-   const DynamoFloat HorizontalTruncation::msThetaDealiasing = 3.0/2.0;
+   const EPMFloat HorizontalTruncation::msThetaDealiasing = 3.0/2.0;
 
-   const DynamoFloat HorizontalTruncation::msPhiDealiasing = 3.0;
+   const EPMFloat HorizontalTruncation::msPhiDealiasing = 3.0;
 
    HorizontalTruncation::HorizontalTruncation(const int maxL, const int maxM, const int mp)
       : mMaxL(maxL),mMaxM(maxM),mMp(mp),mNl(maxL+1),mNm(maxM/mp + 1),mNh(0), mNph(static_cast<int>(nM()*msPhiDealiasing)), mNth(static_cast<int>(nL()*this->msThetaDealiasing))

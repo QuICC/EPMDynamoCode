@@ -56,7 +56,7 @@ namespace EPMDynamo {
           *
           * \bug PolynomialOperator needs restructuring
           */
-         virtual void constructBOperator(const DynamoFloat factor, const PolynomialOperator<POperator>& polyOp) = 0; 
+         virtual void constructBOperator(const EPMFloat factor, const PolynomialOperator<POperator>& polyOp) = 0; 
 
          /**
           * @brief Solve linear equation

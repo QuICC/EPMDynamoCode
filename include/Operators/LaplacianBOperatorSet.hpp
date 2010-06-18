@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
@@ -58,7 +58,7 @@ namespace EPMDynamo {
           *
           * @param factor Multiplicative factor
           */
-         void createOperators(const DynamoFloat factor);
+         void createOperators(const EPMFloat factor);
 
       private:
    };
@@ -68,7 +68,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType, typename TOpType> void LaplacianBOperatorSet<TSimType, TOpType>::createOperators(const DynamoFloat factor)
+   template <typename TSimType, typename TOpType> void LaplacianBOperatorSet<TSimType, TOpType>::createOperators(const EPMFloat factor)
    {
       // Storage for "id" of operator
       int l;

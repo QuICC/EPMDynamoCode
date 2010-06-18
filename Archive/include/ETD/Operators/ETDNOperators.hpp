@@ -13,10 +13,10 @@
 
 // Project includes
 //
-#include "Domain/SpectralTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -49,7 +49,7 @@ namespace EPMDynamo {
          /**
           * @brief Update the ETDN operators
           */
-         void createOperators(const DynamoFloat h, const BasisType &basis) = 0;
+         void createOperators(const EPMFloat h, const BasisType &basis) = 0;
 
       protected:
          /**
@@ -70,7 +70,7 @@ namespace EPMDynamo {
          /**
           * @brief Update the number of required scalings
           */
-         void updateScalings(const DynamoFloat c);
+         void updateScalings(const EPMFloat c);
 
          /**
           * @brief Compute the scaled F0 values
@@ -101,7 +101,7 @@ namespace EPMDynamo {
          /**
           * @brief Threshold value for requiring the scaling/squaring approach
           */
-         static const DynamoFloat  SCALINGSQUARING_THRESHOLD;
+         static const EPMFloat  SCALINGSQUARING_THRESHOLD;
 
          /**
           * @brief Number of operators
@@ -116,7 +116,7 @@ namespace EPMDynamo {
          /**
           * @brief Absolute value of maximum eigenvalue
           */
-         DynamoFloat mMaxEig;
+         EPMFloat mMaxEig;
 
          /**
           * @brief Smart truncation information
@@ -197,9 +197,9 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSim, int TNOps> const DynamoFloat  ETDNOperators<TSim, TNOps>::SCALINGSQUARING_THRESHOLD = 10;
+   template <typename TSim, int TNOps> const EPMFloat  ETDNOperators<TSim, TNOps>::SCALINGSQUARING_THRESHOLD = 10;
 
-   template <typename TSim, int TNOps> void ETDNOperators<TSim, TNOps>::updateScalings(const DynamoFloat c)
+   template <typename TSim, int TNOps> void ETDNOperators<TSim, TNOps>::updateScalings(const EPMFloat c)
    {
       this->mScalings = std::ceil(std::log(SCALINGSQUARING_THRESHOLD*c*this->mMaxEig)/std::log(2.0));
    }
@@ -231,12 +231,12 @@ namespace EPMDynamo {
       rMat.diagonal.cwise() += 1.0;
 
       // Storage for the factorial factor
-      DynamoFloat factor = 1.0;
+      EPMFloat factor = 1.0;
 
       // Loop over a certain number of expansion factors
       for(int i=2; i < 12; ++i)
       {
-         factor *= static_cast<DynamoFloat>(i);
+         factor *= static_cast<EPMFloat>(i);
 
          rMat += rMat*rMat.cwise()/factor;
       }

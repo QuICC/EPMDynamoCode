@@ -22,7 +22,7 @@ namespace EPMDynamo {
    {
    }
 
-   void RTPOperators::cross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const DynamoFloat coeff)
+   void RTPOperators::cross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const EPMFloat coeff)
    {
       int nR = left.nR();
       if(coeff == 1.0)
@@ -50,7 +50,7 @@ namespace EPMDynamo {
       }
    }
 
-   void RTPOperators::addCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const DynamoFloat coeff)
+   void RTPOperators::addCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const EPMFloat coeff)
    {
       int nR = left.nR();
       if(coeff == 1.0)
@@ -78,7 +78,7 @@ namespace EPMDynamo {
       }
    }
 
-   void RTPOperators::subCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const DynamoFloat coeff)
+   void RTPOperators::subCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const EPMFloat coeff)
    {
       int nR = left.nR();
       if(coeff == 1.0)
@@ -106,7 +106,7 @@ namespace EPMDynamo {
       }
    }
 
-   void RTPOperators::dot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const DynamoFloat coeff)
+   void RTPOperators::dot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const EPMFloat coeff)
    {
       int nR = left.nR();
       if(coeff == 1.0)
@@ -124,7 +124,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::addDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const DynamoFloat coeff)
+   void RTPOperators::addDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const EPMFloat coeff)
    {
       int nR = left.nR();
       if(coeff == 1.0)
@@ -142,7 +142,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::subDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const DynamoFloat coeff)
+   void RTPOperators::subDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const EPMFloat coeff)
    {
       int nR = left.nR();
       if(coeff == 1.0)
@@ -160,7 +160,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::radVect(RTPField &rField, const RTPScalar &scalar, const DynamoFloat coeff)
+   void RTPOperators::radVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff)
    {
       int nR = scalar.nR();
       if(coeff == 1.0)
@@ -186,7 +186,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::addRadVect(RTPField &rField, const RTPScalar &scalar, const DynamoFloat coeff)
+   void RTPOperators::addRadVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff)
    {
       int nR = scalar.nR();
       if(coeff == 1.0)
@@ -206,7 +206,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::subRadVect(RTPField &rField, const RTPScalar &scalar, const DynamoFloat coeff)
+   void RTPOperators::subRadVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff)
    {
       int nR = scalar.nR();
       if(coeff == 1.0)
@@ -226,7 +226,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::crossZVect(RTPField &rField, const RTPField &inField, const DynamoFloat coeff)
+   void RTPOperators::crossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
    {
       int nR = inField.nR();
       int nTh;
@@ -263,7 +263,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::addCrossZVect(RTPField &rField, const RTPField &inField, const DynamoFloat coeff)
+   void RTPOperators::addCrossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
    {
       int nR = inField.nR();
       int nTh;
@@ -300,7 +300,7 @@ namespace EPMDynamo {
       }
    }
          
-   void RTPOperators::subCrossZVect(RTPField &rField, const RTPField &inField, const DynamoFloat coeff)
+   void RTPOperators::subCrossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
    {
       int nR = inField.nR();
       int nTh;

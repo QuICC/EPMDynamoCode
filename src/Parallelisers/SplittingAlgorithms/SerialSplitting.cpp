@@ -10,7 +10,7 @@
 
 // Class include
 //
-#include "Parallelisers/SerialSplitting.hpp"
+#include "Parallelisers/SplittingAlgorithms/SerialSplitting.hpp"
 
 // Project includes
 //

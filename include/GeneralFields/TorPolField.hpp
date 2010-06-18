@@ -17,7 +17,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "General/MathConstants.hpp"
 #include "GeneralFields/SpectralFieldBase.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -165,17 +165,17 @@ namespace EPMDynamo {
       Array    tmpSpectrum(this->trunc()->sim()->hoz()->nM());
       tmpSpectrum.setConstant(0.0);
 
-      DynamoFloat tmpEnergy;
-      DynamoFloat shWeight;
-      DynamoFloat shFactor;
-      DynamoFloat lfactor;
+      EPMFloat tmpEnergy;
+      EPMFloat shWeight;
+      EPMFloat shFactor;
+      EPMFloat lfactor;
       int l_;
       for(int l = l0; l < nL; ++l)
       {
          l_ = ls(l);
          ms = this->trunc()->local()->spec()->mArray(l);
-         shWeight = 4.0 * MathConstants::PI / static_cast<DynamoFloat>(2*l_+1);
-         lfactor = static_cast<DynamoFloat>(l_*(l_+1));
+         shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
+         lfactor = static_cast<EPMFloat>(l_*(l_+1));
 
          for(int m = 0; m < this->nM(l); ++m)
          {
@@ -222,15 +222,15 @@ namespace EPMDynamo {
       Array    tmpSpectrum(this->trunc()->sim()->hoz()->nM());
       tmpSpectrum.setConstant(0.0);
 
-      DynamoFloat tmpEnergy;
-      DynamoFloat shWeight;
-      DynamoFloat shFactor;
+      EPMFloat tmpEnergy;
+      EPMFloat shWeight;
+      EPMFloat shFactor;
       int l_;
       for(int l = l0; l < nL; ++l)
       {
          l_ = ls(l);
          ms = this->trunc()->local()->spec()->mArray(l);
-         shWeight = 4.0 * MathConstants::PI / static_cast<DynamoFloat>(2*l_+1);
+         shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
 
          for(int m = 0; m < this->nM(l); ++m)
          {

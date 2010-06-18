@@ -86,7 +86,7 @@ this->mTotCorr = 0.0;
          if(this->mCounterCorrIts == 1)
          {
             // Initialise previous corrector norm to max representable value
-            this->mOldCorrectionNorm = std::numeric_limits<DynamoFloat>::max();
+            this->mOldCorrectionNorm = std::numeric_limits<EPMFloat>::max();
          }
 
          // Check if timestep is bigger than minimal value if the initialisation steps are over
@@ -169,7 +169,7 @@ this->mTotCorr = 0.0;
       }
    }
 
-   void PCTimestepControl::testPCTimestep(DynamoFloat& rDt)
+   void PCTimestepControl::testPCTimestep(EPMFloat& rDt)
    {
       // Set timestep according to PC errors
       if(this->mPCTStep > 0.0)
@@ -188,7 +188,7 @@ this->mTotCorr = 0.0;
       if(mrParams.isNextStep())
       {
          // Store current timestep
-         DynamoFloat dt = this->mrParams.dt();
+         EPMFloat dt = this->mrParams.dt();
 
          // Set timestep according to corrector correction norm
          this->testPCTimestep(dt);

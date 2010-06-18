@@ -65,7 +65,7 @@ namespace EPMDynamo {
       int nL = this->nL();
       for(int l = 0; l < nL; ++l)
       {
-         rLHSBCValues(l) = basis.at(l).bdiff(1) + static_cast<DynamoFloat>(basis.at(l).l()+1)*basis.at(l).bpoly();
+         rLHSBCValues(l) = basis.at(l).bdiff(1) + static_cast<EPMFloat>(basis.at(l).l()+1)*basis.at(l).bpoly();
       }
    }
 

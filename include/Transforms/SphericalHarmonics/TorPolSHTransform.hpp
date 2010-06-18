@@ -337,7 +337,7 @@ namespace EPMDynamo {
       this->fft().forward(rFTmp, rtpValues);
 
       // Send data and release temporary storage
-      this->shManipulator().sendConversion(rFTmp);
+      this->shManipulator().send(rFTmp);
       this->shManipulator().releaseTmp(rFTmp);
    }
 
@@ -358,7 +358,7 @@ namespace EPMDynamo {
          this->fft().forward(rFTmp, rtpValues);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rFTmp);
+         this->shManipulator().send(rFTmp);
          this->shManipulator().releaseTmp(rFTmp);
       }
 
@@ -366,7 +366,7 @@ namespace EPMDynamo {
       {
          // Get temporary storage and receive data
          FFTBackwardType &rMTmp = this->shManipulator().provideBTmp();
-         this->shManipulator().receiveConversion(rMTmp);
+         this->shManipulator().receive(rMTmp);
 
          // Perform integration over Legendre polynomials
          this->legT().template multM<SetProduct>(rSHValues, rMTmp, &AssociatedLegendreOperator::intg);
@@ -396,7 +396,7 @@ namespace EPMDynamo {
       // Get temporary storage and receive data
       FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
       rFTmp.doZeroPadding();
-      this->shManipulator().receiveConversion(rFTmp);
+      this->shManipulator().receive(rFTmp);
 
       // Do the FFT of the complex space values
       this->fft().backward(rRTPValues, rFTmp);
@@ -422,7 +422,7 @@ namespace EPMDynamo {
          this->legT().template multM<SetProduct>(rMTmp, shValues, &AssociatedLegendreOperator::proj);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rMTmp);
+         this->shManipulator().send(rMTmp);
          this->shManipulator().releaseTmp(rMTmp);
       }
 
@@ -431,7 +431,7 @@ namespace EPMDynamo {
          // Get temporary storage and receive data
          FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
          rFTmp.doZeroPadding();
-         this->shManipulator().receiveConversion(rFTmp);
+         this->shManipulator().receive(rFTmp);
 
          // Do the FFT of the complex space values
          this->fft().backward(rRTPValues, rFTmp);
@@ -451,7 +451,7 @@ namespace EPMDynamo {
          this->fft().forward(rFTmp, thetaValues);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rFTmp);
+         this->shManipulator().send(rFTmp);
          this->shManipulator().releaseTmp(rFTmp);
    }
 
@@ -472,7 +472,7 @@ namespace EPMDynamo {
          this->fft().forward(rFTmp, thetaValues);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rFTmp);
+         this->shManipulator().send(rFTmp);
          this->shManipulator().releaseTmp(rFTmp);
       }
 
@@ -480,7 +480,7 @@ namespace EPMDynamo {
       {
          // Get temporary storage and receive data
          FFTBackwardType &rMTmp = this->shManipulator().provideBTmp();
-         this->shManipulator().receiveConversion(rMTmp);
+         this->shManipulator().receive(rMTmp);
 
          // Perform integration over Legendre polynomials: compute S component
          this->legT().template multM<SetProduct>(rSComp, rMTmp, &AssociatedLegendreOperator::intgTh2S);
@@ -519,7 +519,7 @@ namespace EPMDynamo {
       this->fft().forward(rFTmp, phiValues);
 
       // Send data and release temporary storage
-      this->shManipulator().sendConversion(rFTmp);
+      this->shManipulator().send(rFTmp);
       this->shManipulator().releaseTmp(rFTmp);
    }
 
@@ -540,7 +540,7 @@ namespace EPMDynamo {
          this->fft().forward(rFTmp, phiValues);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rFTmp);
+         this->shManipulator().send(rFTmp);
          this->shManipulator().releaseTmp(rFTmp);
       }
 
@@ -548,7 +548,7 @@ namespace EPMDynamo {
       {
          // Get temporary storage and receive data
          FFTBackwardType &rMTmp = this->shManipulator().provideBTmp();
-         this->shManipulator().receiveConversion(rMTmp);
+         this->shManipulator().receive(rMTmp);
 
          // Perform integration over Legendre polynomials: compute S component
          this->legT().template multM<AddProduct>(rSComp, rMTmp, &AssociatedLegendreOperator::intgPh2S);
@@ -582,7 +582,7 @@ namespace EPMDynamo {
       // Get temporary storage and receive data
       FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
       rFTmp.doZeroPadding();
-      this->shManipulator().receiveConversion(rFTmp);
+      this->shManipulator().receive(rFTmp);
 
       // Do the FFT of the complex space values
       this->fft().backward(rThetaValues, rFTmp);
@@ -610,7 +610,7 @@ namespace EPMDynamo {
          this->legT().template multM<AddProduct>(rMTmp, tComp, &AssociatedLegendreOperator::projT2Th);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rMTmp);
+         this->shManipulator().send(rMTmp);
          this->shManipulator().releaseTmp(rMTmp);
       }
 
@@ -619,7 +619,7 @@ namespace EPMDynamo {
          // Get temporary storage and receive data
          FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
          rFTmp.doZeroPadding();
-         this->shManipulator().receiveConversion(rFTmp);
+         this->shManipulator().receive(rFTmp);
 
          // Do the FFT of the complex space values
          this->fft().backward(rThetaValues, rFTmp);
@@ -634,7 +634,7 @@ namespace EPMDynamo {
       // Get temporary storage and receive data
       FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
       rFTmp.doZeroPadding();
-      this->shManipulator().receiveConversion(rFTmp);
+      this->shManipulator().receive(rFTmp);
 
       // Do the FFT of the complex space values
       this->fft().backward(rPhiValues, rFTmp);
@@ -663,7 +663,7 @@ namespace EPMDynamo {
          this->legT().template multM<AddProduct>(rMTmp, tComp, &AssociatedLegendreOperator::projT2Ph);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rMTmp);
+         this->shManipulator().send(rMTmp);
          this->shManipulator().releaseTmp(rMTmp);
       }
 
@@ -672,7 +672,7 @@ namespace EPMDynamo {
          // Get temporary storage and receive data
          FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
          rFTmp.doZeroPadding();
-         this->shManipulator().receiveConversion(rFTmp);
+         this->shManipulator().receive(rFTmp);
 
          // Do the FFT of the complex space values
          this->fft().backward(rPhiValues, rFTmp);
@@ -694,7 +694,7 @@ namespace EPMDynamo {
       this->fft().forward(rFTmpTh, thetaComp);
 
       // Send data and release temporary storage
-      this->shManipulator().sendConversion(rFTmpTh);
+      this->shManipulator().send(rFTmpTh);
       this->shManipulator().releaseTmp(rFTmpTh);
 
       // Get temporary storage
@@ -704,7 +704,7 @@ namespace EPMDynamo {
       this->fft().forward(rFTmpPh, phiComp);
 
       // Send data and release temporary storage
-      this->shManipulator().sendConversion(rFTmpPh);
+      this->shManipulator().send(rFTmpPh);
       this->shManipulator().releaseTmp(rFTmpPh);
    }
 
@@ -725,7 +725,7 @@ namespace EPMDynamo {
          this->fft().forward(rFTmpTh, thetaComp);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rFTmpTh);
+         this->shManipulator().send(rFTmpTh);
          this->shManipulator().releaseTmp(rFTmpTh);
 
          // Get temporary storage
@@ -735,7 +735,7 @@ namespace EPMDynamo {
          this->fft().forward(rFTmpPh, phiComp);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rFTmpPh);
+         this->shManipulator().send(rFTmpPh);
          this->shManipulator().releaseTmp(rFTmpPh);
       }
 
@@ -743,7 +743,7 @@ namespace EPMDynamo {
       {
          // Get temporary storage and receive data
          FFTBackwardType &rMTmpTh = this->shManipulator().provideBTmp();
-         this->shManipulator().receiveConversion(rMTmpTh);
+         this->shManipulator().receive(rMTmpTh);
 
          // Perform integration over Legendre polynomials: compute T component
          this->legT().template multM<SetProduct>(rTComp, rMTmpTh, &AssociatedLegendreOperator::intgTh2T);
@@ -753,7 +753,7 @@ namespace EPMDynamo {
 
          // Get temporary storage and receive data
          FFTBackwardType &rMTmpPh = this->shManipulator().provideBTmp();
-         this->shManipulator().receiveConversion(rMTmpPh);
+         this->shManipulator().receive(rMTmpPh);
 
          // Perform integration over Legendre polynomials: compute T component
          this->legT().template multM<AddProduct>(rTComp,rMTmpPh, &AssociatedLegendreOperator::intgPh2T);
@@ -783,7 +783,7 @@ namespace EPMDynamo {
       // Get temporary storage and receive data
       FFTForwardType &rFTmpTh = this->shManipulator().provideFTmp();
       rFTmpTh.doZeroPadding();
-      this->shManipulator().receiveConversion(rFTmpTh);
+      this->shManipulator().receive(rFTmpTh);
 
       // Do the FFT of the complex space values
       this->fft().backward(rThComp, rFTmpTh);
@@ -794,7 +794,7 @@ namespace EPMDynamo {
       // Get temporary storage and receive data
       FFTForwardType &rFTmpPh = this->shManipulator().provideFTmp();
       rFTmpPh.doZeroPadding();
-      this->shManipulator().receiveConversion(rFTmpPh);
+      this->shManipulator().receive(rFTmpPh);
 
       // Do the FFT of the complex space values
       this->fft().backward(rPhComp, rFTmpPh);
@@ -820,7 +820,7 @@ namespace EPMDynamo {
          this->legT().template multM<SetProduct>(rMTmpTh, scalar, &AssociatedLegendreOperator::proj2GradTh);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rMTmpTh);
+         this->shManipulator().send(rMTmpTh);
          this->shManipulator().releaseTmp(rMTmpTh);
 
          // add Packet size of transform
@@ -830,7 +830,7 @@ namespace EPMDynamo {
          this->legT().template multM<SetProduct>(rMTmpPh, scalar, &AssociatedLegendreOperator::proj2GradPh);
 
          // Send data and release temporary storage
-         this->shManipulator().sendConversion(rMTmpPh);
+         this->shManipulator().send(rMTmpPh);
          this->shManipulator().releaseTmp(rMTmpPh);
       }
 
@@ -839,7 +839,7 @@ namespace EPMDynamo {
          // Get temporary storage and receive data
          FFTForwardType &rFTmpTh = this->shManipulator().provideFTmp();
          rFTmpTh.doZeroPadding();
-         this->shManipulator().receiveConversion(rFTmpTh);
+         this->shManipulator().receive(rFTmpTh);
 
          // Do the FFT of the complex space values
          this->fft().backward(rThComp, rFTmpTh);
@@ -850,7 +850,7 @@ namespace EPMDynamo {
          // Get temporary storage and receive data
          FFTForwardType &rFTmpPh = this->shManipulator().provideFTmp();
          rFTmpPh.doZeroPadding();
-         this->shManipulator().receiveConversion(rFTmpPh);
+         this->shManipulator().receive(rFTmpPh);
 
          // Do the FFT of the complex space values
          this->fft().backward(rPhComp, rFTmpPh);

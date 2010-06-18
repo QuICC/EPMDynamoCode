@@ -49,7 +49,7 @@ namespace EPMDynamo {
           * @param i Position of the value
           * @param l Harmonic degreee l related to operator op
           */
-         DynamoFloat getLHSBC(const int i, const int l) const;
+         EPMFloat getLHSBC(const int i, const int l) const;
 
          /**
           * @brief Get boundary condition value array of LHS operator
@@ -64,7 +64,7 @@ namespace EPMDynamo {
           * @param l Harmonic degreee l
           * @param m Harmonic order m 
           */
-         virtual DynamoFloat getRealRHSBC(const int l, const int m) const = 0;
+         virtual EPMFloat getRealRHSBC(const int l, const int m) const = 0;
 
          /**
           * @brief Get boundary condition value RHS, imaginary part
@@ -72,7 +72,7 @@ namespace EPMDynamo {
           * @param l Harmonic degreee l
           * @param m Harmonic order m 
           */
-         virtual DynamoFloat getImagRHSBC(const int l, const int m) const = 0;
+         virtual EPMFloat getImagRHSBC(const int l, const int m) const = 0;
 
          /**
           * @brief Get boundary condition value RHS, complex value
@@ -80,7 +80,7 @@ namespace EPMDynamo {
           * @param l Harmonic degreee l
           * @param m Harmonic order m 
           */
-         virtual DynamoComplex getRHSBC(const int l, const int m) const = 0;
+         virtual EPMComplex getRHSBC(const int l, const int m) const = 0;
 
          /**
           * @brief Is a homogeneous boundary condition
@@ -110,7 +110,7 @@ namespace EPMDynamo {
           *
           * @param c Constant for the BC
           */
-         void   setConstPredictorBC(const DynamoFloat c);
+         void   setConstPredictorBC(const EPMFloat c);
 
          /**
           * @brief Set the Predictor BC values

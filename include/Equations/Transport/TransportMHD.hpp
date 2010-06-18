@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
 #include "Equations/Transport/TransportSource.hpp"
@@ -30,7 +30,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /**
          * @brief Constructor
@@ -41,7 +41,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportMHD(typename TSimTraits<TSim>::CodType &rC, typename TSimTraits<TSim>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params);
+         TransportMHD(typename TSimTraits<TSimType>::CodType &rC, typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params);
 
          /**
          * @brief Simple empty destructor
@@ -65,12 +65,12 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the velocity field
           */
-         typename TSimTraits<TSim>::VelType&  mrV;
+         typename TSimTraits<TSimType>::VelType&  mrV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportMHD<TSimType, TSimTraits>::TransportMHD(typename TSimTraits<TSim>::CodType &rC, typename TSimTraits<TSim>::VelType &rV, typename TransportMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> TransportMHD<TSimType, TSimTraits>::TransportMHD(typename TSimTraits<TSimType>::CodType &rC, typename TSimTraits<TSimType>::VelType &rV, typename TransportMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
       : TransportSource<TSimType, TSimTraits>(rC, transform, tsteps, params), mrV(rV)
    {
    }

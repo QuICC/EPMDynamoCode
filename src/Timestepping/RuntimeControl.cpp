@@ -18,7 +18,7 @@
 
 namespace EPMDynamo {
 
-   RuntimeControl::RuntimeControl(DynamoFloat wall)
+   RuntimeControl::RuntimeControl(EPMFloat wall)
       : mWallTime(wall), mRuntime(0.0)
    {
    }
@@ -44,7 +44,7 @@ namespace EPMDynamo {
    void RuntimeControl::printInfo(const int steps) const
    {
       std::cout << "Total runtime was: "<< this->mRuntime << " hours (" << this->mRuntime*3600 << " seconds)" << std::endl;
-      std::cout << "Average timestep time was: " << this->mRuntime*3600. / static_cast<DynamoFloat>(steps) << " seconds/step" << std::endl;
+      std::cout << "Average timestep time was: " << this->mRuntime*3600. / static_cast<EPMFloat>(steps) << " seconds/step" << std::endl;
    }
 
 }

@@ -187,7 +187,7 @@ namespace EPMDynamo {
           *
           * @param l Order n of the polynomial
           */
-         DynamoFloat normaliseW(const int l) const;
+         EPMFloat normaliseW(const int l) const;
 
          /**
           * @brief Get recurrence coefficient \f$a_n = 0\f$ 
@@ -198,7 +198,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceA(const int n) const;
+         EPMFloat recurrenceA(const int n) const;
 
          /**
           * @brief Get recurrence coefficient \f$b_n = \frac{2n -1}{n}\f$ 
@@ -209,7 +209,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceB(const int n) const;
+         EPMFloat recurrenceB(const int n) const;
 
          /**
           * @brief Get recurrence coefficient \f$c_n = \frac{n-1}{n}\f$ 
@@ -220,7 +220,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceC(const int n) const;
+         EPMFloat recurrenceC(const int n) const;
 
          /**
           * @brief Compute the theta coordinates

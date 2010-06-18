@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
 
@@ -25,11 +25,11 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class InductionBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSim>::MagType>
+   template <typename TSimType, template <typename> class TSimTraits> class InductionBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /**
           * @brief Constructor
@@ -38,7 +38,7 @@ namespace EPMDynamo {
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           */
-         InductionBase(typename TSimTraits<TSim>::MagType &rB, TransformType &transform, TimestepParameters &tsteps);
+         InductionBase(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps);
 
          /**
           * @brief Simple empty destructor
@@ -60,8 +60,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionBase<TSimType, TSimTraits>::InductionBase(typename TSimTraits<TSim>::MagType &rB, typename InductionBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSim>::MagType>(rB, transform, tsteps, 1, 1, 1.0, 1.0)
+   template <typename TSimType, template <typename> class TSimTraits> InductionBase<TSimType, TSimTraits>::InductionBase(typename TSimTraits<TSimType>::MagType &rB, typename InductionBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
+      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>(rB, transform, tsteps, 1, 1, 1.0, 1.0)
    {
    }
 

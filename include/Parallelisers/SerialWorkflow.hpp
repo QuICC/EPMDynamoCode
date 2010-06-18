@@ -54,9 +54,6 @@ namespace EPMDynamo {
       private:
    };
 
-   /// Set Workflow typedef to serial code
-   typedef SerialWorkflow  WorkflowType;
-
 }
 
 #endif // SERIALWORKFLOW_HPP

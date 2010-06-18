@@ -14,7 +14,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
 #include "Timestepping/ImplicitTOperatorSet.hpp"
@@ -24,11 +24,11 @@ namespace EPMDynamo {
    /**
     * \brief General implementation of the \f$\theta\f$-method operator set
     */
-   template <typename TSim, typename TOpType> class ThetaTOperatorSet: public ImplicitTOperatorSet<TSim, TOpType>
+   template <typename TSimType, typename TOpType> class ThetaTOperatorSet: public ImplicitTOperatorSet<TSimType, TOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSim::RadialBasisType  BasisType;
+         typedef typename TSimType::RadialBasisType  BasisType;
 
          /**
           * @brief Constructor
@@ -38,7 +38,7 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param pTrunc Truncation information
           */
-         ThetaTOperatorSet(DynamoFloat a, DynamoFloat b, const BasisType &basis, SmartTruncation pTrunc);
+         ThetaTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
@@ -48,7 +48,7 @@ namespace EPMDynamo {
          /**
           * @brief Get the theta parameter
           */
-         DynamoFloat theta() const;
+         EPMFloat theta() const;
 
          /**
           * @brief Update the timestep matrices
@@ -57,7 +57,7 @@ namespace EPMDynamo {
           *
           * @param dt   New timestep value
           */
-         virtual void update(const DynamoFloat dt) = 0;
+         virtual void update(const EPMFloat dt) = 0;
 
          /**
           * @brief Set the theta parameter of the scheme
@@ -66,7 +66,7 @@ namespace EPMDynamo {
           *
           * \bug This has to be reimplemented
           */
-         void setTheta(DynamoFloat theta);
+         void setTheta(EPMFloat theta);
 
          /**
           * @brief Init the operators
@@ -77,17 +77,17 @@ namespace EPMDynamo {
          /**
           * @brief \f$a\f$ coefficient of timestep operator
           */
-         DynamoFloat    mA;
+         EPMFloat    mA;
 
          /**
           * @brief \f$b\f$ coefficient of timestep operator
           */
-         DynamoFloat    mB;
+         EPMFloat    mB;
 
          /**
           * @brief Theta parameter of numerical scheme
           */
-         DynamoFloat   mTheta;
+         EPMFloat   mTheta;
 
          /**
           * @brief Reference to the radial basis
@@ -100,12 +100,12 @@ namespace EPMDynamo {
           * @param factor Multiplicative factor
           * @param timeDiff Timestep length
           */
-         void updateOperators(const DynamoFloat factor, const DynamoFloat timeDiff);
+         void updateOperators(const EPMFloat factor, const EPMFloat timeDiff);
 
          /**
           * @brief Default theta parameter for all operators
           */
-         static const DynamoFloat   DEFAULT_THETA;
+         static const EPMFloat   DEFAULT_THETA;
 
       private:
          /**
@@ -114,19 +114,19 @@ namespace EPMDynamo {
          bool mIsThetaLocked;
    };
 
-   template <typename TSim, typename TOpType> ThetaTOperatorSet<TSim, TOpType>::ThetaTOperatorSet(DynamoFloat a, DynamoFloat b, const typename ThetaTOperatorSet<TSim, TOpType>::BasisType &basis, SmartTruncation pTrunc)
-      : ImplicitTOperatorSet<TSim, TOpType>(pTrunc), mA(a), mB(b), mTheta(DEFAULT_THETA), mrBasis(basis), mIsThetaLocked(false)
+   template <typename TSimType, typename TOpType> ThetaTOperatorSet<TSimType, TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc)
+      : ImplicitTOperatorSet<TSimType, TOpType>(pTrunc), mA(a), mB(b), mTheta(DEFAULT_THETA), mrBasis(basis), mIsThetaLocked(false)
    {
    }
    
-   template <typename TSim, typename TOpType> inline DynamoFloat ThetaTOperatorSet<TSim, TOpType>::theta() const
+   template <typename TSimType, typename TOpType> inline EPMFloat ThetaTOperatorSet<TSimType, TOpType>::theta() const
    {
       return this->mTheta;
    }
 
-   template<typename TSim, typename TOpType> const DynamoFloat ThetaTOperatorSet<TSim, TOpType>::DEFAULT_THETA = 0.5;
+   template<typename TSimType, typename TOpType> const EPMFloat ThetaTOperatorSet<TSimType, TOpType>::DEFAULT_THETA = 0.5;
 
-   template<typename TSim, typename TOpType> void ThetaTOperatorSet<TSim, TOpType>::setTheta(DynamoFloat theta)
+   template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::setTheta(EPMFloat theta)
    {
       // Check if simulation already started, the theta parameter should not be changed during run
       if(this->mIsThetaLocked)
@@ -138,16 +138,16 @@ namespace EPMDynamo {
       }
    }
 
-   template<typename TSim, typename TOpType> void ThetaTOperatorSet<TSim, TOpType>::initOperators()
+   template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::initOperators()
    {
       // Forbid any further call to setTheta!
       this->mIsThetaLocked = true;
 
       // Call inherited initOperators method
-      ImplicitTOperatorSet<TSim, TOpType>::initOperators();
+      ImplicitTOperatorSet<TSimType, TOpType>::initOperators();
    }
 
-   template <typename TSim, typename TOpType> void ThetaTOperatorSet<TSim, TOpType>::updateOperators(const DynamoFloat factor, const DynamoFloat timeDiff)
+   template <typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::updateOperators(const EPMFloat factor, const EPMFloat timeDiff)
    {
       this->createOperators(factor, timeDiff, this->mrBasis);
    }

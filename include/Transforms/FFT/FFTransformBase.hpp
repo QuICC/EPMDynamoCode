@@ -16,7 +16,6 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
-#include "GeneralScalars/RTPFlatScalar.hpp"
 
 namespace EPMDynamo {
 

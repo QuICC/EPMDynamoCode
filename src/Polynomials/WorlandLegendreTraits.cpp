@@ -17,9 +17,9 @@
 
 namespace EPMDynamo {
 
-   const DynamoFloat WorlandLegendreTraits::ALPHA = 0.0;
+   const EPMFloat WorlandLegendreTraits::ALPHA = 0.0;
 
-   const DynamoFloat WorlandLegendreTraits::BETA = -0.5;
+   const EPMFloat WorlandLegendreTraits::BETA = -0.5;
 
    WorlandLegendreTraits::WorlandLegendreTraits()
    {

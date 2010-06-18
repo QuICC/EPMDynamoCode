@@ -21,7 +21,7 @@
 
 namespace EPMDynamo {
 
-   QuadratureRule::QuadratureRule(const Array& diagonal, const Array& subdiagonal, DynamoFloat intWeight)
+   QuadratureRule::QuadratureRule(const Array& diagonal, const Array& subdiagonal, EPMFloat intWeight)
       :mDiagonal(diagonal), mSubdiagonal(subdiagonal), mIntWeight(intWeight)
    {
    }
@@ -39,14 +39,14 @@ namespace EPMDynamo {
       int   n = mDiagonal.size();
       int   ldz = mDiagonal.size();
       // Get maximal precision
-      DynamoFloat   abstol = 2.0*dlamch_(&prec);
+      EPMFloat   abstol = 2.0*dlamch_(&prec);
 
       // info
       int            info, m;
 
       // unused variables (used if given range for eigenvalues/vectors)
       int            ilu;
-      DynamoFloat    vlu;
+      EPMFloat    vlu;
 
 
       // Required arrays and matrices
@@ -84,13 +84,13 @@ namespace EPMDynamo {
       int   n = mDiagonal.size();
       int   ldz = mDiagonal.size();
       // Get maximal precision
-      DynamoFloat   abstol = 2.0*dlamch_(&prec);
+      EPMFloat   abstol = 2.0*dlamch_(&prec);
 
       // info and unused variables (used if given range for eigenvalues/vectors)
       int            info, m;
 
       int            ilu;
-      DynamoFloat    vlu;
+      EPMFloat    vlu;
 
 
       // Required arrays and matrices

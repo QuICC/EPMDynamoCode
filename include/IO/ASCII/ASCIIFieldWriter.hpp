@@ -53,7 +53,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType, typename TWriterType> ASCIIFieldWriter<TSimType, TVariable, TWriterType>::ASCIIFieldWriter(TVariable &var, std::string name, std::string ext, std::string header, std::string version)
+   template <typename TSimType, typename TFieldType, typename TWriterType> ASCIIFieldWriter<TSimType, TFieldType, TWriterType>::ASCIIFieldWriter(TFieldType &var, std::string name, std::string ext, std::string header, std::string version)
       : TWriterType(name, ext, header, version), mrVar(var)
    {
    }

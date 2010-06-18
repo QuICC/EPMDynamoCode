@@ -103,7 +103,7 @@ namespace EPMDynamo {
 
       // Set data type correctly
       HDF5TypesConv  genType;
-      hid_t  type = genType.atype<DynamoComplex>();
+      hid_t  type = genType.atype<EPMComplex>();
 
       // Compute size of the memory dataspace
       hsize_t iDims[2];

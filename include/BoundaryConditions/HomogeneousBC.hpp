@@ -46,7 +46,7 @@ namespace EPMDynamo {
           * @param l Harmonic degreee l
           * @param m Harmonic order m 
           */
-         DynamoFloat getRealRHSBC(const int l, const int m) const;
+         EPMFloat getRealRHSBC(const int l, const int m) const;
 
          /**
           * @brief Get boundary condition value RHS, imaginary part
@@ -54,7 +54,7 @@ namespace EPMDynamo {
           * @param l Harmonic degreee l
           * @param m Harmonic order m 
           */
-         DynamoFloat getImagRHSBC(const int l, const int m) const;
+         EPMFloat getImagRHSBC(const int l, const int m) const;
 
          /**
           * @brief Get boundary condition value RHS, complex value
@@ -62,26 +62,26 @@ namespace EPMDynamo {
           * @param l Harmonic degreee l
           * @param m Harmonic order m 
           */
-         DynamoComplex getRHSBC(const int l, const int m) const;
+         EPMComplex getRHSBC(const int l, const int m) const;
          
       protected:
 
       private:
    };
 
-   inline DynamoFloat HomogeneousBC::getRealRHSBC(const int l, const int m) const
+   inline EPMFloat HomogeneousBC::getRealRHSBC(const int l, const int m) const
    {
       return 0.0;
    }
 
-   inline DynamoFloat HomogeneousBC::getImagRHSBC(const int l, const int m) const
+   inline EPMFloat HomogeneousBC::getImagRHSBC(const int l, const int m) const
    {
       return 0.0;
    }
 
-   inline DynamoComplex HomogeneousBC::getRHSBC(const int l, const int m) const
+   inline EPMComplex HomogeneousBC::getRHSBC(const int l, const int m) const
    {
-      return DynamoComplex(0.0);
+      return EPMComplex(0.0);
    }
 }
 

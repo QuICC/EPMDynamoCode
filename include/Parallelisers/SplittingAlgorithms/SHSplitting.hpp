@@ -68,13 +68,10 @@ namespace EPMDynamo {
 
          /**
           * @brief Split load for the Spec part
-         /**
-          * @brief Split the load of th real space radii
           *
           * @param rLs Array of harmonic degrees
           * @param rMs Vector of arrays of harmonic orders
           * @param id CPU/Core id
-          */
           */
          virtual void splitSpec(ArrayI &rLs, std::vector<ArrayI> &rMs, const int id) const;
 

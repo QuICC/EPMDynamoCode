@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "GeneralFields/TorPolField.hpp"
 #include "Equations/TimeEquation.hpp"
@@ -56,7 +56,7 @@ namespace EPMDynamo {
           * @param a \f$a\f$ parameter of the Timestepper
           * @param b \f$a\f$ parameter of the Timestepper
           */
-         TorPolDiffusionEquation(TFieldType &rF, TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, DynamoFloat a, DynamoFloat b);
+         TorPolDiffusionEquation(TFieldType &rF, TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, EPMFloat a, EPMFloat b);
 
          /**
           * @brief Simple empty destructor
@@ -132,7 +132,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::TorPolDiffusionEquation(TFieldType &rF, typename TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, DynamoFloat a, DynamoFloat b)
+   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::TorPolDiffusionEquation(TFieldType &rF, typename TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, EPMFloat a, EPMFloat b)
       : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mTorTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mPolTStepper(a, b, transform.radBasis(), tsteps, rF.trunc())
    {
       // Set counter to total number of boundary conditions (doesn't make the difference between toroidal or poloidal)

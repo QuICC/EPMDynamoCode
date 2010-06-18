@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
 #include "Equations/Transport/TransportBase.hpp"
@@ -30,7 +30,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /**
          * @brief Constructor
@@ -40,7 +40,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportDiffusion(typename TSimTraits<TSim>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params);
+         TransportDiffusion(typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params);
 
          /**
          * @brief Simple empty destructor
@@ -71,7 +71,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportDiffusion<TSimType, TSimTraits>::TransportDiffusion(typename TSimTraits<TSim>::CodType &rC, typename TransportDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> TransportDiffusion<TSimType, TSimTraits>::TransportDiffusion(typename TSimTraits<TSimType>::CodType &rC, typename TransportDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
       : TransportBase<TSimType, TSimTraits>(rC, transform, tsteps, params)
    {
    }

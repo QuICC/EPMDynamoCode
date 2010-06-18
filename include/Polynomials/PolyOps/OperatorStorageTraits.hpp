@@ -49,21 +49,21 @@ namespace EPMDynamo {
    /**
     * @brief These traits defines the storage type of the operators (Specialized for DPOperator)
     */
-   template <> class OperatorStorageTraits<CPOperator<DynamoFloat> >
+   template <> class OperatorStorageTraits<CPOperator<EPMFloat> >
    {
       public:
          /// Typedef for the used storage type
-         typedef ComputedOperator<CPOperator<DynamoFloat> > StorageType;
+         typedef ComputedOperator<CPOperator<EPMFloat> > StorageType;
    };
 
    /**
     * @brief These traits defines the storage type of the operators (Specialized for ZPOperator)
     */
-   template <> class OperatorStorageTraits<CPOperator<DynamoComplex> >
+   template <> class OperatorStorageTraits<CPOperator<EPMComplex> >
    {
       public:
          /// Typedef for the used storage type
-         typedef ComputedOperator<CPOperator<DynamoComplex> > StorageType;
+         typedef ComputedOperator<CPOperator<EPMComplex> > StorageType;
    };
 
 }

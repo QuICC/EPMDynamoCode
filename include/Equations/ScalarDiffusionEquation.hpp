@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TimeEquation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
@@ -50,7 +50,7 @@ namespace EPMDynamo {
           * \param a \f$a\f$ parameter for the timestepper
           * \param b \f$b\f$ parameter for the timestepper
           */
-         ScalarDiffusionEquation(TFieldType &rC, TransformType &transform, TimestepParameters& tsteps, int nBC, DynamoFloat a, DynamoFloat b);
+         ScalarDiffusionEquation(TFieldType &rC, TransformType &transform, TimestepParameters& tsteps, int nBC, EPMFloat a, EPMFloat b);
 
          /**
           * @brief Simple empty destructor
@@ -101,7 +101,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType> ScalarDiffusionEquation<TSimType,TFieldType>::ScalarDiffusionEquation(TFieldType &rC, typename ScalarDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBC, DynamoFloat a, DynamoFloat b)
+   template <typename TSimType, typename TFieldType> ScalarDiffusionEquation<TSimType,TFieldType>::ScalarDiffusionEquation(TFieldType &rC, typename ScalarDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBC, EPMFloat a, EPMFloat b)
       : TimeEquation<TSimType, TFieldType>(rC, transform, tsteps), mTStepper(a, b, transform.radBasis(), tsteps, rC.trunc())
    {
       // Set the boundary condition counter

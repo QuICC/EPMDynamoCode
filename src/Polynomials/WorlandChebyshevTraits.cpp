@@ -17,9 +17,9 @@
 
 namespace EPMDynamo {
 
-   const DynamoFloat WorlandChebyshevTraits::ALPHA = -0.5;
+   const EPMFloat WorlandChebyshevTraits::ALPHA = -0.5;
 
-   const DynamoFloat WorlandChebyshevTraits::BETA = -0.5;
+   const EPMFloat WorlandChebyshevTraits::BETA = -0.5;
 
    WorlandChebyshevTraits::WorlandChebyshevTraits()
    {

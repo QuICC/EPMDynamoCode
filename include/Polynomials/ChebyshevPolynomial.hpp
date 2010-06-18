@@ -215,7 +215,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceA(const int n) const;
+         EPMFloat recurrenceA(const int n) const;
 
          /**
           * @brief Get recurrence coefficients \f$b_n = \frac{(2n+\alpha+\beta-1)(2n +\alpha+\beta)}{2n(n+\alpha+\beta)}\f$ 
@@ -224,7 +224,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceB(const int n) const;
+         EPMFloat recurrenceB(const int n) const;
 
          /**
           * @brief Get recurrence coefficients \f$c_n = \frac{(n+\alpha-1)(n+\beta-1)(2n+\alpha+\beta)}{n(n+\alpha+\beta)(2n+\alpha+\beta-2)} \f$ 
@@ -233,7 +233,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceC(const int n) const;
+         EPMFloat recurrenceC(const int n) const;
 
          /**
           * @brief Compute normalisation factor required for weight
@@ -243,7 +243,7 @@ namespace EPMDynamo {
           *
           * @param n Order of the polynomial
           */
-         DynamoFloat normaliseW(const int n);
+         EPMFloat normaliseW(const int n);
    };
 
    // public inline functions

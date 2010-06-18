@@ -41,7 +41,7 @@ namespace EPMDynamo {
       if(this->doesIO())
       {
          // Close the file
-         s->close();
+         this->close();
       }
    }
 

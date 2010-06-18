@@ -498,7 +498,7 @@ namespace EPMDynamo {
       return this->mPacks*this->mBSizes.at(id);
    }
 
-   template <typename TForward, typename TBackward> MPIManipulatorBase<TForward, TBackward>::MPIManipulatorBase(const SmartTrunc pTrunc, const int nFTmp, const int nBTmp)
+   template <typename TForward, typename TBackward> MPIManipulatorBase<TForward, TBackward>::MPIManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp)
       : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mSpecialFEntry(-1), mSpecialBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
    {
    }

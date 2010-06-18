@@ -119,7 +119,7 @@ namespace EPMDynamo {
          /**
           * @brief Angular distance factor for CFL condition
           */
-         DynamoFloat mCFLFactor;
+         EPMFloat mCFLFactor;
 
          /**
           * @brief Codensity scalar
@@ -157,7 +157,7 @@ namespace EPMDynamo {
    {
       // Set the CFL factor to L*(L+1)
       int l = this->mpTrunc->sim()->hoz()->nL();
-      this->mCFLFactor = static_cast<DynamoFloat>(l*(l+1));
+      this->mCFLFactor = static_cast<EPMFloat>(l*(l+1));
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::initEquations()

@@ -25,7 +25,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the constant type
-         typedef DynamoFloat ConstantType;
+         typedef EPMFloat ConstantType;
 
          /// Typedef for full matrix type
          typedef Eigen::Matrix<ConstantType, Eigen::Dynamic, Eigen::Dynamic>  OutputMatrix;
@@ -53,7 +53,7 @@ namespace EPMDynamo {
          /**
           * @brief Multiplicative constant
           */
-         DynamoFloat c() const;
+         EPMFloat c() const;
          
       protected:
          /**
@@ -74,7 +74,7 @@ namespace EPMDynamo {
       return this->productOp();
    }
 
-   inline DynamoFloat POperator::c() const
+   inline EPMFloat POperator::c() const
    {
       return 1.0;
    }

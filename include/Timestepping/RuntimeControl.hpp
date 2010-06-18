@@ -38,7 +38,7 @@ namespace EPMDynamo {
           *
           * @param wall Wall time
           */
-         RuntimeControl(DynamoFloat wall);
+         RuntimeControl(EPMFloat wall);
 
          /**
           * @brief Destructor
@@ -53,7 +53,7 @@ namespace EPMDynamo {
          /**
           * @brief Get current runtime
           */
-         DynamoFloat runtime() const;
+         EPMFloat runtime() const;
 
          /**
           * @brief Update run time
@@ -73,15 +73,15 @@ namespace EPMDynamo {
          /**
           * @brief Wall time
           */
-         const DynamoFloat mWallTime;
+         const EPMFloat mWallTime;
 
          /**
           * @brief Run time
           */
-         DynamoFloat mRuntime;
+         EPMFloat mRuntime;
    };
 
-   inline DynamoFloat RuntimeControl::runtime() const
+   inline EPMFloat RuntimeControl::runtime() const
    {
       return this->mRuntime;
    }

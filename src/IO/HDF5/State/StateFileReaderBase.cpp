@@ -25,7 +25,7 @@ namespace EPMDynamo {
    {
    }
 
-   void StateFileReaderBase::readPhysical(DynamoFloat &E, DynamoFloat &q, DynamoFloat &Ra, DynamoFloat &Ro)
+   void StateFileReaderBase::readPhysical(EPMFloat &E, EPMFloat &q, EPMFloat &Ra, EPMFloat &Ro)
    {
       // Open the physical parameters group
       this->mGroup = H5Gopen(this->mFile, StateFileDefs::PHYSICALTAG.c_str(), H5P_DEFAULT);

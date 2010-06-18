@@ -25,7 +25,7 @@ namespace EPMDynamo {
    {
    }
 
-   void StateFileWriterBase::writePhysical(const DynamoFloat E, const DynamoFloat q, const DynamoFloat Ra, const DynamoFloat Ro)
+   void StateFileWriterBase::writePhysical(const EPMFloat E, const EPMFloat q, const EPMFloat Ra, const EPMFloat Ro)
    {
       // Create the Physical parameters group
       this->mGroup = H5Gcreate(this->mFile, StateFileDefs::PHYSICALTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
@@ -46,7 +46,7 @@ namespace EPMDynamo {
       H5Gclose(this->mGroup);
    }
 
-   void StateFileWriterBase::writeRun(const DynamoFloat time, const DynamoFloat step)
+   void StateFileWriterBase::writeRun(const EPMFloat time, const EPMFloat step)
    {
       // Create the Run parameters group
       this->mGroup = H5Gcreate(this->mFile, StateFileDefs::RUNTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);

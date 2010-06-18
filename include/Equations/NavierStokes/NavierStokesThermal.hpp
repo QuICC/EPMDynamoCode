@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
 #include "Equations/NavierStokes/NavierStokesRotating.hpp"
@@ -26,10 +26,10 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> class NavierStokesThermal : public NavierStokesRotating<TSimType, TSimTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -40,7 +40,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesThermal(typename TSimTraits<TSim>::VelType &rV, typename TSimTraits<TSim>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
 
          /**
           * @brief Simple empty destructor
@@ -64,12 +64,12 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the codensity scalar
           */
-         typename TSimTraits<TSim>::CodType&  mrC;
+         typename TSimTraits<TSimType>::CodType&  mrC;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesThermal<TSimType, TSimTraits>::NavierStokesThermal(typename TSimTraits<TSim>::VelType &rV, typename TSimTraits<TSim>::CodType &rC, typename NavierStokesThermal<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesThermal<TSimType, TSimTraits>::NavierStokesThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesThermal<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
       : NavierStokesRotating<TSimType, TSimTraits>(rV, transform, tsteps, params), mrC(rC)
    {
    }

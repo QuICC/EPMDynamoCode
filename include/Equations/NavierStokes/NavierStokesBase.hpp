@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
@@ -30,13 +30,13 @@ namespace EPMDynamo {
     * \bug Need to change the implementation of the poisson solver
     * \bug Poisson solver has not yet been moved into new tree
     */
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSim>::VelType, TTStepPol>  {
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TTStepPol>  {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -46,7 +46,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesBase(typename TSimTraits<TSim>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
 
          /**
           * @brief Simple empty destructor
@@ -73,8 +73,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> NavierStokesBase<TSimType, TSimTraits, TTStepPol>::NavierStokesBase(typename TSimTraits<TSim>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TTStepPol>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSim>::VelType, TTStepPol>(rV, transform, tsteps, 1, 1, params.Ro(), params.E()), mrParams(params)
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> NavierStokesBase<TSimType, TSimTraits, TTStepPol>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TTStepPol>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TTStepPol>(rV, transform, tsteps, 1, 1, params.Ro(), params.E()), mrParams(params)
    {
    }
 

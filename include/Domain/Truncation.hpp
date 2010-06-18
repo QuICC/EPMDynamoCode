@@ -50,7 +50,7 @@ namespace EPMDynamo {
          /**
           * @brief Parallelisation information
           */
-         WorkflowType& para();
+         EPMDYNAMO_WORKFLOWTYPE& para();
          
          /**
           * @brief Get the general Simulation wide truncation information
@@ -89,7 +89,7 @@ namespace EPMDynamo {
          /**
           * @brief Parallelisation information and control
           */
-         WorkflowType mPara;
+         EPMDYNAMO_WORKFLOWTYPE mPara;
 
          /**
           * @brief Simulation wide truncation information
@@ -114,7 +114,7 @@ namespace EPMDynamo {
          void splitLoad();
    };
 
-   inline WorkflowType& Truncation::para()
+   inline EPMDYNAMO_WORKFLOWTYPE& Truncation::para()
    {
       return this->mPara;
    }

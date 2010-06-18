@@ -15,9 +15,9 @@
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/DynamoSimulation.hpp"
-#include "Simulations/WSH/WSHSimInc.hpp"
-#include "Simulations/WSH/WSHSimulation.hpp"
+#include "Simulations/Implementations/DynamoSimulation.hpp"
+#include "Simulations/Types/WSHSimInc.hpp"
+#include "Simulations/Types/WSHSimulation.hpp"
 
 namespace epm = EPMDynamo;
 

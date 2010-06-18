@@ -106,7 +106,7 @@ namespace EPMDynamo {
 
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->rPoly().row(n) = (static_cast<DynamoFloat>(n)*x).transpose().cwise().cos();
+         this->rPoly().row(n) = (static_cast<EPMFloat>(n)*x).transpose().cwise().cos();
       }
    }
 
@@ -174,10 +174,10 @@ namespace EPMDynamo {
       this->rDiff(1).row(0).setConstant(0.0);
       this->rDiff(1).row(1).setConstant(1.0);
 
-      DynamoFloat rn;
+      EPMFloat rn;
       for(int n = 2; n < this->polyN(); ++n)
       {
-         rn = static_cast<DynamoFloat>(n);
+         rn = static_cast<EPMFloat>(n);
 
          // Compute dr part
          this->rDiff(1).row(n) = 4.0*(0.5*x).cwise().cos().transpose();
@@ -191,10 +191,10 @@ namespace EPMDynamo {
    {
       this->rBDiff(1)(0) = 0.0;
 
-      DynamoFloat rn;
+      EPMFloat rn;
       for(int n = 1; n < this->polyN(); ++n)
       {
-         rn = static_cast<DynamoFloat>(n);
+         rn = static_cast<EPMFloat>(n);
 
          this->rBDiff(1)(n) = 4.0*(rn*rn);
       }
@@ -214,10 +214,10 @@ namespace EPMDynamo {
       this->rDiff(2).row(0).setConstant(0.0);
       this->rDiff(2).row(1).setConstant(4.0);
 
-      DynamoFloat rn;
+      EPMFloat rn;
       for(int n = 2; n < this->polyN(); ++n)
       {
-         rn = static_cast<DynamoFloat>(n);
+         rn = static_cast<EPMFloat>(n);
 
          this->rDiff(2).row(n) = (-2.0*rn*(rn*x).cwise().cos()).transpose();
 
@@ -231,10 +231,10 @@ namespace EPMDynamo {
    {
       this->rBDiff(2)(0) = 0.0;
 
-      DynamoFloat rn;
+      EPMFloat rn;
       for(int n = 1; n < this->polyN(); ++n)
       {
-         rn = static_cast<DynamoFloat>(n);
+         rn = static_cast<EPMFloat>(n);
 
          this->rBDiff(2)(n) = 4.0/3.0*rn*rn*(4.0*rn*rn-1.0);
       }
@@ -251,22 +251,22 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat ChebyshevPolynomial::recurrenceA(const int n) const
+   EPMFloat ChebyshevPolynomial::recurrenceA(const int n) const
    {
      return 0.0;
    }
 
-   DynamoFloat ChebyshevPolynomial::recurrenceB(const int n) const
+   EPMFloat ChebyshevPolynomial::recurrenceB(const int n) const
    {
       return 2.0;
    }
 
-   DynamoFloat ChebyshevPolynomial::recurrenceC(const int n) const
+   EPMFloat ChebyshevPolynomial::recurrenceC(const int n) const
    {
       return 1.0;
    }
 
-   DynamoFloat ChebyshevPolynomial::normaliseW(const int n)
+   EPMFloat ChebyshevPolynomial::normaliseW(const int n)
    {
       return 1.0/this->weights().dot(this->poly().row(n).cwise().pow(2));
    }

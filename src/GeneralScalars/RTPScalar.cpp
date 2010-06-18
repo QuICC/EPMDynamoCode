@@ -10,7 +10,7 @@
 
 // Class include
 //
-#include "GeneralFields/RTPScalar.hpp"
+#include "GeneralScalars/RTPScalar.hpp"
 
 // Project includes
 //

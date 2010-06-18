@@ -31,7 +31,7 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat BoundaryCondition::getLHSBC(const int i, const int l) const
+   EPMFloat BoundaryCondition::getLHSBC(const int i, const int l) const
    {
       return this->mLHSBCValues.at(l)(i);
    }

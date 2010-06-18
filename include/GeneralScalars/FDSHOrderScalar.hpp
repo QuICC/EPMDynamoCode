@@ -57,7 +57,7 @@ namespace EPMDynamo {
           * fast or slow looping directions. It is only here for a few special case where it allows a more
           * general implementation.
           */
-         DynamoComplex  coeff(const int l, const int m, const int n) const;
+         EPMComplex  coeff(const int l, const int m, const int n) const;
 
          /**
           * @brief Set coefficient for mode parameters l, m, and n
@@ -66,7 +66,7 @@ namespace EPMDynamo {
           * fast or slow looping directions. It is only here for a few special case where it allows a more
           * general implementation. This might be removed at a later stage.
           */
-         DynamoComplex&  rCoeff(const int l, const int m, const int n);
+         EPMComplex&  rCoeff(const int l, const int m, const int n);
          
       protected:
 
@@ -92,12 +92,12 @@ namespace EPMDynamo {
       return this->mMShells.at(m);
    }
 
-   inline DynamoComplex  FDSHOrderScalar::coeff(const int l, const int m, const int n) const
+   inline EPMComplex  FDSHOrderScalar::coeff(const int l, const int m, const int n) const
    {
       return this->mMShells.at(m)(l, n);
    }
 
-   inline DynamoComplex&  FDSHOrderScalar::rCoeff(const int l, const int m, const int n)
+   inline EPMComplex&  FDSHOrderScalar::rCoeff(const int l, const int m, const int n)
    {
       return this->mMShells.at(m)(l, n);
    }

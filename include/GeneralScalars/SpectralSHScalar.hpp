@@ -47,12 +47,12 @@ namespace EPMDynamo {
          /**
           * @brief Compute the L2 norm of the spectral values
           */
-         DynamoFloat l2Norm() const;
+         EPMFloat l2Norm() const;
 
          /**
           * @brief Compute the L2 norm for each mode separately
           */
-         DynamoFloat modalL2Norm() const;
+         EPMFloat modalL2Norm() const;
 
          /**
           * @brief Get the energy of the scalar
@@ -123,15 +123,15 @@ namespace EPMDynamo {
       Array    tmpSpectrum(this->trunc()->sim()->hoz()->nM());
       tmpSpectrum.setConstant(0.0);
 
-      DynamoFloat tmpEnergy;
-      DynamoFloat shWeight;
-      DynamoFloat shFactor;
+      EPMFloat tmpEnergy;
+      EPMFloat shWeight;
+      EPMFloat shFactor;
       int l_;
       for(int l = l0; l < nL; ++l)
       {
          l_ = ls(l);
          ms = this->trunc()->local()->spec()->mArray(l);
-         shWeight = 4.0 * MathConstants::PI / static_cast<DynamoFloat>(2*l_+1);
+         shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
          for(int m = 0; m < this->nM(l); ++m)
          {
             tmpEnergy = 0.0;

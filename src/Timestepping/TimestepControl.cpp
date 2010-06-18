@@ -29,7 +29,7 @@ namespace EPMDynamo {
    {
    }
 
-   void TimestepControl::updateCFLTimestep(const RTPField &velV, const DynamoFloat llFactor)
+   void TimestepControl::updateCFLTimestep(const RTPField &velV, const EPMFloat llFactor)
    {
       if(this->mrParams.isNextStep())
       {
@@ -42,11 +42,11 @@ namespace EPMDynamo {
          Array radii = velV.trunc()->sim()->rad()->radGrid();
 
          // Initialise to highest representable value
-         this->mCFLTimestep = std::numeric_limits<DynamoFloat>::max();
+         this->mCFLTimestep = std::numeric_limits<EPMFloat>::max();
 
          // Local CFL Condition
-         DynamoFloat dr;
-         DynamoFloat maxVel = 0.0;
+         EPMFloat dr;
+         EPMFloat maxVel = 0.0;
          Matrix   p;
          int n_;
          for(int n=0; n < nR; ++n)
@@ -97,7 +97,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::updateCFLTimestep(const RTPField &magB, const RTPField &velV, const DynamoFloat llFactor)
+   void TimestepControl::updateCFLTimestep(const RTPField &magB, const RTPField &velV, const EPMFloat llFactor)
    {
       if(mrParams.isNextStep())
       {
@@ -110,12 +110,12 @@ namespace EPMDynamo {
          Array radii = magB.trunc()->sim()->rad()->radGrid();
 
          // Initialise to highest representable value
-         this->mCFLTimestep = std::numeric_limits<DynamoFloat>::max();
+         this->mCFLTimestep = std::numeric_limits<EPMFloat>::max();
 
          // Local CFL Condition
-         DynamoFloat d;
-         DynamoFloat dr;
-         DynamoFloat maxVel = 0.0;
+         EPMFloat d;
+         EPMFloat dr;
+         EPMFloat maxVel = 0.0;
          Matrix   p;
          int n_;
          for(int n=0; n < nR; ++n)
@@ -205,7 +205,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::testInitialisationTimestep(DynamoFloat& rDt)
+   void TimestepControl::testInitialisationTimestep(EPMFloat& rDt)
    {
       // Initialisation timestep
       if(this->mNeedInit)
@@ -226,7 +226,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::testMaximumTimestep(DynamoFloat& rDt)
+   void TimestepControl::testMaximumTimestep(EPMFloat& rDt)
    {
       // Force maximum timestep
       if(rDt > TimestepConfig::MAXIMUM_TIMESTEP)
@@ -236,7 +236,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::testCFLTimestep(DynamoFloat& rDt)
+   void TimestepControl::testCFLTimestep(EPMFloat& rDt)
    {
       // Set timestep according to CFL condition
       this->getSimulationCFLCondition();
@@ -246,13 +246,13 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::useCourantTimestep(DynamoFloat& rDt)
+   void TimestepControl::useCourantTimestep(EPMFloat& rDt)
    {
       // Include Courant number into timestep value
       rDt = rDt*TimestepConfig::COURANT_NUMBER;
    }
 
-   void TimestepControl::setWindowedTimestep(DynamoFloat dt)
+   void TimestepControl::setWindowedTimestep(EPMFloat dt)
    {
       // Don't make adaptative scheme to reactive. Allow a range of timestep values
       if(dt < this->mrParams.dt()*(1.0-TimestepConfig::TIMESTEP_MARGIN) ||  dt > this->mrParams.dt()*(1.0 + TimestepConfig::TIMESTEP_MARGIN))
@@ -269,7 +269,7 @@ namespace EPMDynamo {
       if(this->mrParams.isNextStep())
       {
          // Get current dt
-         DynamoFloat dt = this->mrParams.dt();
+         EPMFloat dt = this->mrParams.dt();
 
          // Set timestep according to CFL condition
          this->testCFLTimestep(dt);

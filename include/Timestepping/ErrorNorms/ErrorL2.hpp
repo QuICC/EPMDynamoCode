@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -33,7 +33,7 @@ namespace EPMDynamo {
           *
           * @param rVar Input variable
           */
-         static DynamoFloat computeNorm(const ScalarType& rVar);
+         static EPMFloat computeNorm(const ScalarType& rVar);
 
          /**
           * @brief Compare new and old values and keep maximum
@@ -41,7 +41,7 @@ namespace EPMDynamo {
           * @param newNorm New error norm value
           * @param oldNorm Old error norm value
           */
-         static DynamoFloat updateNorm(const DynamoFloat newNorm, const DynamoFloat oldNorm);
+         static EPMFloat updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm);
 
       protected:
 
@@ -57,12 +57,12 @@ namespace EPMDynamo {
          virtual ~ErrorL2() {};
    };
 
-   template <typename TSimType> inline DynamoFloat ErrorL2<TSimType>::computeNorm(const typename ErrorL2<TSimType>::ScalarType& rVar)
+   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::computeNorm(const typename ErrorL2<TSimType>::ScalarType& rVar)
    {
       return rVar.l2Norm();
    }
 
-   template <typename TSimType> inline DynamoFloat ErrorL2<TSimType>::updateNorm(const DynamoFloat newNorm, const DynamoFloat oldNorm)
+   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
    }

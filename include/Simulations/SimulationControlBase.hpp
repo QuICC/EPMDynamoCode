@@ -36,7 +36,7 @@ namespace EPMDynamo {
           * \param sRate State file save rate
           * \param wall Wall time
           */
-         SimulationControlBase(DynamoFloat t, DynamoFloat dt, int maxtstep, int aRate, int sRate, DynamoFloat wall);
+         SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall);
 
          /**
           * @brief Constructor 
@@ -70,7 +70,17 @@ namespace EPMDynamo {
          /**
           * @brief Get the time integration parameters
           */
+         const TimestepParameters&  tsParams() const;
+
+         /**
+          * @brief Get the time integration parameters
+          */
          TimestepParameters&  tsParams();
+
+         /**
+          * @brief Get the time integration counters
+          */
+         const TimestepCounter&  tsCounter() const;
 
          /**
           * @brief Get the time integration counters
@@ -80,7 +90,17 @@ namespace EPMDynamo {
          /**
           * @brief Get the time integration run control
           */
+         const RuntimeControl&  runControl() const;
+
+         /**
+          * @brief Get the time integration run control
+          */
          RuntimeControl&  runControl();
+
+         /**
+          * @brief Get the external control interface
+          */
+         const ControlInterface&  ctrlIface() const;
 
          /**
           * @brief Get the external control interface
@@ -144,9 +164,19 @@ namespace EPMDynamo {
       return this->mKeepRunning;
    }
 
+   inline const TimestepParameters& SimulationControlBase::tsParams() const
+   {
+      return this->mTSParams;
+   }
+
    inline TimestepParameters& SimulationControlBase::tsParams()
    {
       return this->mTSParams;
+   }
+
+   inline const TimestepCounter& SimulationControlBase::tsCounter() const
+   {
+      return this->mTSCounter;
    }
 
    inline TimestepCounter& SimulationControlBase::tsCounter()
@@ -154,9 +184,19 @@ namespace EPMDynamo {
       return this->mTSCounter;
    }
 
+   inline const RuntimeControl& SimulationControlBase::runControl() const
+   {
+      return this->mRunControl;
+   }
+
    inline RuntimeControl& SimulationControlBase::runControl()
    {
       return this->mRunControl;
+   }
+
+   inline const ControlInterface& SimulationControlBase::ctrlIface() const
+   {
+      return this->mCtrlIface;
    }
 
    inline ControlInterface& SimulationControlBase::ctrlIface()

@@ -110,7 +110,7 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat WorlandPolynomial::normaliseW(const int n)
+   EPMFloat WorlandPolynomial::normaliseW(const int n)
    {
       return 1.0/this->weights().dot(this->poly().row(n).cwise().pow(2));
    }
@@ -153,7 +153,7 @@ namespace EPMDynamo {
 
    void WorlandPolynomial::computeFirstDerivative()
    {
-      Array rfactor = static_cast<DynamoFloat>(l())*this->grid().cwise().pow(l()-1);
+      Array rfactor = static_cast<EPMFloat>(l())*this->grid().cwise().pow(l()-1);
       Array drfactor = this->grid().cwise().pow(l());
 
       for(int n = 0; n < this->polyN(); ++n)
@@ -166,7 +166,7 @@ namespace EPMDynamo {
 
    void WorlandPolynomial::computeBoundaryFirstDerivative()
    {
-      DynamoFloat rfactor = static_cast<DynamoFloat>(l());
+      EPMFloat rfactor = static_cast<EPMFloat>(l());
 
       for(int n = 0; n < polyN(); ++n)
       {
@@ -178,8 +178,8 @@ namespace EPMDynamo {
 
    void WorlandPolynomial::computeSecondDerivative()
    {
-      Array rfactor = static_cast<DynamoFloat>(l()*(l()-1))*this->grid().cwise().pow(l()-2);
-      Array drfactor = static_cast<DynamoFloat>(2*l())*this->grid().cwise().pow(l()-1);
+      Array rfactor = static_cast<EPMFloat>(l()*(l()-1))*this->grid().cwise().pow(l()-2);
+      Array drfactor = static_cast<EPMFloat>(2*l())*this->grid().cwise().pow(l()-1);
       Array ddrfactor = this->grid().cwise().pow(l());
 
       for(int n = 0; n < this->polyN(); ++n)
@@ -193,8 +193,8 @@ namespace EPMDynamo {
 
    void WorlandPolynomial::computeBoundarySecondDerivative()
    {
-      DynamoFloat rfactor = static_cast<DynamoFloat>(this->l()*(this->l()-1));
-      DynamoFloat drfactor = static_cast<DynamoFloat>(2*this->l());
+      EPMFloat rfactor = static_cast<EPMFloat>(this->l()*(this->l()-1));
+      EPMFloat drfactor = static_cast<EPMFloat>(2*this->l());
 
       for(int n = 0; n < this->polyN(); ++n)
       {

@@ -35,7 +35,7 @@ namespace EPMDynamo {
           * @param bcValue Value at the boundary
           * @param basis   Radial basis
           */
-         DifferentialHeatingBC(const DynamoFloat bcValue, const BasisType &basis);
+         DifferentialHeatingBC(const EPMFloat bcValue, const BasisType &basis);
 
          /**
           * @brief Destructor
@@ -56,12 +56,12 @@ namespace EPMDynamo {
           *
           * @param bcValue   Value at the boundary
           */
-         void setBCValue(const DynamoFloat bcValue);
+         void setBCValue(const EPMFloat bcValue);
 
       private:
    };
 
-   template <typename TSimType> DifferentialHeatingBC<TSimType>::DifferentialHeatingBC(const DynamoFloat bcValue, const typename DifferentialHeatingBC<TSimType>::BasisType &basis)
+   template <typename TSimType> DifferentialHeatingBC<TSimType>::DifferentialHeatingBC(const EPMFloat bcValue, const typename DifferentialHeatingBC<TSimType>::BasisType &basis)
       : L0HarmonicBC(basis.basisN(), basis.polyN())
    {
       // Fill Operator BC values
@@ -86,7 +86,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> void DifferentialHeatingBC<TSimType>::setBCValue(const DynamoFloat bcValue)
+   template <typename TSimType> void DifferentialHeatingBC<TSimType>::setBCValue(const EPMFloat bcValue)
    {
       this->mValue = bcValue;
    }

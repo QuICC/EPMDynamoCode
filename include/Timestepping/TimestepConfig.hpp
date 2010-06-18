@@ -26,7 +26,7 @@ namespace EPMDynamo {
          /**
           * @brief Minimum timestep length
           */
-         static const DynamoFloat MIN_TIMESTEP;
+         static const EPMFloat MIN_TIMESTEP;
 
          /**
           * @brief Maximal value for timestep
@@ -34,12 +34,12 @@ namespace EPMDynamo {
           * This is useful in case the adaptative control is not strong enough or 
           * if for any reason a given timestep should be enforced
           */
-         static  DynamoFloat MAXIMUM_TIMESTEP;
+         static  EPMFloat MAXIMUM_TIMESTEP;
 
          /**
           * @brief Courant number
           */
-         static const DynamoFloat COURANT_NUMBER;
+         static const EPMFloat COURANT_NUMBER;
 
          /**
           * @brief Adaptive timestep scheme margin \f$p\f$
@@ -47,29 +47,29 @@ namespace EPMDynamo {
           * The timestep will only be modified if the new timestep is outside the
           * \f$ [(1.0-p) dt, (1.0+p) dt] \f$
           */
-         static const DynamoFloat TIMESTEP_MARGIN;
+         static const EPMFloat TIMESTEP_MARGIN;
 
          /**
           * @brief Possibility to overrule the maximum allowed timestep
           *
           * @param newMax New maximum allowed timestep
           */
-         static void overruleMaxTimestep(DynamoFloat newMax);
+         static void overruleMaxTimestep(EPMFloat newMax);
 
          /**
           * @brief Multiplicative constant for tolerance ( < 1)
           */
-         static const DynamoFloat TIMESTEP_ERROR_THETA;
+         static const EPMFloat TIMESTEP_ERROR_THETA;
 
          /**
           * @brief Maximum error tolerance
           */
-         static const DynamoFloat TIMESTEP_ERROR_TOLERANCE;
+         static const EPMFloat TIMESTEP_ERROR_TOLERANCE;
 
          /**
           * @brief Maximum error epsilon (theta*tol)
           */
-         static const DynamoFloat TIMESTEP_ERROR_EPSILON;
+         static const EPMFloat TIMESTEP_ERROR_EPSILON;
          
       protected:
 

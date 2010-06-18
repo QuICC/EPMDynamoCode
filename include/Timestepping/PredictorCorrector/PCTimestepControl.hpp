@@ -68,27 +68,27 @@ namespace EPMDynamo {
          /**
           * @brief Timestep obtained through the PC error constrains
           */
-         DynamoFloat   mPCTStep;
+         EPMFloat   mPCTStep;
 
          /**
           * @brief Storage for the norm of the current corrector iteration
           */
-         DynamoFloat   mCorrectionNorm;
+         EPMFloat   mCorrectionNorm;
 
          /**
           * @brief Storage for the norm of the previous corrector iteration
           */
-         DynamoFloat   mOldCorrectionNorm;
+         EPMFloat   mOldCorrectionNorm;
 
          /**
           * @brief Storage for the total error of the PC step
           */
-         DynamoFloat   mPCError;
+         EPMFloat   mPCError;
 
          /**
           * @brief Storage for the total error of the previous PC step
           */ 
-         DynamoFloat   mOldPCError;
+         EPMFloat   mOldPCError;
 
          /**
           * @brief Adaptive timestep controller
@@ -105,7 +105,7 @@ namespace EPMDynamo {
           *
           * @param rDt Timestep lenght old/new
           */
-         void testPCTimestep(DynamoFloat& rDt);
+         void testPCTimestep(EPMFloat& rDt);
 
          /**
           * @brief Compute the timestep resulting from PC errors
@@ -119,7 +119,7 @@ namespace EPMDynamo {
           *
           * \bug this needs to be restructured
           */
-         DynamoFloat mTotCorr;
+         EPMFloat mTotCorr;
    };
 
 }

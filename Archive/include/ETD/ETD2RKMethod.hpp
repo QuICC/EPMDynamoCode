@@ -12,13 +12,13 @@
 
 // Project includes
 //
-#include "Domain/SpectralTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDMethodBase.hpp"
 #include "Timestepping/ETD/Operators/ETD2Operators.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKA.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKTimestep.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -38,7 +38,7 @@ namespace EPMDynamo {
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
           */
-         ETD2RKMethod(DynamoFloat a, DynamoFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc);
+         ETD2RKMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc);
 
          /**
           * @brief Destructor
@@ -69,7 +69,7 @@ namespace EPMDynamo {
          ETD2Operators  mETD2;
    };
 
-   template <typename TSim> ETD2RKMethod<TSim>::ETD2RKMethod(DynamoFloat a, DynamoFloat b, const typename ETD2RKMethod<TSim>::BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc)
+   template <typename TSim> ETD2RKMethod<TSim>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSim>::BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc)
       : ETDMethodBase<TSim>(a, b, basis, tsteps, pTrunc), mETD2(pTrunc)
    {
       // Init the method

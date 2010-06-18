@@ -91,12 +91,12 @@ namespace EPMDynamo {
          /**
           * @brief Get \f$\alpha\f$ parameter of the jacobi polynomial
           */
-         DynamoFloat alpha() const;
+         EPMFloat alpha() const;
 
          /**
           * @brief Get \f$\beta\f$ parameter of the jacobi polynomial
           */
-         DynamoFloat beta() const;
+         EPMFloat beta() const;
 
          /**
           * @brief Complete initialisation of the polynomials
@@ -203,12 +203,12 @@ namespace EPMDynamo {
          /**
           * @brief \f$\alpha\f$ parameter of the Onesided Jacobi polynomials
           */
-         DynamoFloat    mAlpha;
+         EPMFloat    mAlpha;
 
          /**
           * @brief \f$\beta\f$ parameter of the Onesided Jacobi polynomials
           */
-         DynamoFloat    mBeta;
+         EPMFloat    mBeta;
 
          /**
           * @brief Values of the polynomials on the boundary
@@ -274,7 +274,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceA(const int n) const;
+         EPMFloat recurrenceA(const int n) const;
 
          /**
           * @brief Get recurrence coefficients \f$b_n = \frac{(2n+\alpha+\beta-1)(2n +\alpha+\beta)}{2n(n+\alpha+\beta)}\f$ 
@@ -283,7 +283,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceB(const int n) const;
+         EPMFloat recurrenceB(const int n) const;
 
          /**
           * @brief Get recurrence coefficients \f$c_n = \frac{(n+\alpha-1)(n+\beta-1)(2n+\alpha+\beta)}{n(n+\alpha+\beta)(2n+\alpha+\beta-2)} \f$ 
@@ -292,7 +292,7 @@ namespace EPMDynamo {
           *
           * @param n Order n of the polynomial
           */
-         DynamoFloat recurrenceC(const int n) const;
+         EPMFloat recurrenceC(const int n) const;
 
          /**
           * @brief Get recurrence coefficients \f$a_n = \frac{(2n+\alpha+\beta-1)(\alpha^2-\beta^2)}{2n(n+\alpha+\beta)(2n+\alpha+\beta-2)}\f$ 
@@ -304,7 +304,7 @@ namespace EPMDynamo {
           * @param alpha Value of alpha parameter
           * @param beta Value of beta parameter
           */
-         DynamoFloat recurrenceA(const int n, const DynamoFloat alpha, const DynamoFloat beta) const;
+         EPMFloat recurrenceA(const int n, const EPMFloat alpha, const EPMFloat beta) const;
 
          /**
           * @brief Get recurrence coefficients \f$b_n = \frac{(2n+\alpha+\beta-1)(2n +\alpha+\beta)}{2n(n+\alpha+\beta)}\f$ 
@@ -316,7 +316,7 @@ namespace EPMDynamo {
           * @param alpha Value of alpha parameter
           * @param beta Value of beta parameter
           */
-         DynamoFloat recurrenceB(const int n, const DynamoFloat alpha, const DynamoFloat beta) const;
+         EPMFloat recurrenceB(const int n, const EPMFloat alpha, const EPMFloat beta) const;
 
          /**
           * @brief Get recurrence coefficients \f$c_n = \frac{(n+\alpha-1)(n+\beta-1)(2n+\alpha+\beta)}{n(n+\alpha+\beta)(2n+\alpha+\beta-2)} \f$ 
@@ -328,17 +328,17 @@ namespace EPMDynamo {
           * @param alpha Value of alpha parameter
           * @param beta Value of beta parameter
           */
-         DynamoFloat recurrenceC(const int n, const DynamoFloat alpha, const DynamoFloat beta) const;
+         EPMFloat recurrenceC(const int n, const EPMFloat alpha, const EPMFloat beta) const;
    };
 
    // public inline functions
    //
-   inline DynamoFloat   OnesidedJacobi::alpha() const
+   inline EPMFloat   OnesidedJacobi::alpha() const
    {
       return this->mAlpha;
    }
 
-   inline DynamoFloat   OnesidedJacobi::beta() const
+   inline EPMFloat   OnesidedJacobi::beta() const
    {
       return this->mBeta;
    }

@@ -50,23 +50,23 @@ namespace EPMDynamo {
          /**
           * @brief Get state file time
           */
-         DynamoFloat time() const;
+         EPMFloat time() const;
 
          /**
           * @brief Get state file timestep
           */
-         DynamoFloat timestep() const;
+         EPMFloat timestep() const;
          
       protected:
          /**
           * @brief Time read from file
           */
-         DynamoFloat mTime;
+         EPMFloat mTime;
 
          /**
           * @brief Timestep read from file
           */
-         DynamoFloat mTimestep;
+         EPMFloat mTimestep;
 
          /**
           * @brief Read Physical parameters to file
@@ -76,7 +76,7 @@ namespace EPMDynamo {
           * @param Ra Storage to read Rayleigh number
           * @param Ro Storage to read Rossby number
           */
-         void readPhysical(DynamoFloat &E, DynamoFloat &q, DynamoFloat &Ra, DynamoFloat &Ro);
+         void readPhysical(EPMFloat &E, EPMFloat &q, EPMFloat &Ra, EPMFloat &Ro);
 
          /**
           * @brief Read run information to file
@@ -109,12 +109,12 @@ namespace EPMDynamo {
       private:
    };
 
-   inline DynamoFloat StateFileReaderBase::time() const
+   inline EPMFloat StateFileReaderBase::time() const
    {
       return this->mTime;
    }
 
-   inline DynamoFloat StateFileReaderBase::timestep() const
+   inline EPMFloat StateFileReaderBase::timestep() const
    {
       return this->mTimestep;
    }

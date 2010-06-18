@@ -10,7 +10,7 @@
 
 // Class include
 //
-#include "GeneralFields/FDSHShell.hpp"
+#include "GeneralScalars/FDSHShell.hpp"
 
 // Project includes
 //
@@ -32,7 +32,7 @@ namespace EPMDynamo {
       int nM = this->mpTrunc->local()->fdsh()->nM();
       for(int i=0; i < nM; ++i)
       {
-         this->mOrders.push_back(SHDegrees(this->nLs(i)));
+         this->mOrders.push_back(SHDegrees(nLs(i)));
       }
    }
 

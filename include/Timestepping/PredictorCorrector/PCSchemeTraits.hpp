@@ -43,7 +43,7 @@ namespace EPMDynamo {
          typedef PCTimestepControl   TimestepControl;
 
          /// Typedef for the error norm type
-         typedef PCL2MaxNorm<TSimType>   ErrorNormType;
+         typedef ErrorL2Max<TSimType>   ErrorNormType;
    };
 
 }

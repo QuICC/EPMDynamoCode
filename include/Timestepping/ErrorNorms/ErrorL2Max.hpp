@@ -17,7 +17,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -37,7 +37,7 @@ namespace EPMDynamo {
           *
           * @param rVar Input variable
           */
-         static DynamoFloat computeNorm(const ScalarType& rVar);
+         static EPMFloat computeNorm(const ScalarType& rVar);
 
          /**
           * @brief Compare new and old values and keep maximum
@@ -45,7 +45,7 @@ namespace EPMDynamo {
           * @param newNorm New error norm value
           * @param oldNorm Old error norm value
           */
-         static DynamoFloat updateNorm(const DynamoFloat newNorm, const DynamoFloat oldNorm);
+         static EPMFloat updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm);
 
       protected:
 
@@ -61,11 +61,11 @@ namespace EPMDynamo {
          virtual ~ErrorL2Max() {}; 
    };
 
-   template <typename TSimType> DynamoFloat ErrorL2Max<TSimType>::computeNorm(const typename ErrorL2Max<TSimType>::ScalarType& rVar)
+   template <typename TSimType> EPMFloat ErrorL2Max<TSimType>::computeNorm(const typename ErrorL2Max<TSimType>::ScalarType& rVar)
    {
       // Create temporary storage
-      DynamoFloat norm = 0.0;
-      DynamoFloat tmp = 0.0;
+      EPMFloat norm = 0.0;
+      EPMFloat tmp = 0.0;
 
       // Get truncation information
       const int l0 = rVar.minL();
@@ -92,7 +92,7 @@ namespace EPMDynamo {
       return norm;
    }
 
-   template <typename TSimType> inline DynamoFloat ErrorL2Max<TSimType>::updateNorm(const DynamoFloat newNorm, const DynamoFloat oldNorm)
+   template <typename TSimType> inline EPMFloat ErrorL2Max<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
    }

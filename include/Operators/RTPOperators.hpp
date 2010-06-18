@@ -41,7 +41,7 @@ namespace EPMDynamo {
           * @param right righthand side operand
           * @param coeff Multiplicative coefficient
           */
-         static void cross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const DynamoFloat coeff = 1.0);
+         static void cross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Compute and add the cross product of the two given vector fields
@@ -51,7 +51,7 @@ namespace EPMDynamo {
           * @param right righthand side operand
           * @param coeff Multiplicative coefficient
           */
-         static void addCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const DynamoFloat coeff = 1.0);
+         static void addCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Compute and substract the cross product of the two given vector fields
@@ -61,7 +61,7 @@ namespace EPMDynamo {
           * @param right righthand side operand
           * @param coeff Multiplicative coefficient
           */
-         static void subCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const DynamoFloat coeff = 1.0);
+         static void subCross(RTPField &rCrossVal, const RTPField &left, const RTPField &right, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Compute dot product of the two given vector fields
@@ -71,7 +71,7 @@ namespace EPMDynamo {
           * @param right Right-hand side operand
           * @param coeff Multiplicative coefficient
           */
-         static void dot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const DynamoFloat coeff = 1.0);
+         static void dot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Compute and add dot product of the two given vector fields
@@ -81,7 +81,7 @@ namespace EPMDynamo {
           * @param right Right-hand side operand
           * @param coeff Multiplicative coefficient
           */
-         static void addDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const DynamoFloat coeff = 1.0);
+         static void addDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Compute and substract dot product of the two given vector fields
@@ -91,7 +91,7 @@ namespace EPMDynamo {
           * @param right Right-hand side operand
           * @param coeff Multiplicative coefficient
           */
-         static void subDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const DynamoFloat coeff = 1.0);
+         static void subDot(RTPScalar &rDot, const RTPField &left, const RTPField &right, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Multiply scalar by radial vector
@@ -100,7 +100,7 @@ namespace EPMDynamo {
           * @param scalar Input scalar
           * @param coeff Multiplicative coefficient
           */
-         static void radVect(RTPField &rField, const RTPScalar &scalar, const DynamoFloat coeff = 1.0);
+         static void radVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Multiply scalar by radial vector and add
@@ -109,7 +109,7 @@ namespace EPMDynamo {
           * @param scalar Input scalar
           * @param coeff Multiplicative coefficient
           */
-         static void addRadVect(RTPField &rField, const RTPScalar &scalar, const DynamoFloat coeff = 1.0);
+         static void addRadVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Multiply scalar by radial vector and substract
@@ -118,7 +118,7 @@ namespace EPMDynamo {
           * @param scalar Input scalar
           * @param coeff Multiplicative coefficient
           */
-         static void subRadVect(RTPField &rField, const RTPScalar &scalar, const DynamoFloat coeff = 1.0);
+         static void subRadVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Cross product of given field with \f$\hat{z}\f$ unit vector
@@ -127,7 +127,7 @@ namespace EPMDynamo {
           * @param inField Input field
           * @param coeff Multiplicative coefficient
           */
-         static void crossZVect(RTPField &rField, const RTPField &inField, const DynamoFloat coeff = 1.0);
+         static void crossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Add cross product of given field with \f$\hat{z}\f$ unit vector
@@ -136,7 +136,7 @@ namespace EPMDynamo {
           * @param inField Input field
           * @param coeff Multiplicative coefficient
           */
-         static void addCrossZVect(RTPField &rField, const RTPField &inField, const DynamoFloat coeff = 1.0);
+         static void addCrossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
 
          /**
           * @brief Substract product of given field with \f$\hat{z}\f$ unit vector
@@ -145,7 +145,7 @@ namespace EPMDynamo {
           * @param inField Input field
           * @param coeff Multiplicative coefficient
           */
-         static void subCrossZVect(RTPField &rField, const RTPField &inField, const DynamoFloat coeff = 1.0);
+         static void subCrossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
 
       protected:
 

@@ -23,11 +23,11 @@ namespace EPMDynamo {
    {
    }
 
-   DynamoFloat SpectralSHScalar::l2Norm() const
+   EPMFloat SpectralSHScalar::l2Norm() const
    {
       // Create temporary storage
-      DynamoFloat norm = 0.0;
-      DynamoFloat tmp = 0.0;
+      EPMFloat norm = 0.0;
+      EPMFloat tmp = 0.0;
 
       // Get truncation information
       const int l0 = this->minL();
@@ -56,11 +56,11 @@ namespace EPMDynamo {
       return norm;
    }
 
-   DynamoFloat SpectralSHScalar::modalL2Norm() const
+   EPMFloat SpectralSHScalar::modalL2Norm() const
    {
       // Create temporary storage
-      DynamoFloat norm = 0.0;
-      DynamoFloat tmp = 0.0;
+      EPMFloat norm = 0.0;
+      EPMFloat tmp = 0.0;
 
       // Get truncation information
       const int l0 = this->minL();

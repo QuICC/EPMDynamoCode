@@ -17,7 +17,7 @@
 
 namespace EPMDynamo {
 
-   SimulationControlBase::SimulationControlBase(DynamoFloat t, DynamoFloat dt, int maxtstep, int aRate, int sRate, DynamoFloat wall)
+   SimulationControlBase::SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall)
       : mKeepRunning(true), mTSParams(t, dt), mTSCounter(maxtstep, aRate, sRate), mRunControl(wall), mUseWall(mTSCounter.unlimited()), mCtrlIface()
    {
    }

@@ -134,7 +134,7 @@ namespace EPMDynamo {
       }
 
       // Check the obtained splitting
-      this->check(rpLocal, rRemote);
+      this->checkSplitting(rpLocal, rRemote);
    }
 
    template <typename TSplitAlgo> void LoadSplitter<TSplitAlgo>::checkSplitting(SmartLocalTrunc pLocal, const std::vector<SmartCoreTrunc>  &pRemote) const

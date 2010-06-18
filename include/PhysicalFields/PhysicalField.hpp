@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/PhysicalFieldBase.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/QSTField.hpp"
@@ -197,7 +197,7 @@ namespace EPMDynamo {
       Matrix   spectrum(this->trunc()->local()->spec()->nL(), 5); 
 
       ArrayI lArray = this->trunc()->local()->spec()->lArray();
-      spectrum.col(0) = lArray.cast<DynamoFloat>();
+      spectrum.col(0) = lArray.cast<EPMFloat>();
       
       spectrum.col(1) = qE + sE + tE;
       spectrum.col(2) = qE;
@@ -219,7 +219,7 @@ namespace EPMDynamo {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nM(), 5); 
 
       ArrayI mArray = this->trunc()->sim()->hoz()->mArray();
-      spectrum.col(0) = mArray.cast<DynamoFloat>();
+      spectrum.col(0) = mArray.cast<EPMFloat>();
       
       spectrum.col(1) = qE + sE + tE;
       spectrum.col(2) = qE;

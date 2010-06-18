@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/PhysicalScalarBase.hpp"
 #include "General/EPMTypedefs.hpp"
 
@@ -175,7 +175,7 @@ namespace EPMDynamo {
 
       ArrayI lArray = this->trunc()->sim()->hoz()->lArray();
 
-      spectrum.col(0) = lArray.cast<DynamoFloat>();
+      spectrum.col(0) = lArray.cast<EPMFloat>();
 
       spectrum.col(1) = this->perturbation().spectrumL();
 
@@ -188,7 +188,7 @@ namespace EPMDynamo {
       
       ArrayI mArray = this->trunc()->sim()->hoz()->mArray();
 
-      spectrum.col(0) = mArray.cast<DynamoFloat>();
+      spectrum.col(0) = mArray.cast<EPMFloat>();
 
       spectrum.col(1) = this->perturbation().spectrumM();
 

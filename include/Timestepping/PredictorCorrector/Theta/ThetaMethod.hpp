@@ -15,7 +15,7 @@
 //
 #include "Domain/Truncation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/TimestepSchemeBase.hpp"
 #include "Timestepping/PredictorCorrector/PCErrorControl.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaLHSTOperatorSet.hpp"
@@ -49,7 +49,7 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
           */
-         ThetaMethod(DynamoFloat a, DynamoFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ThetaMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
@@ -146,7 +146,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaMethod<TSimType>::ThetaMethod(DynamoFloat a, DynamoFloat b, const typename ThetaMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+   template <typename TSimType> ThetaMethod<TSimType>::ThetaMethod(EPMFloat a, EPMFloat b, const typename ThetaMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : TimestepSchemeBase<TSimType>(tsteps, pTrunc), mLHS(a, b, basis, pTrunc), mRHS(a, b, basis, pTrunc), mPreviousNTerms(pTrunc)
    {
    }

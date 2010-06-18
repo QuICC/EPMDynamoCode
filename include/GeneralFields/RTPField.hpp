@@ -79,7 +79,7 @@ namespace EPMDynamo {
           *
           * \tparam TOp Type of operation: (0) Set result, (1) Add result, (-1) Substract result
           */
-         template <int TOp> void cross(RTPField &rCross, const RTPField &right, const DynamoFloat coeff = 1.0) const;
+         template <int TOp> void cross(RTPField &rCross, const RTPField &right, const EPMFloat coeff = 1.0) const;
 
          /**
           * @brief Compute the dot product
@@ -90,7 +90,7 @@ namespace EPMDynamo {
           *
           * \tparam TOp Type of operation: (0) Set result, (1) Add result, (-1) Substract result
           */
-         template <int TOp> void dot(RTPScalar &rDot, const RTPField &right, const DynamoFloat coeff = 1.0) const;
+         template <int TOp> void dot(RTPScalar &rDot, const RTPField &right, const EPMFloat coeff = 1.0) const;
 
          /**
           * @brief Compute the cross product with \f$\hat{z}\f$
@@ -100,7 +100,7 @@ namespace EPMDynamo {
           *
           * \tparam TOp Type of operation: (0) Set result, (1) Add result, (-1) Substract result
           */
-         template <int TOp> void crossZVect(RTPField &rField, const DynamoFloat coeff = 1.0) const;
+         template <int TOp> void crossZVect(RTPField &rField, const EPMFloat coeff = 1.0) const;
 
       protected:
 
@@ -151,7 +151,7 @@ namespace EPMDynamo {
       return this->mPhComponent;
    }
 
-   template <int TOp> inline void RTPField::cross(RTPField &rCross, const RTPField &right, const DynamoFloat coeff) const
+   template <int TOp> inline void RTPField::cross(RTPField &rCross, const RTPField &right, const EPMFloat coeff) const
    {
       if(TOp == 0)
       {
@@ -167,7 +167,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <int TOp> inline void RTPField::dot(RTPScalar &rDot, const RTPField &right, const DynamoFloat coeff) const
+   template <int TOp> inline void RTPField::dot(RTPScalar &rDot, const RTPField &right, const EPMFloat coeff) const
    {
       if(TOp == 0)
       {
@@ -183,7 +183,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <int TOp> inline void RTPField::crossZVect(RTPField &rField, const DynamoFloat coeff) const
+   template <int TOp> inline void RTPField::crossZVect(RTPField &rField, const EPMFloat coeff) const
    {
       if(TOp == 0)
       {

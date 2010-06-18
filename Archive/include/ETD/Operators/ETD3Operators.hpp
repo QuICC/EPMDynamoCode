@@ -12,11 +12,11 @@
 
 // Project includes
 //
-#include "Domain/SpectralTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
 #include "Timestepping/ETD/Operators/ETDNOperators.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -49,7 +49,7 @@ namespace EPMDynamo {
          /**
           * @brief Update the ETD3 operators
           */
-         void createOperators(const DynamoFloat h, const BasisType &basis);
+         void createOperators(const EPMFloat h, const BasisType &basis);
 
       protected:
 
@@ -65,7 +65,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSim> void ETD3Operators<TSim>::createOperators(const DynamoFloat h, const typename ETD3Operators<TSim>::BasisType &basis)
+   template <typename TSim> void ETD3Operators<TSim>::createOperators(const EPMFloat h, const typename ETD3Operators<TSim>::BasisType &basis)
    {
       // Get list of degrees
       ArrayI   degrees = this->pIdxCtrl()->opLs();

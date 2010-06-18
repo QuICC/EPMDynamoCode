@@ -15,6 +15,7 @@
 //
 #include "IO/HDF5/State/StateFileWriterBase.hpp"
 #include "Timestepping/TimestepParameters.hpp"
+#include "Equations/Parameters/EquationParameters.hpp"
 
 namespace EPMDynamo {
 
@@ -36,7 +37,7 @@ namespace EPMDynamo {
          * @param eqParams Equation parameters
          * @param tsParams Timestep parameters
          */
-         StateFileWriter(const typename TSimTraits<TSim>::CodType &codC, const typename TSimTraits<TSim>::MagType &magB, const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
+         StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
 
          /**
          * @brief Constructor for thermal convection
@@ -46,7 +47,7 @@ namespace EPMDynamo {
          * @param eqParams Equation parameters
          * @param tsParams Timestep parameters
          */
-         StateFileWriter(const typename TSimTraits<TSim>::CodType &codC, const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
+         StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
 
          /**
          * @brief Constructor for magneto-convection
@@ -56,7 +57,7 @@ namespace EPMDynamo {
          * @param eqParams Equation parameters
          * @param tsParams Timestep parameters
          */
-         StateFileWriter(const typename TSimTraits<TSim>::MagType &magB, const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
+         StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
 
          /**
          * @brief Constructor with only codensity
@@ -65,7 +66,7 @@ namespace EPMDynamo {
          * @param eqParams Equation parameters
          * @param tsParams Timestep parameters
          */
-         StateFileWriter(const typename TSimTraits<TSim>::CodType &codC, const EquationParameters &eqParams, const TimestepParameters &tsParams);
+         StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const EquationParameters &eqParams, const TimestepParameters &tsParams);
 
          /**
          * @brief Constructor with only magnetic field
@@ -74,7 +75,7 @@ namespace EPMDynamo {
          * @param eqParams Equation parameters
          * @param tsParams Timestep parameters
          */
-         StateFileWriter(const typename TSimTraits<TSim>::MagType &magB, const EquationParameters &eqParams, const TimestepParameters &tsParams);
+         StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const EquationParameters &eqParams, const TimestepParameters &tsParams);
 
          /**
          * @brief Constructor for cases with all three fields
@@ -83,7 +84,7 @@ namespace EPMDynamo {
          * @param eqParams Equation parameters
          * @param tsParams Timestep parameters
          */
-         StateFileWriter(const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
+         StateFileWriter(const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams);
 
          /**
          * @brief Destructor
@@ -99,17 +100,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the condensity variable
           */
-         const typename TSimTraits<TSim>::CodType*  mpCodC;
+         const typename TSimTraits<TSimType>::CodType*  mpCodC;
 
          /**
           * @brief Pointer to the magnetic variable
           */
-         const typename TSimTraits<TSim>::MagType*  mpMagB;
+         const typename TSimTraits<TSimType>::MagType*  mpMagB;
 
          /**
           * @brief Pointer to the velocity variable
           */
-         const typename TSimTraits<TSim>::VelType*  mpVelV;
+         const typename TSimTraits<TSimType>::VelType*  mpVelV;
 
       private:
          /**
@@ -129,8 +130,8 @@ namespace EPMDynamo {
 
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSim>::CodType &codC, const typename TSimTraits<TSim>::MagType &magB, const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(codC.trunc()), mpCodC(codC), mpMagB(magB), mpVelV(velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
+      : StateFileWriterBase(codC.trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -143,8 +144,8 @@ namespace EPMDynamo {
       this->mPhys(3) = eqParams.Ro();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSim>::CodType &codC, const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
+      : StateFileWriterBase(codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -157,8 +158,8 @@ namespace EPMDynamo {
       this->mPhys(3) = eqParams.Ro();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSim>::MagType &magB, const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(magB.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
+      : StateFileWriterBase(magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -171,8 +172,8 @@ namespace EPMDynamo {
       this->mPhys(3) = eqParams.Ro();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSim>::CodType &codC, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(NULL), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const EquationParameters &eqParams, const TimestepParameters &tsParams)
+      : StateFileWriterBase(codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL), mTrunc(4), mPhys(4), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -185,8 +186,8 @@ namespace EPMDynamo {
       this->mPhys(3) = eqParams.Ro();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSim>::MagType &magB, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(magB.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(NULL), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const EquationParameters &eqParams, const TimestepParameters &tsParams)
+      : StateFileWriterBase(magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL), mTrunc(4), mPhys(4), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -199,8 +200,8 @@ namespace EPMDynamo {
       this->mPhys(3) = eqParams.Ro();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSim>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+   template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
+      : StateFileWriterBase(velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();

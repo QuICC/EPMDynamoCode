@@ -64,7 +64,7 @@ namespace EPMDynamo {
           * @param velV Velocity rtp space field
           * @param llFactor Spherical geometry factor
           */
-         void updateCFLTimestep(const RTPField &velV, const DynamoFloat llFactor);
+         void updateCFLTimestep(const RTPField &velV, const EPMFloat llFactor);
 
          /**
           * @brief Update value of the CFL condition timestep
@@ -73,7 +73,7 @@ namespace EPMDynamo {
           * @param velV Velocity rtp space field
           * @param llFactor Spherical geometry factor
           */
-         void updateCFLTimestep(const RTPField &magB, const RTPField &velV, const DynamoFloat llFactor);
+         void updateCFLTimestep(const RTPField &magB, const RTPField &velV, const EPMFloat llFactor);
 
          /**
           * @brief Print some useful information
@@ -105,7 +105,7 @@ namespace EPMDynamo {
          /**
           * @brief CFL condition imposed timestep
           */
-         DynamoFloat   mCFLTimestep;
+         EPMFloat   mCFLTimestep;
 
          /**
           * @brief Get the Simulation wide CFL condition (MPI communication)
@@ -117,35 +117,35 @@ namespace EPMDynamo {
           *
           * @param rDt Timestep length
           */
-         void testInitialisationTimestep(DynamoFloat& rDt);
+         void testInitialisationTimestep(EPMFloat& rDt);
 
          /**
           * @brief Test for maximum timestep
           *
           * @param rDt Timestep length
           */
-         void testMaximumTimestep(DynamoFloat& rDt);
+         void testMaximumTimestep(EPMFloat& rDt);
 
          /**
           * @brief Test for CFL condition timestep
           *
           * @param rDt Timestep length
           */
-         void testCFLTimestep(DynamoFloat& rDt);
+         void testCFLTimestep(EPMFloat& rDt);
 
          /**
           * @brief Include courant number in obtained timestep
           *
           * @param rDt Timestep length
           */
-         void useCourantTimestep(DynamoFloat& rDt);
+         void useCourantTimestep(EPMFloat& rDt);
 
          /**
           * @brief Test for allowed timestep window
           *
           * @param dt Timestep length
           */
-         void setWindowedTimestep(DynamoFloat dt);
+         void setWindowedTimestep(EPMFloat dt);
 
       private:
    };

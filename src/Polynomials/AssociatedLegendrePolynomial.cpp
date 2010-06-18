@@ -114,10 +114,10 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat AssociatedLegendrePolynomial::normaliseW(const int l) const
+   EPMFloat AssociatedLegendrePolynomial::normaliseW(const int l) const
    {
       // Set basis value of the normalisation factor (due to schmidt normalisation)
-      DynamoFloat norm = (2.0*static_cast<DynamoFloat>(l) + 1.0)/4.0;
+      EPMFloat norm = (2.0*static_cast<EPMFloat>(l) + 1.0)/4.0;
 
       // An additional factor of 2 is required for m=0
       if(m() == 0)
@@ -162,17 +162,17 @@ namespace EPMDynamo {
       }
    }
 
-   DynamoFloat AssociatedLegendrePolynomial::recurrenceA(const int n) const
+   EPMFloat AssociatedLegendrePolynomial::recurrenceA(const int n) const
    {
       return 0.0;
    }
 
-   DynamoFloat AssociatedLegendrePolynomial::recurrenceB(const int n) const
+   EPMFloat AssociatedLegendrePolynomial::recurrenceB(const int n) const
    {
       if(n > 1)
       {
-         DynamoFloat factorB;
-         DynamoFloat rn = static_cast<DynamoFloat>(n);
+         EPMFloat factorB;
+         EPMFloat rn = static_cast<EPMFloat>(n);
 
          factorB = (2*rn - 1)/rn;
 
@@ -187,12 +187,12 @@ namespace EPMDynamo {
 
    }
 
-   DynamoFloat AssociatedLegendrePolynomial::recurrenceC(const int n) const
+   EPMFloat AssociatedLegendrePolynomial::recurrenceC(const int n) const
    {
       if(n > 1)
       {
-         DynamoFloat factorC;
-         DynamoFloat rn = static_cast<DynamoFloat>(n);
+         EPMFloat factorC;
+         EPMFloat rn = static_cast<EPMFloat>(n);
 
          factorC = (rn - 1.0)/rn;
 
@@ -213,12 +213,12 @@ namespace EPMDynamo {
          this->rPoly().row(idx).setConstant(1.0);
       } else
       {
-         DynamoFloat r2i;
-         DynamoFloat factor = std::sqrt(2.0);
+         EPMFloat r2i;
+         EPMFloat factor = std::sqrt(2.0);
 
          for (int i=1; i <= m; i++)
          {
-            r2i = static_cast<DynamoFloat>(2*i);
+            r2i = static_cast<EPMFloat>(2*i);
             factor *= -std::sqrt((r2i - 1.0)/r2i);
          }
          this->rPoly().row(idx) = this->sinTheta().transpose().cwise().pow(m);
@@ -233,7 +233,7 @@ namespace EPMDynamo {
          throw EPMException("AssociatedLegendrePolynomial::computePmm1", "m < 0");
       }
       this->rPoly().row(idx) = this->grid().transpose();
-      this->rPoly().row(idx) *= std::sqrt(2.0*static_cast<DynamoFloat>(m) + 1.0);
+      this->rPoly().row(idx) *= std::sqrt(2.0*static_cast<EPMFloat>(m) + 1.0);
       this->rPoly().row(idx).cwise() *= this->poly().row(idx-1);
    }
 
@@ -254,8 +254,8 @@ namespace EPMDynamo {
          throw EPMException("AssociatedLegendrePolynomial::computePlm", "l = m");
       }
 
-      DynamoFloat rm = static_cast<DynamoFloat>(m);
-      DynamoFloat rl = static_cast<DynamoFloat>(l);
+      EPMFloat rm = static_cast<EPMFloat>(m);
+      EPMFloat rl = static_cast<EPMFloat>(l);
 
       int maxL = l + this->polyN() - 2;
 
@@ -283,11 +283,11 @@ namespace EPMDynamo {
       } else
       {
 
-         DynamoFloat r2i;
-         DynamoFloat factor = std::sqrt(2.0)*static_cast<DynamoFloat>(m);
+         EPMFloat r2i;
+         EPMFloat factor = std::sqrt(2.0)*static_cast<EPMFloat>(m);
          for (int i=1; i <= m; i++)
          {
-            r2i = static_cast<DynamoFloat>(2*i);
+            r2i = static_cast<EPMFloat>(2*i);
             factor *= -std::sqrt((r2i-1.0)/r2i);
          }
 
@@ -306,7 +306,7 @@ namespace EPMDynamo {
          throw EPMException("AssociatedLegendrePolynomial::computeDPmm1", "m < 0");
       }
 
-      DynamoFloat rm = static_cast<DynamoFloat>(m);
+      EPMFloat rm = static_cast<EPMFloat>(m);
 
       this->rDiff(1).row(idx) = (this->diff(1).row(idx-1).cwise()*this->grid().transpose() - this->poly().row(idx-1).cwise()*this->sinTheta().transpose());
       this->rDiff(1).row(idx) *= std::sqrt(2.0*rm + 1.0);
@@ -330,8 +330,8 @@ namespace EPMDynamo {
          throw EPMException("AssociatedLegendrePolynomial::computeDPlm", "l = 0");
       }
 
-      DynamoFloat rm = static_cast<double>(m);
-      DynamoFloat rl = static_cast<double>(l);
+      EPMFloat rm = static_cast<double>(m);
+      EPMFloat rl = static_cast<double>(l);
 
       int maxL = l + polyN() - 2;
 

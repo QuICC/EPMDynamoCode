@@ -63,22 +63,22 @@ namespace EPMDynamo {
          /**
           * @brief Get \f$l(l+1)\f$ factor
           */
-         DynamoFloat ll() const;
+         EPMFloat ll() const;
 
          /**
           * @brief Get \f$\frac{1}{l(l+1)}\f$ factor
           */
-         DynamoFloat ll_1() const;
+         EPMFloat ll_1() const;
 
          /**
           * @brief Get \f$\sqrt{l(l+1)}\f$ factor
           */
-         DynamoFloat sll() const;
+         EPMFloat sll() const;
 
          /**
           * @brief Get \f$\frac{1}{\sqrt{l(l+1)}}\f$ factor
           */
-         DynamoFloat sll_1() const;
+         EPMFloat sll_1() const;
 
          /**
           * @brief Get the energy matrix for a simple product
@@ -157,22 +157,22 @@ namespace EPMDynamo {
    // Inline definitions of access of Ll factors values
    //
 
-   template <typename TPolynomial> inline DynamoFloat  RadialOperatorBase<TPolynomial>::ll() const
+   template <typename TPolynomial> inline EPMFloat  RadialOperatorBase<TPolynomial>::ll() const
    {
       return this->mLlFactors(0);
    }
 
-   template <typename TPolynomial> inline DynamoFloat  RadialOperatorBase<TPolynomial>::ll_1() const
+   template <typename TPolynomial> inline EPMFloat  RadialOperatorBase<TPolynomial>::ll_1() const
    {
       return this->mLlFactors(1);
    }
 
-   template <typename TPolynomial> inline DynamoFloat  RadialOperatorBase<TPolynomial>::sll() const
+   template <typename TPolynomial> inline EPMFloat  RadialOperatorBase<TPolynomial>::sll() const
    {
       return this->mLlFactors(2);
    }
 
-   template <typename TPolynomial> inline DynamoFloat  RadialOperatorBase<TPolynomial>::sll_1() const
+   template <typename TPolynomial> inline EPMFloat  RadialOperatorBase<TPolynomial>::sll_1() const
    {
       return this->mLlFactors(3);
    }
@@ -268,7 +268,7 @@ namespace EPMDynamo {
 
    template <typename TPolynomial> void RadialOperatorBase<TPolynomial>::initLlFactors()
    {
-      this->mLlFactors(0) = static_cast<DynamoFloat>(this->l()*(this->l()+1));
+      this->mLlFactors(0) = static_cast<EPMFloat>(this->l()*(this->l()+1));
       this->mLlFactors(2) = std::sqrt(this->ll());
 
       if(this->ll() == 0.0)
@@ -299,7 +299,7 @@ namespace EPMDynamo {
    template <typename TPolynomial> void RadialOperatorBase<TPolynomial>::computeLaplacians()
    {
       Matrix   tmp1(this->polyN(), this->gridN());
-      Array rfactor1 = static_cast<DynamoFloat>(4*this->l()+6)*this->grid().cwise().pow(this->l());
+      Array rfactor1 = static_cast<EPMFloat>(4*this->l()+6)*this->grid().cwise().pow(this->l());
       Array rfactor2 = 4.0*this->grid().cwise().pow(this->l()+2);
 
       this->computeDerivativeBase(this->mLaplacianProj, 1);

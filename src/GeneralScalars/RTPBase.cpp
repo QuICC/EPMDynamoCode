@@ -10,7 +10,7 @@
 
 // Class include
 //
-#include "GeneralFields/RTPBase.hpp"
+#include "GeneralScalars/RTPBase.hpp"
 
 // Project includes
 //

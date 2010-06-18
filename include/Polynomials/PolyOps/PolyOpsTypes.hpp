@@ -42,28 +42,28 @@ namespace EPMDynamo {
    typedef EPMSHARED_PTR<PolynomialOperator<LRPOperator> >  SmartLRPOp;
 
    /// Typedef for a smart CPOperator with real constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CPOperator<DynamoFloat> > >  SmartDPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CPOperator<EPMFloat> > >  SmartDPOp;
 
    /// Typedef for a smart CLPOperator with real constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CLPOperator<DynamoFloat> > >  SmartDLPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CLPOperator<EPMFloat> > >  SmartDLPOp;
 
    /// Typedef for a smart CRPOperator with real constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CRPOperator<DynamoFloat> > >  SmartDRPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CRPOperator<EPMFloat> > >  SmartDRPOp;
 
    /// Typedef for a smart CLRPOperator with real constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CLRPOperator<DynamoFloat> > >  SmartDLRPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CLRPOperator<EPMFloat> > >  SmartDLRPOp;
 
    /// Typedef for a smart CPOperator with complex constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CPOperator<DynamoComplex> > >  SmartZPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CPOperator<EPMComplex> > >  SmartZPOp;
 
    /// Typedef for a smart CLPOperator with complex constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CLPOperator<DynamoComplex> > >  SmartZLPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CLPOperator<EPMComplex> > >  SmartZLPOp;
 
    /// Typedef for a smart CRPOperator with complex constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CRPOperator<DynamoComplex> > >  SmartZRPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CRPOperator<EPMComplex> > >  SmartZRPOp;
 
    /// Typedef for a smart CLRPOperator with complex constant
-   typedef EPMSHARED_PTR<PolynomialOperator<CLRPOperator<DynamoComplex> > >  SmartZLRPOp;
+   typedef EPMSHARED_PTR<PolynomialOperator<CLRPOperator<EPMComplex> > >  SmartZLRPOp;
 
 }
 

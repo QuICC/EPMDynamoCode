@@ -13,6 +13,7 @@
 
 // Project includes
 //
+#include "Equations/Parameters/EquationParameters.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControlBase.hpp"
 
@@ -29,9 +30,6 @@ namespace EPMDynamo {
          /// Typedef for the Timestep control type
          typedef  typename SimulationTraits<TSimType>::TimestepTraits::TimestepControl   TimestepControl;
 
-         /// Typedef for the equation parameters type
-         typedef  typename TSimType::EqParamsType   EqParamsType;
-
          /**
           * @brief Constructor
           *
@@ -43,7 +41,7 @@ namespace EPMDynamo {
           * \param sRate State file save rate
           * \param wall Wall time
           */
-         SimulationControl(DynamoFloat t, DynamoFloat dt, const EqParamsType& eqParams, int maxtstep, int aRate, int sRate, DynamoFloat wall);
+         SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall);
 
          /**
           * @brief Constructor
@@ -53,7 +51,7 @@ namespace EPMDynamo {
           * \param runI Run related values (integer type): (0) Maximum number of timsteps, (1) ASCII save rate, (2) State file save rate
           * \param run Run related values (float type): (0) Wall time
           */
-         SimulationControl(const Array& time, const EqParamsType& eqParams, const ArrayI& runI, const Array& run);
+         SimulationControl(const Array& time, const EquationParameters& eqParams, const ArrayI& runI, const Array& run);
 
          /**
           * @brief Destructor
@@ -85,12 +83,12 @@ namespace EPMDynamo {
       return this->mTSControl;
    }
 
-   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(DynamoFloat t, DynamoFloat dt, const EqParamsType& eqParams, int maxtstep, int aRate, int sRate, DynamoFloat wall)
+   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall)
       : SimulationControlBase(t, dt, maxtstep, aRate, sRate, wall), mTSControl(mTSParams, eqParams)
    {
    }
 
-   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(const Array& time, const EqParamsType& eqParams, const ArrayI& runI, const Array& run)
+   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(const Array& time, const EquationParameters& eqParams, const ArrayI& runI, const Array& run)
       : SimulationControlBase(time, runI, run), mTSControl(mTSParams, eqParams)
    {
    }

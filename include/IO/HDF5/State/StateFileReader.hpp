@@ -108,39 +108,39 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : StateFileReaderBase(name, codC.trunc()), mpCodC(codC), mpMagB(magB), mpVelV(velV)
+      : StateFileReaderBase(name, codC.trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : StateFileReaderBase(name, codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(velV)
+      : StateFileReaderBase(name, codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : StateFileReaderBase(name, codC.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(velV)
+      : StateFileReaderBase(name, magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, std::string name)
-      : StateFileReaderBase(name, codC.trunc()), mpCodC(codC), mpMagB(NULL), mpVelV(NULL)
+      : StateFileReaderBase(name, codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::MagType &magB, std::string name)
-      : StateFileReaderBase(name, magB.trunc()), mpCodC(NULL), mpMagB(magB), mpVelV(NULL)
+      : StateFileReaderBase(name, magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::VelType &velV, std::string name)
-      : StateFileReaderBase(name, velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(velV)
+      : StateFileReaderBase(name, velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void StateFileReader<TSimType, TSimTraits>::read()
    {
       // Read the Physical parameters
-      DynamoFloat E, q, Ra, Ro;
+      EPMFloat E, q, Ra, Ro;
       this->readPhysical(E, q, Ra, Ro);
 
       // Read the truncation information

@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TimeEquation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
@@ -51,7 +51,7 @@ namespace EPMDynamo {
           * @param a \f$a\f$ parameter for the timestepper
           * @param b \f$b\f$ parameter for the timestepper
           */
-         QSTDiffusionEquation(TFieldType &rF, TransformType &transform, TimestepParameters &tsteps, int nBCQ, int nBCS, int nBCT, DynamoFloat a, DynamoFloat b);
+         QSTDiffusionEquation(TFieldType &rF, TransformType &transform, TimestepParameters &tsteps, int nBCQ, int nBCS, int nBCT, EPMFloat a, EPMFloat b);
 
          /**
           * @brief Simple empty destructor
@@ -136,7 +136,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType> QSTDiffusionEquation<TSimType, TFieldType>::QSTDiffusionEquation(TFieldType &rF, typename QSTDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBCQ, int nBCS, int nBCT, DynamoFloat a, DynamoFloat b)
+   template <typename TSimType, typename TFieldType> QSTDiffusionEquation<TSimType, TFieldType>::QSTDiffusionEquation(TFieldType &rF, typename QSTDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBCQ, int nBCS, int nBCT, EPMFloat a, EPMFloat b)
       : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mQTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mSTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mTTStepper(a, b, transform.radBasis(), tsteps, rF.trunc())
    {
       // Set counter to total number of boundary conditions

@@ -14,7 +14,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 
 namespace EPMDynamo {
@@ -43,7 +43,7 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param pTrunc Truncation information
           */
-         ThetaLHSTOperatorSet(DynamoFloat a, DynamoFloat b, const BasisType &basis, SmartTruncation pTrunc);
+         ThetaLHSTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
@@ -55,7 +55,7 @@ namespace EPMDynamo {
           *
           * @param dt   New timestep value
           */
-         virtual void update(DynamoFloat dt);
+         virtual void update(EPMFloat dt);
 
          /**
           * @brief Solve timestep equation for unknown
@@ -76,18 +76,18 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaLHSTOperatorSet<TSimType>::ThetaLHSTOperatorSet(DynamoFloat a, DynamoFloat b, const typename ThetaLHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc)
+   template <typename TSimType> ThetaLHSTOperatorSet<TSimType>::ThetaLHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaLHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc)
       : ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(a, b, basis, pTrunc)
    {
    }
 
-   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::update(const DynamoFloat dt)
+   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::update(const EPMFloat dt)
    {
       // Set Laplacian multiplicative factor
-      DynamoFloat factor = -this->mB*this->mTheta;
+      EPMFloat factor = -this->mB*this->mTheta;
 
       // Set time matrix multiplicative factor
-      DynamoFloat timeDiff = this->mA/dt;
+      EPMFloat timeDiff = this->mA/dt;
 
       // Update stored operators
       this->updateOperators(factor, timeDiff);

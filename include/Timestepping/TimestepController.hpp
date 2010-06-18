@@ -32,7 +32,7 @@ namespace EPMDynamo {
           * @param alpha Alpha parameter of controller
           * @param params Timestep parameters
           */
-         TimestepController(DynamoFloat beta1, DynamoFloat beta2, DynamoFloat alpha, TimestepParameters& params);
+         TimestepController(EPMFloat beta1, EPMFloat beta2, EPMFloat alpha, TimestepParameters& params);
          
          /**
           * @brief Constructor for predefined type
@@ -71,7 +71,7 @@ namespace EPMDynamo {
           * @param errn Previous error
           * @param errn_1 Error at step before previous
           */
-         DynamoFloat nextTimestep(DynamoFloat errn, DynamoFloat errn_1);
+         EPMFloat nextTimestep(EPMFloat errn, EPMFloat errn_1);
 
       protected:
 
@@ -79,47 +79,47 @@ namespace EPMDynamo {
          /**
           * @brief \f$\beta_1\f$ parameter of the elementary controller
           */
-         static const DynamoFloat ELEMENTARY_KBETA1;
+         static const EPMFloat ELEMENTARY_KBETA1;
 
          /**
           * @brief \f$\beta_2\f$ parameter of the elementary controller
           */
-         static const DynamoFloat ELEMENTARY_KBETA2;
+         static const EPMFloat ELEMENTARY_KBETA2;
 
          /**
           * @brief \f$\alpha\f$ parameter of the elementary controller
           */
-         static const DynamoFloat ELEMENTARY_ALPHA;
+         static const EPMFloat ELEMENTARY_ALPHA;
 
          /**
           * @brief \f$\beta_1\f$ parameter of the PI4.2 controller
           */
-         static const DynamoFloat PI42_KBETA1;
+         static const EPMFloat PI42_KBETA1;
 
          /**
           * @brief \f$\beta_2\f$ pf the PI4.2 controller
           */
-         static const DynamoFloat PI42_KBETA2;
+         static const EPMFloat PI42_KBETA2;
 
          /**
           * @brief \f$\alpha\f$ pa the PI4.2 controller
           */
-         static const DynamoFloat PI42_ALPHA;
+         static const EPMFloat PI42_ALPHA;
 
          /**
           * @brief \f$\beta_1\f$ pf the H211b controller
           */
-         static const DynamoFloat H211B_KBETA1;
+         static const EPMFloat H211B_KBETA1;
 
          /**
           * @brief \f$\beta_2\f$ pf the H211b controller
           */
-         static const DynamoFloat H211B_KBETA2;
+         static const EPMFloat H211B_KBETA2;
 
          /**
           * @brief \f$\alpha\f$ pa the H211b controller
           */
-         static const DynamoFloat H211B_ALPHA;
+         static const EPMFloat H211B_ALPHA;
 
          /**
           * @brief First order timestep controller \f$\beta_1\f$ paramter
@@ -130,7 +130,7 @@ namespace EPMDynamo {
           *  - \f$k\beta_1 = 3/5\f$ for PI4.2 controller
           *  - \f$k\beta_1 = 1/4\f$ for H211b digital filter (b=4)
           */
-         DynamoFloat mControllerBeta1;
+         EPMFloat mControllerBeta1;
 
          /**
           * @brief First order timestep controller \f$\beta_2\f$ paramter
@@ -141,7 +141,7 @@ namespace EPMDynamo {
           *  - \f$k\beta_2 = -1/5\f$ for PI4.2 controller
           *  - \f$k\beta_2 = 1/4\f$ for H211b digital filter (b=4)
           */
-         DynamoFloat mControllerBeta2;
+         EPMFloat mControllerBeta2;
 
          /**
           * @brief First order timestep controller \f$\alpha\f$ paramter
@@ -152,7 +152,7 @@ namespace EPMDynamo {
           *  - \f$\alpha = 0\f$ for PI4.2 controller
           *  - \f$\alpha = 1/4\f$ for H211b digital filter (b=4)
           */
-         DynamoFloat mControllerAlpha;
+         EPMFloat mControllerAlpha;
 
          /**
           * @brief Reference to TimestepParameters object
@@ -167,7 +167,7 @@ namespace EPMDynamo {
           * @param a \f$\alpha\f$ parameter
           * @param k Order of the scheme
           */
-         void setControllerParameters(DynamoFloat kb1, DynamoFloat kb2, DynamoFloat a, int k);
+         void setControllerParameters(EPMFloat kb1, EPMFloat kb2, EPMFloat a, int k);
 
          /**
           * @brief Set parameters for elementary controller

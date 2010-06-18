@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
 
@@ -24,11 +24,10 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TOpType Type of the operator
-    * \tparam TBCType Type of the boundary condition
     *
     * \bug Review this implementation regarding new operator implementation
     */
-   template <typename TSimType, typename TOpType, BCType TBCType> class ImplicitTOperatorSet: public BoundedOperatorSet<TOpType, TBCType>
+   template <typename TSimType, typename TOpType> class ImplicitTOperatorSet: public BoundedOperatorSet<TOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -53,17 +52,17 @@ namespace EPMDynamo {
           * @param timeDiff Timestep length
           * @param basis Radial basis
           */
-         void createOperators(const DynamoFloat factor, const DynamoFloat timeDiff, const BasisType &basis);
+         void createOperators(const EPMFloat factor, const EPMFloat timeDiff, const BasisType &basis);
 
       private:
    };
 
-   template <typename TSimType, typename TOpType, BCType TBCType> ImplicitTOperatorSet<TSimType, TOpType, TBCType>::ImplicitTOperatorSet(SmartTruncation pTrunc)
-      : BoundedOperatorSet<TOpType, TBCType>(pTrunc)
+   template <typename TSimType, typename TOpType> ImplicitTOperatorSet<TSimType, TOpType>::ImplicitTOperatorSet(SmartTruncation pTrunc)
+      : BoundedOperatorSet<TOpType>(pTrunc)
    {
    }
 
-   template <typename TSimType, typename TOpType, BCType TBCType> void ImplicitTOperatorSet<TSimType, TOpType, TBCType>::createOperators(const DynamoFloat factor, const DynamoFloat timeDiff, const typename ImplicitTOperatorSet<TSimType, TOpType, TBCType>::BasisType &basis)
+   template <typename TSimType, typename TOpType> void ImplicitTOperatorSet<TSimType, TOpType>::createOperators(const EPMFloat factor, const EPMFloat timeDiff, const typename ImplicitTOperatorSet<TSimType, TOpType>::BasisType &basis)
    {
       // Storage for "id" of operator
       int l;

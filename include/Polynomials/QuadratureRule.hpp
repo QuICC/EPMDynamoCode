@@ -43,7 +43,7 @@ namespace EPMDynamo {
           * @param subdiagonal   The subdiagonal of the symmetric tridiagonal eigensystem
           * @param intWeight     The integral weight of the weight function
           */
-         QuadratureRule(const Array& diagonal, const Array& subdiagonal, DynamoFloat intWeight = 0.0);
+         QuadratureRule(const Array& diagonal, const Array& subdiagonal, EPMFloat intWeight = 0.0);
 
          /**
           * @brief Simple empty destructor
@@ -81,7 +81,7 @@ namespace EPMDynamo {
          /**
           * @brief Integral weight of the weight function
           */
-         DynamoFloat    mIntWeight;
+         EPMFloat    mIntWeight;
    };
 
 }

@@ -12,7 +12,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/Typedefs.hpp"
 #include "Operators/HomogeneousSet.hpp"
 

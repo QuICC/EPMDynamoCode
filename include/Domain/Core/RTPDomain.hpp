@@ -48,7 +48,7 @@ namespace EPMDynamo {
           *
           * \param n Radial index
           */
-         DynamoFloat radGrid(const int n) const;
+         EPMFloat radGrid(const int n) const;
 
          /**
           * @brief Get the radial grid
@@ -61,7 +61,7 @@ namespace EPMDynamo {
           * \param j Theta index
           * \param n Radial index 
           */
-         DynamoFloat  cTh(const int j, const int n) const;
+         EPMFloat  cTh(const int j, const int n) const;
 
          /**
           * @brief Get the j \f$\sin\theta\f$ value (for radial index n)
@@ -69,7 +69,7 @@ namespace EPMDynamo {
           * \param j Theta index
           * \param n Radial index 
           */
-         DynamoFloat  sTh(const int j, const int n) const;
+         EPMFloat  sTh(const int j, const int n) const;
 
          /**
           * @brief Set the radial grid (isn't know at creation time)
@@ -105,7 +105,7 @@ namespace EPMDynamo {
          SmartArray  mpSinTh;
    };
 
-   inline DynamoFloat RTPDomain::radGrid(const int n) const
+   inline EPMFloat RTPDomain::radGrid(const int n) const
    {
       return (*this->mpRadGrid)(n);
    }
@@ -115,12 +115,12 @@ namespace EPMDynamo {
       return *this->mpRadGrid;
    }
 
-   inline DynamoFloat RTPDomain::cTh(const int j, const int n) const
+   inline EPMFloat RTPDomain::cTh(const int j, const int n) const
    {
       return (*this->mpCosTh)(this->th0(n) + j);
    }
 
-   inline DynamoFloat RTPDomain::sTh(const int j, const int n) const
+   inline EPMFloat RTPDomain::sTh(const int j, const int n) const
    {
       return (*this->mpSinTh)(this->th0(n) + j);
    }

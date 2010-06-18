@@ -61,9 +61,6 @@ namespace EPMDynamo {
       private:
    };
 
-   /// Set Workflow typedef to MPI code
-   typedef MPIWorkflow  WorkflowType;
-
 }
 
 #endif // MPIWORKFLOW_HPP

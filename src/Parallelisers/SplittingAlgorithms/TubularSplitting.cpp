@@ -14,7 +14,7 @@
 
 // Class include
 //
-#include "Parallelisers/TubularSplitting.hpp"
+#include "Parallelisers/SplittingAlgorithms/TubularSplitting.hpp"
 
 // Project includes
 //

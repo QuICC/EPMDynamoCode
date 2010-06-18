@@ -62,10 +62,10 @@ namespace EPMDynamo {
       // Treat the CSCS case differently (has 2 extraneous grid points)
       if(SimulationConstants::isCSCSGrid())
       {
-         this->mpProj2GradPh = SmartZRPOp(new PolynomialOperator<CRPOperator<DynamoComplex> >(DynamoComplex(0.0, this->m()), this->mSin_1Ones, this->mSin_1Poly));
+         this->mpProj2GradPh = SmartZRPOp(new PolynomialOperator<CRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->mSin_1Ones, this->mSin_1Poly));
       } else
       {
-         this->mpProj2GradPh = SmartZRPOp(new PolynomialOperator<CRPOperator<DynamoComplex> >(DynamoComplex(0.0, this->m()), this->mSin_1Theta, this->poly()));
+         this->mpProj2GradPh = SmartZRPOp(new PolynomialOperator<CRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->mSin_1Theta, this->poly()));
       }
 
       // Projection operator from Spectral to theta component of gradient
@@ -78,20 +78,20 @@ namespace EPMDynamo {
       // Treat the CSCS case differently (has 2 extraneous grid points)
       if(SimulationConstants::isCSCSGrid())
       {
-         this->mpProjT2Th = SmartZLRPOp(new PolynomialOperator<CLRPOperator<DynamoComplex> >(DynamoComplex(0.0, -this->m()), this->sll_1(), this->mSin_1Ones, this->mSin_1Poly));
+         this->mpProjT2Th = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, -this->m()), this->sll_1(), this->mSin_1Ones, this->mSin_1Poly));
       } else
       {
-         this->mpProjT2Th = SmartZLRPOp(new PolynomialOperator<CLRPOperator<DynamoComplex> >(DynamoComplex(0.0, -this->m()), this->sll_1(), this->mSin_1Theta, this->poly()));
+         this->mpProjT2Th = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, -this->m()), this->sll_1(), this->mSin_1Theta, this->poly()));
       }
 
       // Projection operator from Spectral S compoent to phi component
       // Treat the CSCS case differently (has 2 extraneous grid points)
       if(SimulationConstants::isCSCSGrid())
       {
-         this->mpProjS2Ph = SmartZLRPOp(new PolynomialOperator<CLRPOperator<DynamoComplex> >(DynamoComplex(0.0, this->m()), this->sll_1(), this->mSin_1Ones, this->mSin_1Poly));
+         this->mpProjS2Ph = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->sll_1(), this->mSin_1Ones, this->mSin_1Poly));
       } else
       {
-         this->mpProjS2Ph = SmartZLRPOp(new PolynomialOperator<CLRPOperator<DynamoComplex> >(DynamoComplex(0.0, this->m()), this->sll_1(), this->mSin_1Theta, this->poly()));
+         this->mpProjS2Ph = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->sll_1(), this->mSin_1Theta, this->poly()));
       }
 
       // Projection operator from Spectral S compoent to theta component
@@ -107,10 +107,10 @@ namespace EPMDynamo {
       this->mpIntgPh2T = SmartRPOp(new PolynomialOperator<RPOperator>(this->sll_1(), this->wDiff(1)));
 
 //      // Integration operator from real space theta component to spectral T component
-      this->mpIntgTh2T =  SmartZLRPOp(new PolynomialOperator<CLRPOperator<DynamoComplex> >(DynamoComplex(0.0, this->m()), this->mSin_1Theta, this->sll_1(), this->wPoly()));
+      this->mpIntgTh2T =  SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->mSin_1Theta, this->sll_1(), this->wPoly()));
 
 //      // Integration operator from real space phi component to spectral S component
-      this->mpIntgPh2S = SmartZLRPOp(new PolynomialOperator<CLRPOperator<DynamoComplex> >(DynamoComplex(0.0, -this->m()), this->mSin_1Theta, this->sll_1(), this->wPoly()));
+      this->mpIntgPh2S = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, -this->m()), this->mSin_1Theta, this->sll_1(), this->wPoly()));
 
       // Integration operator from real space theta component to spectral S component
       this->mpIntgTh2S = SmartRPOp(new PolynomialOperator<RPOperator>(this->sll_1(), this->wDiff(1)));

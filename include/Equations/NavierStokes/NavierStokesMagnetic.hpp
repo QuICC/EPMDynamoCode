@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesRotating.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
@@ -32,10 +32,10 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> class NavierStokesMagnetic : public NavierStokesRotating<TSimType, TSimTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -46,7 +46,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesMagnetic(typename TSimTraits<TSim>::VelType &rV, typename TSimTraits<TSim>::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesMagnetic(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
 
          /**
           * @brief Simple empty destructor
@@ -70,12 +70,12 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the magnetic field
           */
-         typename TSimTraits<TSim>::MagType&  mrB;
+         typename TSimTraits<TSimType>::MagType&  mrB;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesMagnetic<TSimType, TSimTraits>::NavierStokesMagnetic(typename TSimTraits<TSim>::VelType &rV, typename TSimTraits<TSim>::MagType &rB, typename NavierStokesMagnetic<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesMagnetic<TSimType, TSimTraits>::NavierStokesMagnetic(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename NavierStokesMagnetic<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
       : NavierStokesRotating<TSimType, TSimTraits>(rV, transform, tsteps, params), mrB(rB)
    {
    }

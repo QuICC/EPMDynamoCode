@@ -64,11 +64,11 @@ namespace EPMDynamo {
    void ChebyshevGrid::computeGrid(const int left, const int right)
    {
       int xN = this->gridN() - left - right;
-      DynamoFloat f_tmp;
+      EPMFloat f_tmp;
 
       for(int i=0; i < xN; ++i)
       {
-         f_tmp = (MathConstants::PI/2.0)*static_cast<DynamoFloat>((2*(i+1)-1))/static_cast<DynamoFloat>(xN);
+         f_tmp = (MathConstants::PI/2.0)*static_cast<EPMFloat>((2*(i+1)-1))/static_cast<EPMFloat>(xN);
 
          this->mGrid(i + left) = std::cos(f_tmp);
       }
@@ -80,7 +80,7 @@ namespace EPMDynamo {
 
       for(int i=0; i < xN; ++i)
       {
-         this->mWeights(i + left)  = MathConstants::PI/static_cast<DynamoFloat>(2*xN);
+         this->mWeights(i + left)  = MathConstants::PI/static_cast<EPMFloat>(2*xN);
       }
    }
 

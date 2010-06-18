@@ -4,7 +4,6 @@
 
 // System includes
 //
-#include <boost/static_assert.hpp>
 
 // External includes
 //
@@ -41,27 +40,31 @@ namespace EPMDynamo {
          splitter.createTruncations(this->mpLocal, this->mRemote);
       } else
       {
+         try
+         {
          #ifdef EPMDYNAMO_SPLIT_SH
             #ifdef EPMDYNAMO_SPLIT_RADIAL
                // Create tubular massive splitter
                LoadSplitter<TubularSplitting>  splitter(this->sim(), this->para().nCore(), this->para().id());
+
+               splitter.createTruncations(this->mpLocal, this->mRemote);
             #else
                // Create Spherical harmonics splitter
                LoadSplitter<SHSplitting>  splitter(this->sim(), this->para().nCore(), this->para().id());
+
+               splitter.createTruncations(this->mpLocal, this->mRemote);
             #endif // EPMDYNAMO_SPLIT_RADIAL
          #else
             #ifdef EPMDYNAMO_SPLIT_RADIAL
                // Create radial splitter
                LoadSplitter<RadialSplitting>  splitter(this->sim(), this->para().nCore(), this->para().id());
+
+               splitter.createTruncations(this->mpLocal, this->mRemote);
             #else
                // This should never happen!
-               BOOST_STATIC_ASSERT(false);
+               assert(false);
             #endif // EPMDYNAMO_SPLIT_RADIAL
          #endif // EPMDYNAMO_SPLIT_SH
-
-         try
-         {
-            splitter.createTruncations(this->mpLocal, this->mRemote);
          }
          catch(EPMException &e)
          {

@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Induction/InductionBase.hpp"
 
@@ -29,7 +29,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSim>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /**
           * @brief Constructor
@@ -38,7 +38,7 @@ namespace EPMDynamo {
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           */
-         InductionDiffusion(typename TSimTraits<TSim>::MagType &rB, TransformType &transform, TimestepParameters &tsteps);
+         InductionDiffusion(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps);
 
          /**
           * @brief Simple empty destructor
@@ -69,7 +69,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionDiffusion<TSimType, TSimTraits>::InductionDiffusion(typename TSimTraits<TSim>::MagType &rB, typename InductionDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
+   template <typename TSimType, template <typename> class TSimTraits> InductionDiffusion<TSimType, TSimTraits>::InductionDiffusion(typename TSimTraits<TSimType>::MagType &rB, typename InductionDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
       : InductionBase<TSimType, TSimTraits>(rB, transform, tsteps)
    {
    }

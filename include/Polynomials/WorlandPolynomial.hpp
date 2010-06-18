@@ -132,7 +132,7 @@ namespace EPMDynamo {
           *
           * @param n Order of the polynomial
           */
-         DynamoFloat normaliseW(const int n);
+         EPMFloat normaliseW(const int n);
    };
 }
 

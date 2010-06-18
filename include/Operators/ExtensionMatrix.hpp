@@ -56,7 +56,7 @@ namespace EPMDynamo {
           *
           * @param rVector RHS vector
           */
-         void imposeBCValue(Array& rVector);
+         void prepareRHS(Array& rVector);
 
          /**
           * @brief Restrict operator
@@ -65,7 +65,7 @@ namespace EPMDynamo {
           * @param factor Multiplicative factor
           * @param fullOp Complete operator
           */
-         void restrictOperator(Matrix &rOp, const DynamoFloat factor, const Matrix& fullOp);
+         void restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix& fullOp);
          
       protected:
 
@@ -91,7 +91,7 @@ namespace EPMDynamo {
 
    template <BCType TBCType> void ExtensionMatrix<TBCType>::prepareRHS(Array &rVector)
    {
-      if(TBCType == BCType::NonHomogeneous)
+      if(TBCType == NonHomogeneous)
       {
       }
    }
@@ -100,7 +100,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <BCType TBCType> void ExtensionMatrix<TBCType>::restrictOperator(Matrix &rOp, const DynamoFloat factor, const Matrix &fullOp)
+   template <BCType TBCType> void ExtensionMatrix<TBCType>::restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
    {
    }
 

@@ -49,7 +49,7 @@ namespace EPMDynamo {
           * @param Ra Rayleigh number
           * @param Ro Rossby number
           */
-         void writePhysical(const DynamoFloat E, const DynamoFloat q, const DynamoFloat Ra, const DynamoFloat Ro);
+         void writePhysical(const EPMFloat E, const EPMFloat q, const EPMFloat Ra, const EPMFloat Ro);
 
          /**
           * @brief Write run information to file
@@ -57,7 +57,7 @@ namespace EPMDynamo {
           * @param time Reached simulation time
           * @param step Current timestep
           */
-         void writeRun(const DynamoFloat time, const DynamoFloat step);
+         void writeRun(const EPMFloat time, const EPMFloat step);
 
          /**
           * @brief Create group for Codensity scalar and set mGroup

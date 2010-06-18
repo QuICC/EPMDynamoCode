@@ -2,15 +2,12 @@
  *  \brief Source of the implementation of an MPI workflow control
  */
 
-// Configuration includes
-//
-#include "Config/Parallelisation.h"
-
 // System includes
 //
 
 // External includes
 //
+#include <mpi.h>
 
 // Class include
 //

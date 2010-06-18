@@ -93,13 +93,13 @@ namespace EPMDynamo {
           * @brief Get the integration operator from phi component to the QST S 
           *          component
           */
-         const PolynomialOperator<CLRPOperator<DynamoComplex> >& intgPh2S() const;
+         const PolynomialOperator<CLRPOperator<EPMComplex> >& intgPh2S() const;
 
          /**
           * @brief Get the integration operator from theta component to the QST T 
           *          component
           */
-         const PolynomialOperator<CLRPOperator<DynamoComplex> >& intgTh2T() const;
+         const PolynomialOperator<CLRPOperator<EPMComplex> >& intgTh2T() const;
 
          /**
           * @brief Get the integration operator from phi component to the QST T 
@@ -131,13 +131,13 @@ namespace EPMDynamo {
           * @brief Get the projection operator from the QST S component to the phi
           *          component 
           */
-         const PolynomialOperator<CLRPOperator<DynamoComplex> >& projS2Ph() const;
+         const PolynomialOperator<CLRPOperator<EPMComplex> >& projS2Ph() const;
 
          /**
           * @brief Get the projection operator from the QST T component to the theta
           *          component 
           */
-         const PolynomialOperator<CLRPOperator<DynamoComplex> >& projT2Th() const;
+         const PolynomialOperator<CLRPOperator<EPMComplex> >& projT2Th() const;
 
          /**
           * @brief Get the projection operator from the QST T component to the phi
@@ -153,7 +153,7 @@ namespace EPMDynamo {
          /**
           * @brief Get the projection operator to the phi component  of the gradient
           */
-         const PolynomialOperator<CRPOperator<DynamoComplex> >& proj2GradPh() const;
+         const PolynomialOperator<CRPOperator<EPMComplex> >& proj2GradPh() const;
          
       protected:
 
@@ -244,12 +244,12 @@ namespace EPMDynamo {
       return *this->mpIntgTh2S;
    }
 
-   inline const PolynomialOperator<CLRPOperator<DynamoComplex> >& AssociatedLegendreOperator::intgPh2S() const
+   inline const PolynomialOperator<CLRPOperator<EPMComplex> >& AssociatedLegendreOperator::intgPh2S() const
    {
       return *this->mpIntgPh2S;
    }
 
-   inline const PolynomialOperator<CLRPOperator<DynamoComplex> >& AssociatedLegendreOperator::intgTh2T() const
+   inline const PolynomialOperator<CLRPOperator<EPMComplex> >& AssociatedLegendreOperator::intgTh2T() const
    {
       return *this->mpIntgTh2T;
    }
@@ -278,12 +278,12 @@ namespace EPMDynamo {
       return *this->mpProjS2Th;
    }
 
-   inline const PolynomialOperator<CLRPOperator<DynamoComplex> >& AssociatedLegendreOperator::projS2Ph() const
+   inline const PolynomialOperator<CLRPOperator<EPMComplex> >& AssociatedLegendreOperator::projS2Ph() const
    {
       return *this->mpProjS2Ph;
    }
 
-   inline const PolynomialOperator<CLRPOperator<DynamoComplex> >& AssociatedLegendreOperator::projT2Th() const
+   inline const PolynomialOperator<CLRPOperator<EPMComplex> >& AssociatedLegendreOperator::projT2Th() const
    {
       return *this->mpProjT2Th;
    }
@@ -298,7 +298,7 @@ namespace EPMDynamo {
       return *this->mpProj2GradTh;
    }
 
-   inline const PolynomialOperator<CRPOperator<DynamoComplex> >& AssociatedLegendreOperator::proj2GradPh() const
+   inline const PolynomialOperator<CRPOperator<EPMComplex> >& AssociatedLegendreOperator::proj2GradPh() const
    {
       return *this->mpProj2GradPh;
    }

@@ -16,7 +16,6 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralScalars/FDSHOrderScalar.hpp"
-#include "GeneralScalars/FDSHRadialScalar.hpp"
 #include "GeneralScalars/FDSHDegreeScalar.hpp"
 #include "DataManipulators/MPIManipulatorBase.hpp"
 

@@ -81,12 +81,12 @@ namespace EPMDynamo {
       {
          this->mSll_1(0) = 0.0;
       } else {
-         this->mSll_1(0) = 1.0/std::sqrt(static_cast<DynamoFloat>(this->m()*(this->m()+1)));
+         this->mSll_1(0) = 1.0/std::sqrt(static_cast<EPMFloat>(this->m()*(this->m()+1)));
       }
 
       for(int i= 1, l = this->m() + 1 ; i < this->polyN(); ++i, ++l)
       {
-         this->mSll_1(i) = 1.0/std::sqrt(static_cast<DynamoFloat>(l*(l+1)));
+         this->mSll_1(i) = 1.0/std::sqrt(static_cast<EPMFloat>(l*(l+1)));
       }
    }
 

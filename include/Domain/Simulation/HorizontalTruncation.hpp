@@ -154,12 +154,12 @@ namespace EPMDynamo {
          /**
           * @brief Theta dealiasing factor
           */
-         static const DynamoFloat msThetaDealiasing;
+         static const EPMFloat msThetaDealiasing;
 
          /**
           * @brief Phi dealiasing factor
           */
-         static const DynamoFloat msPhiDealiasing;
+         static const EPMFloat msPhiDealiasing;
 
          /**
           * @brief Correct grid sizes if grid type requires it (ex. CSCS)

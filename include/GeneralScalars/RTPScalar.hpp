@@ -74,7 +74,7 @@ namespace EPMDynamo {
           * @param rField  Resulting vector field
           * @param coeff Multiplicative coefficient
           */
-         template <int TOp> void radVect(RTPField &rField, const DynamoFloat = 1) const;
+         template <int TOp> void radVect(RTPField &rField, const EPMFloat = 1) const;
          
       protected:
 
@@ -118,7 +118,7 @@ namespace EPMDynamo {
       return this->mValues.at(iR);
    }
 
-   template <int TOp> inline void RTPScalar::radVect(RTPField &rField, const DynamoFloat coeff) const
+   template <int TOp> inline void RTPScalar::radVect(RTPField &rField, const EPMFloat coeff) const
    {
       if(TOp == 0)
       {

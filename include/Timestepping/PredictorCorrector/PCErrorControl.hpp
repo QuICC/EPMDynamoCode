@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/ErrorNorms/ErrorL2.hpp"
 #include "Timestepping/ErrorNorms/ErrorL2Summed.hpp"
 #include "Timestepping/ErrorNorms/ErrorL2Max.hpp"
@@ -43,7 +43,7 @@ namespace EPMDynamo {
           * @param rVar Input variable
           * @param oldError Previous error norm
           */
-         static DynamoFloat errorNorm(const ScalarType& rVar, const DynamoFloat oldError);
+         static EPMFloat errorNorm(const ScalarType& rVar, const EPMFloat oldError);
 
       protected:
 
@@ -59,11 +59,11 @@ namespace EPMDynamo {
          virtual ~PCErrorControl() {};
    };
 
-   template <typename TSimType> DynamoFloat PCErrorControl<TSimType>::errorNorm(const typename PCErrorControl<TSimType>::ScalarType& rVar, const DynamoFloat oldError)
+   template <typename TSimType> EPMFloat PCErrorControl<TSimType>::errorNorm(const typename PCErrorControl<TSimType>::ScalarType& rVar, const EPMFloat oldError)
    {
       // Create temporary storage
-      DynamoFloat norm = 0.0;
-      DynamoFloat error = 0.0;
+      EPMFloat norm = 0.0;
+      EPMFloat error = 0.0;
 
       // Compute error norm
       norm = ErrorNormType::computeNorm(rVar);

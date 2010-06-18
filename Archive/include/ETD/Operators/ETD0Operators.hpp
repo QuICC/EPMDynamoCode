@@ -12,10 +12,10 @@
 
 // Project includes
 //
-#include "Domain/SpectralTruncation.hpp"
+#include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/Operators/ETDNOperators.hpp"
-#include "Simulations/SimulationTraits.hpp"
+#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -45,7 +45,7 @@ namespace EPMDynamo {
          /**
           * @brief Update the ETD0 operators
           */
-         void createOperators(const DynamoFloat c, const BasisType &basis);
+         void createOperators(const EPMFloat c, const BasisType &basis);
 
       protected:
 
@@ -61,7 +61,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSim> void ETD0Operators<TSim>::createOperators(const DynamoFloat c, const typename ETD0Operators<TSim>::BasisType &basis)
+   template <typename TSim> void ETD0Operators<TSim>::createOperators(const EPMFloat c, const typename ETD0Operators<TSim>::BasisType &basis)
    {
       // Update the required scaling power
       this->updateScalings(c);
