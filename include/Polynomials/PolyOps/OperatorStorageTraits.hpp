@@ -1,0 +1,71 @@
+/** \file OperatorStorageTraits.hpp
+ */
+
+#ifndef OPERATORSTORAGETRAITS_HPP
+#define OPERATORSTORAGETRAITS_HPP
+
+// System includes
+//
+
+// External includes
+//
+
+// Project includes
+//
+#include "Polynomials/PolyOps/StoredOperator.hpp"
+#include "Polynomials/PolyOps/ComputedOperator.hpp"
+#include "Polynomials/PolyOps/POperator.hpp"
+#include "Polynomials/PolyOps/CPOperator.hpp"
+
+namespace EPMDynamo {
+
+   /**
+    * @brief These traits defines the storage type of the operators
+    *
+    * \bug Needs cleaning and restructuring
+    */
+   template <typename TExp> class OperatorStorageTraits
+   {
+      public:
+         #ifdef EPMDYNAMO_BIGMEM
+            /// Typedef for the used storage type to be stored operators
+            typedef StoredOperator<TExp> StorageType;
+         #else
+            /// Typedef for the used storage type to be computed operators
+            typedef ComputedOperator<TExp> StorageType;
+         #endif // EPMDYNAMO_BIGMEM
+   };
+
+   /**
+    * @brief These traits defines the storage type of the operators (Specialized for POperator)
+    */
+   template <> class OperatorStorageTraits<POperator>
+   {
+      public:
+         /// Typedef for the used storage type
+         typedef ComputedOperator<POperator> StorageType;
+   };
+
+   /**
+    * @brief These traits defines the storage type of the operators (Specialized for DPOperator)
+    */
+   template <> class OperatorStorageTraits<CPOperator<DynamoFloat> >
+   {
+      public:
+         /// Typedef for the used storage type
+         typedef ComputedOperator<CPOperator<DynamoFloat> > StorageType;
+   };
+
+   /**
+    * @brief These traits defines the storage type of the operators (Specialized for ZPOperator)
+    */
+   template <> class OperatorStorageTraits<CPOperator<DynamoComplex> >
+   {
+      public:
+         /// Typedef for the used storage type
+         typedef ComputedOperator<CPOperator<DynamoComplex> > StorageType;
+   };
+
+}
+
+#endif // OPERATORSTORAGETRAITS_HPP

@@ -14,7 +14,6 @@ set(${SrcSubDir}_Srcs
 # include source files from subdirectories
 #
 set(SrcSubSubDirs
-      ETD
       PredictorCorrector
       )
 
