@@ -55,7 +55,6 @@ namespace EPMDynamo {
       protected:
 
       private:
-
          /**
           * @brief Fill the basis vector
           */

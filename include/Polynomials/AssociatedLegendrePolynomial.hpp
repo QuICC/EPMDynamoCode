@@ -318,7 +318,8 @@ namespace EPMDynamo {
           *    \frac{d}{d\theta}P_l^m(\cos\theta) = \frac{1}{\sqrt{(l+m)(l-m)}}\left( (2l -1)\left(\cos\theta \frac{d}{d\theta}P_{l-1}^m(\cos\theta)- \sin\theta P_{l-1}^{m}\right) - \sqrt{(l-m-1)(l+m-1)}\frac{d}{d\theta}P_{l-2}^m(\cos\theta) \right)
           * \f]
           *
-          * @param m Harmonic degree l
+          * @param l Harmonic degree l
+          * @param m Harmonic order m
           * @param idx Index
           */
          void computeDPlm(int l, const int m, int idx = 2);
