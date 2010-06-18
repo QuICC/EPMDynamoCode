@@ -63,7 +63,7 @@ namespace EPMDynamo {
          /**
           * @brief Print some run info
           *
-          * @parma steps Number of steps performed
+          * @param steps Number of steps performed
           */
          void printInfo(const int steps) const;
          

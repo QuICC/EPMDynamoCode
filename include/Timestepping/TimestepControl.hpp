@@ -143,7 +143,7 @@ namespace EPMDynamo {
          /**
           * @brief Test for allowed timestep window
           *
-          * @param rDt Timestep length
+          * @param dt Timestep length
           */
          void setWindowedTimestep(DynamoFloat dt);
 
