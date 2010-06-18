@@ -2,6 +2,7 @@
 # Set list of source files
 #
 set(${SrcSubDir}_Srcs
+      LoadSplitterBase.cpp
       MPIWorkflow.cpp
       SerialWorkflow.cpp
       WorkflowBase.cpp
@@ -11,7 +12,7 @@ set(${SrcSubDir}_Srcs
 # include source files from subdirectories
 #
 set(SrcSubSubDirs
-      LoadSplitters
+      SplittingAlgorithms
       )
 
 foreach(SrcSubSubDir ${SrcSubSubDirs})

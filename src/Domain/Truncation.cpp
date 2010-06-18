@@ -1,9 +1,10 @@
 /** \file Truncation.cpp
- *  \brief Source of the truncation
+ *  \brief Source of the truncation implementation
  */
 
 // System includes
 //
+#include <boost/static_assert.hpp>
 
 // External includes
 //
@@ -15,10 +16,10 @@
 // Project includes
 //
 #include "Parallelisers/LoadSplitter.hpp"
-#include "Parallelisers/SingleLoadSplitter.hpp"
-#include "Parallelisers/FDSHLoadSplitter.hpp"
-#include "Parallelisers/MassiveLoadSplitter.hpp"
-#include "Parallelisers/TubularLoadSplitter.hpp"
+#include "Parallelisers/SplittingAlgorithms/SerialSplitting.hpp"
+#include "Parallelisers/SplittingAlgorithms/TubularSplitting.hpp"
+#include "Parallelisers/SplittingAlgorithms/RadialSplitting.hpp"
+#include "Parallelisers/SplittingAlgorithms/SHSplitting.hpp"
 
 namespace EPMDynamo {
 
@@ -33,20 +34,30 @@ namespace EPMDynamo {
    {
       if(this->para().nCore() == 1)
       {
-         LoadSplitter<SingleLoadSplitter>  splitter(this->sim(), 1 ,0);
+         // Create serial splitter
+         LoadSplitter<SerialSplitting>  splitter(this->sim(), 1 ,0);
 
+         // Create truncation
          splitter.createTruncations(this->mpLocal, this->mRemote);
       } else
       {
-         #ifdef EPMDYNAMO_TWOSTEP
-            #ifdef EPMDYNAMO_TUBULAR
-               LoadSplitter<TubularLoadSplitter>  splitter(this->sim(), this->para().nCore(), this->para().id());
+         #ifdef EPMDYNAMO_SPLIT_SH
+            #ifdef EPMDYNAMO_SPLIT_RADIAL
+               // Create tubular massive splitter
+               LoadSplitter<TubularSplitting>  splitter(this->sim(), this->para().nCore(), this->para().id());
             #else
-               LoadSplitter<MassiveLoadSplitter>  splitter(this->sim(), this->para().nCore(), this->para().id());
-            #endif // EPMDYNAMO_TUBULAR
+               // Create Spherical harmonics splitter
+               LoadSplitter<SHSplitting>  splitter(this->sim(), this->para().nCore(), this->para().id());
+            #endif // EPMDYNAMO_SPLIT_RADIAL
          #else
-            LoadSplitter<FDSHLoadSplitter>  splitter(this->sim(), this->para().nCore(), this->para().id());
-         #endif // EPMDYNAMO_TWOSTEP
+            #ifdef EPMDYNAMO_SPLIT_RADIAL
+               // Create radial splitter
+               LoadSplitter<RadialSplitting>  splitter(this->sim(), this->para().nCore(), this->para().id());
+            #else
+               // This should never happen!
+               BOOST_STATIC_ASSERT(false);
+            #endif // EPMDYNAMO_SPLIT_RADIAL
+         #endif // EPMDYNAMO_SPLIT_SH
 
          try
          {

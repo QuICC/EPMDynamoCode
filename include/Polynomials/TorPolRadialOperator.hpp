@@ -94,37 +94,27 @@ namespace EPMDynamo {
          /**
           * @brief Get the integration operator from a QST T component to the Toroidal
           *          component
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CPOperator<DynamoFloat> >&  intgT2Tor() const;
 
          /**
           * @brief Get the integration operator from a QST Q component to the Poloidal
           *          component
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CLPOperator<DynamoFloat> >&  intgQ2Pol() const;
          
          /**
           * @brief Get the integration operator for the Curl projection
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CPOperator<DynamoFloat> >&  intgT2CurlProj() const;
          
          /**
           * @brief Get the integration operator for the CurlCurl projection
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<LPOperator>&  intgQ2CurlCurlProj() const;
          
          /**
           * @brief Get the integration operator for the CurlCurl projection
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<POperator>&  intgS2CurlCurlProj() const;
 
@@ -134,80 +124,60 @@ namespace EPMDynamo {
 
          /**
           * @brief Get the projection operator for a standard \f$W_n^{l}\f$ expansion
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<POperator>&  proj() const;
 
          /**
           * @brief Get the projection operator of the first derivative of a 
           *          \f$W_n^{l-1}\f$ expansion
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<POperator>&  dProj() const;
 
          /**
           * @brief Get the projection operator of the second derivative of a 
           *          \f$W_n^{l-1}\f$ expansion
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<POperator>&  d2Proj() const;
 
          /**
           * @brief Get the projection operator from a spectral scalar to the theta
           *          or phi component of the gradient
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<RPOperator>&  proj2GradTP() const;
 
          /**
           * @brief Get the projection operator from a Toroidal component to the Q
           * component of the curl
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CRPOperator<DynamoFloat> >&  projTor2CurlQ() const;
 
          /**
           * @brief Get the projection operator from a Toroidal component to the S
           * component of the curl
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CPOperator<DynamoFloat> >&  projTor2CurlS() const;
 
          /**
           * @brief Get the projection operator from a Poloidal component to the T
           * component of the curl
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CPOperator<DynamoFloat> >&  projPol2CurlT() const;
 
          /**
           * @brief Get the projection operator from the Poloidal component to the QST Q 
           *          component
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CRPOperator<DynamoFloat> >&  projPol2Q() const;
 
          /**
           * @brief Get the projection operator from the Poloidal component to the QST S 
           *          component
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CPOperator<DynamoFloat> >&  projPol2S() const;
 
          /**
           * @brief Get the projection operator from the Toroidal component to the QST T 
           *          component
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CPOperator<DynamoFloat> >&  projTor2T() const;
 
@@ -217,8 +187,6 @@ namespace EPMDynamo {
 
          /**
           * @brief Get the spectral operator for the laplacian 
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<POperator>&  specLaplacian() const;
 

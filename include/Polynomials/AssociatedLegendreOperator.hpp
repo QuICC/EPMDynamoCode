@@ -124,41 +124,34 @@ namespace EPMDynamo {
          /**
           * @brief Get the projection operator from the QST S component to the theta
           *          component 
-          * \todo Add more information
           */
          const PolynomialOperator<LPOperator>& projS2Th() const;
 
          /**
           * @brief Get the projection operator from the QST S component to the phi
           *          component 
-          * \todo Add more information
           */
          const PolynomialOperator<CLRPOperator<DynamoComplex> >& projS2Ph() const;
 
          /**
           * @brief Get the projection operator from the QST T component to the theta
           *          component 
-          * \todo Add more information
           */
          const PolynomialOperator<CLRPOperator<DynamoComplex> >& projT2Th() const;
 
          /**
           * @brief Get the projection operator from the QST T component to the phi
           *          component 
-          * \todo Add more information
           */
          const PolynomialOperator<LPOperator>& projT2Ph() const;
 
          /**
           * @brief Get the projection operator to the theta component  of the gradient
-          * \todo Add more information
           */
          const PolynomialOperator<POperator>& proj2GradTh() const;
 
          /**
           * @brief Get the projection operator to the phi component  of the gradient
-          *
-          * \todo Add more information
           */
          const PolynomialOperator<CRPOperator<DynamoComplex> >& proj2GradPh() const;
          
