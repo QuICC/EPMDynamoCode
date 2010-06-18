@@ -114,6 +114,11 @@ namespace EPMDynamo {
 
       private:
 
+         /**
+          * @brief Tot amount of correction from corrector
+          *
+          * \bug this needs to be restructured
+          */
          DynamoFloat mTotCorr;
    };
 

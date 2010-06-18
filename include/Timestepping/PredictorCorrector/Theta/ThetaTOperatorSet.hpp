@@ -62,7 +62,7 @@ namespace EPMDynamo {
          /**
           * @brief Set the theta parameter of the scheme
           *
-          * @param theat Implicitness
+          * @param theta Implicitness
           *
           * \bug This has to be reimplemented
           */

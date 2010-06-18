@@ -46,6 +46,7 @@ namespace EPMDynamo {
           * @param a Coefficient \f$a\f$ of timestep scheme
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
+          * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
           */
          ThetaMethod(DynamoFloat a, DynamoFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);

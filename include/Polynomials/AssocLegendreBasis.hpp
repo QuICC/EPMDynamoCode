@@ -50,8 +50,8 @@ namespace EPMDynamo {
          /**
           * @brief Simple empty destructor
           */
-         virtual ~AssocLegendreBasis() {}:
-         
+         virtual ~AssocLegendreBasis() {};
+
       protected:
 
       private:
