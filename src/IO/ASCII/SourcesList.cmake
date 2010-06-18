@@ -7,12 +7,12 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       ASCIINWriter.cpp
       ASCIIReader.cpp
       ASCIIRWriter.cpp 
+      ASCIIWriter.cpp
       ControlInterface.cpp
       ControlInterfaceDefs.cpp
       EnergyFileDefs.cpp
       ParametersFileDefs.cpp
       ParametersFile.cpp
-      SCIIWriter.cpp
       SpectrumFileDefs.cpp
       StdMessageDefs.cpp
       StdMessage.cpp 

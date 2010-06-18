@@ -1,5 +1,8 @@
 #
 # Set list of source files
 #
-set(${SrcSubDir}_Srcs RTPOperators.cpp IndexControl.cpp DenseOperator.cpp
-      DenseLUOperator.cpp)
+set(${SrcSubDir}_Srcs
+      RTPOperators.cpp
+      DenseOperator.cpp
+      DenseLUOperator.cpp
+      )
