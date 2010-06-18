@@ -51,7 +51,7 @@ namespace EPMDynamo {
          /**
           * @brief Simple empty destructor
           */
-         virtual ~NavierStokesMagnetic();
+         virtual ~NavierStokesMagnetic() {};
 
          /**
           * @brief Update RTP values of the equation
