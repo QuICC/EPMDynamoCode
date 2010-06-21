@@ -167,7 +167,7 @@ namespace EPMDynamo {
          /**
           * @brief Get the data manipulator
           */
-         DataManipulatorType&  spectralSHManipulator();
+         DataManipulatorType&  sshManipulator();
          
       protected:
 
@@ -203,7 +203,7 @@ namespace EPMDynamo {
          RadialTransformType&  spectralT();
    };
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::DataManipulatorType& TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::spectralSHManipulator()
+   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::DataManipulatorType& TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::sshManipulator()
    {
       return this->mSpectralSHManipulator;
    }
@@ -230,80 +230,80 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformRTP2Spec(typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rSSHValues, const RTPScalar &rtpValues)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(1);
+         this->sshManipulator().addPacks(1);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          // Perform the SH expansion and store in temporary FDSHForwardType
          SHTransform::transformRTP2Spec(rtpValues);
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Get temporary storage
-         FDSHForwardType  &rMTmp = this->spectralSHManipulator().provideFTmp();
+         FDSHForwardType  &rMTmp = this->sshManipulator().provideFTmp();
 
          // Perform the SH expansion and store in temporary FDSHForwardType
          SHTransform::transformRTP2Spec(rMTmp, rtpValues);
 
          // Send data and release temporary storage
-         this->spectralSHManipulator().send(rMTmp);
-         this->spectralSHManipulator().releaseTmp(rMTmp);
+         this->sshManipulator().send(rMTmp);
+         this->sshManipulator().releaseTmp(rMTmp);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHBackwardType &rLTmp = this->spectralSHManipulator().provideBTmp();
-         this->spectralSHManipulator().receive(rLTmp);
+         FDSHBackwardType &rLTmp = this->sshManipulator().provideBTmp();
+         this->sshManipulator().receive(rLTmp);
 
          // Perform the forward Worland transform 
          this->spectralT().template multL<SetProduct>(rSSHValues, rLTmp, &PolynomialType::intg);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rLTmp);
+         this->sshManipulator().freeTmp(rLTmp);
       }
    }
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformSpec2RTP(RTPScalar &rRTPValues, const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &sshValues)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(1);
+         this->sshManipulator().addPacks(1);
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // add Packet size of transform
-         FDSHBackwardType &rLTmp = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmp = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform
          this->spectralT().template multL<SetProduct>(rLTmp, sshValues, &PolynomialType::proj);
 
          // Send data and release temporary storage
-         this->spectralSHManipulator().send(rLTmp);
-         this->spectralSHManipulator().releaseTmp(rLTmp);
+         this->sshManipulator().send(rLTmp);
+         this->sshManipulator().releaseTmp(rLTmp);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmp = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmp);
+         FDSHForwardType &rMTmp = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmp);
 
          // Extract real space values from the SH expansion
          SHTransform::transformSpec2RTP(rRTPValues, rMTmp);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rMTmp);
+         this->sshManipulator().freeTmp(rMTmp);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          // Extract real space values from the SH expansion
          SHTransform::transformSpec2RTP(rRTPValues);
@@ -312,59 +312,59 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformSpec2Grad(RTPField &rGradient, const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &sshValues)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(2);
+         this->sshManipulator().addPacks(2);
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Get temporary storage
-         FDSHBackwardType &rLTmpR = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpR = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform to obtain radial derivative
          this->spectralT().template multL<SetProduct>(rLTmpR, sshValues, &PolynomialType::dProj);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpR);
-         this->spectralSHManipulator().releaseTmp(rLTmpR);
+         this->sshManipulator().send(rLTmpR);
+         this->sshManipulator().releaseTmp(rLTmpR);
 
          // Get temporary storage
-         FDSHBackwardType &rLTmpTP = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpTP = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform to obtain value divided by the radial grid
          this->spectralT().template multL<SetProduct>(rLTmpTP, sshValues, &PolynomialType::proj2GradTP);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpTP);
-         this->spectralSHManipulator().releaseTmp(rLTmpTP);
+         this->sshManipulator().send(rLTmpTP);
+         this->sshManipulator().releaseTmp(rLTmpTP);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmpR = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpR);
+         FDSHForwardType &rMTmpR = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpR);
 
          // Extract real space values from the SH expansion
          SHTransform::transformSpec2RTP(rGradient.rR(), rMTmpR);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rMTmpR);
+         this->sshManipulator().freeTmp(rMTmpR);
 
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmpTP = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpTP);
+         FDSHForwardType &rMTmpTP = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpTP);
 
          // Extract real space values from the SH expansion
          SHTransform::transformSpec2GradTP(rGradient.rTheta(), rGradient.rPhi(), rMTmpTP);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rMTmpTP);
+         this->sshManipulator().freeTmp(rMTmpTP);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          SHTransform::transformSpec2RTP(rGradient.rR());
 
@@ -374,13 +374,13 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformRTP2TorPol(TorPolFieldType &rToPoField, const RTPField &rtpField)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(2);
+         this->sshManipulator().addPacks(2);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          // Compute Q component out of r component
          SHTransform::transformRTP2Spec(rtpField.r());
@@ -389,62 +389,62 @@ namespace EPMDynamo {
          this->transformTP2T(rtpField.theta(), rtpField.phi());
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Get temporary storage
-         FDSHForwardType &rMTmpQ = this->spectralSHManipulator().provideFTmp();
+         FDSHForwardType &rMTmpQ = this->sshManipulator().provideFTmp();
 
          // Compute Q component out of r component
          SHTransform::transformRTP2Spec(rMTmpQ, rtpField.r());
 
          // Transpose the FDSHForwardType values to a suitable order for radial transform
-         this->spectralSHManipulator().send(rMTmpQ);
-         this->spectralSHManipulator().releaseTmp(rMTmpQ);
+         this->sshManipulator().send(rMTmpQ);
+         this->sshManipulator().releaseTmp(rMTmpQ);
 
          // Get temporary storage
-         FDSHForwardType &rMTmpT = this->spectralSHManipulator().provideFTmp();
+         FDSHForwardType &rMTmpT = this->sshManipulator().provideFTmp();
 
          // Compute T component from the Theta and phi components
          this->transformTP2T(rMTmpT, rtpField.theta(), rtpField.phi());
 
          // Transpose the FDSHForwardType values to a suitable order for radial transform
-         this->spectralSHManipulator().send(rMTmpT);
-         this->spectralSHManipulator().releaseTmp(rMTmpT);
+         this->sshManipulator().send(rMTmpT);
+         this->sshManipulator().releaseTmp(rMTmpT);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHBackwardType &rLTmpQ = this->spectralSHManipulator().provideBTmp();
-         this->spectralSHManipulator().receive(rLTmpQ);
+         FDSHBackwardType &rLTmpQ = this->sshManipulator().provideBTmp();
+         this->sshManipulator().receive(rLTmpQ);
 
          // Perform the forward Worland transform for Poloidal component
          this->spectralT().template multL<SetProduct>(rToPoField.rPol(), rLTmpQ, &PolynomialType::intgQ2Pol);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rLTmpQ);
+         this->sshManipulator().freeTmp(rLTmpQ);
 
          // Get temporary storage and receive data
-         FDSHBackwardType &rLTmpT = this->spectralSHManipulator().provideBTmp();
-         this->spectralSHManipulator().receive(rLTmpT);
+         FDSHBackwardType &rLTmpT = this->sshManipulator().provideBTmp();
+         this->sshManipulator().receive(rLTmpT);
 
          // Perform the forward Worland transform for Toroidal component
          this->spectralT().template multL<SetProduct>(rToPoField.rTor(), rLTmpT, &PolynomialType::intgT2Tor);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rLTmpT);
+         this->sshManipulator().freeTmp(rLTmpT);
       }
    }
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformRTP2TorPolNTerms(typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rCurl, typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rCurlCurl, const RTPField &rtpField)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(3);
+         this->sshManipulator().addPacks(3);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          // Get the Q component from radial component
          SHTransform::transformRTP2Spec(rtpField.r());
@@ -456,21 +456,21 @@ namespace EPMDynamo {
          this->transformTP2STPartP(rtpField.phi());
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Get temporary storage
-         FDSHForwardType &rMTmpQ = this->spectralSHManipulator().provideFTmp();
+         FDSHForwardType &rMTmpQ = this->sshManipulator().provideFTmp();
 
          // Get the Q component from radial component
          SHTransform::transformRTP2Spec(rMTmpQ, rtpField.r());
 
          // Transpose the FDSHForwardType values to a suitable order for radial transform
-         this->spectralSHManipulator().send(rMTmpQ);
-         this->spectralSHManipulator().releaseTmp(rMTmpQ);
+         this->sshManipulator().send(rMTmpQ);
+         this->sshManipulator().releaseTmp(rMTmpQ);
 
          // Get temporary storage
-         FDSHForwardType &rMTmpS = this->spectralSHManipulator().provideFTmp();
-         FDSHForwardType &rMTmpT = this->spectralSHManipulator().provideFTmp();
+         FDSHForwardType &rMTmpS = this->sshManipulator().provideFTmp();
+         FDSHForwardType &rMTmpT = this->sshManipulator().provideFTmp();
 
          // Compute S and T components: Theta part
          this->transformTP2STPartT(rMTmpS, rMTmpT, rtpField.theta());
@@ -479,92 +479,92 @@ namespace EPMDynamo {
          this->transformTP2STPartP(rMTmpS, rMTmpT, rtpField.phi());
 
          // Transpose the FDSHForwardType values to a suitable order for radial transform
-         this->spectralSHManipulator().send(rMTmpS);
-         this->spectralSHManipulator().releaseTmp(rMTmpS);
+         this->sshManipulator().send(rMTmpS);
+         this->sshManipulator().releaseTmp(rMTmpS);
 
          // Transpose the FDSHForwardType values to a suitable order for radial transform
-         this->spectralSHManipulator().send(rMTmpT);
-         this->spectralSHManipulator().releaseTmp(rMTmpT);
+         this->sshManipulator().send(rMTmpT);
+         this->sshManipulator().releaseTmp(rMTmpT);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHBackwardType &rLTmpQ = this->spectralSHManipulator().provideBTmp();
-         this->spectralSHManipulator().receive(rLTmpQ);
+         FDSHBackwardType &rLTmpQ = this->sshManipulator().provideBTmp();
+         this->sshManipulator().receive(rLTmpQ);
 
          // Perform the forward Worland transform  from Q component
          this->spectralT().template multL<SetProduct>(rCurlCurl, rLTmpQ, &PolynomialType::intgQ2CurlCurlProj);
          
          // Free temporary storage
-         this->spectralSHManipulator().freeTmp(rLTmpQ);
+         this->sshManipulator().freeTmp(rLTmpQ);
 
          // Get temporary storage and receive data
-         FDSHBackwardType &rLTmpS = this->spectralSHManipulator().provideBTmp();
-         this->spectralSHManipulator().receive(rLTmpS);
+         FDSHBackwardType &rLTmpS = this->sshManipulator().provideBTmp();
+         this->sshManipulator().receive(rLTmpS);
 
          // Perform the forward Worland transform  from S component
          this->spectralT().template multL<AddProduct>(rCurlCurl, rLTmpS, &PolynomialType::intgS2CurlCurlProj);
 
          // Free temporary storage
-         this->spectralSHManipulator().freeTmp(rLTmpS);
+         this->sshManipulator().freeTmp(rLTmpS);
 
          // Get temporary storage and receive data
-         FDSHBackwardType &rLTmpT = this->spectralSHManipulator().provideBTmp();
-         this->spectralSHManipulator().receive(rLTmpT);
+         FDSHBackwardType &rLTmpT = this->sshManipulator().provideBTmp();
+         this->sshManipulator().receive(rLTmpT);
 
          // Perform the forward Worland transform for Curl value from T component
          this->spectralT().template multL<SetProduct>(rCurl, rLTmpT, &PolynomialType::intgT2CurlProj);
 
          // Free temporary storage
-         this->spectralSHManipulator().freeTmp(rLTmpT);
+         this->sshManipulator().freeTmp(rLTmpT);
       }
    }
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformTorPol2RTP(RTPField &rRTPField, const TorPolFieldType &topoField)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(3);
+         this->sshManipulator().addPacks(3);
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Compute the R component from the poloidal component
          this->transformPol2R(rRTPField.rR(), topoField.pol());
 
          // Get temporary storage
-         FDSHBackwardType &rLTmpS = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpS = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform for Poloidal component: S 
          this->spectralT().template multL<SetProduct>(rLTmpS, topoField.pol(), &PolynomialType::projPol2S);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpS);
-         this->spectralSHManipulator().releaseTmp(rLTmpS);
+         this->sshManipulator().send(rLTmpS);
+         this->sshManipulator().releaseTmp(rLTmpS);
 
          // Get temporary storage
-         FDSHBackwardType &rLTmpT = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpT = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform for Toroidal component
          this->spectralT().template multL<SetProduct>(rLTmpT, topoField.tor(), &PolynomialType::projTor2T);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpT);
-         this->spectralSHManipulator().releaseTmp(rLTmpT);
+         this->sshManipulator().send(rLTmpT);
+         this->sshManipulator().releaseTmp(rLTmpT);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Compute the R component from the poloidal component
          this->transformPol2R(rRTPField.rR(), topoField.pol());
 
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmpS = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpS);
-         FDSHForwardType &rMTmpT = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpT);
+         FDSHForwardType &rMTmpS = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpS);
+         FDSHForwardType &rMTmpT = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpT);
 
          // Compute Theta component
          this->transformST2Theta(rRTPField.rTheta(), rMTmpS, rMTmpT);
@@ -573,11 +573,11 @@ namespace EPMDynamo {
          this->transformST2Phi(rRTPField.rPhi(), rMTmpS, rMTmpT);
 
          // Free temporary storage 
-         this->spectralSHManipulator().freeTmp(rMTmpS);
-         this->spectralSHManipulator().freeTmp(rMTmpT);
+         this->sshManipulator().freeTmp(rMTmpS);
+         this->sshManipulator().freeTmp(rMTmpT);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          // Compute the R component from the poloidal component
          this->transformPol2R(rRTPField.rR());
@@ -592,62 +592,62 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformTorPol2Curl(RTPField &rCurl, const TorPolFieldType &topoField)
    {
-      if(this->spectralSHManipulator().isFirstEntry())
+      if(this->sshManipulator().isFirstEntry())
       {
          // add Packet size of transform
-         this->spectralSHManipulator().addPacks(3);
+         this->sshManipulator().addPacks(3);
       }
 
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Get temporary storage
-         FDSHBackwardType &rLTmpCurlQ = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpCurlQ = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform for S component
          this->spectralT().template multL<SetProduct>(rLTmpCurlQ, topoField.tor(), &PolynomialType::projTor2CurlQ);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpCurlQ);
-         this->spectralSHManipulator().releaseTmp(rLTmpCurlQ);
+         this->sshManipulator().send(rLTmpCurlQ);
+         this->sshManipulator().releaseTmp(rLTmpCurlQ);
 
          // Get temporary storage
-         FDSHBackwardType &rLTmpCurlS = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpCurlS = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform for S component
          this->spectralT().template multL<SetProduct>(rLTmpCurlS, topoField.tor(), &PolynomialType::projTor2CurlS);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpCurlS);
-         this->spectralSHManipulator().releaseTmp(rLTmpCurlS);
+         this->sshManipulator().send(rLTmpCurlS);
+         this->sshManipulator().releaseTmp(rLTmpCurlS);
 
          // Get temporary storage
-         FDSHBackwardType &rLTmpCurlT = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmpCurlT = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform for T component
          this->spectralT().template multL<SetProduct>(rLTmpCurlT, topoField.pol(), &PolynomialType::projPol2CurlT);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmpCurlT);
-         this->spectralSHManipulator().releaseTmp(rLTmpCurlT);
+         this->sshManipulator().send(rLTmpCurlT);
+         this->sshManipulator().releaseTmp(rLTmpCurlT);
       }
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmpCurlQ = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpCurlQ);
+         FDSHForwardType &rMTmpCurlQ = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpCurlQ);
 
          // Extract real space radial component from the SH expansion
          SHTransform::transformSpec2RTP(rCurl.rR(), rMTmpCurlQ);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rMTmpCurlQ);
+         this->sshManipulator().freeTmp(rMTmpCurlQ);
 
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmpCurlS = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpCurlS);
-         FDSHForwardType &rMTmpCurlT = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmpCurlT);
+         FDSHForwardType &rMTmpCurlS = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpCurlS);
+         FDSHForwardType &rMTmpCurlT = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmpCurlT);
 
          // Compute Theta component
          this->transformST2Theta(rCurl.rTheta(), rMTmpCurlS, rMTmpCurlT);
@@ -656,11 +656,11 @@ namespace EPMDynamo {
          this->transformST2Phi(rCurl.rPhi(), rMTmpCurlS, rMTmpCurlT);
 
          // Free temporary data
-         this->spectralSHManipulator().freeTmp(rMTmpCurlS);
-         this->spectralSHManipulator().freeTmp(rMTmpCurlT);
+         this->sshManipulator().freeTmp(rMTmpCurlS);
+         this->sshManipulator().freeTmp(rMTmpCurlT);
       }
 
-      if(this->spectralSHManipulator().atSpecialStage())
+      if(this->sshManipulator().atInterStage())
       {
          // Extract real space radial component from the SH expansion
          SHTransform::transformSpec2RTP(rCurl.rR());
@@ -687,30 +687,30 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformPol2R(RTPScalar &rRComp, const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &polComp)
    {
-      if(this->spectralSHManipulator().atSendStage())
+      if(this->sshManipulator().atSendStage())
       {
          // Get temporary storage
-         FDSHBackwardType &rLTmp = this->spectralSHManipulator().provideBTmp();
+         FDSHBackwardType &rLTmp = this->sshManipulator().provideBTmp();
 
          // Perform the backward Worland transform for Poloidal component: Q part
          this->spectralT().template multL<SetProduct>(rLTmp, polComp, &PolynomialType::projPol2Q);
 
          // Transpose the FDSHForwardType values to a suitable order for the SHTransform
-         this->spectralSHManipulator().send(rLTmp);
-         this->spectralSHManipulator().releaseTmp(rLTmp);
+         this->sshManipulator().send(rLTmp);
+         this->sshManipulator().releaseTmp(rLTmp);
       } 
 
-      if(this->spectralSHManipulator().atRecvStage())
+      if(this->sshManipulator().atRecvStage())
       {
          // Get temporary storage and receive data
-         FDSHForwardType &rMTmp = this->spectralSHManipulator().provideFTmp();
-         this->spectralSHManipulator().receive(rMTmp);
+         FDSHForwardType &rMTmp = this->sshManipulator().provideFTmp();
+         this->sshManipulator().receive(rMTmp);
 
          // Extract real space values from the SH expansion
          SHTransform::transformSpec2RTP(rRComp, rMTmp);
 
          // free temporary storage
-         this->spectralSHManipulator().freeTmp(rMTmp);
+         this->sshManipulator().freeTmp(rMTmp);
       }
    }
 

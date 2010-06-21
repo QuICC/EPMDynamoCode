@@ -129,7 +129,7 @@ namespace EPMDynamo {
           *
           * \bug Bad name for method
           */
-         bool atSpecialStage() const;
+         bool atInterStage() const;
 
          /**
           * @brief Add n packs to next communication
@@ -261,7 +261,7 @@ namespace EPMDynamo {
       return (this->mPacksCounter == 0);
    }
 
-   template <typename TForward, typename TBackward> inline bool ManipulatorBase<TForward, TBackward>::atSpecialStage() const
+   template <typename TForward, typename TBackward> inline bool ManipulatorBase<TForward, TBackward>::atInterStage() const
    {
       return (this->mPacksCounter < 0);
    }

@@ -211,12 +211,12 @@ namespace EPMDynamo {
    template <typename TSimType> void SimulationBase<TSimType>::combineRTPTransforms(const int entry)
    {
       #ifdef EPMDYNAMO_GROUPED_ONESTEP
-         this->mTransform.spectralSHManipulator().initiateGroupedBSend(entry);
+         this->mTransform.sshManipulator().initiateGroupedBSend(entry);
       #endif // EPMDYNAMO_GROUPED_ONESTEP
 
       #ifdef EPMDYNAMO_GROUPED_TWOSTEP
          #ifndef EPMDYNAMO_GROUPED_ONESTEP
-            this->mTransform.spectralSHManipulator().initiateGroupedBSend(entry);
+            this->mTransform.sshManipulator().initiateGroupedBSend(entry);
          #endif // EPMDYNAMO_GROUPED_ONESTEP
          this->mTransform.shManipulator().initiateGroupedBSend(entry);
       #endif // EPMDYNAMO_GROUPED_TWOSTEP
@@ -226,29 +226,29 @@ namespace EPMDynamo {
    {
       #ifdef EPMDYNAMO_GROUPED_TWOSTEP
          #ifndef EPMDYNAMO_GROUPED_ONESTEP
-            this->mTransform.spectralSHManipulator().initiateGroupedFSend(entry);
+            this->mTransform.sshManipulator().initiateGroupedFSend(entry);
          #endif // EPMDYNAMO_GROUPED_ONESTEP
          this->mTransform.shManipulator().initiateGroupedFSend(entry);
       #endif // EPMDYNAMO_GROUPED_TWOSTEP
 
       #ifdef EPMDYNAMO_GROUPED_ONESTEP
-         this->mTransform.spectralSHManipulator().initiateGroupedFSend(entry);
+         this->mTransform.sshManipulator().initiateGroupedFSend(entry);
       #endif // EPMDYNAMO_GROUPED_ONESTEP
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::configureWSHManipulator(const int maxFPacks, const int maxBPacks, bool state)
    {
       // Set the number of packs
-      mTransform.spectralSHManipulator().setMaxPacks(maxFPacks, maxBPacks);
+      mTransform.sshManipulator().setMaxPacks(maxFPacks, maxBPacks);
 
       // Desactivate automatic send/recv control
-      mTransform.spectralSHManipulator().setDynamicPacks(state);
+      mTransform.sshManipulator().setDynamicPacks(state);
 
       // Activate or desactivate the special communcation entries
-      mTransform.spectralSHManipulator().setDesactivator(state);
+      mTransform.sshManipulator().setDesactivator(state);
 
       // Finish initialisation of manipulator
-      mTransform.spectralSHManipulator().setup();
+      mTransform.sshManipulator().setup();
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::configureSHManipulator(const int maxFPacks, const int maxBPacks, bool state)
@@ -272,7 +272,7 @@ namespace EPMDynamo {
    {
       #ifdef EPMDYNAMO_GROUPED_TWOSTEP
          // Set the WSH manipulator to be aware of nested grouped communication
-         mTransform.spectralSHManipulator().setSpecialEntries(0, this->mTransformSteps-1);
+         mTransform.sshManipulator().setSpecialEntries(0, this->mTransformSteps-1);
          #ifdef EPMDYNAMO_GROUPED_ONESTEP
             // If its a full massive grouped communication introduce index shift
             mTransform.shManipulator().setEntryShift(1);
