@@ -82,7 +82,7 @@ namespace EPMDynamo {
          /**
           * @brief Update equations RTP values
           *
-          * \param step Step in a multistep transform
+          * \param step Current step in a multistep transform
           */
          void updateEquationsRTP(const int step);
 
@@ -94,7 +94,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform equations RHS
           *
-          * \param step Step in a multistep transform
+          * \param step Current step in a multistep transform
           */
          void transformEquationsRHS(const int step);
 
