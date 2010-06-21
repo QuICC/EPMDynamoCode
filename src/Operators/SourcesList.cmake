@@ -2,7 +2,8 @@
 # Set list of source files
 #
 set(${SrcSubDir}_Srcs
-      RTPOperators.cpp
+      ExtensionMatrix.cpp
       DenseOperator.cpp
       DenseLUOperator.cpp
+      RTPOperators.cpp
       )

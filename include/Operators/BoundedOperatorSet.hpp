@@ -32,30 +32,15 @@ namespace EPMDynamo {
     * \brief Implementation of a set of bounded operators
     *
     * \tparam TOpType Type of the operator
-    *
-    * \bug Need to sort out the redirect, Real/Imag, m values issues
-    * \bug The operators are not yet computed correctly
     */
    template <typename TOpType> class BoundedOperatorSet
    {
       public:
          /// typedef for a homogeneous bounded operator
-         typedef  BoundedOperator<TOpType, Homogeneous> HBOperator;
+         typedef  BoundedOperator<TOpType> BOperator;
 
-         /// typedef for a non homogeneous bounded operator
-         typedef  BoundedOperator<TOpType, NonHomogeneous> NHBOperator;
-
-         /// typedef for a base bounded operator
-         typedef  BoundedOperatorBase<TOpType> BOperatorBase;
-
-         /// typedef for a smart pointer to a base bounded operator
-         typedef  EPMSHARED_PTR<BOperatorBase> SmartBOperatorBase;
-
-         /// typedef for a smart pointer to a homogeneous bounded operator
-         typedef  EPMSHARED_PTR<HBOperator> SmartHBOperator;
-
-         /// typedef for a smart pointer to a non homogeneous bounded operator
-         typedef  EPMSHARED_PTR<HBOperator> SmartNHBOperator;
+         /// typedef for a smart pointer to a bounded operator
+         typedef  EPMSHARED_PTR<BOperator> SmartBOperator;
 
          /**
           * @brief Constructor
@@ -93,18 +78,16 @@ namespace EPMDynamo {
           * @param old Old RHS value
           * @param cTerms Non linear terms to add
           * @param l Harmonic degree l
-          *
-          * \bug Is this required like this?
           */
          void affineOrders(MatrixZ&  rhs, const MatrixZ& old, const MatrixZ& cTerms, const int l);
 
          /**
-          * @brief Solve equations for all orders with degree l
+          * @brief Solve single equation with degree l operator with zero BC value
           *
-          * \bug THIS IS JUST A TEMPORARY WORKAROUNG, but to what?
-          * \bug Is this required like this?
+          * @param rhs RHS and solution of equation
+          * @param l Harmonic degree l
           */
-         void solveVector(Array&  rhs, const int l);
+         void solveZeroVector(Array&  rhs, const int l);
          
       protected:
          /**
@@ -123,18 +106,14 @@ namespace EPMDynamo {
           * @param rhs RHS output
           * @param old Old RHS values
           * @param l Harmonic degree l
-          *
-          * \bug Is this required like this?
           */
          void multiplyOrders(MatrixZ&  rhs, const MatrixZ& old, const int l);
 
          /**
           * @brief Solve equations for all orders with degree l
           *
-          * @param Equation rhs and solution
+          * @param rhs Equation rhs and solution
           * @param l Harmonic degree l
-          *
-          * \bug Is this required like this?
           */
          void solveOrders(MatrixZ&  rhs, const int l);
 
@@ -143,8 +122,6 @@ namespace EPMDynamo {
           *
           * @param rhs Equation rhs and solution
           * @param l Harmonic degree l
-          *
-          * \bug Is this required like this?
           */
          void solveZeroOrders(MatrixZ&  rhs, const int l);
 
@@ -154,18 +131,18 @@ namespace EPMDynamo {
          std::vector<SmartBC>    mBCs;
 
          /**
-          * @brief Get directe access to operator without redirection
+          * @brief Get operator for given harmonic degree index
           *
-          * @param i Index of operator
+          * @param l Harmonic degree index
           */
-         const BOperatorBase& op(const int i) const;
+         const BOperator& harmOp(const int l) const;
 
          /**
-          * @brief Set directe access to operator without redirection
+          * @brief Set operator for given harmonic degree index
           *
-          * @param i Index of operator
+          * @param l Harmonic degree index
           */
-         BOperatorBase& rOp(const int i);
+         BOperator& rHarmOp(const int l);
 
       private:
          /**
@@ -191,53 +168,39 @@ namespace EPMDynamo {
          /**
           * @brief Vector of operators
           */
-         std::vector<SmartBOperatorBase> mpOperators;
+         std::vector<SmartBOperator> mpOperators;
 
          /**
-          * @brief Convert l,m index to vector of operators index
+          * @brief Flag to check if all BCs are homogeneous
+          */
+         bool mAllHomogeneous;
+
+         /**
+          * @brief Check if the NH matrix is required for harmonic degree l
           *
           * @param l Harmonic degree l
-          * @param m Harmonic order m
-          *
-          *\bug Redirection or the general aspect of minimal memory implementation has to be defined first. This is currently wrong
           */
-         int redirect(const int l, const int m) const;
+         bool needNHMatrix(const int l) const;
 
          /**
-          * @brief Get Operator for real component for harmonic l,m
-          *
-          * @param l Harmonic degree l
-          * @param m Harmonic order m
-          */
-         const BOperatorBase& realOp(const int l, const int m) const;
-
-         /**
-          * @brief Get Operator for imaginary component for harmonic l,m
+          * @brief Check if real boundary conditions are non homogeneous
           *
           * @param l Harmonic degree l
           * @param m Harmonic order m
           */
-         const BOperatorBase& imagOp(const int l, const int m) const;
+         bool isRealBCNH(const int l, const int m) const;
 
          /**
-          * @brief Set Operator for real component for harmonic l,m
+          * @brief Check if real boundary conditions are non homogeneous
           *
           * @param l Harmonic degree l
           * @param m Harmonic order m
           */
-         BOperatorBase& rRealOp(const int l, const int m);
-
-         /**
-          * @brief Set Operator for imaginary component for harmonic l,m
-          *
-          * @param l Harmonic degree l
-          * @param m Harmonic order m
-          */
-         BOperatorBase& rImagOp(const int l, const int m);
+         bool isImagBCNH(const int l, const int m) const;
    };
 
    template <typename TOpType> BoundedOperatorSet<TOpType>::BoundedOperatorSet(SmartTruncation pTrunc)
-      : mNOp(0), mNbc(0), mpTrunc(pTrunc), mTmp()
+      : mNOp(0), mNbc(0), mpTrunc(pTrunc), mTmp(), mAllHomogeneous(false)
    {
    }
 
@@ -265,39 +228,14 @@ namespace EPMDynamo {
       ++this->mNbc;
    }
 
-   template <typename TOpType> inline int BoundedOperatorSet<TOpType>::redirect(const int l, const int m)  const
+   template <typename TOpType> inline const typename BoundedOperatorSet<TOpType>::BOperator& BoundedOperatorSet<TOpType>::harmOp(const int l) const
    {
-      return l;
+      return *(this->mpOperators.at(l));
    }
 
-   template <typename TOpType> inline const typename BoundedOperatorSet<TOpType>::BOperatorBase& BoundedOperatorSet<TOpType>::realOp(const int l, const int m) const
+   template <typename TOpType> inline typename BoundedOperatorSet<TOpType>::BOperator& BoundedOperatorSet<TOpType>::rHarmOp(const int l)
    {
-      return *(this->mpOperators.at(this->redirect(l,m)));
-   }
-
-   template <typename TOpType> inline const typename BoundedOperatorSet<TOpType>::BOperatorBase& BoundedOperatorSet<TOpType>::imagOp(const int l, const int m) const
-   {
-      return *(this->mpOperators.at(this->redirect(l,m)));
-   }
-
-   template <typename TOpType> inline typename BoundedOperatorSet<TOpType>::BOperatorBase& BoundedOperatorSet<TOpType>::rRealOp(const int l, const int m)
-   {
-      return *(this->mpOperators.at(this->redirect(l,m)));
-   }
-
-   template <typename TOpType> inline typename BoundedOperatorSet<TOpType>::BOperatorBase& BoundedOperatorSet<TOpType>::rImagOp(const int l, const int m)
-   {
-      return *(this->mpOperators.at(this->redirect(l,m)));
-   }
-
-   template <typename TOpType> inline const typename BoundedOperatorSet<TOpType>::BOperatorBase& BoundedOperatorSet<TOpType>::op(const int i) const
-   {
-      return *(this->mpOperators.at(i));
-   }
-
-   template <typename TOpType> inline typename BoundedOperatorSet<TOpType>::BOperatorBase& BoundedOperatorSet<TOpType>::rOp(const int i)
-   {
-      return *(this->mpOperators.at(i));
+      return *(this->mpOperators.at(l));
    }
 
    template <typename TOpType> void BoundedOperatorSet<TOpType>::initOperators()
@@ -311,51 +249,49 @@ namespace EPMDynamo {
       int nL = this->trunc()->local()->spec()->nL();
 
       // Pointers to homogeneous operators
-      SmartHBOperator   pHOp;
-
-      int nM;
+      SmartBOperator   pBOp;
 
       // Loop over degreees
       for(int l = 0; l < nL; ++l)
       {
-         nM = this->trunc()->local()->spec()->nM(l);
-         for(int m = 0; m < nM; ++m)
+         // Get boundary rows
+         for(int k=0; k < this->nBC(); ++k)
          {
-            assert(this->mBCs.at(0)->getRealRHSBC(l,m) == 0.0);
-            assert(this->mBCs.at(0)->getImagRHSBC(l,m) == 0.0);
+            bcRows.row(k) = this->mBCs.at(k)->getLHSBC(l).transpose();
          }
 
-         // Get boundary row
-         bcRows.row(0) = this->mBCs.at(0)->getLHSBC(l).transpose();
-
          // Create smart pointer
-         pHOp = SmartHBOperator(new HBOperator(this->nBC(), opSize, l));
+         pBOp = SmartBOperator(new BOperator(this->nBC(), opSize, l));
 
          // Add homogeneous operator
-         this->mpOperators.push_back(pHOp);
+         this->mpOperators.push_back(pBOp);
 
          // implement boundary condition of newly created operator
-         this->mpOperators.back()->implementBCs(bcRows);
+         this->mpOperators.back()->implementBCs(bcRows, this->needNHMatrix(l));
       }
 
       // Set the total number of operators
       this->mNOp = this->mpOperators.size();
+
+      // Check if all BCs are homogeneous
+      this->mAllHomogeneous = true;
+      for(int k=0; k < this->nBC(); ++k)
+      {
+         this->mAllHomogeneous = this->mAllHomogeneous && this->mBCs.at(k)->isHomogeneous();
+      }
    }
 
    template <typename TOpType> void BoundedOperatorSet<TOpType>::multiplyOrders(MatrixZ& rhs, const MatrixZ& old, const int l)
    {
       // Get size of the matrix
-      int rows;
+      int rows = this->harmOp(l).nTau();
       int nM = this->trunc()->local()->spec()->nM(l);
 
       // Loop over the orders
       for(int m = 0; m < nM; ++m)
       {
-         // Get size of real operator
-         rows = this->realOp(l,m).nTau();
-
          // Put real values in tmp
-         this->mTmp = this->realOp(l,m).op() * old.col(m).start(rows).real();
+         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).real();
 
          // Copy tmp into real part of rhs
          for(int j=0; j < rows; ++j)
@@ -363,11 +299,8 @@ namespace EPMDynamo {
             rhs(j,m).real() = this->mTmp(j);
          }
 
-         // Get size of imaginary operator
-         rows = this->imagOp(l,m).nTau();
-
          // Put imaginary values in tmp
-         this->mTmp = this->imagOp(l,m).op() * old.col(m).start(rows).imag();
+         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).imag();
 
          // Copy tmp into imaginary part of rhs
          for(int j=0; j < rows; ++j)
@@ -380,17 +313,14 @@ namespace EPMDynamo {
    template <typename TOpType> void BoundedOperatorSet<TOpType>::affineOrders(MatrixZ& rhs, const MatrixZ& old, const MatrixZ& cTerms, const int l)
    {
       // Get size of the matrix
-      int rows;
+      int rows = this->harmOp(l).nTau();
       int nM = this->trunc()->local()->spec()->nM(l);
 
       // Loop over the orders
       for(int m = 0; m < nM; ++m)
       {
-         // Get size of real operator
-         rows = this->realOp(l,m).nTau();
-
          // Put real values in tmp
-         this->mTmp = this->realOp(l,m).op() * old.col(m).start(rows).real() + cTerms.col(m).start(rows).real();
+         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).real() + cTerms.col(m).start(rows).real();
 
          // Copy tmp into real part of rhs
          for(int j=0; j < rows; ++j)
@@ -398,11 +328,8 @@ namespace EPMDynamo {
             rhs(j,m).real() = this->mTmp(j);
          }
 
-         // Get size of real operator
-         rows = this->imagOp(l,m).nTau();
-
          // Put imaginary values in tmp
-         this->mTmp = this->imagOp(l,m).op() * old.col(m).start(rows).imag() + cTerms.col(m).start(rows).imag();
+         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).imag() + cTerms.col(m).start(rows).imag();
 
          // Copy tmp into imaginary part of rhs
          for(int j=0; j < rows; ++j)
@@ -418,6 +345,91 @@ namespace EPMDynamo {
       int nVar = rhs.rows();
       int nM = this->trunc()->local()->spec()->nM(l);
 
+      if(this->mAllHomogeneous)
+      {
+         // Loop over the orders
+         for(int m = 0; m < nM; ++m)
+         {
+            // Set tmp variable to real part
+            this->mTmp = rhs.col(m).real();
+
+            // Solve real equation
+            this->rHarmOp(l).solve(this->mTmp, true);
+
+            // Copy solution into field
+            for(int j = 0; j < nVar; ++j)
+            {
+               rhs(j,m).real() = this->mTmp(j);
+            }
+
+            // Set tmp variable to imaginary part
+            this->mTmp = rhs.col(m).imag();
+
+            // Solve imaginary equation
+            this->rHarmOp(l).solve(this->mTmp, true);
+
+            // Copy solution into field
+            for(int j = 0; j < nVar; ++j)
+            {
+               rhs(j,m).imag() = this->mTmp(j);
+            }
+         }
+      } else
+      {
+         // Loop over the orders
+         for(int m = 0; m < nM; ++m)
+         {
+            // Set tmp variable to real part
+            this->mTmp = rhs.col(m).real();
+
+            // Include the RHS boundary value
+            if(this->isRealBCNH(l, m))
+            {
+               for(int k = 0; k < this->nBC(); ++k)
+               {
+                  this->mTmp(nVar-this->nBC()+k) = this->mBCs.at(k)->getRealRHSBC(l,m);
+               }
+            }
+
+            // Solve real equation
+            this->rHarmOp(l).solve(this->mTmp, true);
+
+            // Copy solution into field
+            for(int j = 0; j < nVar; ++j)
+            {
+               rhs(j,m).real() = this->mTmp(j);
+            }
+
+            // Set tmp variable to imaginary part
+            this->mTmp = rhs.col(m).imag();
+
+            // Include the RHS boundary value
+            if(this->isImagBCNH(l, m))
+            {
+               for(int k = 0; k < this->nBC(); ++k)
+               {
+                  this->mTmp(nVar-this->nBC()+k) = this->mBCs.at(k)->getImagRHSBC(l,m);
+               }
+            }
+
+            // Solve imaginary equation
+            this->rHarmOp(l).solve(this->mTmp, true);
+
+            // Copy solution into field
+            for(int j = 0; j < nVar; ++j)
+            {
+               rhs(j,m).imag() = this->mTmp(j);
+            }
+         }
+      }
+   }
+
+   template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveZeroOrders(MatrixZ& rhs, const int l)
+   {
+      // Get size of the matrix
+      int nVar = rhs.rows();
+      int nM = this->trunc()->local()->spec()->nM(l);
+
       // Loop over the orders
       for(int m = 0; m < nM; ++m)
       {
@@ -425,7 +437,7 @@ namespace EPMDynamo {
          this->mTmp = rhs.col(m).real();
 
          // Solve real equation
-         this->rRealOp(l,m).solve(this->mTmp);
+         this->rHarmOp(l).solveZero(this->mTmp);
 
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
@@ -437,7 +449,7 @@ namespace EPMDynamo {
          this->mTmp = rhs.col(m).imag();
 
          // Solve imaginary equation
-         this->rImagOp(l,m).solve(this->mTmp);
+         this->rHarmOp(l).solveZero(this->mTmp);
 
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
@@ -447,16 +459,47 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveZeroOrders(MatrixZ& rhs, const int l)
+   template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveZeroVector(Array& rhs, const int l)
    {
-afafafafaf;
+      this->rHarmOp(l).solveZero(rhs);
    }
 
-   template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveVector(Array& rhs, const int l)
+   template <typename TOpType> bool BoundedOperatorSet<TOpType>::isRealBCNH(const int l, const int m) const
    {
-      this->rRealOp(l,0).solve(rhs);
+      bool flag = true;
+
+      for(int k = 0; k < this->nBC(); ++k)
+      {
+         flag = flag && (this->mBCs.at(k)->getRealRHSBC(l,m) == 0);
+      }
+
+      return flag;
    }
 
+   template <typename TOpType> bool BoundedOperatorSet<TOpType>::isImagBCNH(const int l, const int m) const
+   {
+      bool flag = true;
+
+      for(int k = 0; k < this->nBC(); ++k)
+      {
+         flag = flag && (this->mBCs.at(k)->getImagRHSBC(l,m) == 0);
+      }
+
+      return flag;
+   }
+
+   template <typename TOpType> bool BoundedOperatorSet<TOpType>::needNHMatrix(const int l) const
+   {
+      int nM = this->trunc()->local()->spec()->nM(l);
+      bool flag = true;
+
+      for(int m=0; m < nM; ++m)
+      {
+         flag = flag && (! this->isRealBCNH(l,m)) && (! this->isImagBCNH(l,m));
+      }
+
+      return flag;
+   }
 }
 
 #endif // BOUNDEDOPERATORSET_HPP

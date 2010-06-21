@@ -25,8 +25,6 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TOpType Type of the operator
-    *
-    * \bug Review operator construction, might require to split set and "bounding"
     */
    template <typename TSimType, typename TOpType> class LaplacianBOperatorSet: public BoundedOperatorSet<TOpType>
    {
@@ -77,13 +75,13 @@ namespace EPMDynamo {
       for(int i = 0; i < this->nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->op(i).id();
+         l = this->harmOp(i).id();
 
          // Construct the bounded operator
-         this->rOp(i).constructBOperator(factor, this->mrBasis.at(l).specLaplacian());
+         this->rHarmOp(i).constructBOperator(factor, this->mrBasis.at(l).specLaplacian());
 
          // Do finalisation step (for example factorisation)
-         this->rOp(i).finaliseOp();
+         this->rHarmOp(i).finaliseOp();
       }
    }
 }

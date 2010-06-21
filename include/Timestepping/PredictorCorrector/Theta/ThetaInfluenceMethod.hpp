@@ -232,7 +232,7 @@ namespace EPMDynamo {
          tmp(0) = 1.0;
 
          // Compute influence matrix solution
-         this->mLHS.solveVector(tmp, l);
+         this->mLHS.solveZeroVector(tmp, l);
 
          // Store solution from influence matrix
          this->mInfluence.storeSolution(tmp, l);

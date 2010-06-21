@@ -45,8 +45,9 @@ namespace EPMDynamo {
           * @brief Implement the boundary conditions
           *
           * @param bcRows Matrix of the boundary imposing row values
+          * @param needNHMatrix Needs the NH imposing matrix ?
           */
-         virtual void implementBCs(const Matrix& bcRows) = 0;
+         virtual void implementBCs(const Matrix& bcRows, bool needNHMatrix) = 0;
 
          /**
           * @brief Compute the operator the bounded operator based on input
@@ -62,8 +63,9 @@ namespace EPMDynamo {
           * @brief Solve linear equation
           *
           * @param vector RHS of the linear equation
+          * @param isHomogeneous Is boundary condition homogeneous?
           */
-         virtual void solve(Array& vector) = 0;
+         virtual void solve(Array& vector, bool isHomogeneous) = 0;
          
          /**
           * @brief Get size of the bounded operator

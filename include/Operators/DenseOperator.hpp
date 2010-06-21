@@ -71,15 +71,11 @@ namespace EPMDynamo {
           * @brief Solve linear equation
           *
           * @param vector RHS of linear equation
-          *
-          * \bug This method are currently only and assert
           */
          void solveEquation(Array& vector);
 
          /**
           * @brief Invert the operator matrix
-          *
-          * \bug This method are currently only and assert
           */
          void inverse();
 

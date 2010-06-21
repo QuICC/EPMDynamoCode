@@ -115,7 +115,7 @@ namespace EPMDynamo {
       // Loop over degrees to solve for all modes with homogeneous operators
       for(int l = l0; l <  nL; ++l)
       {
-         this->solveHOrders(rVar.rLShell(l), l);
+         this->solveZeroOrders(rVar.rLShell(l), l);
       }
    }
 

@@ -119,9 +119,6 @@ namespace EPMDynamo {
    /// Typedef for a RHS timestepping matrix
    typedef Matrix  TimestepMatrix;
    //@}
-
-   /// Enumeration of the types of boundary conditions
-   enum BCType {Homogeneous, NonHomogeneous};
    
 }
 

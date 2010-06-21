@@ -24,8 +24,6 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TOpType Type of the operator
-    *
-    * \bug Review this implementation regarding new operator implementation
     */
    template <typename TSimType, typename TOpType> class ImplicitTOperatorSet: public BoundedOperatorSet<TOpType>
    {
@@ -71,16 +69,16 @@ namespace EPMDynamo {
       for(int i = 0; i < this->nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->op(i).id();
+         l = this->harmOp(i).id();
 
          // Construct the bounded laplacian operator
-         this->rOp(i).constructBOperator(factor, basis.at(l).specLaplacian());
+         this->rHarmOp(i).constructBOperator(factor, basis.at(l).specLaplacian());
 
          // Add time derivative to diagonal
-         this->rOp(i).rOp().diagonal().cwise() += timeDiff;
+         this->rHarmOp(i).rOp().diagonal().cwise() += timeDiff;
 
          // Do finalisation step (for example factorisation)
-         this->rOp(i).finaliseOp();
+         this->rHarmOp(i).finaliseOp();
       }
    }
 }
