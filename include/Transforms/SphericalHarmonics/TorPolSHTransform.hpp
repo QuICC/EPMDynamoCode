@@ -32,8 +32,6 @@ namespace EPMDynamo {
     * expansion puts some contrains on the radial behavior for each harmonic mode.)
     *
     * \tparam TSHTraits Traits for the spherical harmonics transforms
-    *
-    * \bug Review Implementation and traits, try to simplify flow control
     */
    template <typename TSHTraits> class TorPolSHTransform
    {
@@ -41,7 +39,7 @@ namespace EPMDynamo {
          /// Typedef for the Spherical harmonics scalar data type
          typedef typename TSHTraits::SHScalarType    SHScalarType;
 
-         /// Typedef for the FFT forward data type scalar data type
+         /// Typedef for the FFT forward data type
          typedef typename TSHTraits::FFTForwardType  FFTForwardType;
 
          /// Typedef for the FFT backward data type
@@ -285,6 +283,74 @@ namespace EPMDynamo {
           * @brief Get the legendre transform
           */
          LegendreTransformType&  legT();
+
+         /**
+          * @brief Send part of transform of RTP scalar into its SH decomposition
+          *
+          * @param rtpValues  Input real space values
+          */
+         void send_RTP2Spec(const RTPScalar   &rtpValues);
+
+         /**
+          * @brief Receive part of the transform of a SH decomposition into RTP scalar
+          *
+          * @param rRTPValues Output real space values
+          */
+         void recv_Spec2RTP(RTPScalar   &rRTPValues);
+
+         /**
+          * @brief Receive part of transform Scalar to Theta and Phi component of scalar
+          *
+          * @param rThComp Theta Component from QST gradient
+          * @param rPhComp  Phi Component from RTP gradient
+          */
+         void recv_Spec2GradTP(RTPScalar &rThComp, RTPScalar &rPhComp);
+
+         /**
+          * @brief Send part of transform TP Components into T component
+          *
+          * @param thetaComp  R Component from RTP decomposition
+          * @param phiComp  R Component from RTP decomposition
+          */
+         void send_TP2T(const RTPScalar &thetaComp, const RTPScalar &phiComp);
+
+         /**
+          * @brief Receive part of transform (Q)ST decomposition to RTP: Get Phi Component
+          *
+          * The Theta component is obtaind by adding the contribution from the S and Q
+          * components
+          *
+          * @param rPhiValues Output real space theta values
+          */
+         void recv_ST2Phi(RTPScalar  &rPhiValues);
+
+         /**
+          * @brief Receive part of transform (Q)ST decomposition to RTP: Get Theta Component
+          *
+          * The Theta component is obtaind by adding the contribution from the S and Q
+          * components
+          *
+          * @param rThetaValues Output real space theta values
+          */
+         void recv_ST2Theta(RTPScalar  &rThetaValues);
+
+         /**
+          * @brief Send part of transform (R)TP to QST decomposition: Phi part of ST components
+          *
+          * Both the S component and the T component depend on the Phi component.
+          *
+          * @param phiValues  Input real space phi values
+          */
+         void send_TP2STPartP(const RTPScalar   &phiValues);
+
+         /**
+          * @brief Send part of transform (R)TP to QST decomposition: Theta part of ST components
+          *
+          * Both the S component and the T component depend on the Theta component.
+          *
+          * @param thetaValues  Input real space theta values
+          */
+         void send_TP2STPartT(const RTPScalar   &thetaValues);
    };
 
    template <typename TSHTraits> inline bool TorPolSHTransform<TSHTraits>::hasM0() const
@@ -330,6 +396,11 @@ namespace EPMDynamo {
    {
       this->shManipulator().addPacks(1);
 
+      this->send_RTP2Spec(rtpValues);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::send_RTP2Spec(const RTPScalar &rtpValues)
+   {
       // Get temporary storage
       FFTForwardType  &rFTmp = this->shManipulator().provideFTmp();
 
@@ -351,15 +422,7 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atSendStage())
       {
-         // Get temporary storage
-         FFTForwardType  &rFTmp = this->shManipulator().provideFTmp();
-
-         // Do the FFT transform of the real space values
-         this->fft().forward(rFTmp, rtpValues);
-
-         // Send data and release temporary storage
-         this->shManipulator().send(rFTmp);
-         this->shManipulator().releaseTmp(rFTmp);
+         this->send_RTP2Spec(rtpValues);
       }
 
       if(this->shManipulator().atRecvStage())
@@ -392,6 +455,11 @@ namespace EPMDynamo {
    }
 
    template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::transformSpec2RTP(RTPScalar &rRTPValues)
+   {
+      this->recv_Spec2RTP(rRTPValues);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::recv_Spec2RTP(RTPScalar &rRTPValues)
    {
       // Get temporary storage and receive data
       FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
@@ -428,22 +496,19 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atRecvStage())
       {
-         // Get temporary storage and receive data
-         FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
-         rFTmp.doZeroPadding();
-         this->shManipulator().receive(rFTmp);
-
-         // Do the FFT of the complex space values
-         this->fft().backward(rRTPValues, rFTmp);
-
-         // Free temporary data
-         this->shManipulator().freeTmp(rFTmp);
+         this->recv_Spec2RTP(rRTPValues);
       }
    }
 
    template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::transformTP2STPartT(const RTPScalar &thetaValues)
    {   
          this->shManipulator().addPacks(1);
+
+         this->send_TP2STPartT(thetaValues);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::send_TP2STPartT(const RTPScalar &thetaValues)
+   {   
          // Get temporary storage
          FFTForwardType  &rFTmp = this->shManipulator().provideFTmp();
 
@@ -465,15 +530,7 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atSendStage())
       {
-         // Get temporary storage
-         FFTForwardType  &rFTmp = this->shManipulator().provideFTmp();
-
-         // Do the FFT transform of the real space values
-         this->fft().forward(rFTmp, thetaValues);
-
-         // Send data and release temporary storage
-         this->shManipulator().send(rFTmp);
-         this->shManipulator().releaseTmp(rFTmp);
+         this->send_TP2STPartT(thetaValues);
       }
 
       if(this->shManipulator().atRecvStage())
@@ -511,7 +568,13 @@ namespace EPMDynamo {
 
    template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::transformTP2STPartP(const RTPScalar &phiValues)
    {
-         this->shManipulator().addPacks(1);
+      this->shManipulator().addPacks(1);
+
+      this->send_TP2STPartP(phiValues);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::send_TP2STPartP(const RTPScalar &phiValues)
+   {
       // Get temporary storage
       FFTForwardType  &rFTmp = this->shManipulator().provideFTmp();
 
@@ -533,15 +596,7 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atSendStage())
       {
-         // Get temporary storage
-         FFTForwardType  &rFTmp = this->shManipulator().provideFTmp();
-
-         // Do the FFT transform of the real space values
-         this->fft().forward(rFTmp, phiValues);
-
-         // Send data and release temporary storage
-         this->shManipulator().send(rFTmp);
-         this->shManipulator().releaseTmp(rFTmp);
+         this->send_TP2STPartP(phiValues);
       }
 
       if(this->shManipulator().atRecvStage())
@@ -578,6 +633,11 @@ namespace EPMDynamo {
    }
 
    template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::transformST2Theta(RTPScalar &rThetaValues)
+   {
+      this->recv_ST2Theta(rThetaValues);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::recv_ST2Theta(RTPScalar &rThetaValues)
    {
       // Get temporary storage and receive data
       FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
@@ -616,20 +676,16 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atRecvStage())
       {
-         // Get temporary storage and receive data
-         FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
-         rFTmp.doZeroPadding();
-         this->shManipulator().receive(rFTmp);
-
-         // Do the FFT of the complex space values
-         this->fft().backward(rThetaValues, rFTmp);
-
-         // Free temporary data
-         this->shManipulator().freeTmp(rFTmp);
+         this->recv_ST2Theta(rThetaValues);
       }
    }
 
    template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::transformST2Phi(RTPScalar &rPhiValues)
+   {
+      this->recv_ST2Phi(rPhiValues);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::recv_ST2Phi(RTPScalar &rPhiValues)
    {
       // Get temporary storage and receive data
       FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
@@ -669,16 +725,7 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atRecvStage())
       {
-         // Get temporary storage and receive data
-         FFTForwardType &rFTmp = this->shManipulator().provideFTmp();
-         rFTmp.doZeroPadding();
-         this->shManipulator().receive(rFTmp);
-
-         // Do the FFT of the complex space values
-         this->fft().backward(rPhiValues, rFTmp);
-
-         // Free temporary data
-         this->shManipulator().freeTmp(rFTmp);
+         this->recv_ST2Phi(rPhiValues);
       }
    }
 
@@ -687,6 +734,11 @@ namespace EPMDynamo {
       // add Packet size of transform
       this->shManipulator().addPacks(2);
 
+      this->send_TP2T(thetaComp, phiComp);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::send_TP2T(const RTPScalar &thetaComp, const RTPScalar &phiComp)
+   {
       // Get temporary storage
       FFTForwardType  &rFTmpTh = this->shManipulator().provideFTmp();
 
@@ -718,25 +770,7 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atSendStage())
       {
-         // Get temporary storage
-         FFTForwardType  &rFTmpTh = this->shManipulator().provideFTmp();
-
-         // Do the FFT transform of the real space values
-         this->fft().forward(rFTmpTh, thetaComp);
-
-         // Send data and release temporary storage
-         this->shManipulator().send(rFTmpTh);
-         this->shManipulator().releaseTmp(rFTmpTh);
-
-         // Get temporary storage
-         FFTForwardType  &rFTmpPh = this->shManipulator().provideFTmp();
-
-         // Do the FFT transform of the real space values
-         this->fft().forward(rFTmpPh, phiComp);
-
-         // Send data and release temporary storage
-         this->shManipulator().send(rFTmpPh);
-         this->shManipulator().releaseTmp(rFTmpPh);
+         this->send_TP2T(thetaComp, phiComp);
       }
 
       if(this->shManipulator().atRecvStage())
@@ -779,6 +813,11 @@ namespace EPMDynamo {
    }
 
    template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::transformSpec2GradTP(RTPScalar &rThComp, RTPScalar &rPhComp)
+   {
+      this->recv_Spec2GradTP(rThComp, rPhComp);
+   }
+
+   template <typename TSHTraits> void TorPolSHTransform<TSHTraits>::recv_Spec2GradTP(RTPScalar &rThComp, RTPScalar &rPhComp)
    {
       // Get temporary storage and receive data
       FFTForwardType &rFTmpTh = this->shManipulator().provideFTmp();
@@ -836,27 +875,7 @@ namespace EPMDynamo {
 
       if(this->shManipulator().atRecvStage())
       {
-         // Get temporary storage and receive data
-         FFTForwardType &rFTmpTh = this->shManipulator().provideFTmp();
-         rFTmpTh.doZeroPadding();
-         this->shManipulator().receive(rFTmpTh);
-
-         // Do the FFT of the complex space values
-         this->fft().backward(rThComp, rFTmpTh);
-
-         // Free temporary data
-         this->shManipulator().freeTmp(rFTmpTh);
-
-         // Get temporary storage and receive data
-         FFTForwardType &rFTmpPh = this->shManipulator().provideFTmp();
-         rFTmpPh.doZeroPadding();
-         this->shManipulator().receive(rFTmpPh);
-
-         // Do the FFT of the complex space values
-         this->fft().backward(rPhComp, rFTmpPh);
-
-         // Free temporary data
-         this->shManipulator().freeTmp(rFTmpPh);
+         this->recv_Spec2GradTP(rThComp, rPhComp);
       }
    }
 
