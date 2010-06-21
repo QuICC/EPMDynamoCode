@@ -20,7 +20,7 @@
 #include "Timestepping/PredictorCorrector/PCScheme.hpp"
 #include "Timestepping/PredictorCorrector/PCTimestepControl.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaMethod.hpp"
-#include "Timestepping/PredictorCorrector/Theta/ThetaPoissonMethod.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaInfluenceMethod.hpp"
 
 namespace EPMDynamo {
 }

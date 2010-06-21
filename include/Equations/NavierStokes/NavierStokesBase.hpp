@@ -25,12 +25,9 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
-    * \tparam TTStepPol NEED TO CHANGE THIS
-    *
-    * \bug Need to change the implementation of the poisson solver
-    * \bug Poisson solver has not yet been moved into new tree
+    * \tparam TInfluenceTraits Traits for the influence matrix step
     */
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TTStepPol>  {
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
@@ -73,12 +70,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> NavierStokesBase<TSimType, TSimTraits, TTStepPol>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TTStepPol>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TTStepPol>(rV, transform, tsteps, 1, 1, params.Ro(), params.E()), mrParams(params)
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 1, params.Ro(), params.E()), mrParams(params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TTStepPol> void NavierStokesBase<TSimType, TSimTraits, TTStepPol>::init()
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> void NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::init()
    {
       // Check that the right number of BCs have been provided
       if(this->hasAllBCs())

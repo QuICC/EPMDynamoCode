@@ -19,7 +19,7 @@
 #include "Equations/TimeEquation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "Timestepping/WithoutPoissonTStep.hpp"
+#include "Timestepping/SimpleTTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -29,11 +29,9 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TFieldType Type of the field
-    * \tparam TPoisson BAD IMPLEMENTATION
-    *
-    * \bug TPoisson template needs to be rewritten/reimplemented
+    * \tparam TInfluenceTraits Traits for the influence matrix step
     */
-   template <typename TSimType, typename TFieldType, template <typename> class TPoisson = WithoutPoissonTStep> class TorPolDiffusionEquation : public TimeEquation<TSimType, TFieldType>
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits = SimpleTTraits> class TorPolDiffusionEquation : public TimeEquation<TSimType, TFieldType>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -99,7 +97,7 @@ namespace EPMDynamo {
          /**
           * @brief Timestepper object responsible for the Poloidal component
           */
-         typename TPoisson<TimeTraits>::Timestepper  mPolTStepper;
+         typename TInfluenceTraits<TimeTraits>::Timestepper  mPolTStepper;
 
          /**
           * @brief Vector of BoundaryCondition for the Toroidal component
@@ -132,14 +130,14 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::TorPolDiffusionEquation(TFieldType &rF, typename TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, EPMFloat a, EPMFloat b)
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::TorPolDiffusionEquation(TFieldType &rF, typename TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, EPMFloat a, EPMFloat b)
       : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mTorTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mPolTStepper(a, b, transform.radBasis(), tsteps, rF.trunc())
    {
       // Set counter to total number of boundary conditions (doesn't make the difference between toroidal or poloidal)
       this->mBCCounter = nBCT + nBCP;
    }
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> void TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::addTorBC(SmartBC pBC)
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> void TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::addTorBC(SmartBC pBC)
    {
       // Add toroidal BC to list
       this->mTorBCs.push_back(pBC);
@@ -148,7 +146,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> void TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::addPolBC(SmartBC pBC)
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> void TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::addPolBC(SmartBC pBC)
    {
       // Add poloidal BC to list
       this->mPolBCs.push_back(pBC);
@@ -157,7 +155,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> inline void TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::initTSteppers()
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> inline void TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::initTSteppers()
    {
       // Set Boundary condition of timestepper for Toroidal component
       for(unsigned int i=0; i < this->mTorBCs.size(); ++i)
@@ -185,12 +183,12 @@ namespace EPMDynamo {
       this->mPolBCs.clear();
    }
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> inline void TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::transformNTerms(typename TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::ScalarType &rCurl, typename TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::ScalarType &rCurlCurl)
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> inline void TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::transformNTerms(typename TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::ScalarType &rCurl, typename TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::ScalarType &rCurlCurl)
    {
       this->mrTransform.transformRTP2TorPolNTerms(rCurl, rCurlCurl, this->mNTerms.oc().rtp());
    }
 
-   template <typename TSimType, typename TFieldType, template <typename> class TTStepPol> inline void TorPolDiffusionEquation<TSimType, TFieldType, TTStepPol>::timestep()
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> inline void TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::timestep()
    {
       // Timestep toroidal part
       this->mTorTStepper.timestep(this->mrX.rOc().rPerturbation().rTor(), this->mNTerms.rOc().rPerturbation().rTor());

@@ -20,7 +20,7 @@ namespace EPMDynamo {
    class PCTimestepControl;
    template <typename, template <typename> class> class PCScheme;
    template <typename> class ThetaMethod;
-   template <typename> class ThetaPoissonMethod;
+   template <typename> class ThetaInfluenceMethod;
    template <typename> class ErrorL2Max;
 
    /**
@@ -33,13 +33,13 @@ namespace EPMDynamo {
    template <typename TSimType> class PCSchemeTraits
    {
       public:
-         /// Typedef for the timestepper without poisson step
+         /// Typedef for the simple timestepper (no influence matrix)
          typedef PCScheme<TSimType, ThetaMethod>   Timestepper;  
 
-         /// Typedef for the timestepper with poisson step
-         typedef PCScheme<TSimType, ThetaPoissonMethod>   PoissonTimestepper;  
+         /// Typedef for the timestepper with influence matrix step
+         typedef PCScheme<TSimType, ThetaInfluenceMethod>   InfluenceTimestepper;  
 
-         /// Typedef for the timestepper with poisson step
+         /// Typedef for the timestep control object type
          typedef PCTimestepControl   TimestepControl;
 
          /// Typedef for the error norm type

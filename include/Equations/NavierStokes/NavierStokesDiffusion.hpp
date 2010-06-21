@@ -17,7 +17,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
-#include "Timestepping/WithoutPoissonTStep.hpp"
+#include "Timestepping/SimpleTTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -26,11 +26,8 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
-    * \tparam TTStepPol NEED TO CHANGE THIS
-    *
-    * \bug Need to change the implementation of the poisson solver
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesDiffusion : public NavierStokesBase<TSimType, TSimTraits, WithoutPoissonTStep> 
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesDiffusion : public NavierStokesBase<TSimType, TSimTraits, SimpleTTraits> 
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -79,7 +76,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> NavierStokesDiffusion<TSimType, TSimTraits>::NavierStokesDiffusion(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
-      : NavierStokesBase<TSimType, TSimTraits, WithoutPoissonTStep>(rV, transform, tsteps, params)
+      : NavierStokesBase<TSimType, TSimTraits, SimpleTTraits>(rV, transform, tsteps, params)
    {
    }
 

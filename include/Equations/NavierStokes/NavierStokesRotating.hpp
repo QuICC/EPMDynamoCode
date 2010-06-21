@@ -18,7 +18,7 @@
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "Timestepping/WithPoissonTStep.hpp"
+#include "Timestepping/InfluenceTTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -27,11 +27,8 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
-    * \tparam TTStepPol NEED TO CHANGE THIS
-    *
-    * \bug Need to change the implementation of the poisson solver
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesRotating : public NavierStokesBase<TSimType, TSimTraits, WithPoissonTStep>
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesRotating : public NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -85,7 +82,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> NavierStokesRotating<TSimType, TSimTraits>::NavierStokesRotating(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesRotating<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
-      : NavierStokesBase<TSimType, TSimTraits, WithPoissonTStep>(rV, transform, tsteps, params)
+      : NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>(rV, transform, tsteps, params)
    {
    }
 
@@ -115,7 +112,7 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotating<TSimType, TSimTraits>::init()
    {
-      // Set Poisson equation boundary condition
+      // Set influence matrix equation boundary condition
       SmartBC  pZeroBC(new ZeroBC<TSimType>(this->mrTransform.radBasis()));
       this->mPolTStepper.addInfluenceBC(pZeroBC);
 

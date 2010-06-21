@@ -107,6 +107,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Configure the transforms
+          *
+          * \bug Very bad structure that needs to be corrected
           */
          void configureTransforms();
 

@@ -26,13 +26,13 @@ namespace EPMDynamo {
    template <typename TSim> class ETDSchemeTraits
    {
       public:
-         /// Typedef for the timestepper without poisson step
+         /// Typedef for the simple timestepper (without influence matrix step)
          typedef ETDScheme<TSim, ETD2RKMethod>   Timestepper;  
 
-         /// Typedef for the timestepper with poisson step
-         typedef ETDScheme<TSim, ETD2RKMethod>   PoissonTimestepper;  
+         /// Typedef for the timestepper with influence matrix step
+         typedef ETDScheme<TSim, ETD2RKMethod>   InfluenceTimestepper;  
 
-         /// Typedef for the timestepper with poisson step
+         /// Typedef for the timestep control object
          typedef ETDTimestepControl   TimestepControl;
          
       protected:

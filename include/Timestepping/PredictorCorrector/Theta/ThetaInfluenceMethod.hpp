@@ -1,9 +1,9 @@
-/** \file ThetaPoissonMethod.hpp
+/** \file ThetaInfluenceMethod.hpp
  *  \brief Implementation of the theta method with influence matrix
  */
 
-#ifndef THETAPOISSONMETHOD_HPP
-#define THETAPOISSONMETHOD_HPP
+#ifndef THETAINFLUENCEMETHOD_HPP
+#define THETAINFLUENCEMETHOD_HPP
 
 // System includes
 //
@@ -28,10 +28,8 @@ namespace EPMDynamo {
     * \brief Implementation of the theta method with influence matrix
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Needs to be reviewd and implemented in a clean way
     */
-   template <typename TSimType> class ThetaPoissonMethod: public ThetaMethod<TSimType>
+   template <typename TSimType> class ThetaInfluenceMethod: public ThetaMethod<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -49,12 +47,12 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
           */
-         ThetaPoissonMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~ThetaPoissonMethod() {};
+         virtual ~ThetaInfluenceMethod() {};
 
          /**
           * @brief Add boundary condition for inlfuence matrix
@@ -64,7 +62,7 @@ namespace EPMDynamo {
          void addInfluenceBC(SmartBC pBC);
 
          /**
-          * @brief Initialise the ThetaPoissonMethod
+          * @brief Initialise the ThetaInfluenceMethod
           */
          void init();
          
@@ -130,12 +128,12 @@ namespace EPMDynamo {
          void useInfluenceSolution(ScalarType& rVar);
    };
 
-   template <typename TSimType> ThetaPoissonMethod<TSimType>::ThetaPoissonMethod(EPMFloat a, EPMFloat b, const typename ThetaPoissonMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+   template <typename TSimType> ThetaInfluenceMethod<TSimType>::ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const typename ThetaInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-1), mInfluence(pTrunc, basis)
    {
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::addInfluenceBC(SmartBC pBC)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::addInfluenceBC(SmartBC pBC)
    {
       // Add boundary condition
       this->mInfluence.addBC(pBC);
@@ -144,7 +142,7 @@ namespace EPMDynamo {
       ++this->mInfluenceNBC;
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::init()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::init()
    {
       // Initialise the timestep operators
       ThetaMethod<TSimType>::init();
@@ -153,7 +151,7 @@ namespace EPMDynamo {
       this->initInfluence();
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::updateTimeMatrices()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::updateTimeMatrices()
    {
       // Update the timestep operators
       ThetaMethod<TSimType>::updateTimeMatrices();
@@ -162,7 +160,7 @@ namespace EPMDynamo {
       this->updateInfluenceSolution();
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::setPredictorRHS(typename ThetaPoissonMethod<TSimType>::ScalarType& rVar, const typename ThetaPoissonMethod<TSimType>::ScalarType& oldVar, typename ThetaPoissonMethod<TSimType>::ScalarType& rNTerms)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::setPredictorRHS(typename ThetaInfluenceMethod<TSimType>::ScalarType& rVar, const typename ThetaInfluenceMethod<TSimType>::ScalarType& oldVar, typename ThetaInfluenceMethod<TSimType>::ScalarType& rNTerms)
    {
       // Solve influence matrix equation
       this->mInfluence.solve(rNTerms);
@@ -171,7 +169,7 @@ namespace EPMDynamo {
       ThetaMethod<TSimType>::setPredictorRHS(rVar, oldVar, rNTerms);
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::solvePredictor(typename ThetaPoissonMethod<TSimType>::ScalarType& rVar)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::solvePredictor(typename ThetaInfluenceMethod<TSimType>::ScalarType& rVar)
    {
       // Solve for unknown variable
       ThetaMethod<TSimType>::solvePredictor(rVar);
@@ -180,7 +178,7 @@ namespace EPMDynamo {
       this->useInfluenceSolution(rVar);
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::setCorrectorRHS(typename ThetaPoissonMethod<TSimType>::ScalarType& rNewNTerms)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::setCorrectorRHS(typename ThetaInfluenceMethod<TSimType>::ScalarType& rNewNTerms)
    {
       // Solve influenc matrix equation
       this->mInfluence.solve(rNewNTerms);
@@ -189,7 +187,7 @@ namespace EPMDynamo {
       ThetaMethod<TSimType>::setCorrectorRHS(rNewNTerms);
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::solveCorrector()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::solveCorrector()
    {
       // Get the correction to the unknown variable
       ThetaMethod<TSimType>::solveCorrector();
@@ -198,7 +196,7 @@ namespace EPMDynamo {
       this->useInfluenceSolution(this->mPreviousNTerms);
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::initInfluence()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::initInfluence()
    {
       if(this->mInfluenceNBC  == 0)
       {
@@ -209,11 +207,11 @@ namespace EPMDynamo {
          this->mInfluence.computeOperators();
       } else
       {
-         throw EPMException("ThetaPoissonMethod::initInfluence", "Tried to initialise with wrong number of BCs");
+         throw EPMException("ThetaInfluenceMethod::initInfluence", "Tried to initialise with wrong number of BCs");
       }
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::updateInfluenceSolution()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::updateInfluenceSolution()
    {
       // Get size of radial truncation
       int nN = this->mLHS.trunc()->sim()->rad()->nN();
@@ -241,11 +239,11 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> void ThetaPoissonMethod<TSimType>::useInfluenceSolution(typename ThetaPoissonMethod<TSimType>::ScalarType& rVar)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::useInfluenceSolution(typename ThetaInfluenceMethod<TSimType>::ScalarType& rVar)
    {
       this->mInfluence.correctSolution(rVar);
    }
 
 }
 
-#endif // THETAPOISSONMETHOD_HPP
+#endif // THETAINFLUENCEMETHOD_HPP

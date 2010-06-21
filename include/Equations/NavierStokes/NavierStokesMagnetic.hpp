@@ -25,9 +25,6 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
-    * \tparam TTStepPol NEED TO CHANGE THIS
-    *
-    * \bug Need to change the implementation of the poisson solver
     */
    template <typename TSimType, template <typename> class TSimTraits> class NavierStokesMagnetic : public NavierStokesRotating<TSimType, TSimTraits>  {
       public:
