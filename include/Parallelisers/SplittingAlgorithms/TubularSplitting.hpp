@@ -62,9 +62,9 @@ namespace EPMDynamo {
          /**
           * @brief Split load for the FDSH part
           *
-          * @param rR0 Array of start indexes for radial points
-          * @param rNr Array of number of radial points
-          * @param rMArray Array of harmonic orders
+          * @param rLs Array of harmonic degrees
+          * @param rM0 Array of start indexes of harmonic orders
+          * @param rNm Array of number of harmonic orders
           * @param id CPU/Core id
           */
          virtual void splitFDSH(ArrayI &rLs, ArrayI &rM0, ArrayI &rNm, const int id) const;
