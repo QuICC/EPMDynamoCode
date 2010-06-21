@@ -59,6 +59,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Constructor
+          *
+          * @param pTrunc Truncation information
           */
          BoundedOperatorSet(SmartTruncation pTrunc);
 
@@ -74,6 +76,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Add a BoundaryCondition pointer
+          *
+          * @param pBC Smart pointer to boundary condition
           */
          void addBC(SmartBC pBC);
 
@@ -84,6 +88,11 @@ namespace EPMDynamo {
 
          /**
           * @brief Compute affine the matrix product for the orders of given degree
+          *
+          * @param rhs RHS output value
+          * @param old Old RHS value
+          * @param cTerms Non linear terms to add
+          * @param l Harmonic degree l
           *
           * \bug Is this required like this?
           */
@@ -111,6 +120,10 @@ namespace EPMDynamo {
          /**
           * @brief Compute the matrix product for the orders of given degree
           *
+          * @param rhs RHS output
+          * @param old Old RHS values
+          * @param l Harmonic degree l
+          *
           * \bug Is this required like this?
           */
          void multiplyOrders(MatrixZ&  rhs, const MatrixZ& old, const int l);
@@ -118,18 +131,22 @@ namespace EPMDynamo {
          /**
           * @brief Solve equations for all orders with degree l
           *
+          * @param Equation rhs and solution
+          * @param l Harmonic degree l
+          *
           * \bug Is this required like this?
           */
          void solveOrders(MatrixZ&  rhs, const int l);
 
          /**
-          * @brief Solve equations for all orders with degree l
+          * @brief Solve equations for all orders with degree l with zero BC value
           *
-          * This does the same as solveOrders but is required in the case NH boundary conditions are used some times
+          * @param rhs Equation rhs and solution
+          * @param l Harmonic degree l
           *
           * \bug Is this required like this?
           */
-         void solveHOrders(MatrixZ&  rhs, const int l);
+         void solveZeroOrders(MatrixZ&  rhs, const int l);
 
          /**
           * @brief Vector of BoundaryCondition
@@ -178,6 +195,9 @@ namespace EPMDynamo {
 
          /**
           * @brief Convert l,m index to vector of operators index
+          *
+          * @param l Harmonic degree l
+          * @param m Harmonic order m
           *
           *\bug Redirection or the general aspect of minimal memory implementation has to be defined first. This is currently wrong
           */
@@ -427,9 +447,9 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveHOrders(MatrixZ& rhs, const int l)
+   template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveZeroOrders(MatrixZ& rhs, const int l)
    {
-      this->solveOrders(rhs, l);
+afafafafaf;
    }
 
    template <typename TOpType> inline void BoundedOperatorSet<TOpType>::solveVector(Array& rhs, const int l)

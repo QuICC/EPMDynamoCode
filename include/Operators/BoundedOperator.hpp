@@ -69,6 +69,13 @@ namespace EPMDynamo {
           */
          virtual void solve(Array& vector);
 
+         /**
+          * @brief Solve linear equation with zero BC value
+          *
+          * @param vector RHS of the linear equation
+          */
+         virtual void solveZero(Array& vector);
+
       protected:
 
       private:
@@ -92,6 +99,15 @@ namespace EPMDynamo {
    template <typename TOpType, BCType TBCType> void BoundedOperator<TOpType, TBCType>::constructBOperator(const EPMFloat factor, const PolynomialOperator<POperator>& polyOp)
    {
       this->mExt.restrictOperator(this->rOp(), factor, polyOp.op());
+   }
+
+   template <typename TOpType, BCType TBCType> void BoundedOperator<TOpType, TBCType>::solveZero(Array& vector)
+   {
+      // Call basic solve
+      this->solveEquation(vector);
+
+      // Extend solution to full truncation
+      this->mExt.extendZero(vector);
    }
 
    template <typename TOpType, BCType TBCType> void BoundedOperator<TOpType, TBCType>::solve(Array& vector)

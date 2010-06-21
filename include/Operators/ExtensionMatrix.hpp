@@ -50,6 +50,13 @@ namespace EPMDynamo {
          void extend(Array& rVector);
 
          /**
+          * @brief Compute the missing coefficients with zero BC value
+          *
+          * @param rVector Vector of coefficients to extend
+          */
+         void extendZero(Array& rVector);
+
+         /**
           * @brief Impose boundary value on RHS
           *
           * @param rVector RHS vector
@@ -204,6 +211,11 @@ namespace EPMDynamo {
       {
          rVector.start(this->mNBOp) -= this->NH() * rVector.end(this->mNBCs);
       }
+   }
+
+   template <BCType TBCType> void ExtensionMatrix<TBCType>::extendZero(Array &rVector)
+   {
+      rVector.end(this->mNBCs) = this->G() * rVector.start(this->mNBOp);
    }
 
    template <BCType TBCType> void ExtensionMatrix<TBCType>::extend(Array &rVector)
