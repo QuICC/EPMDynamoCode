@@ -26,8 +26,6 @@ namespace EPMDynamo {
     * \brief Implementation of the influence matrix approach for the 4th order Navier-Stokes equation
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Review computations
     */
    template <typename TSimType> class InfluenceMatrix: public LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>
    {
@@ -56,8 +54,6 @@ namespace EPMDynamo {
           *
           * @param sol Solution to store
           * @param l Harmonic degree l
-          *
-          * \bug IS NOT BOUNDARY CONDITION AWARE FOR THE MOMENT
           */
          void storeSolution(const Array& sol, const int l);
 
@@ -65,8 +61,6 @@ namespace EPMDynamo {
           * @brief Correct timestep solution
           *
           * @param rVar Intermediate solution to correcte
-          *
-          * \bug IS NOT BOUNDARY CONDITION AWARE FOR THE MOMENT
           */
          void correctSolution(ScalarType &rVar);
 
@@ -136,7 +130,9 @@ namespace EPMDynamo {
 
    template <typename TSimType> inline void InfluenceMatrix<TSimType>::storeSolution(const Array& sol, const int l)
    {
-      EPMFloat bcVal = this->mrBasis.at(l).bpoly().dot(sol);
+      assert(this->mBCs.size() == 0);
+
+      EPMFloat bcVal = this->mBCs.at(0)->getLHSBC(l).dot(sol);
 
       this->mSolutions.at(l) = sol/bcVal;
    }
@@ -153,8 +149,8 @@ namespace EPMDynamo {
 
          for(int m =0; m <this->trunc()->local()->spec()->nM(l) ; ++m)
          {
-            bcVal.real() = this->mrBasis.at(l).bpoly().dot(rVar.rLShell(l).col(m).real()); 
-            bcVal.imag() = this->mrBasis.at(l).bpoly().dot(rVar.rLShell(l).col(m).imag()); 
+            bcVal.real() = this->mBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).real()); 
+            bcVal.imag() = this->mBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag()); 
             for(int n=0; n < nN; ++n)
             {
                rVar.rLShell(l).col(m)(n).real() -= bcVal.real()*mSolutions.at(l)(n);

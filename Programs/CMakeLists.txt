@@ -8,7 +8,7 @@ add_executable(${RunName} ${SrcsList})
 #
 # Create MagnetoConvectionRun 
 #
-set(RunName MagnetoConvection)
+set(RunName MagnetoConvectionRun)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
