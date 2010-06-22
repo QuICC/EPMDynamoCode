@@ -27,6 +27,7 @@ namespace EPMDynamo {
     * @brief This class implements a few methods for easier implementation of an initial state generator
     *
     * \tparam TSimType Type of the simulation
+    * \tparam TGenTraits Traits for the generator
     */
    template <typename TSimType, template <typename> class TGenTraits> class SourceGenerator: public GeneratorBase<TSimType, TGenTraits>
    {

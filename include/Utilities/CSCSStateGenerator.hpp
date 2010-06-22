@@ -28,6 +28,7 @@ namespace EPMDynamo {
     * \brief Implementation of a simple CSCS visualisation file format generator
     *
     * \tparam TSimType Type of the simulation
+    * \tparam TGenTraits Traits for the generator
     */
    template <typename TSimType, template <typename> class TGenTraits> class CSCSStateGenerator: public GeneratorBase<TSimType, TGenTraits>
    {
@@ -57,94 +58,62 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::setState(typename CSCSFieldTraits<TSimType, TGenTraits>::CodType &codC)
+   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::initOutput(std::string name)
    {
-      // Set state file to read Spectral values from
-      EPMSHARED_PTR<CodStateFileReader<TSimType, CSCSFieldTraits> > pInState(new CodStateFileReader<TSimType, CSCSFieldTraits>(codC,  "4242"));
+      EPMSHARED_PTR<StateFileReader<TSimType, TGenTraits> > pInFile;
+      EPMSHARED_PTR<StateFileWriter<TSimType, TGenTraits> >  pOutFile;
+
+      // Create file with all fields
+      if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
+      {
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV(), "4242"));
+
+         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->magB(), this->velV(), this->mSimControl.tsParams()));
+
+      // Create file with Codensity and Velocity fields
+      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic)
+      {
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->velV(), "4242"));
+
+         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->velV(), this->mSimControl.tsParams()));
+
+      // Create file with Magnetic and Velocity fields
+      } else if(TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
+      {
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), this->velV(), "4242"));
+
+         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->velV(), this->mSimControl.tsParams()));
+
+      // Create file with only codensity field
+      } else if(TGenTraits<TSimType>::NeedCodensity)
+      {
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), "4242"));
+
+         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->mSimControl.tsParams()));
+
+      // Create file with only magnetic field
+      } else if(TGenTraits<TSimType>::NeedMagnetic)
+      {
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), "4242"));
+
+         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->mSimControl.tsParams()));
+
+      // Create file with only velocity field
+      } else if(TGenTraits<TSimType>::NeedVelocity)
+      {
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->velV(), "4242"));
+
+         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->velV(), this->mSimControl.tsParams()));
+      }
 
       // Read Spectral values
-      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
+      this->mIOSys.useInitialState(pInFile, this->mSimControl.tsParams());
 
-      // Create state file for codensity
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<CodCSCSFileWriter<TSimType, CSCSFieldTraits> >  pOutState(new CodCSCSFileWriter<TSimType, CSCSFieldTraits>("FSOuter", codC, this->mSimControl.tsParams()));
-
-      // Set state file as output file and initialise system
-      initStateFile(pOutState);
-   }
-
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::setState(typename CSCSFieldTraits<TSimType, TGenTraits>::MagType  &magB)
-   {
-      // Set state file to read Spectral values from
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<MagStateFileReader<TSimType, CSCSFieldTraits> > pInState(new MagStateFileReader<TSimType, CSCSFieldTraits>(magB,  "4242"));
-
-      // Read Spectral values
-      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
-
-      // Create state file for codensity
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<MagCSCSFileWriter<TSimType, CSCSFieldTraits> >  pOutState(new MagCSCSFileWriter<TSimType, CSCSFieldTraits>("FSOuter", magB, this->mSimControl.tsParams()));
+      // Change the base name
+      pOutFile->changeBasename(name);
 
       // Set state file as output file and initialise system
-      initStateFile(pOutState);
-   }
-
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::setState(typename CSCSFieldTraits<TSimType, TGenTraits>::VelType  &velV)
-   {
-      // Set state file to read Spectral values from
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<VelStateFileReader<TSimType, CSCSFieldTraits> > pInState(new VelStateFileReader<TSimType, CSCSFieldTraits>(velV,  "4242"));
-
-      // Read Spectral values
-      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
-
-      // Create state file for codensity
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<VelCSCSFileWriter<TSimType, CSCSFieldTraits> >  pOutState(new VelCSCSFileWriter<TSimType, CSCSFieldTraits>("FSOuter", velV, this->mSimControl.tsParams()));
-
-      // Set state file as output file and initialise system
-      initStateFile(pOutState);
-   }
-
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::setState(typename CSCSFieldTraits<TSimType, TGenTraits>::CodType &codC, typename CSCSFieldTraits<TSimType, TGenTraits>::VelType &velV)
-   {
-      // Set state file to read Spectral values from
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<ThermConvStateFileReader<TSimType, CSCSFieldTraits> > pInState(new ThermConvStateFileReader<TSimType, CSCSFieldTraits>(codC, velV,  "4242"));
-
-      // Read Spectral values
-      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
-
-      // Create state file for codensity
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<ThermConvCSCSFileWriter<TSimType, CSCSFieldTraits> >  pOutState(new ThermConvCSCSFileWriter<TSimType, CSCSFieldTraits>("FSOuter", codC, velV, this->mSimControl.tsParams()));
-
-      // Set state file as output file and initialise system
-      initStateFile(pOutState);
-   }
-
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::setState(typename CSCSFieldTraits<TSimType, TGenTraits>::MagType  &magB, typename CSCSFieldTraits<TSimType, TGenTraits>::VelType &velV)
-   {
-      // Set state file to read Spectral values from
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<MagConvStateFileReader<TSimType, CSCSFieldTraits> > pInState(new MagConvStateFileReader<TSimType, CSCSFieldTraits>(magB, velV,  "4242"));
-
-      // Read Spectral values
-      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
-
-      // Create state file for codensity
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<MagConvCSCSFileWriter<TSimType, CSCSFieldTraits> >  pOutState(new MagConvCSCSFileWriter<TSimType, CSCSFieldTraits>("FSOuter", magB, velV, this->mSimControl.tsParams()));
-
-      // Set state file as output file and initialise system
-      initStateFile(pOutState);
-   }
-
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::setState(typename CSCSFieldTraits<TSimType, TGenTraits>::CodType &codC, typename CSCSFieldTraits<TSimType, TGenTraits>::MagType &magB, typename CSCSFieldTraits<TSimType, TGenTraits>::VelType &velV)
-   {
-      // Set state file to read Spectral values from
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<StateFileReader<TSimType, CSCSFieldTraits> > pInState(new StateFileReader<TSimType, CSCSFieldTraits>(codC, magB, velV,  "4242"));
-
-      // Read Spectral values
-      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
-
-      // Create state file for codensity
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<CSCSFileWriter<TSimType, CSCSFieldTraits> >  pOutState(new CSCSFileWriter<TSimType, CSCSFieldTraits>("FSOuter", codC, magB, velV, this->mSimControl.tsParams()));
-
-      // Set state file as output file and initialise system
-      initStateFile(pOutState);
+      this->initOutputFile(pOutFile);
    }
 
 }
