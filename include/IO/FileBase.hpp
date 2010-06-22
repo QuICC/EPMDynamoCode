@@ -44,7 +44,7 @@ namespace EPMDynamo {
       protected:
 
          /**
-          * @brief Reste name
+          * @brief Reset name
           *
           * @param name New name
           */

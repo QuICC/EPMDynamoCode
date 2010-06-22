@@ -54,6 +54,13 @@ namespace EPMDynamo {
           * @brief Finalise the file
           */
          virtual void finalise();
+
+         /**
+          * @brief Change the basename
+          *
+          * @param base New basename
+          */
+         void changeBasename(std::string base);
          
       protected:
 
@@ -82,7 +89,7 @@ namespace EPMDynamo {
          /**
           * @brief Base name used for appending the number
           */
-         const std::string mBaseName;
+         std::string mBaseName;
 
          /**
           * @brief Width of the zero fill for the file id

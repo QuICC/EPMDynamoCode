@@ -27,6 +27,11 @@ namespace EPMDynamo {
    {
    }
 
+   void HDF5NWriter::changeBasename(std::string base)
+   {
+      this->mBaseName = base;
+   }
+
    void HDF5NWriter::updateName()
    {
       std::ostringstream   oss;

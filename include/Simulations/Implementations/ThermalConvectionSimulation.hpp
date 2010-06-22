@@ -138,10 +138,10 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> ThermalConvectionSimulation<TSimType>::ThermalConvectionSimulation()
-      : mCFLFactor(1.0), mCodC(this->mpSTrunc, this->mTransform), mVelV(this->mpSTrunc, this->mTransform), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCFLFactor(1.0), mCodC(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
       // Set the CFL factor to L*(L+1)
-      int l = this->mpSTrunc->sim()->hoz()->nL();
+      int l = this->mpTrunc->sim()->hoz()->nL();
       this->mCFLFactor = static_cast<DynamoFloat>(l*(l+1));
    }
 
