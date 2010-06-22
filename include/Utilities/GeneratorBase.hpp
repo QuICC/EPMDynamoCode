@@ -51,6 +51,11 @@ namespace EPMDynamo {
          void transformRTP();
 
          /**
+          * @brief Transform the field to RTP space
+          */
+         void transformSpectral();
+
+         /**
           * @brief Initialise the output file
           */
          virtual void initOutput(std::string name) = 0;
@@ -267,6 +272,33 @@ namespace EPMDynamo {
             this->mTransform.transformRTP2TorPol(this->velV().rOc().rPerturbation(), this->velV().oc().rtp());
          }
 
+      }
+   }
+
+   template <typename TSimType, template <typename> class TGenTraits> void GeneratorBase<TSimType, TGenTraits>::transformSpectral()
+   {
+      for(int i=0; i < this->mTransformSteps; ++i)
+      {
+         // Control the groupe communications if applicable
+         this->combineRTPTransforms(i);
+
+         // Transform the codensity field
+         if(TGenTraits<TSimType>::NeedCodensity)
+         {
+            this->codC().rOc().transform(i);
+         }
+
+         // Transform the codensity field
+         if(TGenTraits<TSimType>::NeedMagnetic)
+         {
+            this->magB().rOc().transform(i);
+         }
+
+         // Transform the codensity field
+         if(TGenTraits<TSimType>::NeedVelocity)
+         {
+            this->velV().rOc().transform(i);
+         }
       }
    }
 

@@ -1,9 +1,9 @@
-/** \file CSCSStateGenerator.hpp
+/** \file CSCSParaviewGenerator.hpp
  *  \brief Implementation of a simple CSCS visualisation file format generator
  */
 
-#ifndef CSCSSTATEGENERATOR_HPP
-#define CSCSSTATEGENERATOR_HPP
+#ifndef CSCSPARAVIEWGENERATOR_HPP
+#define CSCSPARAVIEWGENERATOR_HPP
 
 // Configuration includes
 //
@@ -30,18 +30,18 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TGenTraits Traits for the generator
     */
-   template <typename TSimType, template <typename> class TGenTraits> class CSCSStateGenerator: public GeneratorBase<TSimType, TGenTraits>
+   template <typename TSimType, template <typename> class TGenTraits> class CSCSParaviewGenerator: public GeneratorBase<TSimType, TGenTraits>
    {
       public:
          /**
           * @brief Constructor
           */
-         CSCSStateGenerator();
+         CSCSParaviewGenerator();
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~CSCSStateGenerator() {};
+         virtual ~CSCSParaviewGenerator() {};
 
          /**
           * @brief Initialise the output file
@@ -53,57 +53,57 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TGenTraits> CSCSStateGenerator<TSimType, TGenTraits>::CSCSStateGenerator()
+   template <typename TSimType, template <typename> class TGenTraits> CSCSParaviewGenerator<TSimType, TGenTraits>::CSCSParaviewGenerator()
       : GeneratorBase<TSimType, TGenTraits>()
    {
    }
 
-   template <typename TSimType, template <typename> class TGenTraits> void CSCSStateGenerator<TSimType, TGenTraits>::initOutput(std::string name)
+   template <typename TSimType, template <typename> class TGenTraits> void CSCSParaviewGenerator<TSimType, TGenTraits>::initOutput(std::string name)
    {
       EPMSHARED_PTR<StateFileReader<TSimType, TGenTraits> > pInFile;
-      EPMSHARED_PTR<StateFileWriter<TSimType, TGenTraits> >  pOutFile;
+      EPMSHARED_PTR<CSCSFileWriter<TSimType, TGenTraits> >  pOutFile;
 
       // Create file with all fields
       if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV(), "4242"));
 
-         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->magB(), this->velV(), this->mSimControl.tsParams()));
+         pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->magB(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with Codensity and Velocity fields
       } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->velV(), "4242"));
 
-         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->velV(), this->mSimControl.tsParams()));
+         pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with Magnetic and Velocity fields
       } else if(TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), this->velV(), "4242"));
 
-         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->velV(), this->mSimControl.tsParams()));
+         pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with only codensity field
       } else if(TGenTraits<TSimType>::NeedCodensity)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), "4242"));
 
-         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->mSimControl.tsParams()));
+         pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->mSimControl.tsParams()));
 
       // Create file with only magnetic field
       } else if(TGenTraits<TSimType>::NeedMagnetic)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), "4242"));
 
-         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->mSimControl.tsParams()));
+         pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->mSimControl.tsParams()));
 
       // Create file with only velocity field
       } else if(TGenTraits<TSimType>::NeedVelocity)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->velV(), "4242"));
 
-         pOutFile.reset(new CSCSStateFileWriter<TSimType, TGenTraits>("FSOuter", this->velV(), this->mSimControl.tsParams()));
+         pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->velV(), this->mSimControl.tsParams()));
       }
 
       // Read Spectral values
@@ -118,4 +118,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // CSCSSTATEGENERATOR_HPP
+#endif // CSCSPARAVIEWGENERATOR_HPP

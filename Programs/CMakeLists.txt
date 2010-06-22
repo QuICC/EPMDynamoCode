@@ -20,6 +20,13 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
+# Create GenerateCSCS 
+#
+set(RunName GenerateCSCS)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
 # Create GenerateImposed 
 #
 set(RunName GenerateImposed)
