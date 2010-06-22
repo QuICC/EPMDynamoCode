@@ -25,8 +25,6 @@ namespace EPMDynamo {
     * @brief Manipulation routines for FDSH data
     *
     * \tparam TForward Type of the forward data
-    *
-    * \bug Review/Clean code
     */
    template <typename TForward> class MPIFDSHManipulator: public MPIManipulatorBase<TForward, FDSHDegreeScalar>
    {
@@ -57,6 +55,8 @@ namespace EPMDynamo {
           * \param data Input forward data type
           * \param type Created MPI data type
           * \param coreID ID of the cpu/core
+          *
+          * \bug Cleanup MPI type generation
           */
          void buildFType(TForward &data, MPI_Datatype &type, const int coreID);
 
@@ -66,6 +66,8 @@ namespace EPMDynamo {
           * \param data Input data type
           * \param type Created MPI data type
           * \param coreID ID of the cpu/core
+          *
+          * \bug Cleanup MPI type generation
           */
          void buildBType(FDSHDegreeScalar &data, MPI_Datatype &type, const int coreID);
    };

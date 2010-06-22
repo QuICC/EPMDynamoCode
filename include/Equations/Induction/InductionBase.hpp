@@ -54,11 +54,43 @@ namespace EPMDynamo {
           * @brief Initialise the equation
           */
          void init();
+
+         /**
+          * @brief Get the maximum number of backward SSH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSSHBPacks() const;
+
+         /**
+          * @brief Get the maximum number of backward SH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSHBPacks() const;
          
       protected:
 
       private:
    };
+
+   template <typename TSimType, template <typename> class TSimTraits> inline int InductionBase<TSimType, TSimTraits>::nSSHBPacks() const
+   {
+      #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
+         return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
+      #else
+         return 3*(TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedMagneticCurl);
+      #endif // EPMDYNAMO_SSH_GROUPEDCOMM
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> inline int InductionBase<TSimType, TSimTraits>::nSHBPacks() const
+   {
+      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
+         return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
+      #else
+         return (TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedMagneticCurl);
+      #endif // EPMDYNAMO_SH_GROUPEDCOMM
+   }
 
    template <typename TSimType, template <typename> class TSimTraits> InductionBase<TSimType, TSimTraits>::InductionBase(typename TSimTraits<TSimType>::MagType &rB, typename InductionBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
       : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>(rB, transform, tsteps, 1, 1, 1.0, 1.0)

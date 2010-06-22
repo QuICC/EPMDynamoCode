@@ -126,8 +126,6 @@ namespace EPMDynamo {
 
          /**
           * @brief is transform at special stage?
-          *
-          * \bug Bad name for method
           */
          bool atInterStage() const;
 

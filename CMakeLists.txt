@@ -142,45 +142,25 @@ if(EPMDYNAMO_SPLIT_SH OR EPMDYNAMO_SPLIT_RADIAL)
    add_definitions("-DEPMDYNAMO_MPI")
 endif(EPMDYNAMO_SPLIT_SH OR EPMDYNAMO_SPLIT_RADIAL)
 
-
-# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-# %%%%%%%%%%%%%%%%% BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-
 #
-# Use the tubular splitting if two mpi steps are requested
+# Use grouped communication in Spherical Harmonics transform ?
 #
-if(EPMDYNAMO_SH_MPI AND EPMDYNAMO_RADIAL_MPI)
-   set(EPMDYNAMO_TWOSTEP ON)
-   add_definitions("-DEPMDYNAMO_TWOSTEP")
-   add_definitions("-DEPMDYNAMO_TUBULAR")
-endif(EPMDYNAMO_SH_MPI AND EPMDYNAMO_RADIAL_MPI)
+option(EPMDYNAMO_SH_GROUPEDCOMM "Use grouped MPI communication for spherical harmonics transform" OFF)
+if(EPMDYNAMO_SH_GROUPEDCOMM)
+   if(EPMDYNAMO_SPLIT_SH)
+      add_definitions("-DEPMDYNAMO_SH_GROUPEDCOMM")
+   endif(EPMDYNAMO_SPLIT_SH)
+endif(EPMDYNAMO_SH_GROUPEDCOMM)
 
 #
-# Choose between groupe communcation for simple splitting
+# Use grouped communication in Radial transform ?
 #
-option(EPMDYNAMO_GROUPED_ONESTEP "Compile grouped communication MPI version of the code?" OFF)
-if(EPMDYNAMO_GROUPED_ONESTEP)
-   if(EPMDYNAMO_MPI)
-      add_definitions("-DEPMDYNAMO_GROUPED_ONESTEP")
-   endif(EPMDYNAMO_MPI)
-endif(EPMDYNAMO_GROUPED_ONESTEP)
-
-#
-# Choose between groupe communcation for massive splitting
-#
-option(EPMDYNAMO_GROUPED_TWOSTEP "Compile grouped communication massive MPI version of the code?" OFF)
-if(EPMDYNAMO_GROUPED_TWOSTEP)
-   if(EPMDYNAMO_MPI)
-      if(EPMDYNAMO_TWOSTEP)
-         add_definitions("-DEPMDYNAMO_GROUPED_TWOSTEP")
-      endif(EPMDYNAMO_TWOSTEP)
-   endif(EPMDYNAMO_MPI)
-endif(EPMDYNAMO_GROUPED_TWOSTEP)
-
-# %%%%%%%%%%%%%%%%% END OF BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-# %%%%%%%%%%%%%%%%% END OF BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
-# %%%%%%%%%%%%%%%%% END OF BAD IMPLEMENTATION !!!!!!!!!!!!!!!!!!!!!!!
+option(EPMDYNAMO_RADIAL_GROUPEDCOMM "Use grouped MPI communication for radial transform?" OFF)
+if(EPMDYNAMO_RADIAL_GROUPEDCOMM)
+   if(EPMDYNAMO_SPLIT_RADIAL)
+      add_definitions("-DEPMDYNAMO_RADIAL_GROUPEDCOMM")
+   endif(EPMDYNAMO_SPLIT_RADIAL)
+endif(EPMDYNAMO_RADIAL_GROUPEDCOMM)
 
 
 ###################################################

@@ -32,8 +32,6 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TSpectralSHTraits Traits for radial expansion transforms
     * \tparam TSHTraits Traits for the spherical harmonics transforms
-    *
-    * \bug Review Implementation and traits, try to simplify flow control
     */
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> class TorPolSpectralSHTransform : public TorPolSHTransform<TSHTraits>
    {
@@ -675,7 +673,10 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::initRTPDomains(SmartTruncation &rTrunc) const
    {
+      // Fill in radial grid
       rTrunc->setRadialGrid(this->radBasis().at(0).pGrid());
+
+      // Fill in theta grid (and cos, sin)
       rTrunc->setThetaGrid(this->hozBasis().at(0).pTheta(), this->hozBasis().at(0).pCosTheta(), this->hozBasis().at(0).pSinTheta());
    }
 

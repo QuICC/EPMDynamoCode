@@ -57,11 +57,43 @@ namespace EPMDynamo {
           * @brief Initialise the equation
           */
          void init();
+
+         /**
+          * @brief Get the maximum number of backward SSH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSSHBPacks() const;
+
+         /**
+          * @brief Get the maximum number of backward SH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSHBPacks() const;
          
       protected:
 
       private:
    };
+
+   template <typename TSimType, template <typename> class TSimTraits> inline int TransportBase<TSimType, TSimTraits>::nSSHBPacks() const
+   {
+      #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
+         return TSimTraits<TSimType>::NeedCodensity + 2*TSimTraits<TSimType>::NeedCodensityGrad;
+      #else
+         return std::max(static_cast<int>(TSimTraits<TSimType>::NeedCodensity), static_cast<int>(2*TSimTraits<TSimType>::NeedCodensityGrad));
+      #endif // EPMDYNAMO_SSH_GROUPEDCOMM
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> inline int TransportBase<TSimType, TSimTraits>::nSHBPacks() const
+   {
+      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
+         return TSimTraits<TSimType>::NeedCodensity + 3*TSimTraits<TSimType>::NeedCodensityGrad;
+      #else
+         return std::max(static_cast<int>(TSimTraits<TSimType>::NeedCodensity), static_cast<int>(2*TSimTraits<TSimType>::NeedCodensityGrad));
+      #endif // EPMDYNAMO_SH_GROUPEDCOMM
+   }
 
    template <typename TSimType, template <typename> class TSimTraits> TransportBase<TSimType, TSimTraits>::TransportBase(typename TSimTraits<TSimType>::CodType &rC, typename TransportBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
       : ScalarDiffusionEquation<TSimType, typename TSimTraits<TSimType>::CodType >(rC, transform, tsteps, 1, 1.0, params.q())

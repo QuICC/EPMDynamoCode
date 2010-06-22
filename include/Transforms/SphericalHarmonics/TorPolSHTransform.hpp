@@ -80,7 +80,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform RTP scalar into its SH decomposition
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine does only a partial transform used in a two step transform
           *
           * @param rtpValues  Input real space values
           */
@@ -97,7 +97,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform an SH decomposition into RTP scalar
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           *
           * @param rRTPValues Output real space values
           */
@@ -134,7 +134,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform (R)TP to QST decomposition: Theta part of ST components
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           * Both the S component and the T component depend on the Theta component.
           *
           * @param thetaValues  Input real space theta values
@@ -144,7 +144,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform (R)TP to QST decomposition: Phi part of ST components
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           * Both the S component and the T component depend on the Phi component.
           *
           * @param rSComp  S component of QST decomposition
@@ -156,7 +156,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform (R)TP to QST decomposition: Phi part of ST components
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           * Both the S component and the T component depend on the Phi component.
           *
           * @param phiValues  Input real space phi values
@@ -178,7 +178,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform (Q)ST decomposition to RTP: Get Theta Component
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           * The Theta component is obtaind by adding the contribution from the S and Q
           * components
           *
@@ -201,7 +201,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform (Q)ST decomposition to RTP: Get Phi Component
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           * The Theta component is obtaind by adding the contribution from the S and Q
           * components
           *
@@ -221,7 +221,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform TP Components into T component
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           *
           * @param thetaComp  R Component from RTP decomposition
           * @param phiComp  R Component from RTP decomposition
@@ -240,7 +240,7 @@ namespace EPMDynamo {
          /**
           * @brief Transform Scalar to Theta and Phi component of scalar
           *
-          * This routine doesn only a partial transform used in twostep transform version
+          * This routine doesn only a partial transform used in a two step transform
           *
           * @param rThComp Theta Component from QST gradient
           * @param rPhComp  Phi Component from RTP gradient

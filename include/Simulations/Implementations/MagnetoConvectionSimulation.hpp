@@ -209,35 +209,38 @@ namespace EPMDynamo {
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::configureTransforms()
    {
-      // Set basic configuration for Grouped simple
-      #ifdef EPMDYNAMO_GROUPED_ONESTEP
-         // Set number of transform steps
-         this->mTransformSteps = 2;
+      //
+      // Setup the SSH transform data manipulator
+      //
+      
+      // Register transform data packs of induction equation for SSH
+      this->registerSSHPacks(this->mInduction.nFSSHPacks(), this->mInduction.nSSHBPacks());
 
-         // Initialise the data buffers for communication
-         this->configureWSHManipulator(6, 12, false);
-      #else
-         // Set number of transform steps
-         this->mTransformSteps = 1;
+      // Register transform data packs of navier stokes equation for SSH
+      this->registerSSHPacks(this->mNavierStokes.nFSSHPacks(), this->mNavierStokes.nSSHBPacks());
 
-         // Initialise the data buffers for communication
-         this->configureWSHManipulator(3, 3, true);
-      #endif // EPMDYNAMO_GROUPED_ONESTEP
+      // Configure the SSH manipulator
+      this->configureSSHManipulator();
 
-      // Set basic configuration for Grouped massive
-      #ifdef EPMDYNAMO_GROUPED_TWOSTEP
-         // Set number of transform steps
-         this->mTransformSteps++;
+      //
+      // Setup the SH transform data manipulator
+      //
+      
+      // Register transform data packs of induction equation for SH
+      this->registerSHPacks(this->mInduction.nFSHPacks(), this->mInduction.nSHBPacks());
 
-         // Initialise the data buffers for communication
-         this->configureSHManipulator(6, 12, false);
+      // Register transform data packs of navier stokes equation for SH
+      this->registerSHPacks(this->mNavierStokes.nFSHPacks(), this->mNavierStokes.nSHBPacks());
 
-         // Configure nesting specific things
-         this->configureNestedManipulators();
-      #elif EPMDYNAMO_TWOSTEP
-         // Initialise the data buffers for communication
-         this->configureSHManipulator(2, 2, true);
-      #endif // EPMDYNAMO_GROUPED_TWOSTEP
+      // Configure the SSH manipulator
+      this->configureSHManipulator();
+
+      //
+      // Configure transform nesting
+      //
+
+      // Configure the transforms' nesting setup
+      this->configureTransformNesting();
    }
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::initFields()

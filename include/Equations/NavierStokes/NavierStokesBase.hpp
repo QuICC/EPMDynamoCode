@@ -59,6 +59,20 @@ namespace EPMDynamo {
           * @brief Initialise the equation
           */
          void init();
+
+         /**
+          * @brief Get the maximum number of backward SSH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSSHBPacks() const;
+
+         /**
+          * @brief Get the maximum number of backward SH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSHBPacks() const;
          
       protected:
 
@@ -69,6 +83,24 @@ namespace EPMDynamo {
 
       private:
    };
+
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::nSSHBPacks() const
+   {
+      #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
+         return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
+      #else
+         return 3*(TSimTraits<TSimType>::NeedVelocity && TSimTraits<TSimType>::NeedVelocityCurl);
+      #endif // EPMDYNAMO_SSH_GROUPEDCOMM
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::nSHBPacks() const
+   {
+      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
+         return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
+      #else
+         return (TSimTraits<TSimType>::NeedVelocity && TSimTraits<TSimType>::NeedVelocityCurl);
+      #endif // EPMDYNAMO_SH_GROUPEDCOMM
+   }
 
    template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
       : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 1, params.Ro(), params.E()), mrParams(params)

@@ -87,6 +87,34 @@ namespace EPMDynamo {
           */
          void addPolBC(SmartBC pBC);
 
+         /**
+          * @brief Get the maximum number of forward SSH transform packs required
+          *
+          * This is independent of the exact equation setup
+          */
+         int nFSSHPacks() const;
+
+         /**
+          * @brief Get the maximum number of forward SH transform packs required
+          *
+          * This is independent of the exact equation setup
+          */
+         int nFSHPacks() const;
+
+         /**
+          * @brief Get the maximum number of backward SSH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSSHBPacks() const = 0;
+
+         /**
+          * @brief Get the maximum number of backward SH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSHBPacks() const = 0;
+
       protected:
 
          /**
@@ -129,6 +157,20 @@ namespace EPMDynamo {
 
       private:
    };
+
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> inline int TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::nFSSHPacks() const
+   {
+      return 3;
+   }
+
+   template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> inline int TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::nFSHPacks() const
+   {
+      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
+         return 3;
+      #else
+         return 2;
+      #endif // EPMDYNAMO_SH_GROUPEDCOMM
+   }
 
    template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::TorPolDiffusionEquation(TFieldType &rF, typename TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, EPMFloat a, EPMFloat b)
       : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mTorTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mPolTStepper(a, b, transform.radBasis(), tsteps, rF.trunc())

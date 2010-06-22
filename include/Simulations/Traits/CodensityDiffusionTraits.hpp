@@ -40,11 +40,20 @@ namespace EPMDynamo {
          /// Does simulation required a codensity field
          static const bool NeedCodensity = true;
 
+         /// Does simulation required a codensity gradient field
+         static const bool NeedCodensityGrad = false;
+
          /// Does simulation required a magnetic field
          static const bool NeedMagnetic = false;
 
+         /// Does simulation required a magnetic curl field
+         static const bool NeedMagneticCurl = false;
+
          /// Does simulation required a velocity field
          static const bool NeedVelocity = false;
+
+         /// Does simulation required a velocity curl field
+         static const bool NeedVelocityCurl = false;
    };
 
 }

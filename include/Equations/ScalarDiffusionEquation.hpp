@@ -75,6 +75,34 @@ namespace EPMDynamo {
           * \param pBC Smart pointer of the boundary condition to add
           */
          void addBC(SmartBC pBC);
+
+         /**
+          * @brief Get the maximum number of forward SSH transform packs required
+          *
+          * This is independent of the exact equation setup
+          */
+         int nFSSHPacks() const;
+
+         /**
+          * @brief Get the maximum number of forward SH transform packs required
+          *
+          * This is independent of the exact equation setup
+          */
+         int nFSHPacks() const;
+
+         /**
+          * @brief Get the maximum number of backward SSH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSSHBPacks() const = 0;
+
+         /**
+          * @brief Get the maximum number of backward SH transform packs required
+          *
+          * The actual number of required packs depends on exact definition of equation
+          */
+         virtual int nSHBPacks() const = 0;
          
       protected:
 
@@ -100,6 +128,16 @@ namespace EPMDynamo {
 
       private:
    };
+
+   template <typename TSimType, typename TFieldType> inline int ScalarDiffusionEquation<TSimType,TFieldType>::nFSSHPacks() const
+   {
+      return 1;
+   }
+
+   template <typename TSimType, typename TFieldType> inline int ScalarDiffusionEquation<TSimType,TFieldType>::nFSHPacks() const
+   {
+      return 1;
+   }
 
    template <typename TSimType, typename TFieldType> ScalarDiffusionEquation<TSimType,TFieldType>::ScalarDiffusionEquation(TFieldType &rC, typename ScalarDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBC, EPMFloat a, EPMFloat b)
       : TimeEquation<TSimType, TFieldType>(rC, transform, tsteps), mTStepper(a, b, transform.radBasis(), tsteps, rC.trunc())

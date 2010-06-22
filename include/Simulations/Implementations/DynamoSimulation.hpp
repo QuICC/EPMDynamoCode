@@ -110,8 +110,6 @@ namespace EPMDynamo {
 
          /**
           * @brief Configure the transforms
-          *
-          * \bug Very bad structure that needs to be corrected
           */
          void configureTransforms();
 
@@ -163,7 +161,6 @@ namespace EPMDynamo {
    template <typename TSimType> void DynamoSimulation<TSimType>::initEquations()
    {
       // Set boundary condition to the transport equation
-      //SmartBC  pDiffHeatBC(new DifferentialHeatingBC<TSimType>(0.0, this->mTransform.radBasis()));
       SmartBC  pZeroBCC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
       //this->mTransport.addBC(pDiffHeatBC);
       this->mTransport.addBC(pZeroBCC);
@@ -177,9 +174,6 @@ namespace EPMDynamo {
       // Set boundary condition to the Navier-Stokes equation
       SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
       SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
-      //SmartBC  pDBC(new DRadialBC<TSimType>(this->mTransform.radBasis()));
-      //this->mNavierStokes.addTorBC(pZeroBC);
-      //this->mNavierStokes.addPolBC(pDBC);
       this->mNavierStokes.addTorBC(pSFBC);
       this->mNavierStokes.addPolBC(pDDBC);
 
@@ -252,35 +246,44 @@ namespace EPMDynamo {
 
    template <typename TSimType> void DynamoSimulation<TSimType>::configureTransforms()
    {
-      // Set basic configuration for Grouped simple
-      #ifdef EPMDYNAMO_GROUPED_ONESTEP
-         // Set number of transform steps
-         this->mTransformSteps = 2;
+      //
+      // Setup the SSH transform data manipulator
+      //
+      
+      // Register transform data packs of induction equation for SSH
+      this->registerSSHPacks(this->mInduction.nFSSHPacks(), this->mInduction.nSSHBPacks());
 
-         // Initialise the data buffers for communication
-         this->configureWSHManipulator(7, 15, false);
-      #else
-         // Set number of transform steps
-         this->mTransformSteps = 1;
+      // Register transform data packs of transport equation for SSH
+      this->registerSSHPacks(this->mTransport.nFSSHPacks(), this->mTransport.nSSHBPacks());
 
-         // Initialise the data buffers for communication
-         this->configureWSHManipulator(3, 3, true);
-      #endif // EPMDYNAMO_GROUPED_ONESTEP
+      // Register transform data packs of navier stokes equation for SSH
+      this->registerSSHPacks(this->mNavierStokes.nFSSHPacks(), this->mNavierStokes.nSSHBPacks());
 
-      // Set basic configuration for Grouped massive
-      #ifdef EPMDYNAMO_GROUPED_TWOSTEP
-         // Set number of transform steps
-         this->mTransformSteps++;
+      // Configure the SSH manipulator
+      this->configureSSHManipulator();
 
-         // Initialise the data buffers for communication
-         this->configureSHManipulator(7, 16, false);
+      //
+      // Setup the SH transform data manipulator
+      //
+      
+      // Register transform data packs of induction equation for SH
+      this->registerSHPacks(this->mInduction.nFSHPacks(), this->mInduction.nSHBPacks());
 
-         // Configure nesting specific things
-         this->configureNestedManipulators();
-      #elif EPMDYNAMO_TWOSTEP
-         // Initialise the data buffers for communication
-         this->configureSHManipulator(2, 2, true);
-      #endif // EPMDYNAMO_GROUPED_TWOSTEP
+      // Register transform data packs of transport equation for SH
+      this->registerSHPacks(this->mTransport.nFSHPacks(), this->mTransport.nSHBPacks());
+
+      // Register transform data packs of navier stokes equation for SH
+      this->registerSHPacks(this->mNavierStokes.nFSHPacks(), this->mNavierStokes.nSHBPacks());
+
+      // Configure the SSH manipulator
+      this->configureSHManipulator();
+
+      //
+      // Configure transform nesting
+      //
+
+      // Configure the transforms' nesting setup
+      this->configureTransformNesting();
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::initFields()

@@ -135,12 +135,12 @@ namespace EPMDynamo {
          void initiateGroupedFSend(const int entry);
 
          /**
-          * @brief Set the special stage entries ids
+          * @brief Set the interleaved stage entries ids
           *
-          * \param fEntry Forward special stage entry ID
-          * \param bEntry Backward special stage entry ID
+          * \param fEntry Forward interleaved stage entry ID
+          * \param bEntry Backward interleaved stage entry ID
           */
-         void setSpecialEntries(const int fEntry, const int bEntry);
+         void setInterStageIDs(const int fEntry, const int bEntry);
 
          /**
           * @brief Set the entry shift value
@@ -296,14 +296,14 @@ namespace EPMDynamo {
          const int mDesactivationValue;
 
          /**
-          * @brief Entry id for the special stage for forward step
+          * @brief Entry id for the interleaved stage for forward step
           */
-         int mSpecialFEntry;
+         int mInterFEntry;
 
          /**
-          * @brief Entry id for the special stage for backward step
+          * @brief Entry id for the interleaved stage for backward step
           */
-         int mSpecialBEntry;
+         int mInterBEntry;
 
          /**
           * @brief Used to desactivate the entry
@@ -499,7 +499,7 @@ namespace EPMDynamo {
    }
 
    template <typename TForward, typename TBackward> MPIManipulatorBase<TForward, TBackward>::MPIManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp)
-      : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mSpecialFEntry(-1), mSpecialBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
+      : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mInterFEntry(-1), mInterBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
    {
    }
 
@@ -515,11 +515,11 @@ namespace EPMDynamo {
       this->cleanRequests();
    }
 
-   template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::setSpecialEntries(const int fEntry, const int bEntry)
+   template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::setInterStageIDs(const int fEntry, const int bEntry)
    {
-      this->mSpecialFEntry = fEntry;
+      this->mInterFEntry = fEntry;
 
-      this->mSpecialBEntry = bEntry;
+      this->mInterBEntry = bEntry;
    }
 
    template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::setEntryShift(const int shift)
@@ -985,18 +985,18 @@ namespace EPMDynamo {
 
          // Put system in recv stage
          this->mPacksCounter = 0;
-      // This case controls the "nested" collective communication setup: sets special entry
-      } else if(entry == this->mSpecialBEntry)
+      // This case controls the "nested" collective communication setup: sets interleaved entry
+      } else if(entry == this->mInterBEntry)
       {
-         // Put system in special stage
+         // Put system in interlevead stage
          this->mPacksCounter = this->mDesactivationValue;
       }
    }
 
    template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::initiateGroupedFSend(const int entry)
    {
-      // This case controls the "nested" collective communication setup: sets special entry
-      if(entry == this->mSpecialFEntry)
+      // This case controls the "nested" collective communication setup: sets interleaved entry
+      if(entry == this->mInterFEntry)
       {
          // unset first entry flag
          this->mFirstEntry = false;
@@ -1005,7 +1005,7 @@ namespace EPMDynamo {
          this->mPacksCounter = this->mDesactivationValue;
       }
       // This case controls the "simple" collective communication setup: sets first entry
-      else if(entry == this->mSpecialFEntry + 1 + this->mDesactivateEntry)
+      else if(entry == this->mInterFEntry + 1 + this->mDesactivateEntry)
       {
          // set first entry flag
          this->mFirstEntry = true;
@@ -1016,7 +1016,7 @@ namespace EPMDynamo {
          // Set the number of packs to send
          this->mPacks = this->mMaxFPacks;
       // This case controls the "simple" collective communication setup: sets second entry
-      } else if(entry == this->mSpecialFEntry + 2 + this->mDesactivateEntry)
+      } else if(entry == this->mInterFEntry + 2 + this->mDesactivateEntry)
       {
          // Put system in recv stage
          this->mPacksCounter = 0;
@@ -1029,7 +1029,7 @@ namespace EPMDynamo {
       }
       // This case controls the "simple nested" collective communication setup: sets first entry
       //    This is only called when a "nested collective" call is inside simple direct setup
-      else if(entry == this->mSpecialFEntry + 1)
+      else if(entry == this->mInterFEntry + 1)
       {
          // set first entry flag
          this->mFirstEntry = true;
