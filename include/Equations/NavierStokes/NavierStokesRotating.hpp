@@ -18,7 +18,7 @@
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "Timestepping/InfluenceTTraits.hpp"
+#include "Timestepping/Traits/InfluenceTTraits.hpp"
 
 namespace EPMDynamo {
 

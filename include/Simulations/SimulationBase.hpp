@@ -356,7 +356,7 @@ namespace EPMDynamo {
       if(this->mSimControl.tsParams().isNextStep())
       {
          // Save ASCII files
-         if(this->mSimControl.tsCounter().triggerA())
+         if(this->mSimControl.tsCounter().triggerASCII())
          {
             this->mIOSys.writeASCII();
 
@@ -364,7 +364,7 @@ namespace EPMDynamo {
          }
 
          // Save state file
-         if(this->mSimControl.tsCounter().triggerS())
+         if(this->mSimControl.tsCounter().triggerState())
          {
             this->mIOSys.writeHDF5();
          }

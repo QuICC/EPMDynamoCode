@@ -34,7 +34,7 @@ namespace EPMDynamo {
       }
    }
 
-   bool TimestepCounter::unlimited() const
+   bool TimestepCounter::isUnlimited() const
    {
       if(this->mMaxtstep < 1)
       {
@@ -45,7 +45,7 @@ namespace EPMDynamo {
       }
    }
 
-   bool TimestepCounter::triggerA() const
+   bool TimestepCounter::triggerASCII() const
    {
       if(this->mSteps % this->mARate == 0)
       {
@@ -56,7 +56,7 @@ namespace EPMDynamo {
       }
    }
 
-   bool TimestepCounter::triggerS() const
+   bool TimestepCounter::triggerState() const
    {
       if(this->mSteps % this->mSRate == 0)
       {

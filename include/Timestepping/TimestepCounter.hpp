@@ -28,7 +28,7 @@ namespace EPMDynamo {
           *
           * @param maxtstep Maximum number of timesteps
           * @param asciiRate ASCII file save rate
-          * @param stateRate HDF5 state file save rate
+          * @param stateRate State file save rate
           */
          TimestepCounter(int maxtstep, int asciiRate, int stateRate);
 
@@ -50,22 +50,22 @@ namespace EPMDynamo {
          /**
           * @brief Get the number of steps
           */
-         int step() const;
+         int steps() const;
 
          /**
           * @brief is maxtstep unlimited?
           */
-         bool unlimited() const;
+         bool isUnlimited() const;
 
          /**
           * @brief Trigger ASCII save?
           */
-         bool triggerA() const;
+         bool triggerASCII() const;
 
          /**
           * @brief Trigger state save?
           */
-         bool triggerS() const;
+         bool triggerState() const;
 
          /**
           * @brief Print some information about run
@@ -102,7 +102,7 @@ namespace EPMDynamo {
       ++this->mSteps;
    }
 
-   inline int TimestepCounter::step() const
+   inline int TimestepCounter::steps() const
    {
       return this->mSteps;
    }

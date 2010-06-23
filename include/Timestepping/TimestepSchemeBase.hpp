@@ -52,9 +52,9 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Pointer to a Timestep Parameters object
+          * @brief Get the timestep parameters
           */
-         TimestepParameters&  mrTStepParams;
+         TimestepParameters& rTSParams();
 
          /**
           * @brief Get pointer to variable from previous timestep
@@ -93,6 +93,10 @@ namespace EPMDynamo {
          void restoreOld(ScalarType& rVar, ScalarType& nTerms);
 
       private:
+         /**
+          * @brief Reference to a Timestep Parameters object
+          */
+         TimestepParameters&  mrTStepParams;
 
          /**
           * @brief Values of the variable of previous timestep
@@ -114,6 +118,11 @@ namespace EPMDynamo {
           */
          ScalarType& rOldNTerms();
    };
+
+   template <typename TSimType> inline TimestepParameters& TimestepSchemeBase<TSimType>::rTSParams()
+   {
+      return this->mrTStepParams;
+   }
 
    template <typename TSimType> inline typename TimestepSchemeBase<TSimType>::SmartScalarType TimestepSchemeBase<TSimType>::pOldVar() const
    {

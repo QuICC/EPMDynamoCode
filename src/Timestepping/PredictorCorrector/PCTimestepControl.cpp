@@ -22,7 +22,7 @@
 namespace EPMDynamo {
 
    PCTimestepControl::PCTimestepControl(TimestepParameters &params, const EquationParameters &eqParams)
-      : TimestepControl(params, eqParams), mCounterCorrIts(0), mPCTStep(0.0), mCorrectionNorm(0.0), mOldCorrectionNorm(0.0), mPCError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldPCError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mController(TimestepController::ELEMENTARY, 2, params), mTotCorr(0.0)
+      : TimestepControl(params, eqParams), mCounterCorrIts(0), mPCTStep(0.0), mCorrectionNorm(0.0), mOldCorrectionNorm(0.0), mPCError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldPCError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mController(ElementaryCtl, 2, params), mTotCorr(0.0)
    {
    }
 

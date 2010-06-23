@@ -130,7 +130,7 @@ namespace EPMDynamo {
 
       EPMFloat err = 0.0;
       EPMFloat err2 = 0.0;
-      EPMFloat dt = this->mrTStepParams.dt();
+      EPMFloat dt = this->rTSParams().dt();
 
       // Loop over degrees
       for(int l = l0; l < nL; ++l)
@@ -146,34 +146,34 @@ namespace EPMDynamo {
       }
 
       // Store first derivative error
-      this->mrTStepParams.updateDtError(1, err);
+      this->rTSParams().updateDtError(1, err);
 
       // Store second derivative error
-      this->mrTStepParams.updateDtError(2, err2);
+      this->rTSParams().updateDtError(2, err2);
    }
 
    template <typename TSimType, template <typename> class TMethod> void PCScheme<TSimType, TMethod>::timestep(typename PCScheme<TSimType, TMethod>::ScalarType& rVar, typename PCScheme<TSimType, TMethod>::ScalarType& nTerms)
    {
       // If the timestep has been rejected recover previous timestep values
-      if(this->mrTStepParams.isRejected())
+      if(this->rTSParams().isRejected())
       {
          // Restore value from previous timestep
          this->restoreOld(rVar, nTerms);
       }
 
       // Do predictor step if previous corrector solution converged
-      if(this->mrTStepParams.isNextStep())
+      if(this->rTSParams().isNextStep())
       {
 // This is only here temporary until error output is not required anymore
-this->mrTStepParams.resetDtError(1);
-this->mrTStepParams.resetDtError(2);
-this->mrTStepParams.resetError();
+this->rTSParams().resetDtError(1);
+this->rTSParams().resetDtError(2);
+this->rTSParams().resetError();
 
          // Store the variable before timestep to allow rejection of timestep
          this->storeOld(rVar, nTerms);
 
          // Update timesteping matrices if required
-         if(this->mrTStepParams.hasNewDt())
+         if(this->rTSParams().hasNewDt())
          {
             this->updateTimeMatrices();
          }

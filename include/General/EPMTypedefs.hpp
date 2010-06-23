@@ -120,6 +120,9 @@ namespace EPMDynamo {
    typedef Matrix  TimestepMatrix;
    //@}
    
+   /// Enumb of the different type of predefined timestep controllers
+   enum TimestepCtlTypes {ElementaryCtl, PI42Ctl, H211BCtl};
+   
 }
 
 #endif // EPMTYPEDEFS_HPP

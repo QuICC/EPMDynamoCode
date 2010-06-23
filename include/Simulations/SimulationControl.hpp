@@ -96,7 +96,7 @@ namespace EPMDynamo {
    template <typename TSimType> void SimulationControl<TSimType>::update()
    {
       // Check convergence of time integration
-      this->tsControl().checkConvergence(this->tsCounter().step());
+      this->tsControl().checkConvergence(this->tsCounter().steps());
 
       if(this->tsParams().isNextStep())
       {

@@ -15,6 +15,7 @@ set(${SrcSubDir}_Srcs
 #
 set(SrcSubSubDirs
       PredictorCorrector
+      Traits
       )
 
 foreach(SrcSubSubDir ${SrcSubSubDirs})

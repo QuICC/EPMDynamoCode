@@ -15,6 +15,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Timestepping/TimestepParameters.hpp"
+#include "Timestepping/Traits/TimestepControllerTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -41,27 +42,12 @@ namespace EPMDynamo {
           * @param order Order of the timestep scheme
           * @param params Timestep parameters
           */
-         TimestepController(int type, int order, TimestepParameters& params);
+         TimestepController(TimestepCtlTypes type, int order, TimestepParameters& params);
 
          /**
           * @brief Destructor
           */
          virtual ~TimestepController() {};
-
-         /**
-          * @brief Elementary controller type
-          */
-         static const int ELEMENTARY = 1;
- 
-         /**
-          * @brief PI4.2 controller type
-          */
-         static const int PI42 = 2;        
- 
-         /**
-          * @brief H211b digital filter controller type
-          */
-         static const int H211B = 3;        
 
          /**
           * @brief General routine for first order timestep controller (see Soederlind)
@@ -76,51 +62,6 @@ namespace EPMDynamo {
       protected:
 
       private:
-         /**
-          * @brief \f$\beta_1\f$ parameter of the elementary controller
-          */
-         static const EPMFloat ELEMENTARY_KBETA1;
-
-         /**
-          * @brief \f$\beta_2\f$ parameter of the elementary controller
-          */
-         static const EPMFloat ELEMENTARY_KBETA2;
-
-         /**
-          * @brief \f$\alpha\f$ parameter of the elementary controller
-          */
-         static const EPMFloat ELEMENTARY_ALPHA;
-
-         /**
-          * @brief \f$\beta_1\f$ parameter of the PI4.2 controller
-          */
-         static const EPMFloat PI42_KBETA1;
-
-         /**
-          * @brief \f$\beta_2\f$ pf the PI4.2 controller
-          */
-         static const EPMFloat PI42_KBETA2;
-
-         /**
-          * @brief \f$\alpha\f$ pa the PI4.2 controller
-          */
-         static const EPMFloat PI42_ALPHA;
-
-         /**
-          * @brief \f$\beta_1\f$ pf the H211b controller
-          */
-         static const EPMFloat H211B_KBETA1;
-
-         /**
-          * @brief \f$\beta_2\f$ pf the H211b controller
-          */
-         static const EPMFloat H211B_KBETA2;
-
-         /**
-          * @brief \f$\alpha\f$ pa the H211b controller
-          */
-         static const EPMFloat H211B_ALPHA;
-
          /**
           * @brief First order timestep controller \f$\beta_1\f$ paramter
           *
@@ -160,6 +101,21 @@ namespace EPMDynamo {
          TimestepParameters& mrParams;
 
          /**
+          * @brief Get \f$\beta_1\f$ paramter
+          */
+         EPMFloat beta1() const;
+
+         /**
+          * @brief Get \f$\beta_2\f$ paramter
+          */
+         EPMFloat beta2() const;
+
+         /**
+          * @brief Get \f$\alpha\f$ paramter
+          */
+         EPMFloat alpha() const;
+
+         /**
           * @brief Set the parameters of the timestep controller
           *
           * @param kb1 \f$k\beta_1\f$ parameter
@@ -170,26 +126,28 @@ namespace EPMDynamo {
          void setControllerParameters(EPMFloat kb1, EPMFloat kb2, EPMFloat a, int k);
 
          /**
-          * @brief Set parameters for elementary controller
+          * @brief Set the parameters for a predefined controller type
           *
-          * @param k Order of method
+          * @param type Type of the controller
+          * @param k Order of the controller
           */
-         void setElementaryController(int k);
-
-         /**
-          * @brief Set parameters for PI4.2 controller
-          *
-          * @param k Order of method
-          */
-         void setPI42Controller(int k);
-
-         /**
-          * @brief Set parameters for H211b digital filter
-          *
-          * @param k Order of method
-          */
-         void setH211bController(int k);
+          void setPredefinedController(TimestepCtlTypes type, int k);
    };
+
+   inline EPMFloat   TimestepController::beta1() const
+   {
+      return this->mControllerBeta1;
+   }
+
+   inline EPMFloat   TimestepController::beta2() const
+   {
+      return this->mControllerBeta2;
+   }
+
+   inline EPMFloat   TimestepController::alpha() const
+   {
+      return this->mControllerAlpha;
+   }
 
 }
 

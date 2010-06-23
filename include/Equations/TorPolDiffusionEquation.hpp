@@ -19,7 +19,7 @@
 #include "Equations/TimeEquation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "Timestepping/SimpleTTraits.hpp"
+#include "Timestepping/Traits/SimpleTTraits.hpp"
 
 namespace EPMDynamo {
 

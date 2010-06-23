@@ -18,12 +18,12 @@
 namespace EPMDynamo {
 
    SimulationControlBase::SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall)
-      : mKeepRunning(true), mTSParams(t, dt), mTSCounter(maxtstep, aRate, sRate), mRunControl(wall), mUseWall(mTSCounter.unlimited()), mCtrlIface()
+      : mKeepRunning(true), mTSParams(t, dt), mTSCounter(maxtstep, aRate, sRate), mRunControl(wall), mUseWall(mTSCounter.isUnlimited()), mCtrlIface()
    {
    }
 
    SimulationControlBase::SimulationControlBase(const Array& time, const ArrayI& runI, const Array& run)
-      : mKeepRunning(true), mTSParams(time(0), time(1)), mTSCounter(runI(0), runI(1), runI(2)), mRunControl(run(0)), mUseWall(mTSCounter.unlimited()), mCtrlIface()
+      : mKeepRunning(true), mTSParams(time(0), time(1)), mTSCounter(runI(0), runI(1), runI(2)), mRunControl(run(0)), mUseWall(mTSCounter.isUnlimited()), mCtrlIface()
    {
    }
 
@@ -46,7 +46,7 @@ namespace EPMDynamo {
       this->tsCounter().printInfo();
 
       // Print information from Runtime control
-      this->runControl().printInfo(this->tsCounter().step());
+      this->runControl().printInfo(this->tsCounter().steps());
    }
 
    void SimulationControlBase::checkInterface()

@@ -15,6 +15,7 @@
 // Project includes
 //
 #include "Timestepping/TimestepConfig.hpp"
+#include "Timestepping/Traits/TimestepControllerTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -23,22 +24,11 @@ namespace EPMDynamo {
    {
    }
 
-   TimestepController::TimestepController(int type, int order, TimestepParameters &params)
+   TimestepController::TimestepController(TimestepCtlTypes type, int order, TimestepParameters &params)
       : mControllerBeta1(1.0), mControllerBeta2(0.0), mControllerAlpha(0.0), mrParams(params)
    {
-      // Setup an elementary controller of order order
-      if(type == ELEMENTARY)
-      {
-         this->setElementaryController(order);
-      // Setup an PI4.2 controller of order order
-      } else if(type == PI42)
-      {
-         this->setPI42Controller(order);
-      // Setup a H211b digital filter controller of order order
-      } else if(type == H211B)
-      {
-         this->setH211bController(order);
-      }
+      // Setup a predefined controller of order order
+      this->setPredefinedController(type, order);
    }
 
    EPMFloat TimestepController::nextTimestep(EPMFloat errn, EPMFloat errn_1)
@@ -54,7 +44,7 @@ namespace EPMDynamo {
       EPMFloat hn1 = hn;
 
       // Compute new step with first order controller
-      hn1 *= std::pow(epsilon/errn, this->mControllerBeta1)*std::pow(epsilon/errn_1, this->mControllerBeta2)*std::pow(hn/hn_1, -this->mControllerAlpha);
+      hn1 *= std::pow(epsilon/errn, this->beta1())*std::pow(epsilon/errn_1, this->beta2())*std::pow(hn/hn_1, -this->alpha());
 
       return hn1;
    }
@@ -71,37 +61,27 @@ namespace EPMDynamo {
       this->mControllerAlpha = a;
    }
 
-   void TimestepController::setElementaryController(int k)
+   void TimestepController::setPredefinedController(TimestepCtlTypes type, int k)
    {
-      this->setControllerParameters(ELEMENTARY_KBETA1, ELEMENTARY_KBETA2, ELEMENTARY_ALPHA, k);
+      // Setup elementary controller
+      if(type == ElementaryCtl)
+      {
+         this->setControllerParameters(TimestepControllerTraits<ElementaryCtl>::KBETA1, TimestepControllerTraits<ElementaryCtl>::KBETA2, TimestepControllerTraits<ElementaryCtl>::ALPHA, k);
+
+      // Setup PI42 controller
+      } else if(type == PI42Ctl)
+      {
+         this->setControllerParameters(TimestepControllerTraits<PI42Ctl>::KBETA1, TimestepControllerTraits<PI42Ctl>::KBETA2, TimestepControllerTraits<PI42Ctl>::ALPHA, k);
+
+      // Setup H211B controller
+      } else if(type == H211BCtl)
+      {
+         this->setControllerParameters(TimestepControllerTraits<H211BCtl>::KBETA1, TimestepControllerTraits<H211BCtl>::KBETA2, TimestepControllerTraits<H211BCtl>::ALPHA, k);
+
+      // Should never happen
+      } else
+      {
+         assert(false);
+      }
    }
-
-   void TimestepController::setPI42Controller(int k)
-   {
-      this->setControllerParameters(PI42_KBETA1, PI42_KBETA2, PI42_ALPHA, k);
-   }
-
-   void TimestepController::setH211bController(int k)
-   {
-      this->setControllerParameters(H211B_KBETA1, H211B_KBETA2, H211B_ALPHA, k);
-   }
-
-   const EPMFloat TimestepController::ELEMENTARY_KBETA1 = 1.0;
-
-   const EPMFloat TimestepController::ELEMENTARY_KBETA2 = 0.0;
-
-   const EPMFloat TimestepController::ELEMENTARY_ALPHA = 0.0;
-
-   const EPMFloat TimestepController::PI42_KBETA1 = 3.0/5.0;
-
-   const EPMFloat TimestepController::PI42_KBETA2 = -1.0/5.0;
-
-   const EPMFloat TimestepController::PI42_ALPHA = 0.0;
-
-   const EPMFloat TimestepController::H211B_KBETA1 = 1.0/4.0;
-
-   const EPMFloat TimestepController::H211B_KBETA2 = 1.0/4.0;
-
-   const EPMFloat TimestepController::H211B_ALPHA = 1.0/4.0;
-
 }

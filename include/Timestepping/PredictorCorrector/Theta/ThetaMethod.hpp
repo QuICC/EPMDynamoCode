@@ -172,10 +172,10 @@ namespace EPMDynamo {
    template <typename TSimType> void ThetaMethod<TSimType>::updateTimeMatrices()
    {
       // Updated the LHS operator due to new timestep
-      this->mLHS.update(this->mrTStepParams.dt());
+      this->mLHS.update(this->rTSParams().dt());
 
       // Updated the RHS operator due to new timestep
-      this->mRHS.update(this->mrTStepParams.dt());
+      this->mRHS.update(this->rTSParams().dt());
    }
 
    template <typename TSimType> inline void ThetaMethod<TSimType>::updatePrevious(const typename ThetaMethod::ScalarType& previous)
@@ -235,7 +235,7 @@ namespace EPMDynamo {
    template <typename TSimType> void ThetaMethod<TSimType>::useCorrection(typename ThetaMethod<TSimType>::ScalarType& rVar)
    {
       // Update simulation wide value of corrector norm
-      this->mrTStepParams.updateError(PCErrorControl<TSimType>::errorNorm(this->mPreviousNTerms, this->mrTStepParams.error()));
+      this->rTSParams().updateError(PCErrorControl<TSimType>::errorNorm(this->mPreviousNTerms, this->rTSParams().error()));
 
       // Add correction to unknown
       this->addCorrection(rVar, this->mPreviousNTerms);

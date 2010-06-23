@@ -17,7 +17,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
-#include "Timestepping/SimpleTTraits.hpp"
+#include "Timestepping/Traits/SimpleTTraits.hpp"
 
 namespace EPMDynamo {
 
