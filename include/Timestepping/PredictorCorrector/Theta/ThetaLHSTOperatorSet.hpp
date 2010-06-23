@@ -16,6 +16,7 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -82,7 +83,7 @@ namespace EPMDynamo {
    template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::update(const EPMFloat dt)
    {
       // Set Laplacian multiplicative factor
-      EPMFloat factor = -this->mB*this->theta();
+      EPMFloat factor = -this->mB*ThetaTraits<TSimType>::theta;
 
       // Set time matrix multiplicative factor
       EPMFloat timeDiff = this->mA/dt;

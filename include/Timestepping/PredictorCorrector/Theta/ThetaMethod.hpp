@@ -17,7 +17,7 @@
 #include "BoundaryConditions/BoundaryCondition.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/TimestepSchemeBase.hpp"
-#include "Timestepping/PredictorCorrector/PCErrorControl.hpp"
+#include "Timestepping/ErrorControl.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaLHSTOperatorSet.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaRHSTOperatorSet.hpp"
 #include "Timestepping/TimestepParameters.hpp"
@@ -128,8 +128,6 @@ namespace EPMDynamo {
           * @brief Use the corrector solution
           *
           * @param rVar Input/Output variable
-          *
-          * \bug Corrector/Correction norm computatin have to be tested and implemented in a clean way
           */
          void useCorrection(ScalarType& rVar);
 
@@ -220,7 +218,7 @@ namespace EPMDynamo {
       // Loop over degrees
       for(int l = l0; l < nL; ++l)
       {
-         this->mPreviousNTerms.rLShell(l) = this->mRHS.theta()*(newNTerms.lshell(l) - this->mPreviousNTerms.lshell(l));
+         this->mPreviousNTerms.rLShell(l) = ThetaTraits<TSimType>::theta*(newNTerms.lshell(l) - this->mPreviousNTerms.lshell(l));
       }
    }
 
@@ -233,7 +231,7 @@ namespace EPMDynamo {
    template <typename TSimType> void ThetaMethod<TSimType>::useCorrection(typename ThetaMethod<TSimType>::ScalarType& rVar)
    {
       // Update simulation wide value of corrector norm
-      this->rTSParams().updateError(PCErrorControl<TSimType>::errorNorm(this->mPreviousNTerms, this->rTSParams().error()));
+      this->rTSParams().updateError(ErrorControl<TSimType>::errorNorm(this->mPreviousNTerms, this->rTSParams().error()));
 
       // Add correction to unknown
       this->addCorrection(rVar, this->mPreviousNTerms);

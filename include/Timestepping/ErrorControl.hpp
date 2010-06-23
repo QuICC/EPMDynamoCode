@@ -1,9 +1,9 @@
-/** \file PCErrorControl.hpp
- *  \brief Implementation of a specialised error control for predictor/corrector schemes
+/** \file ErrorControl.hpp
+ *  \brief Implementation of a specialised error control
  */
 
-#ifndef PCERRORCONTROL_HPP
-#define PCERRORCONTROL_HPP
+#ifndef ERRORCONTROL_HPP
+#define ERRORCONTROL_HPP
 
 // System includes
 //
@@ -25,17 +25,15 @@ namespace EPMDynamo {
     *        How the norm is actually computed is defined in the timestep scheme traits
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Needs a big cleaning and rewritting!
     */
-   template <typename TSimType> class PCErrorControl
+   template <typename TSimType> class ErrorControl
    {
       public:
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename SimulationTraits<TSimType>::TimestepTraits::ErrorNormType    ErrorNormType;
+         typedef typename SimulationTraits<TSimType>::TimestepTraits::MethodTraits::ErrorNormType    ErrorNormType;
 
          /**
           * @brief Compute the error norm
@@ -51,15 +49,15 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         PCErrorControl() {};
+         ErrorControl() {};
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~PCErrorControl() {};
+         virtual ~ErrorControl() {};
    };
 
-   template <typename TSimType> EPMFloat PCErrorControl<TSimType>::errorNorm(const typename PCErrorControl<TSimType>::ScalarType& rVar, const EPMFloat oldError)
+   template <typename TSimType> EPMFloat ErrorControl<TSimType>::errorNorm(const typename ErrorControl<TSimType>::ScalarType& rVar, const EPMFloat oldError)
    {
       // Create temporary storage
       EPMFloat norm = 0.0;
@@ -76,4 +74,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // PCERRORCONTROL_HPP
+#endif // ERRORCONTROL_HPP

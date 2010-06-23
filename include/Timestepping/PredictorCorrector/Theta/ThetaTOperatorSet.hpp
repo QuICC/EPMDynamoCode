@@ -45,11 +45,6 @@ namespace EPMDynamo {
          virtual ~ThetaTOperatorSet() {};
 
          /**
-          * @brief Get the theta parameter
-          */
-         EPMFloat theta() const;
-
-         /**
           * @brief Update the timestep matrices
           *
           * Still a pure virtual function
@@ -57,15 +52,6 @@ namespace EPMDynamo {
           * @param dt   New timestep value
           */
          virtual void update(const EPMFloat dt) = 0;
-
-         /**
-          * @brief Set the theta parameter of the scheme
-          *
-          * @param theta Implicitness
-          *
-          * \bug This has to be reimplemented
-          */
-         void setTheta(EPMFloat theta);
 
          /**
           * @brief Init the operators
@@ -84,11 +70,6 @@ namespace EPMDynamo {
          EPMFloat    mB;
 
          /**
-          * @brief Theta parameter of numerical scheme
-          */
-         EPMFloat   mTheta;
-
-         /**
           * @brief Reference to the radial basis
           */
          const BasisType&   mrBasis;
@@ -101,11 +82,6 @@ namespace EPMDynamo {
           */
          void updateOperators(const EPMFloat factor, const EPMFloat timeDiff);
 
-         /**
-          * @brief Default theta parameter for all operators
-          */
-         static const EPMFloat   DEFAULT_THETA;
-
       private:
          /**
           * @brief Lock for blocking setting of the theta parameter
@@ -114,24 +90,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, typename TOpType> ThetaTOperatorSet<TSimType, TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc)
-      : ImplicitTOperatorSet<TSimType, TOpType>(pTrunc), mA(a), mB(b), mTheta(DEFAULT_THETA), mrBasis(basis), mIsThetaLocked(false)
+      : ImplicitTOperatorSet<TSimType, TOpType>(pTrunc), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
    {
-   }
-   
-   template <typename TSimType, typename TOpType> inline EPMFloat ThetaTOperatorSet<TSimType, TOpType>::theta() const
-   {
-      return this->mTheta;
-   }
-
-   template<typename TSimType, typename TOpType> const EPMFloat ThetaTOperatorSet<TSimType, TOpType>::DEFAULT_THETA = 0.5;
-
-   template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::setTheta(EPMFloat theta)
-   {
-      // Check if simulation already started, the theta parameter should not be changed during run
-      assert(! this->mIsThetaLocked);
-
-      // Set theta
-      this->mTheta = theta;
    }
 
    template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::initOperators()

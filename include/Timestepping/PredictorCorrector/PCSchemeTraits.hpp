@@ -13,15 +13,15 @@
 
 // Project includes
 //
+#include "Timestepping/PredictorCorrector/PCTimestepControl.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
 
 namespace EPMDynamo {
 
    // Forward declarations
-   class PCTimestepControl;
    template <typename, template <typename> class> class PCScheme;
    template <typename> class ThetaMethod;
    template <typename> class ThetaInfluenceMethod;
-   template <typename> class ErrorL2Max;
 
    /**
     * \brief Traits to describe the request Predictor/Corrector scheme
@@ -33,6 +33,9 @@ namespace EPMDynamo {
    template <typename TSimType> class PCSchemeTraits
    {
       public:
+         /// Typedef for the "general" setup traits
+         typedef ThetaTraits<TSimType>  MethodTraits;
+
          /// Typedef for the simple timestepper (no influence matrix)
          typedef PCScheme<TSimType, ThetaMethod>   Timestepper;  
 
@@ -40,16 +43,7 @@ namespace EPMDynamo {
          typedef PCScheme<TSimType, ThetaInfluenceMethod>   InfluenceTimestepper;  
 
          /// Typedef for the timestep control object type
-         typedef PCTimestepControl   TimestepControl;
-
-         /// Typedef for the error norm type
-         typedef ErrorL2Max<TSimType>   ErrorNormType;
-
-         /// Type of timestep controller to use
-         static const TimestepCtrlTypes  CtrlType = ElementaryCtrl;
-
-         /// Order of the timestep scheme
-         static const int order = Timestepper::order;
+         typedef PCTimestepControl<MethodTraits>   TimestepControl;
    };
 
 }

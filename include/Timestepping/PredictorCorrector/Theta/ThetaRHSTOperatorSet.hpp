@@ -68,7 +68,7 @@ namespace EPMDynamo {
    template <typename TSimType> inline void ThetaRHSTOperatorSet<TSimType>::update(const EPMFloat dt)
    {
       // Set multiplicative factor for Laplacian
-      EPMFloat factor = this->mB*(1.0-this->theta());
+      EPMFloat factor = this->mB*(1.0-ThetaTraits<TSimType>::theta);
 
       // Set multiplicative factor for time matrix
       EPMFloat timeDiff = this->mA/dt;
