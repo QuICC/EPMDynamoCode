@@ -113,13 +113,6 @@ namespace EPMDynamo {
          bool keepRunning() const;
 
          /**
-          * @brief Do an MPI synchronisation
-          *
-          * \bug This should be removed from here and put into the Workflow classes
-          */
-         void synchronize();
-
-         /**
           * @brief Check for command from external control interface input
           */
          void checkInterface();
@@ -202,13 +195,6 @@ namespace EPMDynamo {
    inline ControlInterface& SimulationControlBase::ctrlIface()
    {
       return this->mCtrlIface;
-   }
-
-   inline void SimulationControlBase::synchronize()
-   {
-      #ifdef EPMDYNAMO_MPI
-         MPI_Barrier(MPI_COMM_WORLD);
-      #endif
    }
 }
 

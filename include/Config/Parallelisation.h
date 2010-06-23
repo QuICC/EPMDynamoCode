@@ -12,6 +12,8 @@
    #define EPMDYNAMO_WORKFLOWTYPE  MPIWorkflow 
    /// MPI initialisation operations
    #define  EPMDYNAMO_INITIALISER   MPIWorkflow::init()
+   /// MPI synchronization operations
+   #define  EPMDYNAMO_SYNCHRONIZE   MPIWorkflow::synchronize()
    /// MPI finalisation operations
    #define  EPMDYNAMO_FINALIZER   MPIWorkflow::finalize()
    /// MPI rank of cpu
@@ -24,6 +26,8 @@
    #define EPMDYNAMO_WORKFLOWTYPE  SerialWorkflow 
    /// Serial initialisation operations
    #define  EPMDYNAMO_INITIALISER   SerialWorkflow::init()
+   /// Serial synchronization operations
+   #define  EPMDYNAMO_SYNCHRONIZE   SerialWorkflow::synchronize()
    /// Serial finalisation operations
    #define  EPMDYNAMO_FINALIZER   SerialWorkflow::finalize()
    /// Serial rank of cpu

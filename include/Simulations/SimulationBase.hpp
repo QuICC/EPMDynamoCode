@@ -5,6 +5,10 @@
 #ifndef SIMULATIONBASE_HPP
 #define SIMULATIONBASE_HPP
 
+// Configuration includes
+//
+#include "Config/Parallelisation.h"
+
 // System includes
 //
 #include <boost/static_assert.hpp>
@@ -373,7 +377,7 @@ namespace EPMDynamo {
       this->mIOSys.writeHDF5();
 
       // Synchronize simulation
-      this->mSimControl.synchronize();
+      EPMDYNAMO_SYNCHRONIZE;
 
       // Execute last minute simulation control initialisation operations
       this->mSimControl.preRun();

@@ -39,6 +39,11 @@ namespace EPMDynamo {
           * @brief Initialise the Serial system
           */
          static void init();
+
+         /**
+          * @brief Synchronize
+          */
+         static void synchronize();
   
          /**
           * @brief Finalize the Serial system

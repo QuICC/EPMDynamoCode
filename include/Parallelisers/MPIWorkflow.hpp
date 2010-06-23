@@ -51,6 +51,11 @@ namespace EPMDynamo {
           * @brief Finalize the MPI system
           */
          static void finalize();
+
+         /**
+          * @brief Synchronize
+          */
+         static void synchronize();
          
       protected:
          /**

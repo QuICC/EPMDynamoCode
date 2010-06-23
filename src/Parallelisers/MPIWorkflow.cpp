@@ -42,6 +42,11 @@ namespace EPMDynamo {
       MPI_Comm_rank(MPI_COMM_WORLD, &this->mCoreID);
    }
 
+   void MPIWorkflow::synchronize()
+   {
+      MPI_Barrier(MPI_COMM_WORLD);
+   }
+
    void MPIWorkflow::finalize()
    {
       // Make sure all finished

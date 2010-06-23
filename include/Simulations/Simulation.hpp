@@ -5,6 +5,10 @@
 #ifndef SIMULATION_HPP
 #define SIMULATION_HPP
 
+// Configuration includes
+//
+#include "Config/Parallelisation.h"
+
 // System includes
 //
 
@@ -138,14 +142,14 @@ namespace EPMDynamo {
          this->writeFiles();
 
          // Synchronize simulation
-         this->mSimControl.synchronize();
+         EPMDYNAMO_SYNCHRONIZE;
       }
 
       // Execute last initialisation before end
       this->postRun();
 
       // Synchronize simulation
-      this->mSimControl.synchronize();
+      EPMDYNAMO_SYNCHRONIZE;
    }
 
    template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::finalise()

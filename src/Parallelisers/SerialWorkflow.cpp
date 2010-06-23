@@ -32,6 +32,10 @@ namespace EPMDynamo {
       this->checkCores(1);
    }
 
+   void SerialWorkflow::synchronize()
+   {
+   }
+
    void SerialWorkflow::finalize()
    {
    }
