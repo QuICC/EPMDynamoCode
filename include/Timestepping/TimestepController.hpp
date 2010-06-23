@@ -42,7 +42,7 @@ namespace EPMDynamo {
           * @param order Order of the timestep scheme
           * @param params Timestep parameters
           */
-         TimestepController(TimestepCtlTypes type, int order, TimestepParameters& params);
+         TimestepController(TimestepCtrlTypes type, int order, TimestepParameters& params);
 
          /**
           * @brief Destructor
@@ -131,7 +131,7 @@ namespace EPMDynamo {
           * @param type Type of the controller
           * @param k Order of the controller
           */
-          void setPredefinedController(TimestepCtlTypes type, int k);
+          void setPredefinedController(TimestepCtrlTypes type, int k);
    };
 
    inline EPMFloat   TimestepController::beta1() const

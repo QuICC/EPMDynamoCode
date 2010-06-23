@@ -1,9 +1,9 @@
-/** \file TimestepControl.hpp
- *  \brief Implementation of a simple timestep control
+/** \file TimestepControlBase.hpp
+ *  \brief Base of the implementation of a simple timestep control
  */
 
-#ifndef TIMESTEPCONTROL_HPP
-#define TIMESTEPCONTROL_HPP
+#ifndef TIMESTEPCONTROLBASE_HPP
+#define TIMESTEPCONTROLBASE_HPP
 
 // System includes
 //
@@ -17,30 +17,32 @@
 #include "GeneralFields/RTPField.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
 #include "Timestepping/TimestepParameters.hpp"
+#include "Timestepping/TimestepController.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of a simple timestep control
     *
-    * \bug Review the different timestep tests
     * \bug Improve MPI communication
     */
-   class TimestepControl
+   class TimestepControlBase
    {
       public:
          /**
           * @brief Constructor
           *
-          * @param params Timestep parameters
+          * @param tsParams Timestep parameters
           * @param eqParams Equation parameters
+          * @param ctrlType Type of the timestep controller
+          * @param order Order of the timestep scheme
           */
-         TimestepControl(TimestepParameters &params, const EquationParameters &eqParams);
+         TimestepControlBase(TimestepParameters &tsParams, const EquationParameters &eqParams, TimestepCtrlTypes ctrlType, int order);
 
          /**
           * @brief Constructor
           */
-         ~TimestepControl() {};
+         ~TimestepControlBase() {};
 
          /**
           * @brief Should the simulation keep running?
@@ -49,13 +51,15 @@ namespace EPMDynamo {
 
          /**
           * @brief Check that the timestepping is converging
+          *
+          * @param step Current timestep
           */
-         void checkConvergence(int step);
+         virtual void checkConvergence(int step) = 0;
 
          /**
           * @brief Update the timestep to use
           */
-         void updateTimestep();
+         virtual void updateTimestep() = 0;
 
          /**
           * @brief Update value of the CFL condition timestep for 
@@ -81,7 +85,6 @@ namespace EPMDynamo {
          void printInfo() const;
 
       protected:
-
          /**
           * @brief Boolean to check if simulation should keep running?
           */
@@ -93,19 +96,29 @@ namespace EPMDynamo {
          bool mNeedInit;
 
          /**
-          * @brief Reference to a TimestepParameters object
+          * @brief Storage for timestep error
           */
-         TimestepParameters&  mrParams;
+         EPMFloat mError;
 
          /**
-          * @brief Reference to an EquationParameters object
+          * @brief Storage for previous timestep error
           */
-         const EquationParameters&  mrEqParams;
+         EPMFloat mOldError;
 
          /**
-          * @brief CFL condition imposed timestep
+          * @brief Get timestep parameters
           */
-         EPMFloat   mCFLTimestep;
+         TimestepParameters& rTSParams();
+
+         /**
+          * @brief Get equation parameters
+          */
+         const EquationParameters& eqParams() const;
+
+         /**
+          * @brief Reset stored error and update previous error
+          */
+         void resetError();
 
          /**
           * @brief Get the Simulation wide CFL condition (MPI communication)
@@ -113,11 +126,11 @@ namespace EPMDynamo {
          void getSimulationCFLCondition();
 
          /**
-          * @brief test for initialisation timestep
+          * @brief test for initialisation timestep condition
           *
           * @param rDt Timestep length
           */
-         void testInitialisationTimestep(EPMFloat& rDt);
+         void testInitialisation(EPMFloat& rDt);
 
          /**
           * @brief Test for maximum timestep
@@ -131,7 +144,12 @@ namespace EPMDynamo {
           *
           * @param rDt Timestep length
           */
-         void testCFLTimestep(EPMFloat& rDt);
+         void testCFLCondition(EPMFloat& rDt);
+
+         /**
+          * @brief Use the adaptive timestep condition
+          */
+         void useAdaptiveTimestep(EPMFloat& rDt);
 
          /**
           * @brief Include courant number in obtained timestep
@@ -145,16 +163,50 @@ namespace EPMDynamo {
           *
           * @param dt Timestep length
           */
-         void setWindowedTimestep(EPMFloat dt);
+         void useWindowedTimestep(EPMFloat dt);
+
+         /**
+          * @brief Use new timestep without further tests
+          */
+         void useTimestep(EPMFloat dt);
 
       private:
+         /**
+          * @brief CFL condition imposed timestep
+          */
+         EPMFloat   mCFLTimestep;
+
+         /**
+          * @brief Reference to a TimestepParameters object
+          */
+         TimestepParameters&  mrTSParams;
+
+         /**
+          * @brief Reference to an EquationParameters object
+          */
+         const EquationParameters&  mrEqParams;
+
+         /**
+          * @brief Adaptive timestep controller
+          */
+         TimestepController   mController;
    };
 
-   inline bool TimestepControl::keepRunning() const
+   inline bool TimestepControlBase::keepRunning() const
    {
       return this->mKeepRunning;
    }
 
+   inline TimestepParameters& TimestepControlBase::rTSParams()
+   {
+      return this->mrTSParams;
+   }
+
+   inline const EquationParameters& TimestepControlBase::eqParams() const
+   {
+      return this->mrEqParams;
+   }
+
 }
 
-#endif // TIMESTEPCONTROL_HPP
+#endif // TIMESTEPCONTROLBASE_HPP

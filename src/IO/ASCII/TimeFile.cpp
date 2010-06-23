@@ -31,7 +31,7 @@ namespace EPMDynamo {
          this->preWrite();
 
          // Write timestep
-         this->mFile << this->mrTSParams.time() << "  " << this->mrTSParams.dt() << "  " << this->mrTSParams.dtError(1) << "  " << this->mrTSParams.dtError(2) << "  " << this->mrTSParams.error() << std::endl;
+         this->mFile << this->mrTSParams.time() << "  " << this->mrTSParams.dt() << std::endl;
 
          //Do pre write operations
          this->postWrite();

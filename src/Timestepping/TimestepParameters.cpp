@@ -19,23 +19,10 @@
 namespace EPMDynamo {
 
    TimestepParameters::TimestepParameters(EPMFloat time, EPMFloat timestep)
-      : mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0), mDtError(2)
+      : mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0)
    {
-      // Initialise the truncation errors to zero
-      this->mDtError.setConstant(0.0);
-
       // Check initial values
       this->checkValues();
-   }
-
-   void TimestepParameters::updateDtError(const int order, EPMFloat err)
-   {
-      this->mDtError(order-1)+= err;
-   }
- 
-   void TimestepParameters::resetDtError(const int order)
-   {
-      this->mDtError(order-1) = 0.0;
    }
  
    void TimestepParameters::updateError(EPMFloat err)

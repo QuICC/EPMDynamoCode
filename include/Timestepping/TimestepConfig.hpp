@@ -44,7 +44,8 @@ namespace EPMDynamo {
          /**
           * @brief Adaptive timestep scheme margin \f$p\f$
           *
-          * The timestep will only be modified if the new timestep is outside the
+          * This constant can be used to "window out" small changes in the timestep.
+          * It creates a window of accepted timestep given by 
           * \f$ [(1.0-p) dt, (1.0+p) dt] \f$
           */
          static const EPMFloat TIMESTEP_MARGIN;
@@ -58,16 +59,22 @@ namespace EPMDynamo {
 
          /**
           * @brief Multiplicative constant for tolerance ( < 1)
+          *
+          * The exact meaning of this values depends on the implemented scheme
           */
          static const EPMFloat TIMESTEP_ERROR_THETA;
 
          /**
           * @brief Maximum error tolerance
+          *
+          * The exact meaning of this values depends on the implemented scheme
           */
          static const EPMFloat TIMESTEP_ERROR_TOLERANCE;
 
          /**
           * @brief Maximum error epsilon (theta*tol)
+          *
+          * The exact meaning of this values depends on the implemented scheme
           */
          static const EPMFloat TIMESTEP_ERROR_EPSILON;
          
@@ -77,7 +84,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         TimestepConfig();
+         TimestepConfig() {};
 
          /**
           * @brief Destructor

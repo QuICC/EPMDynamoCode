@@ -1,4 +1,4 @@
-/** \file TimestepControl.cpp
+/** \file TimestepControlBase.cpp
  *  \brief Source of the implementation of a simple timestep control
  */
 
@@ -16,7 +16,7 @@
 
 // Class include
 //
-#include "Timestepping/TimestepControl.hpp"
+#include "Timestepping/TimestepControlBase.hpp"
 
 // Project includes
 //
@@ -24,14 +24,23 @@
 
 namespace EPMDynamo {
 
-   TimestepControl::TimestepControl(TimestepParameters &params, const EquationParameters &eqParams)
-      : mKeepRunning(true), mNeedInit(true), mrParams(params), mrEqParams(eqParams), mCFLTimestep(0.0)
+   TimestepControlBase::TimestepControlBase(TimestepParameters &tsParams, const EquationParameters &eqParams, TimestepCtrlTypes ctrlType, int order)
+      : mKeepRunning(true), mNeedInit(true), mError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mCFLTimestep(0.0), mrTSParams(tsParams), mrEqParams(eqParams), mController(ctrlType, order, tsParams)
    {
    }
 
-   void TimestepControl::updateCFLTimestep(const RTPField &velV, const EPMFloat llFactor)
+   void TimestepControlBase::resetError()
    {
-      if(this->mrParams.isNextStep())
+      // Store error as old value
+      this->mOldError = this->mError;
+      
+      // Reset error to zero
+      this->mError = 0.0;
+   }
+
+   void TimestepControlBase::updateCFLTimestep(const RTPField &velV, const EPMFloat llFactor)
+   {
+      if(this->rTSParams().isNextStep())
       {
          // Get truncation information
          int r0 = velV.trunc()->local()->rtp()->r0();
@@ -85,21 +94,21 @@ namespace EPMDynamo {
          }
 
          // Global CFL conditions min(Ro, sqrt(E))
-         if(this->mrEqParams.Ro() != 0.0)
+         if(this->eqParams().Ro() != 0.0)
          {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, this->mrEqParams.Ro());
+            this->mCFLTimestep = std::min(this->mCFLTimestep, this->eqParams().Ro());
          }
 
-         if(this->mrEqParams.E() != 0.0)
+         if(this->eqParams().E() != 0.0)
          {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, std::sqrt(this->mrEqParams.E()));
+            this->mCFLTimestep = std::min(this->mCFLTimestep, std::sqrt(this->eqParams().E()));
          }
       }
    }
 
-   void TimestepControl::updateCFLTimestep(const RTPField &magB, const RTPField &velV, const EPMFloat llFactor)
+   void TimestepControlBase::updateCFLTimestep(const RTPField &magB, const RTPField &velV, const EPMFloat llFactor)
    {
-      if(mrParams.isNextStep())
+      if(this->rTSParams().isNextStep())
       {
          // Get truncation information
          int r0 = magB.trunc()->local()->rtp()->r0();
@@ -132,12 +141,12 @@ namespace EPMDynamo {
             {
                dr = std::min(radii(n_) - radii(n_-1), radii(n_+1) - radii(n_));
             }
-            d = (mrEqParams.E() + mrEqParams.Ro())/(2.0*dr);
+            d = (this->eqParams().E() + this->eqParams().Ro())/(2.0*dr);
             d = d*d;
 
             // Radial "Velocity"
             p = magB.r().shell(n).cwise().square();
-            maxVel = (p.cwise()/((p*mrEqParams.Ro()).cwise() + d).cwise().sqrt() + velV.r().shell(n).cwise().abs()).maxCoeff();
+            maxVel = (p.cwise()/((p*this->eqParams().Ro()).cwise() + d).cwise().sqrt() + velV.r().shell(n).cwise().abs()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -147,10 +156,10 @@ namespace EPMDynamo {
 
             // Angular "Velocity"
             dr = radii(n_)/std::sqrt(llFactor);
-            d = (mrEqParams.E() + mrEqParams.Ro())/(2.0*dr);
+            d = (this->eqParams().E() + this->eqParams().Ro())/(2.0*dr);
             d = d*d;
             p = magB.theta().shell(n).cwise().square() + magB.phi().shell(n).cwise().square();
-            maxVel = (p.cwise()/((p*mrEqParams.Ro()).cwise() + d).cwise().sqrt() + (velV.theta().shell(n).cwise().square() + velV.phi().shell(n).cwise().square()).cwise().sqrt()).maxCoeff();
+            maxVel = (p.cwise()/((p*this->eqParams().Ro()).cwise() + d).cwise().sqrt() + (velV.theta().shell(n).cwise().square() + velV.phi().shell(n).cwise().square()).cwise().sqrt()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -160,19 +169,19 @@ namespace EPMDynamo {
          }
 
          // Global CFL conditions min(Ro, sqrt(E))
-         if(this->mrEqParams.Ro() != 0.0)
+         if(this->eqParams().Ro() != 0.0)
          {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, this->mrEqParams.Ro());
+            this->mCFLTimestep = std::min(this->mCFLTimestep, this->eqParams().Ro());
          }
 
-         if(this->mrEqParams.E() != 0.0)
+         if(this->eqParams().E() != 0.0)
          {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, std::sqrt(this->mrEqParams.E()));
+            this->mCFLTimestep = std::min(this->mCFLTimestep, std::sqrt(this->eqParams().E()));
          }
       }
    }
 
-   void TimestepControl::getSimulationCFLCondition()
+   void TimestepControlBase::getSimulationCFLCondition()
    {
       // Get the "global" local minimum for MPI code
       #ifdef EPMDYNAMO_MPI
@@ -180,32 +189,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
    }
 
-   void TimestepControl::checkConvergence(int step)
-   {
-      if(this->mrParams.isNextStep())
-      {
-         // Switch step type
-         this->mrParams.toggleTimestepStatus();
-      } else
-      {
-         // Check if timestep value after initialisation steps
-         if(this->mrParams.dt() < TimestepConfig::MIN_TIMESTEP)
-         {
-            // Trigger clean stop of simulation
-            this->mKeepRunning = false;
-
-            std::cout << "Timestep reached minimum timestep!" << std::endl;
-         }
-         // Timestepping converged next timestep will be a predictor one
-         else
-         {
-            // Switch step type
-            this->mrParams.toggleTimestepStatus();
-         }
-      }
-   }
-
-   void TimestepControl::testInitialisationTimestep(EPMFloat& rDt)
+   void TimestepControlBase::testInitialisation(EPMFloat& rDt)
    {
       // Initialisation timestep
       if(this->mNeedInit)
@@ -226,7 +210,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::testMaximumTimestep(EPMFloat& rDt)
+   void TimestepControlBase::testMaximumTimestep(EPMFloat& rDt)
    {
       // Force maximum timestep
       if(rDt > TimestepConfig::MAXIMUM_TIMESTEP)
@@ -236,7 +220,7 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::testCFLTimestep(EPMFloat& rDt)
+   void TimestepControlBase::testCFLCondition(EPMFloat& rDt)
    {
       // Set timestep according to CFL condition
       this->getSimulationCFLCondition();
@@ -246,46 +230,35 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControl::useCourantTimestep(EPMFloat& rDt)
+   void TimestepControlBase::useAdaptiveTimestep(EPMFloat& rDt)
+   {
+      rDt = this->mController.nextTimestep(this->mError, this->mOldError);
+   }
+
+   void TimestepControlBase::useCourantTimestep(EPMFloat& rDt)
    {
       // Include Courant number into timestep value
       rDt = rDt*TimestepConfig::COURANT_NUMBER;
    }
 
-   void TimestepControl::setWindowedTimestep(EPMFloat dt)
+   void TimestepControlBase::useWindowedTimestep(EPMFloat dt)
    {
       // Don't make adaptative scheme to reactive. Allow a range of timestep values
-      if(dt < this->mrParams.dt()*(1.0-TimestepConfig::TIMESTEP_MARGIN) ||  dt > this->mrParams.dt()*(1.0 + TimestepConfig::TIMESTEP_MARGIN))
+      if(dt < this->rTSParams().dt()*(1.0-TimestepConfig::TIMESTEP_MARGIN) ||  dt > this->rTSParams().dt()*(1.0 + TimestepConfig::TIMESTEP_MARGIN))
       {
          // Store new timestep
-         this->mrParams.updateTimestep(dt);
+         this->rTSParams().updateTimestep(dt);
 
-         std::cout << "Updating Timestep! Now using dt=" << this->mrParams.dt() << " at time t=" << this->mrParams.time()<< std::endl;
+         std::cout << "Updating Timestep! Now using dt=" << this->rTSParams().dt() << " at time t=" << this->rTSParams().time()<< std::endl;
       }
    }
 
-   void TimestepControl::updateTimestep()
+   void TimestepControlBase::useTimestep(EPMFloat dt)
    {
-      if(this->mrParams.isNextStep())
-      {
-         // Get current dt
-         EPMFloat dt = this->mrParams.dt();
+      // Store new timestep
+      this->rTSParams().updateTimestep(dt);
 
-         // Set timestep according to CFL condition
-         this->testCFLTimestep(dt);
-
-         // Initialisation timestep
-         this->testInitialisationTimestep(dt);
-
-         // Force maximum timestep
-         this->testMaximumTimestep(dt);
-
-         // Use courant factor
-         this->useCourantTimestep(dt);
-
-         // Don't make adaptative scheme to reactive. Allow a range of timestep values
-         this->setWindowedTimestep(dt);
-      }
+      std::cout << "Updating Timestep! Now using dt=" << this->rTSParams().dt() << " at time t=" << this->rTSParams().time()<< std::endl;
    }
 
 }

@@ -4,7 +4,7 @@
 set(${SrcSubDir}_Srcs
       RuntimeControl.cpp
       TimestepConfig.cpp
-      TimestepControl.cpp
+      TimestepControlBase.cpp
       TimestepController.cpp
       TimestepCounter.cpp
       TimestepParameters.cpp

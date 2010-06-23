@@ -23,8 +23,6 @@ namespace EPMDynamo {
     * \brief Implementation of the \f$\theta\f$-method LHS operator set
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Needs to be reviewed and reimplemented with nou Bounded operators
     */
    template <typename TSimType> class ThetaLHSTOperatorSet: public ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>
    {
@@ -69,7 +67,7 @@ namespace EPMDynamo {
           *
           * @param rVar Input/Output variable
           */
-         void homogeneousBCSolve(ScalarType &rVar);
+         void solveZero(ScalarType &rVar);
          
       protected:
 
@@ -84,7 +82,7 @@ namespace EPMDynamo {
    template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::update(const EPMFloat dt)
    {
       // Set Laplacian multiplicative factor
-      EPMFloat factor = -this->mB*this->mTheta;
+      EPMFloat factor = -this->mB*this->theta();
 
       // Set time matrix multiplicative factor
       EPMFloat timeDiff = this->mA/dt;
@@ -106,7 +104,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::homogeneousBCSolve(typename ThetaLHSTOperatorSet<TSimType>::ScalarType &rVar)
+   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::solveZero(typename ThetaLHSTOperatorSet<TSimType>::ScalarType &rVar)
    {
       // Get number of harmonic degrees
       int nL = rVar.nL();

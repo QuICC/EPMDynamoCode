@@ -28,8 +28,6 @@ namespace EPMDynamo {
     * \brief Implementation of the theta method (without influence matrix)
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Needs to be reviewd and implemented in a clean way
     */
    template <typename TSimType> class ThetaMethod: public TimestepSchemeBase<TSimType>
    {
@@ -64,7 +62,7 @@ namespace EPMDynamo {
          void addBC(SmartBC pBC);
 
          /**
-          * @brief Initialise the ThetaMethod
+          * @brief Initialise the \f$\theta\f$-method scheme
           */
          void init();
          
@@ -82,7 +80,7 @@ namespace EPMDynamo {
          ThetaRHSTOperatorSet<TSimType>  mRHS;
 
          /**
-          * @brief Storage for the values of the previous iteration
+          * @brief Storage for the previous iteration non linear terms values
           */
          ScalarType  mPreviousNTerms;
 
@@ -162,10 +160,10 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ThetaMethod<TSimType>::init()
    {
-      // Set index controler for LHS and create operators (force creation of all homogeneous operators because of corrector step)
+      // Create LHS operators and LU factorise them
       this->mLHS.initOperators();
 
-      // Set index controler for RHS
+      // Create RHS operators
       this->mRHS.initOperators();
    }
 
@@ -229,7 +227,7 @@ namespace EPMDynamo {
    template <typename TSimType> void ThetaMethod<TSimType>::solveCorrector()
    {
       // Get the correction to the unknown variable
-      this->mLHS.homogeneousBCSolve(this->mPreviousNTerms);
+      this->mLHS.solveZero(this->mPreviousNTerms);
    }
 
    template <typename TSimType> void ThetaMethod<TSimType>::useCorrection(typename ThetaMethod<TSimType>::ScalarType& rVar)

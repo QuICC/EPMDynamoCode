@@ -18,12 +18,8 @@
 
 namespace EPMDynamo {
 
-   const EPMFloat PCTimestepConfig::MAX_CORRECTOR_TSTEP = 0.5;
-
    const EPMFloat PCTimestepConfig::MAX_CORRECTION_NORM = TimestepConfig::TIMESTEP_ERROR_EPSILON;
 
-   PCTimestepConfig::PCTimestepConfig()
-   {
-   }
+   const EPMFloat PCTimestepConfig::MAX_CORRECTOR_ERROR = 5*MAX_CORRECTION_NORM;
 
 }

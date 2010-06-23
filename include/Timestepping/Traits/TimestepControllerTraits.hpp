@@ -22,9 +22,9 @@ namespace EPMDynamo {
     *
     * \tparam TType The type of timestep controller
     */
-   template <TimestepCtlTypes TType> class TimestepControllerTraits;
+   template <TimestepCtrlTypes TType> class TimestepControllerTraits;
 
-   template <> class TimestepControllerTraits<ElementaryCtl>
+   template <> class TimestepControllerTraits<ElementaryCtrl>
    {
       public:
          /**
@@ -43,7 +43,7 @@ namespace EPMDynamo {
          static const EPMFloat ALPHA;
    };
 
-   template <> class TimestepControllerTraits<PI42Ctl>
+   template <> class TimestepControllerTraits<PI42Ctrl>
    {
       public:
          /**
@@ -62,7 +62,7 @@ namespace EPMDynamo {
          static const EPMFloat ALPHA;
    };
 
-   template <> class TimestepControllerTraits<H211BCtl>
+   template <> class TimestepControllerTraits<H211BCtrl>
    {
       public:
          /**

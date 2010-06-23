@@ -24,7 +24,7 @@ namespace EPMDynamo {
    {
    }
 
-   TimestepController::TimestepController(TimestepCtlTypes type, int order, TimestepParameters &params)
+   TimestepController::TimestepController(TimestepCtrlTypes type, int order, TimestepParameters &params)
       : mControllerBeta1(1.0), mControllerBeta2(0.0), mControllerAlpha(0.0), mrParams(params)
    {
       // Setup a predefined controller of order order
@@ -61,22 +61,22 @@ namespace EPMDynamo {
       this->mControllerAlpha = a;
    }
 
-   void TimestepController::setPredefinedController(TimestepCtlTypes type, int k)
+   void TimestepController::setPredefinedController(TimestepCtrlTypes type, int k)
    {
       // Setup elementary controller
-      if(type == ElementaryCtl)
+      if(type == ElementaryCtrl)
       {
-         this->setControllerParameters(TimestepControllerTraits<ElementaryCtl>::KBETA1, TimestepControllerTraits<ElementaryCtl>::KBETA2, TimestepControllerTraits<ElementaryCtl>::ALPHA, k);
+         this->setControllerParameters(TimestepControllerTraits<ElementaryCtrl>::KBETA1, TimestepControllerTraits<ElementaryCtrl>::KBETA2, TimestepControllerTraits<ElementaryCtrl>::ALPHA, k);
 
       // Setup PI42 controller
-      } else if(type == PI42Ctl)
+      } else if(type == PI42Ctrl)
       {
-         this->setControllerParameters(TimestepControllerTraits<PI42Ctl>::KBETA1, TimestepControllerTraits<PI42Ctl>::KBETA2, TimestepControllerTraits<PI42Ctl>::ALPHA, k);
+         this->setControllerParameters(TimestepControllerTraits<PI42Ctrl>::KBETA1, TimestepControllerTraits<PI42Ctrl>::KBETA2, TimestepControllerTraits<PI42Ctrl>::ALPHA, k);
 
       // Setup H211B controller
-      } else if(type == H211BCtl)
+      } else if(type == H211BCtrl)
       {
-         this->setControllerParameters(TimestepControllerTraits<H211BCtl>::KBETA1, TimestepControllerTraits<H211BCtl>::KBETA2, TimestepControllerTraits<H211BCtl>::ALPHA, k);
+         this->setControllerParameters(TimestepControllerTraits<H211BCtrl>::KBETA1, TimestepControllerTraits<H211BCtrl>::KBETA2, TimestepControllerTraits<H211BCtrl>::ALPHA, k);
 
       // Should never happen
       } else

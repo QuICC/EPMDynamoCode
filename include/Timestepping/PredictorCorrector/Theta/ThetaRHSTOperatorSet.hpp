@@ -23,8 +23,6 @@ namespace EPMDynamo {
     * \brief Implementation of the \f$\theta\f$ method RHS operator set
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Needs to be reviewed and cleaned
     */
    template <typename TSimType> class ThetaRHSTOperatorSet: public ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::OperatorType>
    {
@@ -70,7 +68,7 @@ namespace EPMDynamo {
    template <typename TSimType> inline void ThetaRHSTOperatorSet<TSimType>::update(const EPMFloat dt)
    {
       // Set multiplicative factor for Laplacian
-      EPMFloat factor = this->mB*(1.0-this->mTheta);
+      EPMFloat factor = this->mB*(1.0-this->theta());
 
       // Set multiplicative factor for time matrix
       EPMFloat timeDiff = this->mA/dt;

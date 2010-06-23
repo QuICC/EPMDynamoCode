@@ -19,8 +19,6 @@ namespace EPMDynamo {
 
    /**
     * \brief Implementation of specialised timestep control for the predictor/corrector schemes
-    *
-    * \bug Needs to be reviewed and cleaned
     */
    class PCTimestepConfig
    {
@@ -36,32 +34,14 @@ namespace EPMDynamo {
          static const int MAX_INITIALISATION_STEPS = 30;
 
          /**
-          * @brief Maximum timestep autorised by stability
-          */
-         static const EPMFloat MAX_CORRECTOR_TSTEP;
-
-         /**
           * @brief Maximum corrector norm value
           */
          static const EPMFloat MAX_CORRECTION_NORM;
 
          /**
-          * @brief Use the last corrector correction as error diagnostic
+          * @brief Maximum corrector error value
           */
-         static const int CORRECTOR_NORM = 1;
-
-         /**
-          * @brief Use the sum of the corrector correction as error diagnostic
-          *
-          * This is most of the time the same as the previous since there
-          * is normally only on corrector iteration
-          */
-         static const int SUMMED_CORRECTOR_NORM = 2;
-
-         /**
-          * @brief Set the type of error diagnostic to use
-          */
-         static const int PC_ERROR_TYPE = PCTimestepConfig::SUMMED_CORRECTOR_NORM;
+         static const EPMFloat MAX_CORRECTOR_ERROR;
          
       protected:
 
@@ -69,7 +49,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         PCTimestepConfig();
+         PCTimestepConfig() {};
 
          /**
           * @brief Destructor

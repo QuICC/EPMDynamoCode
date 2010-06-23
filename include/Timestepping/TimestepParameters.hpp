@@ -22,9 +22,7 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of a the timestep parameters
-    *
-    * \bug Review if all implemented methods are really required (especially the error storage ones)
+    * \brief Implementation of the timestep parameters
     */
    class TimestepParameters
    {
@@ -44,7 +42,9 @@ namespace EPMDynamo {
          ~TimestepParameters() {};
 
          /**
-          * @brief Has the timestep been computed (important for example predictor/corrector scheme)?
+          * @brief Has the timestep been computed?
+          *
+          * This flag allows to relatively easily implemented "iterative" timestep schemes like predictor/corrector
           */
          bool isNextStep() const;
 
@@ -113,28 +113,6 @@ namespace EPMDynamo {
          void printInfo() const;
 
          /**
-          * @brief Update the time derivative truncation error
-          *
-          * @param order Order of the derivative
-          * @param err New value of the error
-          */
-         void updateDtError(const int order, EPMFloat err);
-
-         /**
-          * @brief Reset the time derivative truncation error
-          *
-          * @param order Order of the derivative
-          */
-         void resetDtError(const int order);
-
-         /**
-          * @brief Get the time derivative truncation error
-          *
-          * @param order Order of the derivative
-          */
-         EPMFloat dtError(const int order) const;
-
-         /**
           * @brief Get current global error value
           */
          EPMFloat error() const;
@@ -189,11 +167,6 @@ namespace EPMDynamo {
           * @brief Storage for general timestep error
           */
          EPMFloat mError;
-
-         /**
-          * @brief Store for the derivative truncation error
-          */
-         Array mDtError;
 
          /**
           * @brief Check initialisation values
@@ -259,11 +232,6 @@ namespace EPMDynamo {
    inline EPMFloat TimestepParameters::error() const
    {
       return this->mError;
-   }
-
-   inline EPMFloat TimestepParameters::dtError(const int order) const
-   {
-      return this->mDtError(order-1);
    }
 
    /// Typedef for a shared pointer to a TimestepParameters

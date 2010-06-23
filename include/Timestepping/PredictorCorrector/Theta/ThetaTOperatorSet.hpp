@@ -16,7 +16,6 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
-#include "General/EPMException.hpp"
 #include "Timestepping/ImplicitTOperatorSet.hpp"
 
 namespace EPMDynamo {
@@ -129,13 +128,10 @@ namespace EPMDynamo {
    template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::setTheta(EPMFloat theta)
    {
       // Check if simulation already started, the theta parameter should not be changed during run
-      if(this->mIsThetaLocked)
-      {
-         throw EPMException("ThetaTOperatorSet::setTheta", "Tried to change theta after initialisation");
-      } else
-      {
-         this->mTheta = theta;
-      }
+      assert(! this->mIsThetaLocked);
+
+      // Set theta
+      this->mTheta = theta;
    }
 
    template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::initOperators()

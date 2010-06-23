@@ -25,8 +25,6 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TMethod PC Method used
-    *
-    * \bug Needs big cleaning and restructuration
     */
    template <typename TSimType, template <typename> class TMethod> class PCScheme: public TMethod<TSimType>
    {
@@ -60,33 +58,8 @@ namespace EPMDynamo {
           * @param nTerms Non linear terms
           */
          void timestep(ScalarType& rVar, ScalarType& nTerms);
-
-         /**
-          * @brief Set the theta parameter of the scheme
-          *
-          * @param theta Set implicitness
-          *
-          * \bug Implicitness implementation and handling has to be cleaned!!
-          */
-         void setTheta(EPMFloat theta);
          
       protected:
-         /**
-          * @brief Values of the variable of previous step
-          *
-          * \bug TO BE REMOVED!!
-          */
-         ScalarType  mTimeDiff;
-
-         /**
-          * @brief Compute the temporal truncation errors
-          *
-          * @param var Input variable
-          *
-          * \bug TO BE REMOVED!!
-          */
-         void computeTruncationError(const ScalarType& var);
-
          /**
           * @brief Do predictor timestep
           *
@@ -108,48 +81,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TMethod> PCScheme<TSimType, TMethod>::PCScheme(EPMFloat a, EPMFloat b, const typename PCScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : TMethod<TSimType>(a, b, basis, tsteps, pTrunc), mTimeDiff(pTrunc) 
+      : TMethod<TSimType>(a, b, basis, tsteps, pTrunc)
    {
-   }
-
-   template <typename TSimType, template <typename> class TMethod> void PCScheme<TSimType, TMethod>::setTheta(EPMFloat theta)
-   {
-      // Set theta parameter in LHS operators
-      this->mLHS.setTheta(theta);
-
-      // Set theta parameter in RHS operators
-      this->mRHS.setTheta(theta);
-   }
-
-   template <typename TSimType, template <typename> class TMethod> void PCScheme<TSimType, TMethod>::computeTruncationError(const typename PCScheme<TSimType, TMethod>::ScalarType& var)
-   {
-      // Get number of harmonic degrees
-      int nL = this->oldNTerms().nL();
-      // Get minimu harmonic degrees
-      const int l0 = this->oldNTerms().minL();
-
-      EPMFloat err = 0.0;
-      EPMFloat err2 = 0.0;
-      EPMFloat dt = this->rTSParams().dt();
-
-      // Loop over degrees
-      for(int l = l0; l < nL; ++l)
-      {
-         // Compute norm of the second time derivative approximation
-         err2 += 0.5*dt*((this->mTimeDiff.lshell(l) - (this->oldVar().lshell(l) - var.lshell(l))/dt).norm());
-
-         // First time derivative approximation
-         this->mTimeDiff.rLShell(l) = (this->oldVar().lshell(l) - var.lshell(l))/dt;
-
-         // Compute first derivative error approximation
-         err += dt*this->mTimeDiff.lshell(l).norm();
-      }
-
-      // Store first derivative error
-      this->rTSParams().updateDtError(1, err);
-
-      // Store second derivative error
-      this->rTSParams().updateDtError(2, err2);
    }
 
    template <typename TSimType, template <typename> class TMethod> void PCScheme<TSimType, TMethod>::timestep(typename PCScheme<TSimType, TMethod>::ScalarType& rVar, typename PCScheme<TSimType, TMethod>::ScalarType& nTerms)
@@ -164,11 +97,6 @@ namespace EPMDynamo {
       // Do predictor step if previous corrector solution converged
       if(this->rTSParams().isNextStep())
       {
-// This is only here temporary until error output is not required anymore
-this->rTSParams().resetDtError(1);
-this->rTSParams().resetDtError(2);
-this->rTSParams().resetError();
-
          // Store the variable before timestep to allow rejection of timestep
          this->storeOld(rVar, nTerms);
 
@@ -186,9 +114,6 @@ this->rTSParams().resetError();
       {
          // Do corrector step
          this->doCorrectorStep(rVar, nTerms);
-
-         // Compute the temporal truncation error
-         this->computeTruncationError(rVar);
       }
 
       // Update values stored from previous iteration
