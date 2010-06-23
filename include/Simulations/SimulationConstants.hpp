@@ -18,8 +18,6 @@ namespace EPMDynamo {
 
    /**
     * \brief Some useful simulation wide static constants
-    *
-    * \bug This needs to be rewritten in a cleaner way, probably with asserts
     */
    class SimulationConstants
    {
@@ -47,7 +45,7 @@ namespace EPMDynamo {
          /**
           * @brief Simple empty destructor
           */
-         virtual ~SimulationConstants();
+         virtual ~SimulationConstants() {};
 
       protected:
          /**
@@ -63,7 +61,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         SimulationConstants();
+         SimulationConstants() {};
 
       private:
    };

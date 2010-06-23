@@ -4,6 +4,7 @@
 
 // System includes
 //
+#include <assert.h>
 
 // External includes
 //
@@ -14,7 +15,6 @@
 
 // Project includes
 //
-#include "General/EPMException.hpp"
 
 namespace EPMDynamo {
 
@@ -24,13 +24,9 @@ namespace EPMDynamo {
 
    void SimulationConstants::setCSCSGrid()
    {
-      if(SimulationConstants::isGridLocked())
-      {
-         throw EPMException("SimulationConstants::setCSCSGrid", "Tried to change grid type while it has already been used");
-      } else
-      {
-         SimulationConstants::msIsCSCS = true;
-      }
+      assert(! SimulationConstants::isGridLocked());
+
+      SimulationConstants::msIsCSCS = true;
    }
 
    void SimulationConstants::lockGridType()
