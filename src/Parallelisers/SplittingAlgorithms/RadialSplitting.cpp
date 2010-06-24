@@ -32,11 +32,14 @@ namespace EPMDynamo {
 
    void RadialSplitting::splitRTP(int &rR0, int &rNr, ArrayI &rTh0, ArrayI &rNth, const int id) const
    {
+      // Compute a simple balanced radial split
       this->splitR(rR0, rNr, id);
 
+      // Set start index for full theta truncation
       rTh0.resize(rNr);
       rTh0.setConstant(0);
 
+      // Set number of indexes  for full theta truncation
       int n = sim()->hoz()->nTh();
       rNth.resize(rNr);
       rNth.setConstant(n);
@@ -44,19 +47,20 @@ namespace EPMDynamo {
 
    void RadialSplitting::splitFDSH(ArrayI &rR0, ArrayI &rNr, ArrayI &rMs, const int id) const
    {
-      rR0.resize(sim()->hoz()->nM());
-      rR0.setConstant(0);
-
+      // Compute a balanced radial split
       int r0;
       int nR;
       this->splitR(r0, nR, id);
 
+      // Set start indexex for a balanced radial split
       rR0.resize(sim()->hoz()->nM());
       rR0.setConstant(r0);
 
+      // Set number of radial indexes for balanced radial split
       rNr.resize(sim()->hoz()->nM());
       rNr.setConstant(nR);
 
+      // Set full harmonic order truncation
       rMs = sim()->hoz()->mArray();
    }
 

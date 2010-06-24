@@ -24,11 +24,11 @@ namespace EPMDynamo {
 
    void SerialSplitting::splitRTP(int &rR0, int &rNr, ArrayI &rTh0, ArrayI &rNth, const int id) const
    {
-      // Set the radial truncation information
+      // Set the radial truncation information (full truncation)
       rR0 = 0;
       rNr = sim()->rad()->nR();
 
-      // Set the theta truncation information
+      // Set the theta truncation information (full truncation)
       rTh0.resize(rNr);
       rTh0.setConstant(0);
 
@@ -39,23 +39,23 @@ namespace EPMDynamo {
 
    void SerialSplitting::splitFDSH(ArrayI &rR0, ArrayI &rNr, ArrayI &rMs, const int id) const
    {
-      // Set the radial truncation information
+      // Set the radial truncation information (full truncation)
       rR0.resize(sim()->hoz()->nM());
       rR0.setConstant(0);
 
       rNr.resize(sim()->hoz()->nM());
       rNr.setConstant(sim()->rad()->nR());
 
-      // Set the harmonic orders truncation information
+      // Set the harmonic orders truncation information (full truncation)
       rMs = sim()->hoz()->mArray();
    }
 
    void SerialSplitting::splitSpec(ArrayI &rLs, std::vector<ArrayI> &rMs, const int id) const
    {
-      // Set the harmonic degrees truncation information
+      // Set the harmonic degrees truncation information (full truncation)
       rLs = sim()->hoz()->lArray();
 
-      // Set the harmonic orders truncation information
+      // Set the harmonic orders truncation information (full truncation)
       rMs.clear();
       for(int l=0; l < sim()->hoz()->nL(); ++l)
       {

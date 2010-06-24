@@ -67,7 +67,7 @@ namespace EPMDynamo {
          pOutFile.reset(new SourceWriter<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV()));
 
       // Create state with Codensity and Velocity fields
-      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic)
+      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedVelocity)
       {
          pOutFile.reset(new SourceWriter<TSimType, TGenTraits>(this->codC(), this->velV()));
 

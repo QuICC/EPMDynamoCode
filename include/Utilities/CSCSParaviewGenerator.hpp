@@ -71,7 +71,7 @@ namespace EPMDynamo {
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->magB(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with Codensity and Velocity fields
-      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic)
+      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedVelocity)
       {
          pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->velV(), "4242"));
 
