@@ -227,13 +227,13 @@ namespace EPMDynamo {
       // Register transform data packs of magnetic scalar for SH
       if(TGenTraits<TSimType>::NeedMagnetic)
       {
-         this->registerSHPacks(nSHBPacks, nSHFPacks);
+         this->registerSHPacks(nSHFPacks, nSHBPacks);
       }
 
       // Register transform data packs of velocity scalar for SH
       if(TGenTraits<TSimType>::NeedVelocity)
       {
-         this->registerSHPacks(nSHBPacks, nSHFPacks);
+         this->registerSHPacks(nSHFPacks, nSHBPacks);
       }
 
       // Configure the SSH manipulator

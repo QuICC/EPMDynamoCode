@@ -27,7 +27,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCVTraits
+#define TGENTRAITS epm::GenVTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
 
 typedef  epm::InitialStateGenerator<epm::WSHSimulation, TGENTRAITS>  IStateGenerator;

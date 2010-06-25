@@ -227,7 +227,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
-      : mIOSys(), mpTrunc(TSimType::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0), mSSHFPacks(-1), mSSHBPacks(-1), mSHFPacks(-1), mSHBPacks(-1)
+      : mIOSys(), mpTrunc(TSimType::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0), mSSHFPacks(0), mSSHBPacks(0), mSHFPacks(0), mSHBPacks(0)
    {
       // Finish initialisation of the truncation object by setting the physical grid values
       this->mTransform.initRTPDomains(this->mpTrunc);
@@ -270,23 +270,23 @@ namespace EPMDynamo {
    template <typename TSimType> void SimulationBase<TSimType>::registerSSHPacks(const int maxFPacks, const int maxBPacks)
    {
       #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mSSHFPacks = std::max(this->mSSHFPacks, maxFPacks); 
-         this->mSSHBPacks = std::max(this->mSSHBPacks, maxBPacks); 
-      #else
          this->mSSHFPacks += maxFPacks; 
          this->mSSHBPacks += maxBPacks; 
+      #else
+         this->mSSHFPacks = std::max(this->mSSHFPacks, maxFPacks); 
+         this->mSSHBPacks = std::max(this->mSSHBPacks, maxBPacks); 
       #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::registerSHPacks(const int maxFPacks, const int maxBPacks)
    {
-      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mSHFPacks = std::max(this->mSHFPacks, maxFPacks); 
-         this->mSHBPacks = std::max(this->mSHBPacks, maxBPacks); 
-      #else
+      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
          this->mSHFPacks += maxFPacks; 
          this->mSHBPacks += maxBPacks; 
-      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
+      #else
+         this->mSHFPacks = std::max(this->mSHFPacks, maxFPacks); 
+         this->mSHBPacks = std::max(this->mSHBPacks, maxBPacks); 
+      #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::configureSSHManipulator()
