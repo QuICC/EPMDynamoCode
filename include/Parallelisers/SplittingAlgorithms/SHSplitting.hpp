@@ -25,6 +25,8 @@ namespace EPMDynamo {
 
    /**
     * \brief Implementation of a spherical harmonics load splitting algorithm
+    *
+    * \bug Implement everything ...
     */
    class SHSplitting: public LoadSplitterBase
    {

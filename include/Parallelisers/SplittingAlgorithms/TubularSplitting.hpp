@@ -28,6 +28,8 @@ namespace EPMDynamo {
 
    /**
     * \brief Implemenation of a massive load splitting in a tubular fashion
+    *
+    * \bug Cleanup and correct the "even L crash problem"
     */
    class TubularSplitting: public LoadSplitterBase
    {
