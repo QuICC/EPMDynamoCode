@@ -1,9 +1,9 @@
-/** \file ThetaTraits.hpp
- *  \brief Traits to describe the requested PC \f$\theta\f$-method scheme
+/** \file ETD2RKTraits.hpp
+ *  \brief Traits to describe the requested ETD ETD2RK method scheme
  */
 
-#ifndef THETATRAITS_HPP
-#define THETATRAITS_HPP
+#ifndef ETD2RKTRAITS_HPP
+#define ETD2RKTRAITS_HPP
 
 // System includes
 //
@@ -21,16 +21,13 @@ namespace EPMDynamo {
    template <typename> class ErrorL2Max;
 
    /**
-    * \brief Traits to some global aspects of the theta scheme
+    * \brief Traits to some global aspects of the ETD2RK scheme
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaTraits
+   template <typename TSimType> class ETD2RKTraits
    {
       public:
-         /// Implicitness value of the theta scheme
-         static const EPMFloat theta;
-
          /// Typedef for the error norm type
          typedef ErrorL2Max<TSimType>   ErrorNormType;
 
@@ -44,19 +41,11 @@ namespace EPMDynamo {
          static const bool useWindowed = false;
    };
 
-   template <typename TSimType> const EPMFloat ThetaTraits<TSimType>::theta = 0.5; 
-
-   template <typename TSimType> int ThetaTraits<TSimType>::order()
+   template <typename TSimType> int ETD2RKTraits<TSimType>::order()
    {
-      if(ThetaTraits<TSimType>::theta == 0.5)
-      {
-         return 2;
-      } else
-      {
-         return 1;
-      }
+      return 2;
    }; 
 
 }
 
-#endif // THETATRAITS_HPP
+#endif // ETD2RKTRAITS_HPP

@@ -1,4 +1,5 @@
 /** \file ETD2RKA.hpp
+ *  \brief Implemenation of the "a" step in the ETD2RK method 
  */
 
 #ifndef ETD2RKA_HPP
@@ -16,11 +17,16 @@
 
 namespace EPMDynamo {
 
-   template <typename TSim> class ETD2RKA: public ETDIteration<TSim>
+   /**
+    * \brief Implemenation of the "a" step in the ETD2RK method 
+    *
+    * \tparm TSimType Type of the simulation
+    */
+   template <typename TSimType> class ETD2RKA: public ETDIteration<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -30,7 +36,7 @@ namespace EPMDynamo {
          /**
           * @brief Destructor
           */
-         virtual ~ETD2RKA();
+         virtual ~ETD2RKA() {};
 
          /**
           * @brief Compute the implemented iteration
@@ -51,16 +57,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSim> ETD2RKA<TSim>::ETD2RKA(SmartETDOperator pOpM0, SmartETDOperator pOpM1)
+   template <typename TSimType> ETD2RKA<TSimType>::ETD2RKA(SmartETDOperator pOpM0, SmartETDOperator pOpM1)
       : mpOpM0(pOpM0), mpOpM1(pOpM1)
    {
    }
 
-   template <typename TSim> ETD2RKA<TSim>::~ETD2RKA()
-   {
-   }
-
-   template <typename TSim> void ETD2RKA<TSim>::compute(ETD2RK<TSim>::ScalarType &rVar, ETD2RK<TSim>::ScalarType &rNTerms)
+   template <typename TSimType> void ETD2RKA<TSimType>::compute(ETD2RK<TSimType>::ScalarType &rVar, ETD2RK<TSimType>::ScalarType &rNTerms)
    {
       // rVar = this->mpOpM0 * rVar + this->mpOpM1 * rNTerms;
    }

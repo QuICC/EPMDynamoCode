@@ -34,6 +34,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param pTrunc Truncation information
           */
          ImplicitTOperatorSet(SmartTruncation pTrunc);
 

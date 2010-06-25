@@ -1,4 +1,5 @@
 /** \file ETDMethodBase.hpp
+ *  \brief Base of the implementation of a ETD Metdod
  */
 
 #ifndef ETDMETHODBASE_HPP
@@ -21,20 +22,25 @@
 
 namespace EPMDynamo {
 
-   template <TSim> class ETDMethodBase: public TimestepSchemeBase<TSim>
+   /**
+    * \brief Base of the implementation of a ETD Metdod
+    *
+    * \tparam TSimType Type of the simulation
+    */
+   template <TSimType> class ETDMethodBase: public TimestepSchemeBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSim::RadialBasisType    BasisType;
+         typedef typename TSimType::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /// Typedef for the smart pointer to an ETDStep
-         typedef EPMDYNAMO_SHAREDPTRNS::shared_ptr<ETDIteration>   SmartETDIteration;
+         typedef EPMSHARED_PTR<ETDIteration>   SmartETDIteration;
 
          /// Typedef for the smart pointer to an ETDOperator
-         typedef EPMDYNAMO_SHAREDPTRNS::shared_ptr<ETDOperator>   SmartETDOperator;
+         typedef EPMSHARED_PTR<ETDOperator>   SmartETDOperator;
 
          /**
           * @brief Constructor
@@ -42,13 +48,15 @@ namespace EPMDynamo {
           * @param a Coefficient \f$a\f$ of timestep scheme
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
+          * @param tsteps Timestep parameters
+          * @param pTrunc Truncation information
           */
-         ETDMethodBase(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc);
+         ETDMethodBase(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETDMethodBase();
+         virtual ~ETDMethodBase() {};
          
       protected:
          /**
@@ -93,27 +101,26 @@ namespace EPMDynamo {
 
          /**
           * @brief Compute value at new time
+          *
+          * @param rVar Input/Output variable
+          * @param newNTerms New non linear terms
           */
          void doStep(ScalarType& rVar, ScalarType& nTerms);
 
       private:
    };
 
-   template <typename TSim> inline bool ETDMethodBase<TSim>::hasIntermediate() const
+   template <typename TSimType> inline bool ETDMethodBase<TSimType>::hasIntermediate() const
    {
       return this->mCounter;
    }
 
-   template <typename TSim> ETDMethodBase<TSim>::ETDMethodBase(EPMFloat a, EPMFloat b, const typename ETDMethodBase<TSim>::BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc)
-      : TimestepSchemeBase<TSim>(tsteps, pTrunc), mA(a), mB(b), mrBasis(basis)
+   template <typename TSimType> ETDMethodBase<TSimType>::ETDMethodBase(EPMFloat a, EPMFloat b, const typename ETDMethodBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+      : TimestepSchemeBase<TSimType>(tsteps, pTrunc), mA(a), mB(b), mrBasis(basis)
    {
    }
 
-   template <typename TSim> ETDMethodBase<TSim>::~ETDMethodBase()
-   {
-   }
-
-   template <typename TSim> void ETDMethodBase<TSim>::doStep(typename ETDMethodBase<TSim>::ScalarType& rVar, typename ETDMethodBase<TSim>::ScalarType& nTerms)
+   template <typename TSimType> void ETDMethodBase<TSimType>::doStep(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& nTerms)
    {
       this->mETDSteps.at(this->mCounter)->compute(rVar, nTerms);
    }

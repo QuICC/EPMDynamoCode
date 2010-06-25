@@ -1,8 +1,13 @@
 /** \file ETD2RKMethod.hpp
+ *  \brief Implementation of the ETD2RK method (without influence matrix)
  */
 
 #ifndef ETD2RKMETHOD_HPP
 #define ETD2RKMETHOD_HPP
+
+// Configuration includes
+//
+#include "Config/SmartPointer.h"
 
 // System includes
 //
@@ -22,14 +27,19 @@
 
 namespace EPMDynamo {
 
-   template <TSim> class ETD2RKMethod: public ETDMethodBase<TSim>
+   /**
+    * \brief Implementation of the theta method (without influence matrix)
+    *
+    * \tparam TSimType Type of the simulation
+    */
+   template <TSimType> class ETD2RKMethod: public ETDMethodBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSim::RadialBasisType    BasisType;
+         typedef typename TSimType::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -37,18 +47,15 @@ namespace EPMDynamo {
           * @param a Coefficient \f$a\f$ of timestep scheme
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
+          * @param tsteps Timestep parameters
+          * @param pTrunc Truncation information
           */
-         ETD2RKMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc);
+         ETD2RKMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETD2RKMethod();
-
-         /**
-          * @brief Reorder the previous values to use latest step
-          */
-         void reorderPrevious(ScalarType& rVar, ScalarType& nTerms);
+         virtual ~ETD2RKMethod() {};
 
          /**
           * @brief Update the timestep matrices after a timestep change
@@ -69,25 +76,21 @@ namespace EPMDynamo {
          ETD2Operators  mETD2;
    };
 
-   template <typename TSim> ETD2RKMethod<TSim>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSim>::BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc)
-      : ETDMethodBase<TSim>(a, b, basis, tsteps, pTrunc), mETD2(pTrunc)
+   template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+      : ETDMethodBase<TSimType>(a, b, basis, tsteps, pTrunc), mETD2(pTrunc)
    {
       // Init the method
       this->initMethod();
    }
 
-   template <typename TSim> ETD2RKMethod<TSim>::~ETD2RKMethod()
-   {
-   }
-
-   template <typename TSim> void ETD2RKMethod<TSim>::initMethod()
+   template <typename TSimType> void ETD2RKMethod<TSimType>::initMethod()
    {
       // Create M0 operator
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<>() pOpM0;
+      EPMSHARED_PTR<>() pOpM0;
       // Create M1 operator
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<>() pOpM1;
+      EPMSHARED_PTR<>() pOpM1;
       // Create M2 operator
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<>() pOpM2;
+      EPMSHARED_PTR<>() pOpM2;
 
       // Add required operators
          // Add M0 operator
@@ -98,7 +101,7 @@ namespace EPMDynamo {
       this->mETDOperators.push_back(this->mETD2.pEtdF(2));
 
       // Create storage for a variable
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<ScalarType>() pVarA;
+      EPMSHARED_PTR<ScalarType>() pVarA;
 
       // Add required ETD variables
          // Add storage for variable A 
@@ -108,9 +111,9 @@ namespace EPMDynamo {
       this->mETDNTerms.push_back();
 
       // Create intermediate value a computation step
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<ETD2RKA>() pItA;
+      EPMSHARED_PTR<ETD2RKA>() pItA;
       // Create timestep computation step
-      EPMDYNAMO_SHAREDPTRNS::shared_ptr<ETD2RKTimestep>() pItTimestep;
+      EPMSHARED_PTR<ETD2RKTimestep>() pItTimestep;
 
       // Add required ETD steps
          // Add intermediate value A computation

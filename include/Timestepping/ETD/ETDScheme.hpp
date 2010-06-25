@@ -1,4 +1,5 @@
 /** \file ETDScheme.hpp
+ *  \brief Implementation of a general ETD scheme
  */
 
 #ifndef ETDSCHEME_HPP
@@ -18,14 +19,20 @@
 
 namespace EPMDynamo {
 
-   template <typename TSim, template <typename> class TMethod> class ETDScheme: public TMethod<TSim>
+   /**
+    * \brief Implementation of a general Predictor/Corrector scheme
+    *
+    * \tparam TSimType Type of the simulation
+    * \tparam TMethod ETD Method to use
+    */
+   template <typename TSimType, template <typename> class TMethod> class ETDScheme: public TMethod<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSim::RadialBasisType    BasisType;
+         typedef typename TSimType::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -33,16 +40,21 @@ namespace EPMDynamo {
           * @param a Coefficient \f$a\f$ of timestep scheme
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
+          * @param tsteps Timestep parameters
+          * @param pTrunc Truncation information
           */
-         ETDScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc);
+         ETDScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETDScheme();
+         virtual ~ETDScheme() {};
 
          /**
           * @brief Perform a type step (the actual order/type depends on template)
+          *
+          * @param rVar Input/Output variable to timestep
+          * @param nTerms Non linear terms
           */
          void timestep(ScalarType& rVar, ScalarType& nTerms);
          
@@ -50,22 +62,21 @@ namespace EPMDynamo {
 
          /**
           * @brief Compute an iteration of scheme (actuall computation depends on type)
+          *
+          * @param rVar Input/Output variable
+          * @param newNTerms New non linear terms
           */
          void doIteration(ScalarType& rVar, ScalarType& nTerms);
 
       private:
    };
 
-   template <typename TSim, template <typename> class TMethod> ETDScheme<TSim, TMethod>::ETDScheme(EPMFloat a, EPMFloat b, const typename ETDScheme<TSim, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartSTrunc pTrunc)
-      : TMethod<TSim>(a, b, basis, tsteps, pTrunc) 
+   template <typename TSimType, template <typename> class TMethod> ETDScheme<TSimType, TMethod>::ETDScheme(EPMFloat a, EPMFloat b, const typename ETDScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
+      : TMethod<TSimType>(a, b, basis, tsteps, pTrunc) 
    {
    }
 
-   template <typename TSim, template <typename> class TMethod> ETDScheme<TSim, TMethod>::~ETDScheme()
-   {
-   }
-
-   template <typename TSim, template <typename> class TMethod> void ETDScheme<TSim, TMethod>::timestep(typename ETDScheme<TSim, TMethod>::ScalarType& rVar, typename ETDScheme<TSim, TMethod>::ScalarType& nTerms)
+   template <typename TSimType, template <typename> class TMethod> void ETDScheme<TSimType, TMethod>::timestep(typename ETDScheme<TSimType, TMethod>::ScalarType& rVar, typename ETDScheme<TSimType, TMethod>::ScalarType& nTerms)
    {
       // If the timestep has been rejected recover previous timestep values
       if(this->mrTStepParams.isRejected())
@@ -77,9 +88,6 @@ namespace EPMDynamo {
       // Do first iteration including recomputation of matrices if required
       if(this->mrTStepParams.isNextStep())
       {
-         // Reorder the previous values to include newest step
-         this->reorderPrevious(rVar, nTerms);
-
          // Store the variable before timestep to allow rejection of timestep
          this->storeOld(rVar, nTerms);
 
@@ -98,13 +106,16 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSim, template <typename> class TMethod> void ETDScheme<TSim, TMethod>::doIteration(typename ETDScheme<TSim, TMethod>::ScalarType& rVar, typename ETDScheme<TSim, TMethod>::ScalarType& nTerms)
+   template <typename TSimType, template <typename> class TMethod> void ETDScheme<TSimType, TMethod>::doIteration(typename ETDScheme<TSimType, TMethod>::ScalarType& rVar, typename ETDScheme<TSimType, TMethod>::ScalarType& nTerms)
    {
+      // Check for intermediate computations
       if(this->hasIntermediate())
       {
+         // Do intermediate step
          this->computeIntermediate(rVar, nTerms);
       } else
       {
+         // Do finale timestep
          this->doStep(rVar, nTerms);
       }
    }

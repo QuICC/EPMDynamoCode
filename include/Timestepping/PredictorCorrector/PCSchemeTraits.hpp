@@ -1,5 +1,5 @@
 /** \file PCSchemeTraits.hpp
- *  \brief Traits to describe the request Predictor/Corrector scheme
+ *  \brief Traits to describe the requested Predictor/Corrector scheme
  */
 
 #ifndef PCSCHEMETRAITS_HPP
@@ -27,8 +27,6 @@ namespace EPMDynamo {
     * \brief Traits to describe the request Predictor/Corrector scheme
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \bug Needs a big cleaning and restructuration
     */
    template <typename TSimType> class PCSchemeTraits
    {

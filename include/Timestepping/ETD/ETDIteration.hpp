@@ -1,4 +1,5 @@
 /** \file ETDIteration.hpp
+ *  \brief General implementation of an ETD iteration (step)
  */
 
 #ifndef ETDITERATION_HPP
@@ -15,11 +16,16 @@
 
 namespace EPMDynamo {
 
-   template <typename TSim> class ETDIteration
+   /**
+    * \brief General implementation of an ETD iteration (step)
+    *
+    * \tparam TSimType Type of the simulation
+    */
+   template <typename TSimType> class ETDIteration
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSim::ScalarType    ScalarType;
+         typedef typename TSimType::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -29,10 +35,13 @@ namespace EPMDynamo {
          /**
           * @brief Destructor
           */
-         virtual ~ETDIteration();
+         virtual ~ETDIteration() {};
 
          /**
           * @brief Compute the implemented iteration
+          *
+          * @param rVar Input/Output variable
+          * @param newNTerms New non linear terms
           */
          virtual void compute(ScalarType &rVar, ScalarType rNTerms) = 0;
          
@@ -41,11 +50,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSim> ETDIteration<TSim>::ETDIteration()
-   {
-   }
-
-   template <typename TSim> ETDIteration<TSim>::~ETDIteration()
+   template <typename TSimType> ETDIteration<TSimType>::ETDIteration()
    {
    }
 
