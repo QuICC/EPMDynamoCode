@@ -1,9 +1,9 @@
-/** \file SourceDefs.hpp
+/** \file SourceFileDefs.hpp
  *  \brief Definitions and names used by the source field readers/writers
  */
 
-#ifndef SOURCEDEFS_HPP
-#define SOURCEDEFS_HPP
+#ifndef SOURCEFILEDEFS_HPP
+#define SOURCEFILEDEFS_HPP
 
 // System includes
 //
@@ -20,7 +20,7 @@ namespace EPMDynamo {
    /**
     * \brief Definitions and names used by the source field readers/writers
     */
-   class SourceDefs
+   class SourceFileDefs
    {
       public:
          /**
@@ -71,14 +71,14 @@ namespace EPMDynamo {
          /**
          * @brief Destructor
          */
-         virtual ~SourceDefs() {};
+         virtual ~SourceFileDefs() {};
 
       private:
          /**
          * @brief Empty destructor
          */
-         SourceDefs();
+         SourceFileDefs();
    };
 }
 
-#endif // SOURCEDEFS_HPP
+#endif // SOURCEFILEDEFS_HPP

@@ -1,9 +1,9 @@
-/** \file SourceReaderBase.hpp
+/** \file SourceFileReaderBase.hpp
  *  \brief Base of the source file reader
  */
 
-#ifndef SOURCEREADERBASE_HPP
-#define SOURCEREADERBASE_HPP
+#ifndef SOURCEFILEREADERBASE_HPP
+#define SOURCEFILEREADERBASE_HPP
 
 // Configuration includes
 //
@@ -26,7 +26,7 @@ namespace EPMDynamo {
    /**
     * \brief Base of the source file reader
     */
-   class SourceReaderBase: public SpectralHDF5Reader
+   class SourceFileReaderBase: public SpectralHDF5Reader
    {
       public:
          /**
@@ -35,12 +35,12 @@ namespace EPMDynamo {
          * @param name File name
          * @param pTrunc Truncation information
          */
-         SourceReaderBase(std::string name, SmartTruncation pTrunc);
+         SourceFileReaderBase(std::string name, SmartTruncation pTrunc);
 
          /**
          * @brief Destructor
          */
-         virtual ~SourceReaderBase() {};
+         virtual ~SourceFileReaderBase() {};
 
          /**
           * @brief Write State to file
@@ -75,8 +75,8 @@ namespace EPMDynamo {
    };
 
    /// Typedef for a smart pointer of a StdMessage
-   typedef EPMSHARED_PTR<SourceReaderBase> SmartSourceReaderBase;
+   typedef EPMSHARED_PTR<SourceFileReaderBase> SmartSourceReaderBase;
 
 }
 
-#endif // SOURCEREADERBASE_HPP
+#endif // SOURCEFILEREADERBASE_HPP

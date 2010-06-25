@@ -19,7 +19,7 @@
 #include "IO/HDF5/HDF5Writer.hpp"
 #include "IO/HDF5/State/StateFileReaderBase.hpp"
 #include "IO/HDF5/Imposed/ImposedFieldReaderBase.hpp"
-#include "IO/HDF5/Source/SourceReaderBase.hpp"
+#include "IO/HDF5/Source/SourceFileReaderBase.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 
 namespace EPMDynamo {

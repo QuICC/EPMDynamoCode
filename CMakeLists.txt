@@ -447,6 +447,18 @@ if(EPMDYNAMO_ON_ROSA)
 endif(EPMDYNAMO_ON_ROSA)
 
 
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+#----------------------- CMAKE TESTING STRUCTURE ----------------------------#
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
+
+#
+# Enable testing
+#
+option(EPMDYNAMO_TESTING "Create the CTest tests?" OFF)
+if(EPMDYNAMO_TESTING)
+   enable_testing()
+endif(EPMDYNAMO_TESTING)
+
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
 #------------------------- DIRECTORY STRUCTURE ------------------------------#
@@ -545,15 +557,3 @@ add_subdirectory(${SrcDir})
 add_subdirectory(${ProgramDir} EXCLUDE_FROM_ALL)
 add_subdirectory(${TestSuiteDir} EXCLUDE_FROM_ALL)
 
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
-#----------------------- CMAKE TESTING STRUCTURE ----------------------------#
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
-
-#
-# Enable testing
-#
-#option(EPMDYNAMO_TESTING "Create the CTest tests?" OFF)
-#if(EPMDYNAMO_TESTING)
-#   enable_testing()
-#endif(EPMDYNAMO_TESTING)

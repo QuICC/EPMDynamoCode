@@ -1,9 +1,9 @@
-/** \file SourceWriterBase.hpp
+/** \file SourceFileWriterBase.hpp
  *  \brief Base of the source file writer
  */
 
-#ifndef SOURCEWRITERBASE_HPP
-#define SOURCEWRITERBASE_HPP
+#ifndef SOURCEFILEWRITERBASE_HPP
+#define SOURCEFILEWRITERBASE_HPP
 
 // System includes
 //
@@ -22,7 +22,7 @@ namespace EPMDynamo {
    /**
     * \brief Base of the source file writer
     */
-   class SourceWriterBase: public SpectralHDF5NWriter
+   class SourceFileWriterBase: public SpectralHDF5NWriter
    {
       public:
          /**
@@ -31,12 +31,12 @@ namespace EPMDynamo {
          * @param name File name
          * @param pTrunc Truncation information
          */
-         SourceWriterBase(std::string name, SmartTruncation pTrunc);
+         SourceFileWriterBase(std::string name, SmartTruncation pTrunc);
 
          /**
          * @brief Destructor
          */
-         virtual ~SourceWriterBase() {};
+         virtual ~SourceFileWriterBase() {};
 
          /**
           * @brief Write State to file
@@ -72,4 +72,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // SOURCEWRITERBASE_HPP
+#endif // SOURCEFILEWRITERBASE_HPP

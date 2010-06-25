@@ -23,7 +23,7 @@
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
-#include "IO/HDF5/Source/SourceReader.hpp"
+#include "IO/HDF5/Source/SourceFileReader.hpp"
 #include "IO/ASCII/EnergyFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
 
@@ -295,7 +295,7 @@ namespace EPMDynamo {
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
 
       // Create a source file reader for the codensity source
-      EPMSHARED_PTR<SourceReader<TSimType, DynamoTraits> > pSource(new SourceReader<TSimType, DynamoTraits>(this->mCodC));
+      EPMSHARED_PTR<SourceFileReader<TSimType, DynamoTraits> > pSource(new SourceFileReader<TSimType, DynamoTraits>(this->mCodC));
 
       // Read in source state
       this->mIOSys.useSource(pSource);
