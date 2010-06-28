@@ -33,7 +33,7 @@ namespace EPMDynamo {
           * @param tsParams Timestep parameters
           * @param eqParams Equation parameters
           */
-         ETDTimestepControl(TimestepParameters &params, const EquationParameters &eqParams);
+         ETDTimestepControl(TimestepParameters &tsParams, const EquationParameters &eqParams);
 
          /**
           * @brief Destructor

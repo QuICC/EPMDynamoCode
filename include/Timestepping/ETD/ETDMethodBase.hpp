@@ -103,7 +103,7 @@ namespace EPMDynamo {
           * @brief Compute value at new time
           *
           * @param rVar Input/Output variable
-          * @param newNTerms New non linear terms
+          * @param nTerms New non linear terms
           */
          void doStep(ScalarType& rVar, ScalarType& nTerms);
 

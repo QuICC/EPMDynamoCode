@@ -64,7 +64,7 @@ namespace EPMDynamo {
           * @brief Compute an iteration of scheme (actuall computation depends on type)
           *
           * @param rVar Input/Output variable
-          * @param newNTerms New non linear terms
+          * @param nTerms New non linear terms
           */
          void doIteration(ScalarType& rVar, ScalarType& nTerms);
 

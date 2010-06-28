@@ -41,7 +41,7 @@ namespace EPMDynamo {
           * @brief Compute the implemented iteration
           *
           * @param rVar Input/Output variable
-          * @param newNTerms New non linear terms
+          * @param rNTerms New non linear terms
           */
          virtual void compute(ScalarType &rVar, ScalarType rNTerms) = 0;
          

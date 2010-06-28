@@ -82,7 +82,7 @@ namespace EPMDynamo {
          /**
           * @brief write data to files
           *
-          * \bug This methods needs to be rename and cleaned out
+          * \epmBug This methods needs to be rename and cleaned out
           */
          void writeFiles();
 

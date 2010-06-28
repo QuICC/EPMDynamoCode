@@ -20,7 +20,7 @@ namespace EPMDynamo {
    /**
     * \brief Implemenation of the "a" step in the ETD2RK method 
     *
-    * \tparm TSimType Type of the simulation
+    * \tparam TSimType Type of the simulation
     */
    template <typename TSimType> class ETD2RKA: public ETDIteration<TSimType>
    {
@@ -40,6 +40,9 @@ namespace EPMDynamo {
 
          /**
           * @brief Compute the implemented iteration
+          *
+          * @param rVar Input/Output variable
+          * @param rNTerms New non linear terms
           */
          virtual void compute(ScalarType &rVar, ScalarType rNTerms);
          
