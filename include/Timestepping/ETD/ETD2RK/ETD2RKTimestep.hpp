@@ -41,7 +41,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * @param pNn Pointer to the scalar
+          * @param pNn Pointer the "nth time" non linear terms
           * @param pOpM2 Pointer to the \f$M_2\f$ operator
           */
          ETD2RKTimestep(SmartScalarType pNn, SmartETDOperators pOpM2);

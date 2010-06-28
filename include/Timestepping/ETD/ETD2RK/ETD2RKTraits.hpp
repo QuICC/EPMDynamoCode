@@ -39,6 +39,9 @@ namespace EPMDynamo {
 
          /// Use windowes adaptive timestep
          static const bool useWindowed = false;
+
+         /// Number of intermediate states
+         static const int INTERMEDIATE_STATES = 1;
    };
 
    template <typename TSimType> int ETD2RKTraits<TSimType>::order()

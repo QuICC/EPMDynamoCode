@@ -65,7 +65,7 @@ namespace EPMDynamo {
           * @param c Maximum eigen value
           * @param basis Radial basis 
           *
-          * \epmBug Documentation problem
+          * \epmBug Need to implement inverse of matrix
           */
          void createOperators(const EPMFloat c, const BasisType &basis);
 
@@ -89,17 +89,11 @@ namespace EPMDynamo {
       // Storage for a temporary operator
       Matrix tmpM;
 
-      // Storage for "id" of operator
-      int l;
-
       // Loop over all degrees
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
-         // Get degree of the current operator
-         l = this->rEtdF(0).harmOp(i).id();
-
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(c, basis.at(l).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).constructBOperator(c, basis.at(i).specLaplacian());
 
          // Store the operator including boundary conditions and its inverse
          tmpM = this->etdF(0).harmOp(i).op();

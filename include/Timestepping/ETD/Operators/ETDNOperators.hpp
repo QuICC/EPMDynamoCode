@@ -173,6 +173,8 @@ namespace EPMDynamo {
           * @brief Compute the exponential of the given matrix
           *
           * @param mat Matrix to exponentiate
+          *
+          * \epmBug Currently uses a naive Taylor series
           */
          void computeExponential(Matrix& mat);
 
@@ -263,15 +265,9 @@ namespace EPMDynamo {
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF0()
    {
-      // Storage for "id" of operator
-      int l;
-
       // Loop over all degrees
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
-         // Get degree of the current operator
-         l = this->rEtdF(0).harmOp(i).id();
-
          // Rescale operator
          this->rEtdF(0).rHarmOp(i).rOp() *= std::pow(2.0, this->mScalings);
 
@@ -282,8 +278,6 @@ namespace EPMDynamo {
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeExponential(Matrix& rMat)
    {
-      // FOR THE MOMENT USE A BASIC TAYLOR SERIES
-
       // Add identity
       rMat.diagonal().cwise() += 1.0;
 
@@ -301,15 +295,9 @@ namespace EPMDynamo {
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::squareF0()
    {
-      // Storage for "id" of operator
-      int l;
-
       // Loop over all degrees
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
-         // Get degree of the current operator
-         l = this->rEtdF(0).harmOp(i).id();
-
          // Define homogeneous operator
          this->rEtdF(0).rHarmOp(i).rOp() *= this->etdF(0).harmOp(i).op();
       }
@@ -326,15 +314,9 @@ namespace EPMDynamo {
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::squareF1()
    {
-      // Storage for "id" of operator
-      int l;
-
       // Loop over all degrees
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
-         // Get degree of the current operator
-         l = this->rEtdF(0).harmOp(i).id();
-
          this->rEtdF(1).rHarmOp(i).rOp() += this->etdF(1).harmOp(i).op()*this->etdF(0).harmOp(i).op();
          this->rEtdF(1).rHarmOp(i).rOp() *= 0.5;
       }
@@ -354,15 +336,9 @@ namespace EPMDynamo {
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::squareF2()
    {
-      // Storage for "id" of operator
-      int l;
-
       // Loop over all degrees
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
-         // Get degree of the current operator
-         l = this->rEtdF(0).harmOp(i).id();
-
          // Define homogeneous operator
          this->rEtdF(2).rHarmOp(i).rOp() *= 2.0;
          this->rEtdF(2).rHarmOp(i).rOp() += this->etdF(1).harmOp(i).op()*this->etdF(1).harmOp(i).op();
@@ -387,15 +363,9 @@ namespace EPMDynamo {
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::squareF3()
    {
-      // Storage for "id" of operator
-      int l;
-
       // Loop over all degrees
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
-         // Get degree of the current operator
-         l = this->rEtdF(0).harmOp(i).id();
-
          // Define homogeneous operator
          this->rEtdF(3).rHarmOp(i).rOp().cwise() *= 2.0;
          this->rEtdF(3).rHarmOp(i).rOp() += this->etdF(1).harmOp(i).op()*this->etdF(2).harmOp(i).op() + this->etdF(2).harmOp(i).op();

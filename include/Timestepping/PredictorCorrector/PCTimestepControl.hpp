@@ -121,7 +121,7 @@ namespace EPMDynamo {
          }
 
          // Check if timestep is bigger than minimum and if the initialisation steps are over
-         if(step > PCTimestepConfig::MAX_INITIALISATION_STEPS && this->rTSParams().dt() < TimestepConfig::MIN_TIMESTEP)
+         if(step > TimestepConfig::MAX_INITIALISATION_STEPS && this->rTSParams().dt() < TimestepConfig::MIN_TIMESTEP)
          {
             // Reset iteration counter
             this->mCorrectorIts = 0;

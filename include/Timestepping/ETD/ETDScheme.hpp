@@ -80,6 +80,9 @@ namespace EPMDynamo {
       // Do first iteration including recomputation of matrices if required
       if(this->rTSParams().isNextStep())
       {
+         // Reset the iteration pointer
+         this->resetIterations();
+
          // Store the variable before timestep to allow rejection of timestep
          this->storeOld(rVar, nTerms);
 

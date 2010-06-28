@@ -71,9 +71,9 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Storage for an iteration counter
+          * @brief  Iterator to current iteration
           */
-         int mCounter;
+         typename std::vector<SmartETDIteration>::iterator  mCurrentIt;
 
          /**
           * @brief \f$a\f$ coefficient of timestep operator
@@ -111,9 +111,9 @@ namespace EPMDynamo {
          std::vector<SmartScalarType>  mETDNTerms;
 
          /**
-          * @brief Do we required intermediate computations ?
+          * @brief Reset current pointer to first step
           */
-         bool hasIntermediate() const;
+         void resetIterations();
 
          /**
           * @brief Compute next scheme iteration
@@ -126,19 +126,23 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> inline bool ETDMethodBase<TSimType>::hasIntermediate() const
-   {
-      return this->mCounter;
-   }
-
    template <typename TSimType> ETDMethodBase<TSimType>::ETDMethodBase(EPMFloat a, EPMFloat b, const typename ETDMethodBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : TimestepSchemeBase<TSimType>(tsteps, pTrunc), mA(a), mB(b), mrBasis(basis)
    {
    }
 
+   template <typename TSimType> void ETDMethodBase<TSimType>::resetIterations()
+   {
+      this->mCurrentIt = this->mETDSteps.begin();
+   }
+
    template <typename TSimType> void ETDMethodBase<TSimType>::doIteration(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& nTerms)
    {
-      this->mETDSteps.at(this->mCounter)->compute(rVar, nTerms);
+      // Do step computation
+      (*this->mCurrentIt)->compute(rVar, nTerms);
+
+      // Go forward one step
+      ++this->mCurrentIt;
    }
 
 }

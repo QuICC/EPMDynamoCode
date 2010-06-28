@@ -37,6 +37,11 @@ namespace EPMDynamo {
          static  EPMFloat MAXIMUM_TIMESTEP;
 
          /**
+          * @brief Maximum number of initialisation steps
+          */
+         static const int MAX_INITIALISATION_STEPS = 30;
+
+         /**
           * @brief Courant number
           */
          static const EPMFloat COURANT_NUMBER;

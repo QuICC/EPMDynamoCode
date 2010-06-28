@@ -55,19 +55,93 @@ namespace EPMDynamo {
       protected:
 
       private:
+         /**
+          * @brief Itermediate steps counter
+          */
+         int mInterCounter;
    };
 
    template <typename TMethodTraits> ETDTimestepControl<TMethodTraits>::ETDTimestepControl(TimestepParameters &tsParams, const EquationParameters &eqParams)
-      : TimestepControlBase(tsParams, eqParams, TMethodTraits::CtrlType, TMethodTraits::order())
+      : TimestepControlBase(tsParams, eqParams, TMethodTraits::CtrlType, TMethodTraits::order()), mInterCounter(0)
    {
    }
 
    template <typename TMethodTraits> void ETDTimestepControl<TMethodTraits>::checkConvergence(int step)
    {
+      if(this->rTSParams().isNextStep())
+      {
+         // Switch to next steps in timestep iteration
+         this->rTSParams().toggleTimestepStatus();
+
+         // Accept timestep whatever happened before
+         this->rTSParams().acceptTimestep();
+      } else
+      {
+         // Check if timestep is bigger than minimum and if the initialisation steps are over
+         if(step > TimestepConfig::MAX_INITIALISATION_STEPS && this->rTSParams().dt() < TimestepConfig::MIN_TIMESTEP)
+         {
+            // Trigger clean stop of simulation
+            this->mKeepRunning = false;
+
+            std::cout << "Timestep reached minimum timestep!" << std::endl;
+         }
+         // Check if Corrector correction norm is reducing
+         else if(this->mInterCounter < TMethodTraits::INTERMEDIATE_STATES)
+         {
+            // Increment the intermediate steps counter
+            ++this->mInterCounter;
+         } else
+         {
+            // Reset number of intermediate steps counter
+            this->mInterCounter = 0;
+
+            // Toggle timestep to predictor step
+            this->rTSParams().toggleTimestepStatus();
+
+            // Reset timestep error
+            this->resetError();
+         }
+      }
    }
 
    template <typename TMethodTraits> void ETDTimestepControl<TMethodTraits>::updateTimestep()
    {
+      // Check timestep before starting new timestep iteration
+      if(this->rTSParams().isNextStep())
+      {
+         // Store current timestep
+         EPMFloat dt = this->rTSParams().dt();
+
+         // Set timestep according to adaptive timestep controller
+         if(! this->rTSParams().isRejected())
+         {
+            this->useAdaptiveTimestep(dt);
+         }
+
+         // Set timestep according to CFL condition
+         this->testCFLCondition(dt);
+
+         // Initialisation timestep
+         this->testInitialisation(dt);
+
+         // Force maximum timestep
+         this->testMaximumTimestep(dt);
+
+         // Use courant factor
+         this->useCourantTimestep(dt);
+
+         // Use windowed update scheme for timestep
+         if(TMethodTraits::useWindowed)
+         {
+            this->useWindowedTimestep(dt);
+
+         }
+         // Use new timestep without window
+         else
+         {
+            this->useTimestep(dt);
+         }
+      }
    }
 
 }

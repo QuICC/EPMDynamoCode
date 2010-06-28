@@ -29,11 +29,6 @@ namespace EPMDynamo {
          static const int MAX_CORRECTOR_ITERATIONS = 10;
 
          /**
-          * @brief Maximum number of initialisation steps
-          */
-         static const int MAX_INITIALISATION_STEPS = 30;
-
-         /**
           * @brief Maximum corrector norm value
           */
          static const EPMFloat MAX_CORRECTION_NORM;
