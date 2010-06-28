@@ -24,7 +24,7 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a simple timestep control
     *
-    * \bug Improve MPI communication
+    * \epmBug Improve MPI communication
     */
    class TimestepControlBase
    {

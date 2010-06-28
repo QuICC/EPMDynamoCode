@@ -27,7 +27,7 @@ namespace EPMDynamo {
     *
     * The Polynomials are not normalised.
     *
-    * \bug Clean implementation of the grid traits
+    * \epmBug Clean implementation of the grid traits
     */
    class OnesidedJacobi: public WeightedPolynomial
    {

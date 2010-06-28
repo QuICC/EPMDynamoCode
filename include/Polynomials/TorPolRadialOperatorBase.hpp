@@ -23,7 +23,7 @@ namespace EPMDynamo {
     *
     * \tparam TPolynomial Type of the underlying polynomial
     *
-    * \bug Rewrite the polynomial operators in a cleaner and simpler way
+    * \epmBug Rewrite the polynomial operators in a cleaner and simpler way
     */
    template <typename TPolynomial> class TorPolRadialOperatorBase: public RadialOperatorBase<TPolynomial>
    {

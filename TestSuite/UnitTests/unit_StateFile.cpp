@@ -1,7 +1,7 @@
 /** \file unit_StateFile.cpp
  *  \brief Unit test for the reading/writing of HDF5 state files
  *
- *  \bug Unit test not implemented yet
+ *  \epmBug Unit test not implemented yet
  */
 
 // Configuration includes

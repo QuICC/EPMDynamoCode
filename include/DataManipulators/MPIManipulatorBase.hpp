@@ -29,7 +29,7 @@ namespace EPMDynamo {
     * \tparam TForward Type of data for the forward transform
     * \tparam TBackward Type of data for the backward transform
     *
-    * \bug Review/Cleanup code
+    * \epmBug Review/Cleanup code
     */
    template <typename TForward, typename TBackward> class MPIManipulatorBase: public ManipulatorBase<TForward, TBackward>
    {
@@ -107,7 +107,7 @@ namespace EPMDynamo {
           *
           * \param rData Storage for received data
           *
-          * \bug Removed minL(), might be bad idea
+          * \epmBug Removed minL(), might be bad idea
           */
          void receive(TForward &rData);
 
@@ -116,7 +116,7 @@ namespace EPMDynamo {
           *
           * \param rData Storage for received data
           *
-          * \bug Removed minL(), might be bad idea
+          * \epmBug Removed minL(), might be bad idea
           */
          void receive(TBackward &rData);
 

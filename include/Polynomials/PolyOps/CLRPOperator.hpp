@@ -18,7 +18,7 @@ namespace EPMDynamo {
    /**
     * @brief This class implements a polynomial operator expression of the type: C L P R
     *
-    * \bug Needs cleaning and restructuring
+    * \epmBug Needs cleaning and restructuring
     */
    template <typename TC> class CLRPOperator
    {

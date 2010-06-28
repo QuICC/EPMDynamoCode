@@ -27,8 +27,8 @@ namespace EPMDynamo {
     *
     * This class provides some of the often used RTP space operations: cross product, dot product, radial projection, \f$\hat{z}\f$ cross product
     *
-    * \bug Review these computations and write thoroughful tests
-    * \bug Replace multiple methods with a templated one using enum
+    * \epmBug Review these computations and write thoroughful tests
+    * \epmBug Replace multiple methods with a templated one using enum
     */
    class RTPOperators
    {

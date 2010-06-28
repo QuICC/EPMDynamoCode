@@ -21,7 +21,7 @@ namespace EPMDynamo {
    /**
     * @brief Some tools to create the CSCS output file
     *
-    * \bug The fields are not corrected at poles and origin
+    * \epmBug The fields are not corrected at poles and origin
     */
    class CSCSFileTools
    {

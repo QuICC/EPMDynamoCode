@@ -19,7 +19,7 @@ namespace EPMDynamo {
    /**
     * @brief This class implements a polynomial operator expression of the type: P R
     *
-    * \bug Needs cleaning and restructuring
+    * \epmBug Needs cleaning and restructuring
     */
    class RPOperator
    {

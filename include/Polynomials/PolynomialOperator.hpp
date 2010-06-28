@@ -23,7 +23,7 @@ namespace EPMDynamo {
     *
     * \tparam TExp Type of the expression
     *
-    * \bug This HAS to be rewritten in cleaner and better way!
+    * \epmBug This HAS to be rewritten in cleaner and better way!
     */
    template <typename TExp> class PolynomialOperator : public OperatorStorageTraits<TExp>::StorageType
    {

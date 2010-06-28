@@ -1,7 +1,7 @@
 /** \file unit_CSCSFile.cpp
  *  \brief Unit test for the reading/writing of HDF5 CSCS paraview visualisation files
  *
- *  \bug Unit test not implemented yet
+ *  \epmBug Unit test not implemented yet
  */
 
 // Configuration includes

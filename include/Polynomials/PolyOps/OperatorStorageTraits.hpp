@@ -22,7 +22,7 @@ namespace EPMDynamo {
    /**
     * @brief These traits defines the storage type of the operators
     *
-    * \bug Needs cleaning and restructuring
+    * \epmBug Needs cleaning and restructuring
     */
    template <typename TExp> class OperatorStorageTraits
    {

@@ -133,14 +133,14 @@ namespace EPMDynamo {
          /**
           * @brief Combine Spectral 2 RTP transforms
           *
-          * \bug This methods needs some more thoughts
+          * \epmBug This methods needs some more thoughts
           */
          void combineRTPTransforms(const int entry);
 
          /**
           * @brief Combine RTP 2 Spectral transforms
           *
-          * \bug This methods needs some more thoughts
+          * \epmBug This methods needs some more thoughts
           */
          void combineSpectralTransforms(const int entry);
 

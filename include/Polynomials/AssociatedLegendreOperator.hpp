@@ -23,8 +23,8 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a set of operators on the associated Legendre polynomial
     *
-    * \bug Review this to remove the need of the complicated copy/assignement operators
-    * \bug Rewrite the polynomial operators in a cleaner and simpler way
+    * \epmBug Review this to remove the need of the complicated copy/assignement operators
+    * \epmBug Rewrite the polynomial operators in a cleaner and simpler way
     */
    class AssociatedLegendreOperator: public AssociatedLegendreOperatorBase
    {

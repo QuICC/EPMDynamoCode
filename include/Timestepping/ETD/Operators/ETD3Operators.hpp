@@ -56,7 +56,7 @@ namespace EPMDynamo {
           * @param h ??? Maximum eigen value ???
           * @param basis Radial basis 
           *
-          * \bug Documentation problem
+          * \epmBug Documentation problem
           */
          void createOperators(const EPMFloat h, const BasisType &basis);
 

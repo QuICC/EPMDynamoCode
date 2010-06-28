@@ -18,7 +18,7 @@ namespace EPMDynamo {
 
    /**
     *
-    * \bug Needs cleaning and restructuring
+    * \epmBug Needs cleaning and restructuring
     */
    class LRPOperator
    {

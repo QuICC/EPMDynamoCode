@@ -19,7 +19,7 @@ namespace EPMDynamo {
    /**
     * @brief Set the results of the matrix multiplication
     *
-    * \bug Needs cleaning and restructuring
+    * \epmBug Needs cleaning and restructuring
     */
    class SetProduct
    {

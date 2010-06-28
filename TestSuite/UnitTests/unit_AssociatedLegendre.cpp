@@ -1,7 +1,7 @@
 /** \file unit_AssociatedLegendre.cpp
  *  \brief Unit test for the Associated Legendre polynomials
  *
- *  \bug Unit test not implemented yet
+ *  \epmBug Unit test not implemented yet
  */
 
 // Configuration includes

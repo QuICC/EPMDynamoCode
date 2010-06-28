@@ -26,7 +26,7 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a radial load splitting algorithm
     *
-    * \bug Cleanup implementation and make better documentation
+    * \epmBug Cleanup implementation and make better documentation
     */
    class RadialSplitting: public LoadSplitterBase
    {

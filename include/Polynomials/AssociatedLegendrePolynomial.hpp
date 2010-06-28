@@ -28,9 +28,9 @@ namespace EPMDynamo {
     *
     * The computed polynomials are Schmidt quasi-normalised.
     *
-    * \bug Explain the factor 2 required for m=0.
+    * \epmBug Explain the factor 2 required for m=0.
     *
-    * \bug Explain the factor \f$\sqrt{2}\f$ required.
+    * \epmBug Explain the factor \f$\sqrt{2}\f$ required.
     */
    class AssociatedLegendrePolynomial: public WeightedPolynomial
    {

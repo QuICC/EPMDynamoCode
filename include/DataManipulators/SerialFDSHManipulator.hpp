@@ -46,7 +46,7 @@ namespace EPMDynamo {
           *
           * \param rData Data to send
           *
-          * \bug Removed minL(), might be bad idea
+          * \epmBug Removed minL(), might be bad idea
           */
          void receive(TForward &rData);
 
@@ -55,7 +55,7 @@ namespace EPMDynamo {
           *
           * \param rData Data to send
           *
-          * \bug Removed minL(), might be bad idea
+          * \epmBug Removed minL(), might be bad idea
           */
          void receive(FDSHDegreeScalar &rData);
          

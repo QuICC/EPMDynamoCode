@@ -95,7 +95,7 @@ namespace EPMDynamo {
          /**
           * @brief Compute special operators (for example CSCS stuff)
           *
-          * \bug Commented out code, needs review and corrections
+          * \epmBug Commented out code, needs review and corrections
           */
          void computeSpecialOperators();
 

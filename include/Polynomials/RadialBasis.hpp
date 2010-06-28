@@ -29,7 +29,7 @@ namespace EPMDynamo {
     * \tparam TPolynomial Type of the radial polynomial
     * \tparam TOperatorType Type of the radial operators
     *
-    * \bug Review implementation to make it more flexible
+    * \epmBug Review implementation to make it more flexible
     */
    template <typename TPolynomial, template <typename> class TOperatorType = TorPolRadialOperator> class RadialBasis : public PolynomialBasis<TOperatorType<TPolynomial> >
    {

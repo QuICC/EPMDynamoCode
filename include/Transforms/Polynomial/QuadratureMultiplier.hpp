@@ -28,7 +28,7 @@ namespace EPMDynamo {
     *
     * \tparam TBasis Basis of the quadrature
     *
-    * \bug Review this and simplify if possible. Changes will depend of new implementation of Polynomial Operators.
+    * \epmBug Review this and simplify if possible. Changes will depend of new implementation of Polynomial Operators.
     */
    template<typename TBasis> class QuadratureMultiplier: public QuadratureBasis<TBasis>
    {

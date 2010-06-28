@@ -20,8 +20,8 @@ namespace EPMDynamo {
     *
     * The Polynomials are not normalised.
     *
-    * \bug This code needs to be tested
-    * \bug Correct documentation, it still holds the Jacobi documentation!
+    * \epmBug This code needs to be tested
+    * \epmBug Correct documentation, it still holds the Jacobi documentation!
     */
    class ChebyshevPolynomial: public WeightedPolynomial
    {
