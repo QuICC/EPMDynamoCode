@@ -32,7 +32,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <TSimType> class ETD2RKMethod: public ETDMethodBase<TSimType>
+   template <typename TSimType> class ETD2RKMethod: public ETDMethodBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -58,40 +58,54 @@ namespace EPMDynamo {
          virtual ~ETD2RKMethod() {};
 
          /**
-          * @brief Update the timestep matrices after a timestep change
+          * @brief Add a boundary condition
+          *
+          * @param pBC Boundary condition
           */
-         void updateTimeMatrices();
+         virtual void addBC(SmartBC pBC);
+
+         /**
+          * @brief Initialise the ETD2RK method
+          */
+         void init();
          
       protected:
 
-      private:
          /**
-          * @brief Initialise the method
+          * @brief Update the timestep matrices after a timestep change
           */
-         void initMethod();
+         void updateTimeMatrices();
+
+      private:
 
          /**
           * @brief The set of ETD2 operators
           */
-         ETD2Operators  mETD2;
+         ETD2Operators<TSimType>  mETD2;
+
+         /**
+          * @brief Initialise the pointer for the method
+          */
+         void initMethod(SmartTruncation pTrunc);
    };
 
    template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : ETDMethodBase<TSimType>(a, b, basis, tsteps, pTrunc), mETD2(pTrunc)
    {
-      // Init the method
-      this->initMethod();
+      // initialise pointers
+      this->initMethod(pTrunc);
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::initMethod()
+   template <typename TSimType> void ETD2RKMethod<TSimType>::addBC(SmartBC pBC)
    {
-      // Create M0 operator
-      EPMSHARED_PTR<>() pOpM0;
-      // Create M1 operator
-      EPMSHARED_PTR<>() pOpM1;
-      // Create M2 operator
-      EPMSHARED_PTR<>() pOpM2;
+   }
 
+   template <typename TSimType> void ETD2RKMethod<TSimType>::init()
+   {
+   }
+
+   template <typename TSimType> void ETD2RKMethod<TSimType>::initMethod(SmartTruncation pTrunc)
+   {
       // Add required operators
          // Add M0 operator
       this->mETDOperators.push_back(this->mETD2.pEtdF(0));
@@ -101,7 +115,7 @@ namespace EPMDynamo {
       this->mETDOperators.push_back(this->mETD2.pEtdF(2));
 
       // Create storage for a variable
-      EPMSHARED_PTR<ScalarType>() pVarA;
+      EPMSHARED_PTR<ScalarType> pVarA(new ScalarType(pTrunc));
 
       // Add required ETD variables
          // Add storage for variable A 
@@ -111,9 +125,9 @@ namespace EPMDynamo {
       this->mETDNTerms.push_back();
 
       // Create intermediate value a computation step
-      EPMSHARED_PTR<ETD2RKA>() pItA;
+      EPMSHARED_PTR<ETD2RKA<TSimType> > pItA(new ETD2RKA<TSimType> (this->mETDOperators.at(0), this->mETDOperators.at(1)));
       // Create timestep computation step
-      EPMSHARED_PTR<ETD2RKTimestep>() pItTimestep;
+      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (this->mETDVars.at(0), this->mETDOperators.at(2)));
 
       // Add required ETD steps
          // Add intermediate value A computation

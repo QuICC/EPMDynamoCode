@@ -14,6 +14,7 @@
 // Project includes
 //
 #include "Timestepping/ETD/ETDIteration.hpp"
+#include "Timestepping/ETD/ETDSchemeTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -31,13 +32,19 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// typedef for a pointer to a scalar type
+         typedef EPMSHARED_PTR<ScalarType> SmartScalarType;
+
+         /// Typedef for a smart pointer to ETDOperators
+         typedef EPMSHARED_PTR<typename ETDSchemeTraits<TSimType>::Operators> SmartETDOperators;
+
          /**
           * @brief Constructor
           *
           * @param pNn Pointer to the scalar
           * @param pOpM2 Pointer to the \f$M_2\f$ operator
           */
-         ETD2RKTimestep(SmartScalarType pNn, SmartETDOperator pOpM2);
+         ETD2RKTimestep(SmartScalarType pNn, SmartETDOperators pOpM2);
 
          /**
           * @brief Destructor
@@ -50,7 +57,7 @@ namespace EPMDynamo {
           * @param rVar Input/Output variable
           * @param rNTerms New non linear terms
           */
-         virtual void compute(ScalarType &rVar, ScalarType rNTerms);
+         virtual void compute(ScalarType &rVar, ScalarType &rNTerms);
          
       protected:
          /**
@@ -61,17 +68,17 @@ namespace EPMDynamo {
          /**
           * @brief ETD operator M2
           */
-         SmartETDOperator  mpOpM2;
+         SmartETDOperators  mpOpM2;
 
       private:
    };
 
-   template <typename TSimType> ETD2RKTimestep<TSimType>::ETD2RKTimestep(SmartScalarType pNn, SmartETDOperator pOpM2)
+   template <typename TSimType> ETD2RKTimestep<TSimType>::ETD2RKTimestep(typename ETD2RKTimestep<TSimType>::SmartScalarType pNn, typename ETD2RKTimestep<TSimType>::SmartETDOperators pOpM2)
       : mpNTermsN(pNn), mpOpM2(pOpM2)
    {
    }
 
-   template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(ETD2RK<TSimType>::ScalarType &rVar, ETD2RK<TSimType>::ScalarType &rNTerms)
+   template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
    {
       // rVar = rVar + this->mpOpM2 * (rNTerms - this->mpNTermsN)/h;
    }

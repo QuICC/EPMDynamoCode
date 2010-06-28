@@ -24,7 +24,7 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a specialised timestep control for predictor/corrector schemes
     */
-   template <typename TMethodTraits> class ETDTimestepControl: public TimestepControl
+   template <typename TMethodTraits> class ETDTimestepControl: public TimestepControlBase
    {
       public:
          /**

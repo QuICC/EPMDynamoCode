@@ -14,6 +14,8 @@
 // Project includes
 //
 #include "Timestepping/ETD/ETDIteration.hpp"
+#include "Timestepping/ETD/ETDOperators.hpp"
+#include "Timestepping/ETD/ETDSchemeTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -28,10 +30,16 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for a smart pointer to ETDOperators
+         typedef EPMSHARED_PTR<typename ETDSchemeTraits<TSimType>::Operators> SmartETDOperators;
+
          /**
           * @brief Constructor
+          *
+          * @param pOp Pointer to operator M0
+          * @param pOpM1 Pointer to operator M1
           */
-         ETD2RKA(SmartETDOperator pOpM0, SmartETDOperator pOpM1);
+         ETD2RKA(SmartETDOperators pOpM0, SmartETDOperators pOpM1);
 
          /**
           * @brief Destructor
@@ -44,28 +52,28 @@ namespace EPMDynamo {
           * @param rVar Input/Output variable
           * @param rNTerms New non linear terms
           */
-         virtual void compute(ScalarType &rVar, ScalarType rNTerms);
+         virtual void compute(ScalarType &rVar, ScalarType &rNTerms);
          
       protected:
          /**
           * @brief ETD operator M0
           */
-         SmartETDOperator  mpOpM0;
+         SmartETDOperators  mpOpM0;
 
          /**
           * @brief ETD operator M1
           */
-         SmartETDOperator  mpOpM1;
+         SmartETDOperators  mpOpM1;
 
       private:
    };
 
-   template <typename TSimType> ETD2RKA<TSimType>::ETD2RKA(SmartETDOperator pOpM0, SmartETDOperator pOpM1)
+   template <typename TSimType> ETD2RKA<TSimType>::ETD2RKA(SmartETDOperators pOpM0, SmartETDOperators pOpM1)
       : mpOpM0(pOpM0), mpOpM1(pOpM1)
    {
    }
 
-   template <typename TSimType> void ETD2RKA<TSimType>::compute(ETD2RK<TSimType>::ScalarType &rVar, ETD2RK<TSimType>::ScalarType &rNTerms)
+   template <typename TSimType> void ETD2RKA<TSimType>::compute(typename ETD2RKA<TSimType>::ScalarType &rVar, typename ETD2RKA<TSimType>::ScalarType &rNTerms)
    {
       // rVar = this->mpOpM0 * rVar + this->mpOpM1 * rNTerms;
    }

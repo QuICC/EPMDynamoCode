@@ -15,6 +15,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Timestepping/PredictorCorrector/PCSchemeTraits.hpp"
+#include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Transforms/SpectralSH/TorPolSpectralSHTransform.hpp"
 #include "Transforms/SpectralSH/SerialSpectralSHTTraits.hpp"
 #include "Transforms/SpectralSH/MPISpectralSHTTraits.hpp"
@@ -57,7 +58,8 @@ namespace EPMDynamo {
          typedef  DenseLUOperator  FactoredOpType;
 
          /// Typedef for the timestepping scheme traits
-         typedef  PCSchemeTraits<TSimType>  TimestepTraits;
+         //typedef  PCSchemeTraits<TSimType>  TimestepTraits;
+         typedef  ETDSchemeTraits<TSimType>  TimestepTraits;
    };
 
 }

@@ -13,8 +13,10 @@
 
 // Project includes
 //
+#include "Operators/DenseOperator.hpp"
 #include "Timestepping/ETD/ETDTimestepControl.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKTraits.hpp"
+#include "Timestepping/ETD/ETDOperators.hpp"
 
 namespace EPMDynamo {
 
@@ -42,6 +44,9 @@ namespace EPMDynamo {
 
          /// Typedef for the timestep control object
          typedef ETDTimestepControl<MethodTraits>   TimestepControl;
+
+         /// Typedefs for the ETD operators
+         typedef ETDOperators<TSimType, DenseOperator>  Operators;
    };
 
 }

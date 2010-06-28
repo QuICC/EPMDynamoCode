@@ -43,7 +43,7 @@ namespace EPMDynamo {
           * @param rVar Input/Output variable
           * @param rNTerms New non linear terms
           */
-         virtual void compute(ScalarType &rVar, ScalarType rNTerms) = 0;
+         virtual void compute(ScalarType &rVar, ScalarType &rNTerms) = 0;
          
       protected:
 

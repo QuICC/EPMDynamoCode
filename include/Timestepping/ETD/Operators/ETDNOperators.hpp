@@ -15,8 +15,10 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
+#include "Operators/DenseOperator.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
+#include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
@@ -33,8 +35,11 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for an ETD Operator
+         typedef typename ETDSchemeTraits<TSimType>::Operators ETDOps;
+
          /// Typedef for a smart pointer to ETDOperators
-         typedef typename ETDOperators<TSimType> SmartETDOperators;
+         typedef EPMSHARED_PTR<ETDOps> SmartETDOperators;
 
          /**
           * @brief Constructor
@@ -51,20 +56,19 @@ namespace EPMDynamo {
          /**
           * @brief Update the ETDN operators
           *
-          * @param h Maximum eigen value ?
+          * @param c ??? Maximum eigen value ???
           * @param basis Radial basis
           *
           * \epmBug Documentation problem
           */
-         void createOperators(const EPMFloat h, const BasisType &basis) = 0;
+         virtual void createOperators(const EPMFloat c, const BasisType &basis) = 0;
 
-      protected:
          /**
           * @brief Get the Fn operators
           *
           * @param n Index of the operator
           */
-         const ETDOperators& etdF(const int n) const;
+         const ETDOps& etdF(const int n) const;
 
          /**
           * @brief Get smart pointer to Fn operators
@@ -78,8 +82,10 @@ namespace EPMDynamo {
           *
           * @param n Index of the operator
           */
-         ETDOperators& rEtdF(const int n);
+         ETDOps& rEtdF(const int n);
 
+
+      protected:
          /**
           * @brief Update the number of required scalings
           *
@@ -141,7 +147,7 @@ namespace EPMDynamo {
          /**
           * @brief Storage for the \f$M_i\f$ matrices required in the ETDN schemes
           */
-         std::vector<SmartETDoperators>  mOperators;
+         std::vector<SmartETDOperators>  mOperators;
 
          /**
           * @brief Compute the exponential of the given matrix
@@ -176,17 +182,17 @@ namespace EPMDynamo {
          void initStorage();
    };
 
-   template <typename TSimType, int TSchemeOrder> inline const ETDOperators& ETDNOperators<TSimType, TSchemeOrder>::etdF(const int n)
+   template <typename TSimType, int TSchemeOrder> inline const typename ETDNOperators<TSimType, TSchemeOrder>::ETDOps& ETDNOperators<TSimType, TSchemeOrder>::etdF(const int n) const
    {
       return *(this->mOperators.at(n));
    }
 
-   template <typename TSimType, int TSchemeOrder> inline SmartETDOperators ETDNOperators<TSimType, TSchemeOrder>::pEtdF(const int n)
+   template <typename TSimType, int TSchemeOrder> inline  typename ETDNOperators<TSimType, TSchemeOrder>::SmartETDOperators ETDNOperators<TSimType, TSchemeOrder>::pEtdF(const int n) const
    {
       return this->mOperators.at(n);
    }
 
-   template <typename TSimType, int TSchemeOrder> inline ETDOperators& ETDNOperators<TSimType, TSchemeOrder>::rEtdF(const int n)
+   template <typename TSimType, int TSchemeOrder> inline  typename ETDNOperators<TSimType, TSchemeOrder>::ETDOps& ETDNOperators<TSimType, TSchemeOrder>::rEtdF(const int n)
    {
       return *(this->mOperators.at(n));
    }
@@ -198,17 +204,13 @@ namespace EPMDynamo {
       this->initStorage();
    }
 
-   template <typename TSimType, int TSchemeOrder> ETDNOperators<TSimType, TSchemeOrder>::~ETDNOperators()
-   {
-   }
-
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::initStorage()
    {
       SmartETDOperators pOp;
 
       for(int i=0; i < this->mNOps; ++i)
       {
-         pOp = SmartETDOperators(new ETDOperators(this->mpTrunc));
+         pOp = SmartETDOperators(new ETDOps(this->mpTrunc));
 
          this->mOperators.push_back(pOp);
       }
@@ -245,7 +247,7 @@ namespace EPMDynamo {
       // FOR THE MOMENT USE A BASIC TAYLOR SERIES
 
       // Add identity
-      rMat.diagonal.cwise() += 1.0;
+      rMat.diagonal().cwise() += 1.0;
 
       // Storage for the factorial factor
       EPMFloat factor = 1.0;
@@ -255,7 +257,7 @@ namespace EPMDynamo {
       {
          factor *= static_cast<EPMFloat>(i);
 
-         rMat += rMat*rMat.cwise()/factor;
+         rMat += (rMat*rMat)/factor;
       }
    }
 
@@ -275,7 +277,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSsquaredF0()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF0()
    {
       for(int i = 0; i < this->mScalings; ++i)
       {
@@ -300,7 +302,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSsquaredF1()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF1()
    {
       for(int i = 0; i < this->mScalings; ++i)
       {
@@ -330,7 +332,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSsquaredF2()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF2()
    {
       for(int i = 0; i < this->mScalings; ++i)
       {
@@ -363,7 +365,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSsquaredF3()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF3()
    {
       for(int i = 0; i < this->mScalings; ++i)
       {

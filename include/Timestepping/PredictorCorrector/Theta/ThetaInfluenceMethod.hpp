@@ -62,7 +62,7 @@ namespace EPMDynamo {
          void addInfluenceBC(SmartBC pBC);
 
          /**
-          * @brief Initialise the ThetaInfluenceMethod
+          * @brief Initialise the Theta influence matrix method 
           */
          void init();
          

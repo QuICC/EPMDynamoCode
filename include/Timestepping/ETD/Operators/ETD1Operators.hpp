@@ -63,7 +63,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> ETD1Operators<TSimType>::ETD0Operators(SmartTruncation pTrunc)
-      : ETDOperators<TSimType,2>(pTrunc)
+      : ETDNOperators<TSimType,2>(pTrunc)
    {
    }
 

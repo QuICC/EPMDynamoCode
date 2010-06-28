@@ -21,9 +21,10 @@
 
 namespace EPMDynamo {
 
-    * \brief Implementation of the ETD 0 operators
+   /**
+    * \brief Implementation of the ETD2 operators
     *
-    * \tparam TSimType Type of the simulation
+    */
    template <typename TSimType> class ETD2Operators: public ETDNOperators<TSimType, 3>
    {
       public:
@@ -48,24 +49,24 @@ namespace EPMDynamo {
          /**
           * @brief Update the ETD2 operators
           *
-          * @param h ?? Maximum eigen value ??
+          * @param c ?? Maximum eigen value ??
           * @param basis Radial basis 
           *
           * \epmBug Documentation problem
           */
-         void createOperators(const EPMFloat h, const BasisType &basis);
+         void createOperators(const EPMFloat c, const BasisType &basis);
 
       protected:
 
       private:
    };
 
-   template <typename TSimType> ETD2Operators<TSimType>::ETD0Operators(SmartTruncation pTrunc)
-      : ETDOperators<TSimType, 3>(pTrunc)
+   template <typename TSimType> ETD2Operators<TSimType>::ETD2Operators(SmartTruncation pTrunc)
+      : ETDNOperators<TSimType, 3>(pTrunc)
    {
    }
 
-   template <typename TSimType> void ETD2Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD0Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD2Operators<TSimType>::createOperators(const EPMFloat c, const typename ETD2Operators<TSimType>::BasisType &basis)
    {
       // Storage for a temporary operator
       Matrix tmpM;

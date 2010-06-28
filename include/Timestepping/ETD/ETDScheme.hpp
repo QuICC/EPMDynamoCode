@@ -79,20 +79,20 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TMethod> void ETDScheme<TSimType, TMethod>::timestep(typename ETDScheme<TSimType, TMethod>::ScalarType& rVar, typename ETDScheme<TSimType, TMethod>::ScalarType& nTerms)
    {
       // If the timestep has been rejected recover previous timestep values
-      if(this->mrTStepParams.isRejected())
+      if(this->rTSParams().isRejected())
       {
          // Restore value from previous timestep
          this->restoreOld(rVar, nTerms);
       }
 
       // Do first iteration including recomputation of matrices if required
-      if(this->mrTStepParams.isNextStep())
+      if(this->rTSParams().isNextStep())
       {
          // Store the variable before timestep to allow rejection of timestep
          this->storeOld(rVar, nTerms);
 
          // Update timesteping matrices if required
-         if(this->mrTStepParams.hasNewDt())
+         if(this->rTSParams().hasNewDt())
          {
             this->updateTimeMatrices();
          }

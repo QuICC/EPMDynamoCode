@@ -44,8 +44,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETDOperators<TSimType>::ETDOperators(SmartTruncation pTrunc)
-      : BoundedOperatorSet<TOpType>(pSTrunc)
+   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(SmartTruncation pTrunc)
+      : BoundedOperatorSet<TOpType>(pTrunc)
    {
    }
 

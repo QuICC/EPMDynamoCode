@@ -17,7 +17,8 @@
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/TimestepSchemeBase.hpp"
 #include "Timestepping/ETD/ETDIteration.hpp"
-#include "Timestepping/ETD/ETDOperator.hpp"
+#include "Timestepping/ETD/ETDOperators.hpp"
+#include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
@@ -27,7 +28,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <TSimType> class ETDMethodBase: public TimestepSchemeBase<TSimType>
+   template <typename TSimType> class ETDMethodBase: public TimestepSchemeBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -36,11 +37,14 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for a smart pointer to a scalar type
+         typedef EPMSHARED_PTR<ScalarType>   SmartScalarType;
+
          /// Typedef for the smart pointer to an ETDStep
-         typedef EPMSHARED_PTR<ETDIteration>   SmartETDIteration;
+         typedef EPMSHARED_PTR<ETDIteration<TSimType> >   SmartETDIteration;
 
          /// Typedef for the smart pointer to an ETDOperator
-         typedef EPMSHARED_PTR<ETDOperator>   SmartETDOperator;
+         typedef EPMSHARED_PTR<typename ETDSchemeTraits<TSimType>::Operators>   SmartETDOperator;
 
          /**
           * @brief Constructor
@@ -57,8 +61,20 @@ namespace EPMDynamo {
           * @brief Destructor
           */
          virtual ~ETDMethodBase() {};
+
+         /**
+          * @brief Add a boundary condition
+          *
+          * @param pBC Boundary condition
+          */
+         virtual void addBC(SmartBC pBC) = 0;
          
       protected:
+         /**
+          * @brief Storage for an iteration counter
+          */
+         int mCounter;
+
          /**
           * @brief \f$a\f$ coefficient of timestep operator
           */

@@ -16,6 +16,7 @@
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
+#include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Timestepping/ETD/Operators/ETDNOperators.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
@@ -35,9 +36,6 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
-         /// Typedef for a smart pointer to ETDOperators
-         typedef typename ETDOperators<TSimType> SmartETDOperators;
-
          /**
           * @brief Constructor
           *
@@ -53,12 +51,12 @@ namespace EPMDynamo {
          /**
           * @brief Update the ETD3 operators
           *
-          * @param h ??? Maximum eigen value ???
+          * @param c ??? Maximum eigen value ???
           * @param basis Radial basis 
           *
           * \epmBug Documentation problem
           */
-         void createOperators(const EPMFloat h, const BasisType &basis);
+         void createOperators(const EPMFloat c, const BasisType &basis);
 
       protected:
 
@@ -70,7 +68,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType> void ETD3Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD3Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD3Operators<TSimType>::createOperators(const EPMFloat c, const typename ETD3Operators<TSimType>::BasisType &basis)
    {
       // Get list of degrees
       ArrayI   degrees = this->pIdxCtrl()->opLs();
