@@ -60,14 +60,6 @@ namespace EPMDynamo {
          
       protected:
 
-         /**
-          * @brief Compute an iteration of scheme (actuall computation depends on type)
-          *
-          * @param rVar Input/Output variable
-          * @param nTerms New non linear terms
-          */
-         void doIteration(ScalarType& rVar, ScalarType& nTerms);
-
       private:
    };
 
@@ -105,21 +97,6 @@ namespace EPMDynamo {
          this->doIteration(rVar, nTerms);
       }
    }
-
-   template <typename TSimType, template <typename> class TMethod> void ETDScheme<TSimType, TMethod>::doIteration(typename ETDScheme<TSimType, TMethod>::ScalarType& rVar, typename ETDScheme<TSimType, TMethod>::ScalarType& nTerms)
-   {
-      // Check for intermediate computations
-      if(this->hasIntermediate())
-      {
-         // Do intermediate step
-         this->computeIntermediate(rVar, nTerms);
-      } else
-      {
-         // Do finale timestep
-         this->doStep(rVar, nTerms);
-      }
-   }
-
 }
 
 #endif // ETDSCHEME_HPP

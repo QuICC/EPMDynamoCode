@@ -32,6 +32,8 @@ namespace EPMDynamo {
     * \brief Implementation of a set of bounded operators
     *
     * \tparam TOpType Type of the operator
+    *
+    * \epmBug Think about implication of removing protected part
     */
    template <typename TOpType> class BoundedOperatorSet
    {
@@ -89,7 +91,7 @@ namespace EPMDynamo {
           */
          void solveZeroVector(Array&  rhs, const int l);
          
-      protected:
+//      protected:
          /**
           * @brief Get the number of operators
           */

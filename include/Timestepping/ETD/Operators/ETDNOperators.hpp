@@ -54,12 +54,32 @@ namespace EPMDynamo {
          virtual ~ETDNOperators() {};
 
          /**
+          * @brief Update the timestep matrices
+          *
+          * Still a pure virtual function
+          *
+          * @param dt   New timestep value
+          * @param basis Radial basis
+          */
+         virtual void update(const EPMFloat dt, const BasisType &basis) = 0;
+
+         /**
+          * @brief Init the operators
+          */
+         void initOperators();
+
+         /**
+          * @brief Add a boundary condition
+          *
+          * @param pBC Boundary condition
+          */
+         void addBC(SmartBC pBC);
+
+         /**
           * @brief Update the ETDN operators
           *
-          * @param c ??? Maximum eigen value ???
+          * @param c Maximum eigen value
           * @param basis Radial basis
-          *
-          * \epmBug Documentation problem
           */
          virtual void createOperators(const EPMFloat c, const BasisType &basis) = 0;
 
@@ -198,10 +218,28 @@ namespace EPMDynamo {
    }
 
    template <typename TSimType, int TSchemeOrder> ETDNOperators<TSimType, TSchemeOrder>::ETDNOperators(SmartTruncation pTrunc)
-      : mNOps(TSchemeOrder), mpTrunc(pTrunc), mScalings(0), mMaxEig(0)
+      : mNOps(TSchemeOrder), mScalings(0), mMaxEig(0), mpTrunc(pTrunc)
    {
       // Initialise operators
       this->initStorage();
+   }
+
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::addBC(SmartBC pBC)
+   {
+      // add boundary condition to all operators
+      for(int i=0; i < this->mNOps; ++i)
+      {
+         this->mOperators.at(i)->addBC(pBC);
+      }
+   }
+
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::initOperators()
+   {
+      // init all operators
+      for(int i=0; i < this->mNOps; ++i)
+      {
+         this->mOperators.at(i)->initOperators();
+      }
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::initStorage()
@@ -232,13 +270,13 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
          // Rescale operator
-         this->rEtdF(0).rOp(i).rOp().cwise() *= std::pow(2.0, this->mScalings);
+         this->rEtdF(0).rHarmOp(i).rOp() *= std::pow(2.0, this->mScalings);
 
          // Compute exponential of operator
-         this->computeExponential(this->rEtdF(0).rOp(i).rOp());
+         this->computeExponential(this->rEtdF(0).rHarmOp(i).rOp());
       }
    }
 
@@ -270,10 +308,10 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
          // Define homogeneous operator
-         this->rEtdF(0).rOp(i).rOp() *= this->etdF(0).op(i).op();
+         this->rEtdF(0).rHarmOp(i).rOp() *= this->etdF(0).harmOp(i).op();
       }
    }
 
@@ -295,10 +333,10 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
-         this->rEtdF(1).rOp(i).rOp() += this->etdF(1).op(i).op()*this->etdF(0).op(i).op();
-         this->rEtdF(1).rOp(i).rOp().cwise() *= 0.5;
+         this->rEtdF(1).rHarmOp(i).rOp() += this->etdF(1).harmOp(i).op()*this->etdF(0).harmOp(i).op();
+         this->rEtdF(1).rHarmOp(i).rOp() *= 0.5;
       }
    }
 
@@ -323,12 +361,12 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
          // Define homogeneous operator
-         this->rEtdF(2).rOp(i).rOp().cwise() *= 2.0;
-         this->rEtdF(2).rOp(i).rOp() += this->etdF(1).op(i).op()*this->etdF(1).op(i).op();
-         this->rEtdF(2).rOp(i).rOp() *= 0.25;
+         this->rEtdF(2).rHarmOp(i).rOp() *= 2.0;
+         this->rEtdF(2).rHarmOp(i).rOp() += this->etdF(1).harmOp(i).op()*this->etdF(1).harmOp(i).op();
+         this->rEtdF(2).rHarmOp(i).rOp() *= 0.25;
       }
    }
 
@@ -356,12 +394,12 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
          // Define homogeneous operator
-         this->rEtdF(3).rOp(i).rOp().cwise() *= 2.0;
-         this->rEtdF(3).rOp(i).rOp() += this->etdF(1).op(i).op()*this->etdF(2).op(i).op() + this->etdF(2).op(i).op();
-         this->rEtdF(3).rOp(i).rOp().cwise() *= 0.125;
+         this->rEtdF(3).rHarmOp(i).rOp().cwise() *= 2.0;
+         this->rEtdF(3).rHarmOp(i).rOp() += this->etdF(1).harmOp(i).op()*this->etdF(2).harmOp(i).op() + this->etdF(2).harmOp(i).op();
+         this->rEtdF(3).rHarmOp(i).rOp().cwise() *= 0.125;
       }
    }
 

@@ -36,7 +36,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * @param pOp Pointer to operator M0
+          * @param pOpM0 Pointer to operator M0
           * @param pOpM1 Pointer to operator M1
           */
          ETD2RKA(SmartETDOperators pOpM0, SmartETDOperators pOpM1);

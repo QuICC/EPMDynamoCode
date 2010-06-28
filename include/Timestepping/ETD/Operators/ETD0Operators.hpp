@@ -47,12 +47,22 @@ namespace EPMDynamo {
          virtual ~ETD0Operators() {};
 
          /**
+          * @brief Update the timestep matrices
+          *
+          * Still a pure virtual function
+          *
+          * @param dt   New timestep value
+          * @param basis Radial basis
+          *
+          * \epmBug Wrong computation
+          */
+         virtual void update(const EPMFloat dt, const BasisType &basis);
+
+         /**
           * @brief Update the ETD0 operators
           *
           * @param c Maximum eigen value
           * @param basis Radial basis 
-          *
-          * \epmBug Documentation problem
           */
          void createOperators(const EPMFloat c, const BasisType &basis);
 
@@ -64,6 +74,11 @@ namespace EPMDynamo {
    template <typename TSimType> ETD0Operators<TSimType>::ETD0Operators(SmartTruncation pTrunc)
       : ETDNOperators<TSimType, 1>(pTrunc)
    {
+   }
+
+   template <typename TSimType> void ETD0Operators<TSimType>::update(const EPMFloat dt, const typename ETD0Operators<TSimType>::BasisType &basis)
+   {
+      this->createOperators(dt, basis);
    }
 
    template <typename TSimType> void ETD0Operators<TSimType>::createOperators(const EPMFloat c, const typename ETD0Operators<TSimType>::BasisType &basis)
@@ -78,10 +93,10 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
          // Define homogeneous operator
-         this->rEtdF(0).rOp(i).constructBOperator(c, basis.at(l).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).constructBOperator(c, basis.at(l).specLaplacian());
 
          // Compute the scaled exponential of the created operator
          this->computeScaledF0();
@@ -90,7 +105,7 @@ namespace EPMDynamo {
          this->computeSquaredF0();
 
          // Do finalisation step (for example factorisation)
-         this->rEtdF(0).rOp(i).finaliseOp();
+         this->rEtdF(0).rHarmOp(i).finaliseOp();
       }
    }
 

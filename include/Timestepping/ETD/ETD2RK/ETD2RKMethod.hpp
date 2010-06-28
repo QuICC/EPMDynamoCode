@@ -84,27 +84,37 @@ namespace EPMDynamo {
          ETD2Operators<TSimType>  mETD2;
 
          /**
-          * @brief Initialise the pointer for the method
+          * @brief Initialise the storage for the method
           */
-         void initMethod(SmartTruncation pTrunc);
+         void initStorage(SmartTruncation pTrunc);
    };
 
    template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
       : ETDMethodBase<TSimType>(a, b, basis, tsteps, pTrunc), mETD2(pTrunc)
    {
       // initialise pointers
-      this->initMethod(pTrunc);
+      this->initStorage(pTrunc);
    }
 
    template <typename TSimType> void ETD2RKMethod<TSimType>::addBC(SmartBC pBC)
    {
+      // add boundary condition to operators
+      this->mETD2.addBC(pBC);
    }
 
    template <typename TSimType> void ETD2RKMethod<TSimType>::init()
    {
+      // initialise the operators
+      this->mETD2.initOperators();
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::initMethod(SmartTruncation pTrunc)
+   template <typename TSimType> void ETD2RKMethod<TSimType>::updateTimeMatrices()
+   {
+      // Update the time depended matrices
+      this->mETD2.update(this->rTSParams().dt(), this->mrBasis);
+   }
+
+   template <typename TSimType> void ETD2RKMethod<TSimType>::initStorage(SmartTruncation pTrunc)
    {
       // Add required operators
          // Add M0 operator
@@ -120,9 +130,6 @@ namespace EPMDynamo {
       // Add required ETD variables
          // Add storage for variable A 
       this->mETDVars.push_back(pVarA);
-
-      // Add required ETD NTerms
-      this->mETDNTerms.push_back();
 
       // Create intermediate value a computation step
       EPMSHARED_PTR<ETD2RKA<TSimType> > pItA(new ETD2RKA<TSimType> (this->mETDOperators.at(0), this->mETDOperators.at(1)));

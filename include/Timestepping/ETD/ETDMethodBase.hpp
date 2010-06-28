@@ -116,12 +116,12 @@ namespace EPMDynamo {
          bool hasIntermediate() const;
 
          /**
-          * @brief Compute value at new time
+          * @brief Compute next scheme iteration
           *
           * @param rVar Input/Output variable
           * @param nTerms New non linear terms
           */
-         void doStep(ScalarType& rVar, ScalarType& nTerms);
+         void doIteration(ScalarType& rVar, ScalarType& nTerms);
 
       private:
    };
@@ -136,7 +136,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType> void ETDMethodBase<TSimType>::doStep(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& nTerms)
+   template <typename TSimType> void ETDMethodBase<TSimType>::doIteration(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& nTerms)
    {
       this->mETDSteps.at(this->mCounter)->compute(rVar, nTerms);
    }

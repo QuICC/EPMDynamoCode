@@ -48,14 +48,26 @@ namespace EPMDynamo {
          virtual ~ETD1Operators() {};
 
          /**
+          * @brief Update the timestep matrices
+          *
+          * Still a pure virtual function
+          *
+          * @param dt   New timestep value
+          * @param basis Radial basis
+          *
+          * \epmBug Wrong computation
+          */
+         virtual void update(const EPMFloat dt, const BasisType &basis);
+
+         /**
           * @brief Update the ETD1 operators
           *
-          * @param h ?? Maximum eigen value ??
+          * @param c Maximum eigen value
           * @param basis Radial basis 
           *
           * \epmBug Documentation problem
           */
-         void createOperators(const EPMFloat h, const BasisType &basis);
+         void createOperators(const EPMFloat c, const BasisType &basis);
 
       protected:
 
@@ -67,7 +79,12 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType> void ETD1Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD0Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD1Operators<TSimType>::update(const EPMFloat dt, const typename ETD0Operators<TSimType>::BasisType &basis)
+   {
+      this->createOperators(dt, basis);
+   }
+
+   template <typename TSimType> void ETD1Operators<TSimType>::createOperators(const EPMFloat c, const typename ETD0Operators<TSimType>::BasisType &basis)
    {
       // Storage for a temporary operator
       Matrix tmpM;
@@ -79,33 +96,33 @@ namespace EPMDynamo {
       for(int i = 0; i < this->etdF(0).nOp(); ++i)
       {
          // Get degree of the current operator
-         l = this->rEtdF(0).op(i).id();
+         l = this->rEtdF(0).harmOp(i).id();
 
          // Define homogeneous operator
-         this->rEtdF(0).rOp(i).constructBOperator(c, basis.at(l).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).constructBOperator(c, basis.at(l).specLaplacian());
 
          // Store the operator including boundary conditions and its inverse
-         tmpM = this->etdF(0).op(i).op();
+         tmpM = this->etdF(0).harmOp(i).op();
          //tmpM = INVERSE(tmpM);
 
          // Compute the exponential of the created operator
          this->computeScaledF0();
 
          // Initialise F1 operator
-         this->rEtdF(1).rOp(i).rOp() = this->etdF(0).op(i).op();
+         this->rEtdF(1).rHarmOp(i).rOp() = this->etdF(0).op(i).op();
 
          // Remove identity
-         this->rEtdF(1).rOp(i).rOp().diagonal().cwise() -= 1.0;
+         this->rEtdF(1).rHarmOp(i).rOp().diagonal().cwise() -= 1.0;
 
          // Multiply F1 by 1/c L^-1
-         this->rEtdF(1).rOp(i).rOp() *= tmpM;
+         this->rEtdF(1).rHarmOp(i).rOp() *= tmpM;
 
          // Compute the unscale values
          this->computeSquaredF1();
 
          // Do finalisation step (for example factorisation)
-         this->rEtdF(0).rOp(i).finaliseOp();
-         this->rEtdF(1).rOp(i).finaliseOp();
+         this->rEtdF(0).rHarmOp(i).finaliseOp();
+         this->rEtdF(1).rHarmOp(i).finaliseOp();
       }
    }
 
