@@ -15,15 +15,53 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "Domain/Truncation.hpp"
+#include "Polynomials/RadialBasis.hpp"
+#include "Polynomials/WorlandPolynomial.hpp"
+#include "Simulations/Types/WSHSimInc.hpp"
+#include "Simulations/Types/WSHSimulation.hpp"
 
 namespace epm = EPMDynamo;
+
+typedef epm::WSHSimulation SimulationType;
+typedef epm::SmartTruncation  SmartTruncation;
+typedef SimulationType::RadialBasisType RadialBasisType;
 
 /**
  * @brief Run the Worland unit test
  */
 int runUnitTest()
 {
-   return 0;
+   int maxN = 12;
+   int maxL = 32;
+   int maxM = 10;
+   int Mp = 1;
+   int nCore = 1;
+   const double ERROR_THRESHOLD = 1e-13;
+
+   SmartTruncation  pTrunc = SimulationType::createTrunc(maxN, maxL, maxM, Mp, nCore);
+
+   int nN = pTrunc->sim()->rad()->nN();
+   int nL = pTrunc->local()->spec()->nL();
+
+   RadialBasisType radBasis(pTrunc);
+
+   epm::EPMFloat tmp = 0.0;
+   epm::EPMFloat maxCoeff = 0.0;
+
+   for(int l = 0; l < nL ; ++l)
+   {
+      tmp = ((radBasis.at(l).poly() * radBasis.at(l).wPoly()) - epm::Matrix::Identity(nN, nN)).maxCoeff();
+      maxCoeff = std::max(tmp, maxCoeff);
+   }
+
+   if(maxCoeff < ERROR_THRESHOLD)
+   {
+      return 0;
+   } else
+   {
+      return 1;
+   }
 }
 
 /**
