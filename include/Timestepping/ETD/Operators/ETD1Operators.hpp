@@ -55,7 +55,7 @@ namespace EPMDynamo {
           * @param dt   New timestep value
           * @param basis Radial basis
           *
-          * \epmBug Wrong computation
+          * \epmBug Wrong computation, there is no conversion between dt and c
           */
          virtual void update(const EPMFloat dt, const BasisType &basis);
 
@@ -64,8 +64,6 @@ namespace EPMDynamo {
           *
           * @param c Maximum eigen value
           * @param basis Radial basis 
-          *
-          * \epmBug Need to implement inverse of matrix
           */
          void createOperators(const EPMFloat c, const BasisType &basis);
 
@@ -95,9 +93,9 @@ namespace EPMDynamo {
          // Define homogeneous operator
          this->rEtdF(0).rHarmOp(i).constructBOperator(c, basis.at(i).specLaplacian());
 
-         // Store the operator including boundary conditions and its inverse
+         // Store the operator including boundary conditions and compute its inverse
          tmpM = this->etdF(0).harmOp(i).op();
-         //tmpM = INVERSE(tmpM);
+         this->computeInverse(tmpM);
 
          // Compute the exponential of the created operator
          this->computeScaledF0();

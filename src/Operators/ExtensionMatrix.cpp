@@ -37,7 +37,7 @@ namespace EPMDynamo {
       this->mHMatrix.resize(this->mNBCs, this->mNBCs);
 
       // Fill in the values for H
-      this->mHMatrix = bcRows.corner(Eigen::BottomLeft, this->mNBCs, this->mNBCs);
+      this->mHMatrix = bcRows.corner(Eigen::BottomRight, this->mNBCs, this->mNBCs);
 
       // Fill in the values for G
       this->mGMatrix = bcRows.corner(Eigen::TopLeft, this->mNBCs, this->mNBOp);

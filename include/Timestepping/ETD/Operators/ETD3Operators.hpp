@@ -65,8 +65,6 @@ namespace EPMDynamo {
           *
           * @param c Maximum eigen value
           * @param basis Radial basis 
-          *
-          * \epmBug Need to implement computation of inverse
           */
          void createOperators(const EPMFloat c, const BasisType &basis);
 
@@ -99,7 +97,8 @@ namespace EPMDynamo {
 
          // Store the operator including boundary conditions and its inverse
          tmpM = this->etdF(0).harmOp(i).op();
-         //tmpMInv = INVERSE(tmpM);
+         tmpMInv = tmpM;
+         this->computeInverse(tmpMInv);
          
          // Compute the exponential of the created operator
          this->computeScaledF0();

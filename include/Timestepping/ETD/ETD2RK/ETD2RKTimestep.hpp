@@ -80,6 +80,7 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
    {
+      std::cerr << "Computing ETD2RK timestep" << std::endl;
       // rVar = rVar + this->mpOpM2 * (rNTerms - this->mpNTermsN)/h;
    }
 

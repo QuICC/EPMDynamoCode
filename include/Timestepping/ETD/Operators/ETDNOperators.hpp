@@ -20,6 +20,7 @@
 #include "Timestepping/ETD/ETDOperators.hpp"
 #include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
+#include "LAPACK_Iface.hpp"
 
 namespace EPMDynamo {
 
@@ -137,6 +138,13 @@ namespace EPMDynamo {
           * @brief Compute the squared F0, F1, F2 and F3 values
           */
          void computeSquaredF3();
+
+         /**
+          * @brief Compute of the given matrix
+          *
+          * @param rMat Matrix to invert
+          */
+         void computeInverse(Matrix &rMat);
 
       private:
          /**
@@ -261,6 +269,40 @@ namespace EPMDynamo {
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::updateScalings(const EPMFloat c)
    {
       this->mScalings = std::ceil(std::log(SCALINGSQUARING_THRESHOLD*c*this->mMaxEig)/std::log(2.0));
+   }
+
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeInverse(Matrix &rMat)
+   {
+      int rows = rMat.rows();
+      int cols = rMat.cols();
+
+      int info;
+      ArrayI ipiv(rows);
+
+      // Call LAPACK dgetrf routine for factorisation
+      dgetrf_(&rows, &cols, rMat.data(), &rows, ipiv.data(), &info);
+
+      // Test success of computation through assert
+      assert(info == 0);
+
+      int lwork = -1;
+      Array work(rows);
+
+      // Call LAPACK dgetri routine for optimal work size
+      dgetri_(&rows, rMat.data(), &rows, ipiv.data(), work.data(), &lwork, &info);
+
+      // Test success of computation through assert
+      assert(info == 0);
+
+      // Set to optimal work size
+      lwork = static_cast<int>(work(0));
+      work.resize(lwork);
+
+      // Call LAPACK dgetri routine for inverse computation
+      dgetri_(&rows, rMat.data(), &rows, ipiv.data(), work.data(), &lwork, &info);
+
+      // Test success of computation through assert
+      assert(info == 0);
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF0()

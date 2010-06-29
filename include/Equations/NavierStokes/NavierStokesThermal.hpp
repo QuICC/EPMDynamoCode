@@ -45,7 +45,7 @@ namespace EPMDynamo {
          /**
           * @brief Simple empty destructor
           */
-         virtual ~NavierStokesThermal();
+         virtual ~NavierStokesThermal() {};
 
          /**
           * @brief Update RTP values of the equation

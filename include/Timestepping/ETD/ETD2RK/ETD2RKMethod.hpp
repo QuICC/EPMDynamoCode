@@ -116,25 +116,11 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKMethod<TSimType>::initStorage(SmartTruncation pTrunc)
    {
-      // Add required operators
-         // Add M0 operator
-      this->mETDOperators.push_back(this->mETD2.pEtdF(0));
-         // Add M1 operator
-      this->mETDOperators.push_back(this->mETD2.pEtdF(1));
-         // Add M2 operator
-      this->mETDOperators.push_back(this->mETD2.pEtdF(2));
-
-      // Create storage for a variable
-      EPMSHARED_PTR<ScalarType> pVarA(new ScalarType(pTrunc));
-
-      // Add required ETD variables
-         // Add storage for variable A 
-      this->mETDVars.push_back(pVarA);
-
       // Create intermediate value a computation step
-      EPMSHARED_PTR<ETD2RKA<TSimType> > pItA(new ETD2RKA<TSimType> (this->mETDOperators.at(0), this->mETDOperators.at(1)));
+      EPMSHARED_PTR<ETD2RKA<TSimType> > pItA(new ETD2RKA<TSimType> (this->mETD2.pEtdF(0), this->mETD2.pEtdF(1)));
+
       // Create timestep computation step
-      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (this->mETDVars.at(0), this->mETDOperators.at(2)));
+      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (this->pOldNTerms(), this->mETD2.pEtdF(2)));
 
       // Add required ETD steps
          // Add intermediate value A computation

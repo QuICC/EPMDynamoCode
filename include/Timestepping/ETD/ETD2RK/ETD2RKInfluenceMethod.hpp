@@ -73,6 +73,14 @@ namespace EPMDynamo {
           */
          void updateTimeMatrices();
 
+         /**
+          * @brief Compute next scheme iteration
+          *
+          * @param rVar Input/Output variable
+          * @param rNTerms New non linear terms
+          */
+         void doIteration(ScalarType& rVar, ScalarType& rNTerms);
+
       private:
          /**
           * @brief Number of boundary conditions required for influence matrix
@@ -91,6 +99,9 @@ namespace EPMDynamo {
 
          /**
           * @brief update the influence matrix solution
+          *
+          *
+          * \epmBug Not implemented yet
           */
          void updateInfluenceSolution();
 
@@ -130,6 +141,18 @@ namespace EPMDynamo {
 
       // Update the influence matrix solution
       this->updateInfluenceSolution();
+   }
+
+   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::doIteration(typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rVar, typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rNTerms)
+   {
+      // Solve influence matrix part
+      this->mInfluence.solve(rNTerms);
+
+      // Go on with normal timestep
+      ETDMethodBase<TSimType>::doIteration(rVar, rNTerms);
+
+      // Correct solution with influence solution
+      this->useInfluenceSolution(rVar);
    }
 
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::initInfluence()

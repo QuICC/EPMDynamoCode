@@ -75,6 +75,9 @@ namespace EPMDynamo {
 
          // Accept timestep whatever happened before
          this->rTSParams().acceptTimestep();
+
+         // Increment the intermediate steps counter
+         ++this->mInterCounter;
       } else
       {
          // Check if timestep is bigger than minimum and if the initialisation steps are over

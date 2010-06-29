@@ -96,19 +96,9 @@ namespace EPMDynamo {
          std::vector<SmartETDIteration>  mETDSteps;
 
          /**
-          * @brief Vector of operators required by the ETD scheme
+          * @brief Storage for the required intermediate values
           */
-         std::vector<SmartETDOperator>  mETDOperators;
-
-         /**
-          * @brief Storage for the required variable values
-          */
-         std::vector<SmartScalarType>  mETDVars;
-
-         /**
-          * @brief Storage for the required NTerms
-          */
-         std::vector<SmartScalarType>  mETDNTerms;
+         std::vector<SmartScalarType>  mIntTmp;
 
          /**
           * @brief Reset current pointer to first step
@@ -119,9 +109,9 @@ namespace EPMDynamo {
           * @brief Compute next scheme iteration
           *
           * @param rVar Input/Output variable
-          * @param nTerms New non linear terms
+          * @param rNTerms New non linear terms
           */
-         void doIteration(ScalarType& rVar, ScalarType& nTerms);
+         void doIteration(ScalarType& rVar, ScalarType& rNTerms);
 
       private:
    };
@@ -136,10 +126,10 @@ namespace EPMDynamo {
       this->mCurrentIt = this->mETDSteps.begin();
    }
 
-   template <typename TSimType> void ETDMethodBase<TSimType>::doIteration(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& nTerms)
+   template <typename TSimType> void ETDMethodBase<TSimType>::doIteration(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& rNTerms)
    {
       // Do step computation
-      (*this->mCurrentIt)->compute(rVar, nTerms);
+      (*this->mCurrentIt)->compute(rVar, rNTerms);
 
       // Go forward one step
       ++this->mCurrentIt;

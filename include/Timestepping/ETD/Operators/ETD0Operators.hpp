@@ -54,7 +54,7 @@ namespace EPMDynamo {
           * @param dt   New timestep value
           * @param basis Radial basis
           *
-          * \epmBug Wrong computation
+          * \epmBug Wrong computation, there is no conversion between dt and c
           */
          virtual void update(const EPMFloat dt, const BasisType &basis);
 

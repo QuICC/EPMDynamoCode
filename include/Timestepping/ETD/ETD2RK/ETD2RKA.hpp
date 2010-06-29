@@ -56,12 +56,12 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief ETD operator M0
+          * @brief Pointer to the ETD operator M0
           */
          SmartETDOperators  mpOpM0;
 
          /**
-          * @brief ETD operator M1
+          * @brief Pointer to the ETD operator M1
           */
          SmartETDOperators  mpOpM1;
 
@@ -75,6 +75,7 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKA<TSimType>::compute(typename ETD2RKA<TSimType>::ScalarType &rVar, typename ETD2RKA<TSimType>::ScalarType &rNTerms)
    {
+      std::cerr << "Computing ETD2RK intermediate a" << std::endl;
       // rVar = this->mpOpM0 * rVar + this->mpOpM1 * rNTerms;
    }
 
