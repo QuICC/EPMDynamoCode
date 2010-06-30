@@ -52,7 +52,7 @@ namespace EPMDynamo {
          /**
           * @brief Store kernel boundary values
           *
-          * @param Kernel influence to store
+          * @param kernel Kernel influence to store
           * @param l Harmonic degree l
           */
          void storeKernelBC(const Array& kernel, const int l);

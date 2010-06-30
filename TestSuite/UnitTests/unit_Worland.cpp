@@ -23,8 +23,11 @@
 
 namespace epm = EPMDynamo;
 
+/// Notation simplification typedef for simulation type
 typedef epm::WSHSimulation SimulationType;
+/// Notation simplification typedef for truncation type
 typedef epm::SmartTruncation  SmartTruncation;
+/// Notation simplification typedef for radial basis type
 typedef SimulationType::RadialBasisType RadialBasisType;
 
 /**

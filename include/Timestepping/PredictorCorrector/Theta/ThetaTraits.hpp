@@ -35,7 +35,7 @@ namespace EPMDynamo {
          typedef ErrorL2Max<TSimType>   ErrorNormType;
 
          /// Type of timestep controller to use
-         static const TimestepCtrlTypes  CtrlType = ElementaryCtrl;
+         static const TimestepCtrlTypes  CtrlType = PI42Ctrl;
 
          /// Order of the timestep scheme
          static int order();
