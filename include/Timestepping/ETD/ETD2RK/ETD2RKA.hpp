@@ -75,8 +75,17 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKA<TSimType>::compute(typename ETD2RKA<TSimType>::ScalarType &rVar, typename ETD2RKA<TSimType>::ScalarType &rNTerms)
    {
-      std::cerr << "Computing ETD2RK intermediate a" << std::endl;
-      // rVar = this->mpOpM0 * rVar + this->mpOpM1 * rNTerms;
+      // Get number of harmonic degrees
+      int nL = rVar.trunc()->local()->spec()->nL();
+
+      // Get minimal degree index (not l=0)
+      int l0 = rVar.minL();
+
+      // loop over degrees 
+      for(int l = l0; l < nL; ++l)
+      {
+         rVar.rLShell(l) = this->mpOpM0->harmOp(l).op() * rVar.lshell(l) + this->mpOpM1->harmOp(l).op() * rNTerms.lshell(l);
+      }
    }
 
 }

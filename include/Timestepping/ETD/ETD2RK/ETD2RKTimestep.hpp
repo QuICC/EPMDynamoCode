@@ -80,8 +80,17 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
    {
-      std::cerr << "Computing ETD2RK timestep" << std::endl;
-      // rVar = rVar + this->mpOpM2 * (rNTerms - this->mpNTermsN)/h;
+      // Get number of harmonic degrees
+      int nL = rVar.trunc()->local()->spec()->nL();
+
+      // Get minimal degree index (not l=0)
+      int l0 = rVar.minL();
+
+      // loop over degrees 
+      for(int l = l0; l < nL; ++l)
+      {
+         rVar.rLShell(l) = rVar.lshell(l) + this->mpOpM2->harmOp(l).op() * (rNTerms.lshell(l) - this->mpNTermsN->lshell(l))/h;
+      }
    }
 
 }

@@ -190,7 +190,7 @@ namespace EPMDynamo {
       int nL = this->mInfluence.trunc()->local()->spec()->nL();
 
       // Get minimal degree index (not l=0)
-      int l0 = ! this->mInfluence.trunc()->local()->spec()->lArray()(0);
+      int l0 = this->mInfluence.minL();
 
       // Create temporary storage
       Array tmp(nN);
