@@ -155,6 +155,8 @@ namespace EPMDynamo {
       // Set boundary condition to the Navier-Stokes equation
       SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
       mNavierStokes.addTorBC(pZeroBC);
+      // Order of Poloidal BCs is important
+      mNavierStokes.addPolBC(pZeroBC);
       mNavierStokes.addPolBC(pDDBC);
 
       // Initialise the induction equation

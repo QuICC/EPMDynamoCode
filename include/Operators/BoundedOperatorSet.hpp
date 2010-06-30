@@ -244,6 +244,7 @@ namespace EPMDynamo {
    {
       // Get operator size
       int opSize = this->trunc()->sim()->rad()->nN();
+      int BOpSize = opSize - this->nBC();
        // Create BC rows matrix
       Matrix   bcRows(this->nBC(), opSize);
 
@@ -263,7 +264,7 @@ namespace EPMDynamo {
          }
 
          // Create smart pointer
-         pBOp = SmartBOperator(new BOperator(this->nBC(), opSize, l));
+         pBOp = SmartBOperator(new BOperator(this->nBC(), BOpSize, l));
 
          // Add homogeneous operator
          this->mpOperators.push_back(pBOp);

@@ -50,19 +50,19 @@ namespace EPMDynamo {
          virtual ~InfluenceMatrix() {};
 
          /**
-          * @brief Store solution
+          * @brief Store kernel boundary values
           *
-          * @param sol Solution to store
+          * @param Kernel influence to store
           * @param l Harmonic degree l
           */
-         void storeSolution(const Array& sol, const int l);
+         void storeKernelBC(const Array& kernel, const int l);
 
          /**
-          * @brief Correct timestep solution
+          * @brief Add kernel effect to given values
           *
-          * @param rVar Intermediate solution to correcte
+          * @param rVar Solution to correct
           */
-         void correctSolution(ScalarType &rVar);
+         void addKernel(ScalarType &rVar);
 
          /**
           * @brief Solve influence matrix equation for unkown
@@ -79,10 +79,27 @@ namespace EPMDynamo {
           *    2) Compute LU factorisation
           */
          void computeOperators();
+
+         /**
+          * @brief Add boundary condition
+          *
+          * @param pBC Boundary condition
+          */
+         void addBC(SmartBC pBC);
          
       protected:
 
       private:
+         /**
+          * @brief Number of implemented BCs
+          */
+         int mOpBCs;
+
+         /**
+          * @brief Other boundary conditions
+          */
+         std::vector<SmartBC> mOtherBCs;
+
          /**
           * @brief Vector of solution arrays
           */
@@ -95,7 +112,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> InfluenceMatrix<TSimType>::InfluenceMatrix(SmartTruncation pTrunc, const typename InfluenceMatrix<TSimType>::BasisType &basis)
-      : LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(basis, pTrunc)
+      : LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(basis, pTrunc), mOpBCs(-2)
    {
       this->initSolutions();
    }
@@ -114,7 +131,25 @@ namespace EPMDynamo {
 
    template <typename TSimType> void InfluenceMatrix<TSimType>::computeOperators()
    {
+      // Create the laplacian operators
       this->createOperators(-1.0);
+   }
+
+   template <typename TSimType> inline void InfluenceMatrix<TSimType>::addBC(SmartBC pBC)
+   {
+      // The first boundary conditions is implemented into the laplacian
+      if(this->mOpBCs == -2)
+      {
+         LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>::addBC(pBC);
+      }
+      // Other boundary conditions are stored in the influence matrix object
+      else
+      {
+         this->mOtherBCs.push_back(pBC);
+      }
+
+      // increment number of implemented boundary conditions
+      ++this->mOpBCs;
    }
 
    template <typename TSimType> inline void InfluenceMatrix<TSimType>::solve(typename InfluenceMatrix<TSimType>::ScalarType &rVar)
@@ -128,17 +163,24 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> inline void InfluenceMatrix<TSimType>::storeSolution(const Array& sol, const int l)
+   template <typename TSimType> inline void InfluenceMatrix<TSimType>::storeKernelBC(const Array& kernel, const int l)
    {
-      assert(this->mBCs.size() == 0);
+      // Current implementation only works with a total 2 two BCs
+      assert(this->mOtherBCs.size() == 1);
 
-      EPMFloat bcVal = this->mBCs.at(0)->getLHSBC(l).dot(sol);
+      // Compute the boundary value of the kernel
+      EPMFloat bcVal = this->mOtherBCs.at(0)->getLHSBC(l).dot(kernel);
 
-      this->mSolutions.at(l) = sol/bcVal;
+      // Protect against division by zero
+      assert(bcVal != 0.0);
+
+      // Store the rescaled kernel
+      this->mSolutions.at(l) = kernel/bcVal;
    }
 
-   template <typename TSimType> inline void InfluenceMatrix<TSimType>::correctSolution(typename InfluenceMatrix<TSimType>::ScalarType &rVar)
+   template <typename TSimType> inline void InfluenceMatrix<TSimType>::addKernel(typename InfluenceMatrix<TSimType>::ScalarType &rVar)
    {
+      // Get truncation information
       int nN = this->trunc()->sim()->rad()->nN();
       int nL = this->trunc()->local()->spec()->nL();
       const int l0 = rVar.minL();
@@ -149,12 +191,16 @@ namespace EPMDynamo {
 
          for(int m =0; m <this->trunc()->local()->spec()->nM(l) ; ++m)
          {
-            bcVal.real() = this->mBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).real()); 
-            bcVal.imag() = this->mBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag()); 
+            // Compute the boundary values of the timestep RHS (real and imaginary parts)
+            bcVal.real() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).real()); 
+            bcVal.imag() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag()); 
+
+            // Loop over all radial coefficients
             for(int n=0; n < nN; ++n)
             {
-               rVar.rLShell(l).col(m)(n).real() -= bcVal.real()*mSolutions.at(l)(n);
-               rVar.rLShell(l).col(m)(n).imag() -= bcVal.imag()*mSolutions.at(l)(n);
+               // Substract the kernel influence to give the right boundary condition
+               rVar.rLShell(l).col(m)(n).real() -= bcVal.real()*this->mSolutions.at(l)(n);
+               rVar.rLShell(l).col(m)(n).imag() -= bcVal.imag()*this->mSolutions.at(l)(n);
             }
          }
       }

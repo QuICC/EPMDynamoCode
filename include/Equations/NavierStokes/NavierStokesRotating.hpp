@@ -70,11 +70,6 @@ namespace EPMDynamo {
           * \param step Current step in a multistep transform
           */
          void transformRHS(const int step);
-
-         /**
-          * @brief Initialise the equation
-          */
-         void init();
          
       protected:
 
@@ -108,24 +103,6 @@ namespace EPMDynamo {
    {
       // Transform non linear terms to spectral space from mNTerms values
       this->transformNTerms(this->mNTerms.rOc().rPerturbation().rTor(), this->mNTerms.rOc().rPerturbation().rPol());
-   }
-
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotating<TSimType, TSimTraits>::init()
-   {
-      // Set influence matrix equation boundary condition
-      SmartBC  pZeroBC(new ZeroBC<TSimType>(this->mrTransform.radBasis()));
-      this->mPolTStepper.addInfluenceBC(pZeroBC);
-
-      // Check that the right number of BCs have been provided
-      if(this->hasAllBCs())
-      {
-         // Init the timesteppers (they depend on the boundary conditions)
-         this->initTSteppers();
-      }
-      else
-      {
-         throw EPMException("NavierStokesRotating::init", "Tried to initialise with wrong number of BCs");
-      }
    }
 
 }

@@ -55,11 +55,14 @@ namespace EPMDynamo {
          virtual ~ETD2RKInfluenceMethod() {};
 
          /**
-          * @brief Add boundary condition for inlfuence matrix
+          * @brief Add boundary condition
+          *
+          * Only the first boundary condition will be propagated to the standard timestep structure. But all boundray conditions
+          * are inserted into the influence matrix.
           *
           * @param pBC Boundary condition
           */
-         void addInfluenceBC(SmartBC pBC);
+         void addBC(SmartBC pBC);
 
          /**
           * @brief Initialise the ETD2RK influence matrix method
@@ -99,25 +102,33 @@ namespace EPMDynamo {
 
          /**
           * @brief update the influence matrix solution
-          *
-          *
-          * \epmBug Not implemented yet
           */
-         void updateInfluenceSolution();
+         void updateInfluence();
 
          /**
-          * @brief Correct timestep solution with Influence matrix solution
+          * @brief Compute the influence of the kernel on the timestep
+          *
+          * @param kernel Kernel of the laplacian
+          * @param l Harmonic degree 
+          *
+          * \epmBug Not implemented YET
           */
-         void useInfluenceSolution(ScalarType& rVar);
+         void computeKernelInfluence(Array &kernel, const int l);
    };
 
    template <typename TSimType> ETD2RKInfluenceMethod<TSimType>::ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD2RKInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-1), mInfluence(pTrunc, basis)
+      : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-2), mInfluence(pTrunc, basis)
    {
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::addInfluenceBC(SmartBC pBC)
+   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::addBC(SmartBC pBC)
    {
+      // Propagate only the first boundary condition to standard implementation
+      if(this->mInfluenceNBC == -2)
+      {
+         ETD2RKMethod<TSimType>::addBC(pBC);
+      }
+
       // Add boundary condition
       this->mInfluence.addBC(pBC);
 
@@ -140,7 +151,7 @@ namespace EPMDynamo {
       ETD2RKMethod<TSimType>::updateTimeMatrices();
 
       // Update the influence matrix solution
-      this->updateInfluenceSolution();
+      this->updateInfluence();
    }
 
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::doIteration(typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rVar, typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rNTerms)
@@ -151,8 +162,8 @@ namespace EPMDynamo {
       // Go on with normal timestep
       ETDMethodBase<TSimType>::doIteration(rVar, rNTerms);
 
-      // Correct solution with influence solution
-      this->useInfluenceSolution(rVar);
+      // Include kernel influence
+      this->mInfluence.addKernel(rVar);
    }
 
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::initInfluence()
@@ -170,13 +181,36 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::updateInfluenceSolution()
+   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::updateInfluence()
    {
+      // Get size of radial truncation
+      int nN = this->mLHS.trunc()->sim()->rad()->nN();
+      // Get number of harmonic degrees
+      int nL = this->mLHS.trunc()->local()->spec()->nL();
+
+      // Get minimal degree index (not l=0)
+      int l0 = ! this->mLHS.trunc()->local()->spec()->lArray()(0);
+
+      // Create temporary storage
+      Array tmp(nN);
+
+      // loop over degrees 
+      for(int l = l0; l < nL; ++l)
+      {
+         // Initialise influence matrix solution to kernel r^l
+         tmp.setConstant(0.0);
+         tmp(0) = 1.0;
+
+         // Compute the kernel influence
+         this->computeKernelInfluence(tmp, l);
+
+         // Store solution from influence matrix
+         this->mInfluence.storeKernelBC(tmp, l);
+      }
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::useInfluenceSolution(typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rVar)
+   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::computeKernelInfluence(Array &kernel, const int l)
    {
-      this->mInfluence.correctSolution(rVar);
    }
 
 }

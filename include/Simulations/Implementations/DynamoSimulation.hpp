@@ -175,6 +175,8 @@ namespace EPMDynamo {
       SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
       SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
       this->mNavierStokes.addTorBC(pSFBC);
+      // Order of Poloidal BCs is important
+      this->mNavierStokes.addPolBC(pZeroBC);
       this->mNavierStokes.addPolBC(pDDBC);
 
       // Initialise the induction equation

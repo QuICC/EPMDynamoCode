@@ -100,9 +100,6 @@ namespace EPMDynamo {
 
             // Toggle timestep to predictor step
             this->rTSParams().toggleTimestepStatus();
-
-            // Reset timestep error
-            this->resetError();
          }
       }
    }
@@ -144,6 +141,9 @@ namespace EPMDynamo {
          {
             this->useTimestep(dt);
          }
+
+         // Reset timestep error
+         this->resetError();
       }
    }
 

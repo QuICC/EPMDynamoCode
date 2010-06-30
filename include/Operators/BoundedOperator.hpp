@@ -92,7 +92,7 @@ namespace EPMDynamo {
    };
 
    template <typename TOpType> BoundedOperator<TOpType>::BoundedOperator(const int nBC, const int nTau, const int id)
-      : BoundedOperatorBase<TOpType>(nTau, nBC, id), mExt()
+      : BoundedOperatorBase<TOpType>(nBC, nTau, id), mExt()
    {
    }
 

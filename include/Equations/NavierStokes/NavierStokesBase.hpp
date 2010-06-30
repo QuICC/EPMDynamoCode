@@ -103,7 +103,7 @@ namespace EPMDynamo {
    }
 
    template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 1, params.Ro(), params.E()), mrParams(params)
+      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 2, params.Ro(), params.E()), mrParams(params)
    {
    }
 

@@ -55,11 +55,13 @@ namespace EPMDynamo {
          virtual ~ThetaInfluenceMethod() {};
 
          /**
-          * @brief Add boundary condition for inlfuence matrix
+          * @brief Add boundary condition
+          *
+          * The boundary conditions are added to the influence matrix. Only the first one is propagated to the standard time operators.
           *
           * @param pBC Boundary condition
           */
-         void addInfluenceBC(SmartBC pBC);
+         void addBC(SmartBC pBC);
 
          /**
           * @brief Initialise the Theta influence matrix method 
@@ -120,21 +122,22 @@ namespace EPMDynamo {
          /**
           * @brief update the influence matrix solution
           */
-         void updateInfluenceSolution();
-
-         /**
-          * @brief Correct timestep solution with Influence matrix solution
-          */
-         void useInfluenceSolution(ScalarType& rVar);
+         void updateInfluence();
    };
 
    template <typename TSimType> ThetaInfluenceMethod<TSimType>::ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const typename ThetaInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-1), mInfluence(pTrunc, basis)
+      : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-2), mInfluence(pTrunc, basis)
    {
    }
 
-   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::addInfluenceBC(SmartBC pBC)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::addBC(SmartBC pBC)
    {
+      // Propagate only the first boundary condition to standard implementation
+      if(this->mInfluenceNBC == -2)
+      {
+         ThetaMethod<TSimType>::addBC(pBC);
+      }
+
       // Add boundary condition
       this->mInfluence.addBC(pBC);
 
@@ -157,7 +160,7 @@ namespace EPMDynamo {
       ThetaMethod<TSimType>::updateTimeMatrices();
 
       // Update the influence matrix solution
-      this->updateInfluenceSolution();
+      this->updateInfluence();
    }
 
    template <typename TSimType> void ThetaInfluenceMethod<TSimType>::setPredictorRHS(typename ThetaInfluenceMethod<TSimType>::ScalarType& rVar, const typename ThetaInfluenceMethod<TSimType>::ScalarType& oldVar, typename ThetaInfluenceMethod<TSimType>::ScalarType& rNTerms)
@@ -174,8 +177,8 @@ namespace EPMDynamo {
       // Solve for unknown variable
       ThetaMethod<TSimType>::solvePredictor(rVar);
 
-      // Correct influenc matrix solution
-      this->useInfluenceSolution(rVar);
+      // Include kernel influence
+      this->mInfluence.addKernel(rVar);
    }
 
    template <typename TSimType> void ThetaInfluenceMethod<TSimType>::setCorrectorRHS(typename ThetaInfluenceMethod<TSimType>::ScalarType& rNewNTerms)
@@ -192,8 +195,8 @@ namespace EPMDynamo {
       // Get the correction to the unknown variable
       ThetaMethod<TSimType>::solveCorrector();
 
-      // Correct influence matrix solution
-      this->useInfluenceSolution(this->mPreviousNTerms);
+      // Include kernel influence
+      this->mInfluence.addKernel(this->mPreviousNTerms);
    }
 
    template <typename TSimType> void ThetaInfluenceMethod<TSimType>::initInfluence()
@@ -211,7 +214,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::updateInfluenceSolution()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::updateInfluence()
    {
       // Get size of radial truncation
       int nN = this->mLHS.trunc()->sim()->rad()->nN();
@@ -224,24 +227,19 @@ namespace EPMDynamo {
       // Create temporary storage
       Array tmp(nN);
 
-      // loop over degrees
+      // loop over degrees 
       for(int l = l0; l < nL; ++l)
       {
-         // Initialise influence matrix solution to r^l
+         // Initialise influence matrix solution to kernel r^l
          tmp.setConstant(0.0);
          tmp(0) = 1.0;
 
-         // Compute influence matrix solution
+         // Compute the kernel influence
          this->mLHS.solveZeroVector(tmp, l);
 
          // Store solution from influence matrix
-         this->mInfluence.storeSolution(tmp, l);
+         this->mInfluence.storeKernelBC(tmp, l);
       }
-   }
-
-   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::useInfluenceSolution(typename ThetaInfluenceMethod<TSimType>::ScalarType& rVar)
-   {
-      this->mInfluence.correctSolution(rVar);
    }
 
 }
