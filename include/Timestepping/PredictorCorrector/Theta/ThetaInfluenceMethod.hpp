@@ -46,8 +46,9 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -125,8 +126,8 @@ namespace EPMDynamo {
          void updateInfluence();
    };
 
-   template <typename TSimType> ThetaInfluenceMethod<TSimType>::ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const typename ThetaInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-2), mInfluence(pTrunc, basis)
+   template <typename TSimType> ThetaInfluenceMethod<TSimType>::ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const typename ThetaInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mInfluence(pTrunc, basis, hasL0)
    {
    }
 

@@ -48,8 +48,9 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param pTrunc Truncation information
+          * @param hasL0 Is the L = 0 mode required ?
           */
-         BoundedOperatorSet(SmartTruncation pTrunc);
+         BoundedOperatorSet(SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -92,6 +93,16 @@ namespace EPMDynamo {
          void solveZeroVector(Array&  rhs, const int l);
          
 //      protected:
+         /**
+          * @brief Is the l=0 mode required?
+          */
+         bool hasL0() const;
+
+         /**
+          * @brief Minimul harmonic degree index
+          */
+         int minL() const;
+
          /**
           * @brief Get the number of operators
           */
@@ -148,6 +159,16 @@ namespace EPMDynamo {
 
       private:
          /**
+          * @brief Is the l=0 mode required ?
+          */
+         bool mHasL0;
+
+         /**
+          * @brief Minimum harmonic degree index (depends on mHasL0)
+          */
+         int mMinL;
+
+         /**
           * @brief Number of operators in the set
           */
          int mNOp;
@@ -201,9 +222,24 @@ namespace EPMDynamo {
          bool isImagBCNH(const int l, const int m) const;
    };
 
-   template <typename TOpType> BoundedOperatorSet<TOpType>::BoundedOperatorSet(SmartTruncation pTrunc)
-      : mNOp(0), mNbc(0), mpTrunc(pTrunc), mTmp(), mAllHomogeneous(false)
+   template <typename TOpType> BoundedOperatorSet<TOpType>::BoundedOperatorSet(SmartTruncation pTrunc, bool hasL0)
+      : mHasL0(hasL0), mMinL(0), mNOp(0), mNbc(0), mpTrunc(pTrunc), mTmp(), mAllHomogeneous(false)
    {
+      // Set the minimum l index 
+      if(this->mpTrunc->local()->spec()->lArray()(0) == 0)
+      {
+         this->mMinL = (! this->mHasL0);
+      }
+   }
+
+   template <typename TOpType> inline bool BoundedOperatorSet<TOpType>::hasL0() const
+   {
+      return this->mHasL0;
+   }
+
+   template <typename TOpType> inline int BoundedOperatorSet<TOpType>::minL() const
+   {
+      return this->mMinL;
    }
 
    template <typename TOpType> inline int BoundedOperatorSet<TOpType>::nOp() const
@@ -232,11 +268,17 @@ namespace EPMDynamo {
 
    template <typename TOpType> inline const typename BoundedOperatorSet<TOpType>::BOperator& BoundedOperatorSet<TOpType>::harmOp(const int l) const
    {
+      // Protect against use of unrequired (and probably dangerous) L=0 mode
+      assert(!(this->mpTrunc->local()->spec()->lArray()(l) == 0 && (! this->mHasL0)));
+
       return *(this->mpOperators.at(l));
    }
 
    template <typename TOpType> inline typename BoundedOperatorSet<TOpType>::BOperator& BoundedOperatorSet<TOpType>::rHarmOp(const int l)
    {
+      // Protect against use of unrequired (and probably dangerous) L=0 mode
+      assert(!(this->mpTrunc->local()->spec()->lArray()(l) == 0 && (! this->mHasL0)));
+
       return *(this->mpOperators.at(l));
    }
 

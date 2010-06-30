@@ -43,8 +43,9 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is l=0 mode required?
           */
-         PCScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         PCScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -80,8 +81,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TMethod> PCScheme<TSimType, TMethod>::PCScheme(EPMFloat a, EPMFloat b, const typename PCScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : TMethod<TSimType>(a, b, basis, tsteps, pTrunc)
+   template <typename TSimType, template <typename> class TMethod> PCScheme<TSimType, TMethod>::PCScheme(EPMFloat a, EPMFloat b, const typename PCScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : TMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0)
    {
    }
 

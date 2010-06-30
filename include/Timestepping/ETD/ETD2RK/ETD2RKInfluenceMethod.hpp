@@ -46,8 +46,9 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -116,8 +117,8 @@ namespace EPMDynamo {
          void computeKernelInfluence(Array &kernel, const int l);
    };
 
-   template <typename TSimType> ETD2RKInfluenceMethod<TSimType>::ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD2RKInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc), mInfluenceNBC(-2), mInfluence(pTrunc, basis)
+   template <typename TSimType> ETD2RKInfluenceMethod<TSimType>::ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD2RKInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mInfluence(pTrunc, basis, hasL0)
    {
    }
 
@@ -184,12 +185,12 @@ namespace EPMDynamo {
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::updateInfluence()
    {
       // Get size of radial truncation
-      int nN = this->mLHS.trunc()->sim()->rad()->nN();
+      int nN = this->mInfluence.trunc()->sim()->rad()->nN();
       // Get number of harmonic degrees
-      int nL = this->mLHS.trunc()->local()->spec()->nL();
+      int nL = this->mInfluence.trunc()->local()->spec()->nL();
 
       // Get minimal degree index (not l=0)
-      int l0 = ! this->mLHS.trunc()->local()->spec()->lArray()(0);
+      int l0 = ! this->mInfluence.trunc()->local()->spec()->lArray()(0);
 
       // Create temporary storage
       Array tmp(nN);

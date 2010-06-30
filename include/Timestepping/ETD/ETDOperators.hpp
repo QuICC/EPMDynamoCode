@@ -31,8 +31,9 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param pTrunc Truncation information
+          * @param hasL0 Is l=0 mode required?
           */
-         ETDOperators(SmartTruncation pTrunc);
+         ETDOperators(SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -44,8 +45,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(SmartTruncation pTrunc)
-      : BoundedOperatorSet<TOpType>(pTrunc)
+   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(SmartTruncation pTrunc, bool hasL0)
+      : BoundedOperatorSet<TOpType>(pTrunc, hasL0)
    {
    }
 

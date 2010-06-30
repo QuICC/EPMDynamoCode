@@ -65,7 +65,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename>  class TFieldType> WithSpectralSource<TSimType, TFieldType>::WithSpectralSource(SmartTruncation pTrunc, typename WithSpectralSource<TSimType,TFieldType>::TransformType &transform)
-      : SimpleField<TSimType, TFieldType>(pTrunc, transform), mSrc(pTrunc)
+      : SimpleField<TSimType, TFieldType>(pTrunc, transform), mSrc(pTrunc, true)
    {
    }
 

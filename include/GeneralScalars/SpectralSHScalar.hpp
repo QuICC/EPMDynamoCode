@@ -37,7 +37,7 @@ namespace EPMDynamo {
          * @param pTrunc    Truncation information
          * @param needsL0   Should computation consider L=0 modes
          */
-         SpectralSHScalar(const SmartTruncation pTrunc, const bool needsL0 = true);
+         SpectralSHScalar(const SmartTruncation pTrunc, const bool needsL0);
 
          /**
          * @brief Simple empty destructor

@@ -42,8 +42,9 @@ namespace EPMDynamo {
           *
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         TimestepSchemeBase(TimestepParameters &tsteps, SmartTruncation pTrunc);
+         TimestepSchemeBase(TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -154,8 +155,8 @@ namespace EPMDynamo {
       return (*this->mpOldNTerms);
    }
 
-   template <typename TSimType> TimestepSchemeBase<TSimType>::TimestepSchemeBase(TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : mrTStepParams(tsteps), mpOldVar(new ScalarType(pTrunc)), mpOldNTerms(new ScalarType(pTrunc)) 
+   template <typename TSimType> TimestepSchemeBase<TSimType>::TimestepSchemeBase(TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : mrTStepParams(tsteps), mpOldVar(new ScalarType(pTrunc, hasL0)), mpOldNTerms(new ScalarType(pTrunc, hasL0)) 
    {
    }
 

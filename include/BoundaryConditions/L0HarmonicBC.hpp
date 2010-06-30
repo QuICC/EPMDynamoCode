@@ -80,7 +80,7 @@ namespace EPMDynamo {
          return 0.0;
       } else
       {
-         return mValue;
+         return this->mValue;
       }
    }
 
@@ -96,7 +96,7 @@ namespace EPMDynamo {
          return EPMComplex(0.0);
       } else
       {
-         return EPMComplex(mValue);
+         return EPMComplex(this->mValue);
       }
    }
 }

@@ -36,8 +36,9 @@ namespace EPMDynamo {
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
           * @param pTrunc Truncation information
+          * @param hasL0 Is l=0 mode required?
           */
-         ThetaTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc);
+         ThetaTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -89,8 +90,8 @@ namespace EPMDynamo {
          bool mIsThetaLocked;
    };
 
-   template <typename TSimType, typename TOpType> ThetaTOperatorSet<TSimType, TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc)
-      : ImplicitTOperatorSet<TSimType, TOpType>(pTrunc), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
+   template <typename TSimType, typename TOpType> ThetaTOperatorSet<TSimType, TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
+      : ImplicitTOperatorSet<TSimType, TOpType>(pTrunc, hasL0), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
    {
    }
 

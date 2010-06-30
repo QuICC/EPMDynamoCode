@@ -236,15 +236,12 @@ namespace EPMDynamo {
 
    template <typename TSimType> void DynamoSimulation<TSimType>::timestepEquations()
    {
-std::cerr << "Timestepping Induction" << std::endl;
       // Timestep the induction equation
       this->mInduction.timestep();
 
-std::cerr << "Timestepping Transport" << std::endl;
       // Timestep the transport equation
       this->mTransport.timestep();
 
-std::cerr << "Timestepping Navier Stokes" << std::endl;
       // Timestep the Navier-Stokes equation
       this->mNavierStokes.timestep();
    }

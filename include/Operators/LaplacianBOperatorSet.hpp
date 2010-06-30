@@ -37,8 +37,9 @@ namespace EPMDynamo {
           *
           * @param basis Reference to the basis used for the operators
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         LaplacianBOperatorSet(const BasisType &basis, SmartTruncation pTrunc);
+         LaplacianBOperatorSet(const BasisType &basis, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -61,8 +62,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TOpType> LaplacianBOperatorSet<TSimType, TOpType>::LaplacianBOperatorSet(const typename LaplacianBOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc)
-      : BoundedOperatorSet<TOpType>(pTrunc), mrBasis(basis)
+   template <typename TSimType, typename TOpType> LaplacianBOperatorSet<TSimType, TOpType>::LaplacianBOperatorSet(const typename LaplacianBOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
+      : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mrBasis(basis)
    {
    }
 
@@ -72,7 +73,7 @@ namespace EPMDynamo {
       int l;
 
       // Loop over all degrees
-      for(int i = 0; i < this->nOp(); ++i)
+      for(int i = this->minL(); i < this->nOp(); ++i)
       {
          // Get degree of the current operator
          l = this->harmOp(i).id();

@@ -114,7 +114,7 @@ namespace EPMDynamo {
    };
    
    template <typename TSimType> PhysicalScalar<TSimType>::PhysicalScalar(SmartTruncation pTrunc, typename PhysicalScalar<TSimType>::TransformType &transform)
-      : PhysicalScalarBase<TSimType>(pTrunc, transform), mPerturbation(pTrunc), mNeedGradTransform(0)
+      : PhysicalScalarBase<TSimType>(pTrunc, transform), mPerturbation(pTrunc, true), mNeedGradTransform(0)
    {
    }
 

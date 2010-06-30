@@ -49,8 +49,9 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is l=0 mode required?
           */
-         ETD2RKMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ETD2RKMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -89,8 +90,8 @@ namespace EPMDynamo {
          void initStorage(SmartTruncation pTrunc);
    };
 
-   template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : ETDMethodBase<TSimType>(a, b, basis, tsteps, pTrunc), mETD2(pTrunc)
+   template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : ETDMethodBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mETD2(pTrunc, hasL0)
    {
       // initialise pointers
       this->initStorage(pTrunc);
@@ -105,7 +106,7 @@ namespace EPMDynamo {
    template <typename TSimType> void ETD2RKMethod<TSimType>::init()
    {
       // initialise the operators
-      this->mETD2.initOperators();
+      this->mETD2.initOperators(this->mrBasis);
    }
 
    template <typename TSimType> void ETD2RKMethod<TSimType>::updateTimeMatrices()

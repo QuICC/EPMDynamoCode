@@ -58,7 +58,7 @@ namespace EPMDynamo {
       : HomogeneousBC(basis.basisN(), basis.polyN())
    {
       // Fill Operator BC values
-      fillLHSBCValues(basis);
+      this->fillLHSBCValues(basis);
    }
 
    template <typename TSimType> void DDRadialBC<TSimType>::fillLHSBCValues(const typename DDRadialBC<TSimType>::BasisType &basis)
@@ -66,7 +66,7 @@ namespace EPMDynamo {
       int nL = this->nL();
       for(int l = 0; l < nL; ++l)
       {
-         rLHSBCValues(l) = basis.at(l).bdiff(2);
+         this->rLHSBCValues(l) = basis.at(l).bdiff(2);
       }
    }
 }

@@ -34,7 +34,7 @@ namespace EPMDynamo {
           * @param pTrunc truncation information
           * @param needsL0 Is the l=0 mode required in computation?
           */
-         SpectralSHScalarBase(const SmartTruncation pTrunc, const bool needsL0 = true);
+         SpectralSHScalarBase(const SmartTruncation pTrunc, const bool needsL0);
 
          /**
           * @brief Destructor

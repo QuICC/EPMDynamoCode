@@ -40,8 +40,9 @@ namespace EPMDynamo {
           * @param b Coefficient \f$b\f$ of timestep scheme
           * @param basis Reference to the basis used for the operators
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc);
+         ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const BasisType &basis, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -60,8 +61,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaRHSTOperatorSet<TSimType>::ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaRHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc)
-      : ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::OperatorType>(a, b, basis, pTrunc)
+   template <typename TSimType> ThetaRHSTOperatorSet<TSimType>::ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaRHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
+      : ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::OperatorType>(a, b, basis, pTrunc, hasL0)
    {
    }
 

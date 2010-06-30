@@ -54,8 +54,9 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is l=0 mode required?
           */
-         ETDMethodBase(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ETDMethodBase(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -116,8 +117,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETDMethodBase<TSimType>::ETDMethodBase(EPMFloat a, EPMFloat b, const typename ETDMethodBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : TimestepSchemeBase<TSimType>(tsteps, pTrunc), mA(a), mB(b), mrBasis(basis)
+   template <typename TSimType> ETDMethodBase<TSimType>::ETDMethodBase(EPMFloat a, EPMFloat b, const typename ETDMethodBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : TimestepSchemeBase<TSimType>(tsteps, pTrunc, hasL0), mA(a), mB(b), mrBasis(basis)
    {
    }
 

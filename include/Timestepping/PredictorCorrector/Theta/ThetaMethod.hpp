@@ -46,8 +46,9 @@ namespace EPMDynamo {
           * @param basis Reference to the basis used for the operators
           * @param tsteps Timestep parameters
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         ThetaMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc);
+         ThetaMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -142,8 +143,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaMethod<TSimType>::ThetaMethod(EPMFloat a, EPMFloat b, const typename ThetaMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc)
-      : TimestepSchemeBase<TSimType>(tsteps, pTrunc), mLHS(a, b, basis, pTrunc), mRHS(a, b, basis, pTrunc), mPreviousNTerms(pTrunc)
+   template <typename TSimType> ThetaMethod<TSimType>::ThetaMethod(EPMFloat a, EPMFloat b, const typename ThetaMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : TimestepSchemeBase<TSimType>(tsteps, pTrunc, hasL0), mLHS(a, b, basis, pTrunc, hasL0), mRHS(a, b, basis, pTrunc, hasL0), mPreviousNTerms(pTrunc, hasL0)
    {
    }
 

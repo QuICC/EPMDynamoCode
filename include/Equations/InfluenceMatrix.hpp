@@ -41,8 +41,9 @@ namespace EPMDynamo {
           *
           * @param pTrunc Truncation information
           * @param basis Reference to the basis used for the operators
+          * @param hasL0 Is the l=0 mode required?
           */
-         InfluenceMatrix(SmartTruncation pTrunc, const BasisType &basis);
+         InfluenceMatrix(SmartTruncation pTrunc, const BasisType &basis, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -111,8 +112,8 @@ namespace EPMDynamo {
          void initSolutions();
    };
 
-   template <typename TSimType> InfluenceMatrix<TSimType>::InfluenceMatrix(SmartTruncation pTrunc, const typename InfluenceMatrix<TSimType>::BasisType &basis)
-      : LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(basis, pTrunc), mOpBCs(-2)
+   template <typename TSimType> InfluenceMatrix<TSimType>::InfluenceMatrix(SmartTruncation pTrunc, const typename InfluenceMatrix<TSimType>::BasisType &basis, bool hasL0)
+      : LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(basis, pTrunc, hasL0), mOpBCs(-2)
    {
       this->initSolutions();
    }

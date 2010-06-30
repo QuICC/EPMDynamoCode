@@ -31,7 +31,7 @@
 #include "Equations/NavierStokes/NavierStokesMagnetic.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/InsulatingBC.hpp"
 
 namespace EPMDynamo {
@@ -153,11 +153,11 @@ namespace EPMDynamo {
       mInduction.addPolBC(pInsulatingBC);
 
       // Set boundary condition to the Navier-Stokes equation
-      SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
+      SmartBC  pDBC(new DRadialBC<TSimType>(this->mTransform.radBasis()));
       mNavierStokes.addTorBC(pZeroBC);
       // Order of Poloidal BCs is important
       mNavierStokes.addPolBC(pZeroBC);
-      mNavierStokes.addPolBC(pDDBC);
+      mNavierStokes.addPolBC(pDBC);
 
       // Initialise the induction equation
       mInduction.init();

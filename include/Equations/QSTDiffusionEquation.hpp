@@ -137,7 +137,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, typename TFieldType> QSTDiffusionEquation<TSimType, TFieldType>::QSTDiffusionEquation(TFieldType &rF, typename QSTDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBCQ, int nBCS, int nBCT, EPMFloat a, EPMFloat b)
-      : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mQTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mSTStepper(a, b, transform.radBasis(), tsteps, rF.trunc()), mTTStepper(a, b, transform.radBasis(), tsteps, rF.trunc())
+      : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mQTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true), mSTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true), mTTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true)
    {
       // Set counter to total number of boundary conditions
       this->mBCCounter = nBCQ + nBCS + nBCT;

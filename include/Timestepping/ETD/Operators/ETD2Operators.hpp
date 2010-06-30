@@ -38,8 +38,9 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param pTrunc Truncation information
+          * @param hasL0 Is l=0 mode required?
           */
-         ETD2Operators(SmartTruncation pTrunc);
+         ETD2Operators(SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -53,26 +54,24 @@ namespace EPMDynamo {
           *
           * @param dt   New timestep value
           * @param basis Radial basis
-          *
-          * \epmBug Wrong computation
           */
          virtual void update(const EPMFloat dt, const BasisType &basis);
 
          /**
           * @brief Update the ETD2 operators
           *
-          * @param c Maximum eigen value
+          * @param h Timestep length
           * @param basis Radial basis 
           */
-         void createOperators(const EPMFloat c, const BasisType &basis);
+         void createOperators(const EPMFloat h, const BasisType &basis);
 
       protected:
 
       private:
    };
 
-   template <typename TSimType> ETD2Operators<TSimType>::ETD2Operators(SmartTruncation pTrunc)
-      : ETDNOperators<TSimType, 3>(pTrunc)
+   template <typename TSimType> ETD2Operators<TSimType>::ETD2Operators(SmartTruncation pTrunc, bool hasL0)
+      : ETDNOperators<TSimType, 3>(pTrunc, hasL0)
    {
    }
 
@@ -81,16 +80,19 @@ namespace EPMDynamo {
       this->createOperators(dt, basis);
    }
 
-   template <typename TSimType> void ETD2Operators<TSimType>::createOperators(const EPMFloat c, const typename ETD2Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD2Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD2Operators<TSimType>::BasisType &basis)
    {
+      // Update the required scaling power
+      this->updateScalings(h);
+
       // Storage for a temporary operator
       Matrix tmpM;
 
       // Loop over all degrees
-      for(int i = 0; i < this->etdF(0).nOp(); ++i)
+      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(c, basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).constructBOperator(h, basis.at(i).specLaplacian());
 
          // Store the operator including boundary conditions and its inverse
          tmpM = this->etdF(0).harmOp(i).op();

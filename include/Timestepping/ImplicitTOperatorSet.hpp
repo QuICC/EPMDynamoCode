@@ -35,8 +35,9 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param pTrunc Truncation information
+          * @param hasL0 Is the l=0 mode required?
           */
-         ImplicitTOperatorSet(SmartTruncation pTrunc);
+         ImplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
@@ -56,8 +57,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TOpType> ImplicitTOperatorSet<TSimType, TOpType>::ImplicitTOperatorSet(SmartTruncation pTrunc)
-      : BoundedOperatorSet<TOpType>(pTrunc)
+   template <typename TSimType, typename TOpType> ImplicitTOperatorSet<TSimType, TOpType>::ImplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0)
+      : BoundedOperatorSet<TOpType>(pTrunc, hasL0)
    {
    }
 
@@ -67,7 +68,7 @@ namespace EPMDynamo {
       int l;
 
       // Loop over all degrees
-      for(int i = 0; i < this->nOp(); ++i)
+      for(int i = this->minL(); i < this->nOp(); ++i)
       {
          // Get degree of the current operator
          l = this->harmOp(i).id();
