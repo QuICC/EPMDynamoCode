@@ -39,15 +39,44 @@ namespace EPMDynamo {
           * @brief Destructor
           */
          virtual ~ETDOperators() {};
+
+         /**
+          * @brief Get the current timestep length
+          */
+         int h() const;
+
+         /**
+          * @brief Update the timestep length
+          *
+          * @param h New timestep length
+          */
+         void updateTimestep(const EPMFloat h);
          
       protected:
 
       private:
+         /**
+          * @brief Storage for the current timestep lenght
+          */
+         int mH;
    };
 
-   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(SmartTruncation pTrunc, bool hasL0)
-      : BoundedOperatorSet<TOpType>(pTrunc, hasL0)
+   template <typename TSimType, typename TOpType> inline int ETDOperators<TSimType, TOpType>::h() const
    {
+      // Guard from uninitialised timestep length
+      assert(this->mH > 0.0);
+
+      return this->mH;
+   }
+
+   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(SmartTruncation pTrunc, bool hasL0)
+      : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mH(-1)
+   {
+   }
+
+   template <typename TSimType, typename TOpType> void ETDOperators<TSimType, TOpType>::updateTimestep(EPMFloat h)
+   {
+      this->mH = h;
    }
 
 }

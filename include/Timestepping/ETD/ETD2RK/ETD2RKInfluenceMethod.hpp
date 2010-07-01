@@ -20,6 +20,7 @@
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKMethod.hpp"
+#include "Timestepping/ETD/ETD2RK/ETD2RKInfluenceKernel.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
@@ -95,6 +96,11 @@ namespace EPMDynamo {
           * @brief Influence matrix
           */
          InfluenceMatrix<TSimType> mInfluence;
+
+         /**
+          * @brief Computation of the influence kernel
+          */
+         ETD2RKInfluenceKernel<TSimType>  mpKernel;
 
          /**
           * @brief Initialise the influenc matrix
@@ -212,6 +218,7 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::computeKernelInfluence(Array &kernel, const int l)
    {
+      this->mpKernel->computeInfluence(kernel, l);
    }
 
 }

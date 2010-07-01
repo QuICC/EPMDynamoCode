@@ -86,6 +86,8 @@ namespace EPMDynamo {
       // Get minimal degree index (not l=0)
       int l0 = rVar.minL();
 
+      EPMFloat h = this->mpOpM2->h();
+
       // loop over degrees 
       for(int l = l0; l < nL; ++l)
       {

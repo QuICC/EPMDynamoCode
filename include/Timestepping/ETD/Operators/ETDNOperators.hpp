@@ -337,6 +337,12 @@ namespace EPMDynamo {
       {
          this->mScalings(i) = std::ceil(std::log(SCALINGSQUARING_THRESHOLD*h*this->mMaxEig(i))/std::log(2.0));
       }
+
+      // Loop over all the ETD operators
+      for(int i=0; i < this->mNOps; ++i)
+      {
+         this->mpOperators.at(i)->updateTimestep(h);
+      }
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeInverse(Matrix &rMat)
