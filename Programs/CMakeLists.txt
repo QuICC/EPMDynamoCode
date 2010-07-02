@@ -20,6 +20,13 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
+# Create LinearThermalConvectionRun 
+#
+set(RunName LinearThermalConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
 # Create ThermalConvectionRun 
 #
 set(RunName ThermalConvectionRun)

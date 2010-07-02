@@ -27,7 +27,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCBVTraits
+#define TGENTRAITS epm::GenCVTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
 
 typedef  epm::InitialStateGenerator<epm::WSHSimulation, TGENTRAITS>  IStateGenerator;
@@ -70,6 +70,30 @@ void setRTPVelocity(Velocity &velV)
    }
 }
 
+void setSpecCodensity(Codensity &codC)
+{
+   SmartTruncation pTrunc = codC.trunc();
+
+   codC.rOc().rPerturbation().rLShell(0)(0,0) = 0.25;
+   codC.rOc().rPerturbation().rLShell(0)(1,0) = 0.5;
+
+}
+
+void setSpecMagnetic(Magnetic &magB)
+{
+}
+
+void setSpecVelocity(Velocity &velV)
+{
+   SmartTruncation pTrunc = velV.trunc();
+
+   for(int l=1; l < pTrunc->local()->spec()->nL()-5; ++l)
+   {
+      velV.rOc().rPerturbation().rTor().rLShell(l).row(0).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rPol().rLShell(l).row(0).setConstant(1.0e-5);
+   }
+}
+
 /**
  * @brief Velocity diffusion simulation
  */
@@ -98,6 +122,24 @@ int runProgram()
 
    // Transform the fields
    generator.transformRTP();
+
+   // Set the codensity field
+   if(GENTRAITS::NeedCodensity)
+   {
+      setSpecCodensity(generator.codC());
+   }
+
+   // Set the magetic field
+   if(GENTRAITS::NeedMagnetic)
+   {
+      setSpecMagnetic(generator.magB());
+   }
+
+   // Set the velocity field
+   if(GENTRAITS::NeedVelocity)
+   {
+      setSpecVelocity(generator.velV());
+   }
 
    // Initialise the state file
    generator.initOutput("Initial");
