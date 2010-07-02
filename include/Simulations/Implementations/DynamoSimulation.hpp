@@ -315,11 +315,11 @@ namespace EPMDynamo {
    template <typename TSimType> void DynamoSimulation<TSimType>::addASCIIOutput()
    {
       // Create a energy ASCII diagnostic file for the codensity scalar
-      EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::CodType> > pCodEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::CodType>(mCodC, "cod", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::CodType> > pCodEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::MagType> > pMagEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::MagType>(mMagB, "mag", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::MagType> > pMagEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::MagType>(this->mMagB, "mag", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add codensity energy to ASCII output
       this->mIOSys.addASCIIWriter(pCodEnergy);
@@ -329,11 +329,11 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy spectrum ASCII diagnostic file for the codensity scalar
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename DynamoTraits<TSimType>::CodType> > pCodSpectrum(new SpectrumFile<TSimType, typename DynamoTraits<TSimType>::CodType>(mCodC, "cod"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename DynamoTraits<TSimType>::CodType> > pCodSpectrum(new SpectrumFile<TSimType, typename DynamoTraits<TSimType>::CodType>(this->mCodC, "cod"));
       // Create a energy spectrum ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename DynamoTraits<TSimType>::MagType> > pMagSpectrum(new SpectrumFile<TSimType, typename DynamoTraits<TSimType>::MagType>(mMagB, "mag"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename DynamoTraits<TSimType>::MagType> > pMagSpectrum(new SpectrumFile<TSimType, typename DynamoTraits<TSimType>::MagType>(this->mMagB, "mag"));
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename DynamoTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename DynamoTraits<TSimType>::VelType>(mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename DynamoTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename DynamoTraits<TSimType>::VelType>(this->mVelV, "vel"));
 
       // Add codensity energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pCodSpectrum);

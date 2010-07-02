@@ -13,6 +13,13 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
+# Create RotatingDiffusionRun 
+#
+set(RunName RotatingDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
 # Create ThermalConvectionRun 
 #
 set(RunName ThermalConvectionRun)

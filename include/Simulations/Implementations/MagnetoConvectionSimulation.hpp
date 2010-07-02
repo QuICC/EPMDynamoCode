@@ -248,19 +248,19 @@ namespace EPMDynamo {
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::initFields()
    {
       // Read in initial state
-      EPMSHARED_PTR<StateFileReader<TSimType, MagnetoConvectionTraits> > pInState(new StateFileReader<TSimType, MagnetoConvectionTraits>(mMagB, mVelV,  "_initial"));
+      EPMSHARED_PTR<StateFileReader<TSimType, MagnetoConvectionTraits> > pInState(new StateFileReader<TSimType, MagnetoConvectionTraits>(this->mMagB, this->mVelV,  "_initial"));
 
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
 
       // Read in imposed magnetic field
-      EPMSHARED_PTR<ImposedFieldReader<TSimType, MagnetoConvectionTraits> > pIField(new ImposedFieldReader<TSimType, MagnetoConvectionTraits>(mMagB));
+      EPMSHARED_PTR<ImposedFieldReader<TSimType, MagnetoConvectionTraits> > pIField(new ImposedFieldReader<TSimType, MagnetoConvectionTraits>(this->mMagB));
 
       this->mIOSys.useImposedField(pIField);
    }
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::addHDF5Output()
    {
-      EPMSHARED_PTR<StateFileWriter<TSimType, MagnetoConvectionTraits> >  pOutState(new vStateFileWriter<TSimType, MagnetoConvectionTraits>(mMagB, mVelV, this->mEqParams, this->mSimControl.tsParams()));
+      EPMSHARED_PTR<StateFileWriter<TSimType, MagnetoConvectionTraits> >  pOutState(new vStateFileWriter<TSimType, MagnetoConvectionTraits>(this->mMagB, this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
    }
@@ -268,9 +268,9 @@ namespace EPMDynamo {
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::addASCIIOutput()
    {
       // Create a energy ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType> > pMagEnergy(new EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType>(mMagB, "mag", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType> > pMagEnergy(new EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType>(this->mMagB, "mag", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add magnetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pMagEnergy);
@@ -278,9 +278,9 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy spectrum ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType> > pMagSpectrum(new SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType>(mMagB, "mag"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType> > pMagSpectrum(new SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::MagType>(this->mMagB, "mag"));
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType>(mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename MagnetoConvectionTraits<TSimType>::VelType>(this->mVelV, "vel"));
 
       // Add magnetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pMagSpectrum);
