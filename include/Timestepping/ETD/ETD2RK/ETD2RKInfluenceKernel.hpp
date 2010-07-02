@@ -23,8 +23,6 @@ namespace EPMDynamo {
     * \brief Implemenation of influence of the kernel solution
     *
     * \tparam TSimType Type of the simulation
-    *
-    * \epmBug Not implemented yet
     */
    template <typename TSimType> class ETD2RKInfluenceKernel: public ETDIteration<TSimType>
    {
@@ -38,10 +36,10 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * @param pOpM0 Pointer to operator M0
           * @param pOpM1 Pointer to operator M1
+          * @param pOpM2 Pointer to operator M2
           */
-         ETD2RKInfluenceKernel(SmartETDOperators pOpM0, SmartETDOperators pOpM1);
+         ETD2RKInfluenceKernel(SmartETDOperators pOpM1, SmartETDOperators pOpM2);
 
          /**
           * @brief Destructor
@@ -58,26 +56,26 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Pointer to the ETD operator M0
-          */
-         SmartETDOperators  mpOpM0;
-
-         /**
           * @brief Pointer to the ETD operator M1
           */
          SmartETDOperators  mpOpM1;
 
+         /**
+          * @brief Pointer to the ETD operator M2
+          */
+         SmartETDOperators  mpOpM2;
+
       private:
    };
 
-   template <typename TSimType> ETD2RKInfluenceKernel<TSimType>::ETD2RKInfluenceKernel(SmartETDOperators pOpM0, SmartETDOperators pOpM1)
-      : mpOpM0(pOpM0), mpOpM1(pOpM1)
+   template <typename TSimType> ETD2RKInfluenceKernel<TSimType>::ETD2RKInfluenceKernel(SmartETDOperators pOpM1, SmartETDOperators pOpM2)
+      : mpOpM1(pOpM1), mpOpM2(pOpM2)
    {
    }
 
    template <typename TSimType> void ETD2RKInfluenceKernel<TSimType>::computeInfluence(Array &rKernel, const int l)
    {
-      rKernel = this->mpOpM0->harmOp(l).op() * rKernel + this->mpOpM1->harmOp(l).op() * rKernel;
+      rKernel = (this->mpOpM1->harmOp(l).op() + this->mpOpM2->harmOp(l).op()/this->h()) * rKernel;
    }
 
 }

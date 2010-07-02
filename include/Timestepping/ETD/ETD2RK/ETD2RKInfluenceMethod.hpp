@@ -39,6 +39,11 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for a smart ETD2RK influence kernel
+         typedef EPMSHARED_PTR<ETD2RKInfluenceKernel<TSimType> > SmartInfluenceKernel;
+
+
+
          /**
           * @brief Constructor
           *
@@ -100,7 +105,7 @@ namespace EPMDynamo {
          /**
           * @brief Computation of the influence kernel
           */
-         ETD2RKInfluenceKernel<TSimType>  mpKernel;
+         SmartInfluenceKernel  mpKernel;
 
          /**
           * @brief Initialise the influenc matrix
@@ -117,8 +122,6 @@ namespace EPMDynamo {
           *
           * @param kernel Kernel of the laplacian
           * @param l Harmonic degree 
-          *
-          * \epmBug Not implemented YET
           */
          void computeKernelInfluence(Array &kernel, const int l);
    };
@@ -126,6 +129,10 @@ namespace EPMDynamo {
    template <typename TSimType> ETD2RKInfluenceMethod<TSimType>::ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD2RKInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
       : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mInfluence(pTrunc, basis, hasL0)
    {
+      // Set the influence kernel
+      SmartInfluenceKernel pIKernel(new ETD2RKInfluenceKernel<TSimType>(this->mETD2.pEtdF(1), this->mETD2.pEtdF(2)));
+
+      this->mpKernel = pIKernel;
    }
 
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::addBC(SmartBC pBC)
