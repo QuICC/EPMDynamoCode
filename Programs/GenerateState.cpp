@@ -89,8 +89,8 @@ void setSpecVelocity(Velocity &velV)
 
    for(int l=1; l < pTrunc->local()->spec()->nL()-5; ++l)
    {
-      velV.rOc().rPerturbation().rTor().rLShell(l).row(0).setConstant(1.0e-5);
-      velV.rOc().rPerturbation().rPol().rLShell(l).row(0).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rTor().rLShell(l).row(0).setConstant(1.0e-7);
+      velV.rOc().rPerturbation().rPol().rLShell(l).row(0).setConstant(1.0e-7);
    }
 }
 
