@@ -30,8 +30,11 @@ namespace EPMDynamo {
    void MPIFFTManipulator::initTypes()
    {
       int nCore = mpTrunc->para().nCore();
+
+      // Loop over all the cores
       for(int i = 0; i < nCore; ++i)
       {
+         // Build the FFTFlatScalar MPI datatype for each cpu
          std::map<FFTFlatScalar *, MPI_Datatype>  tFMap;
          for(int j = 0; j < this->mNFTmp; ++j)
          {
@@ -41,6 +44,7 @@ namespace EPMDynamo {
          }
          this->mFTypes.push_back(tFMap);
 
+         // Build the FFTOrderScalar MPI datatype for each cpu
          std::map<FFTOrderScalar *, MPI_Datatype>  tBMap;
          for(int j = 0; j < mNBTmp; ++j)
          {

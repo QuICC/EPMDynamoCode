@@ -53,8 +53,6 @@ namespace EPMDynamo {
           * \param data Input data
           * \param type Created MPI data type
           * \param coreID ID of the cpu/core
-          *
-          * \epmBug Cleanup MPI type generation
           */
          void buildFType(FFTFlatScalar &data, MPI_Datatype &type, const int coreID);
 
@@ -64,8 +62,6 @@ namespace EPMDynamo {
           * \param data Input data
           * \param type Created MPI data type
           * \param coreID ID of the cpu/core
-          *
-          * \epmBug Cleanup MPI type generation
           */
          void buildBType(FFTOrderScalar &data, MPI_Datatype &type, const int coreID);
    };

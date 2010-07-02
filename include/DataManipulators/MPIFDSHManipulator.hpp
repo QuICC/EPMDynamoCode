@@ -55,8 +55,6 @@ namespace EPMDynamo {
           * \param data Input forward data type
           * \param type Created MPI data type
           * \param coreID ID of the cpu/core
-          *
-          * \epmBug Cleanup MPI type generation
           */
          void buildFType(TForward &data, MPI_Datatype &type, const int coreID);
 
@@ -66,8 +64,6 @@ namespace EPMDynamo {
           * \param data Input data type
           * \param type Created MPI data type
           * \param coreID ID of the cpu/core
-          *
-          * \epmBug Cleanup MPI type generation
           */
          void buildBType(FDSHDegreeScalar &data, MPI_Datatype &type, const int coreID);
    };
@@ -85,8 +81,11 @@ namespace EPMDynamo {
    template <typename TForward> void MPIFDSHManipulator<TForward>::initTypes()
    {
       int nCore = this->mpTrunc->para().nCore();
+
+      // Loop over all cpu
       for(int i = 0; i < nCore; ++i)
       {
+         // Create the Forward transform MPI datatypes
          std::map<TForward *, MPI_Datatype>  tFMap;
          for(int j = 0; j < this->mNFTmp; ++j)
          {
@@ -96,6 +95,7 @@ namespace EPMDynamo {
          }
          this->mFTypes.push_back(tFMap);
 
+         // Create the backward transform MPI datatypes
          std::map<FDSHDegreeScalar *, MPI_Datatype>  tBMap;
          for(int j = 0; j < this->mNBTmp; ++j)
          {
