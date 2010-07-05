@@ -121,6 +121,33 @@ namespace EPMDynamo {
          static void subRadVect(RTPField &rField, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
 
          /**
+          * @brief Scalar product with radial vector
+          *
+          * @param rScalar Resulting scalar field
+          * @param scalar Input scalar
+          * @param coeff Multiplicative coefficient
+          */
+         static void radVectProj(RTPScalar &rScalar, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Scalar product with radial vector and add
+          *
+          * @param rScalar Resulting scalar field
+          * @param scalar Input scalar
+          * @param coeff Multiplicative coefficient
+          */
+         static void addRadVectProj(RTPScalar &rScalar, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Scalar product with radial vector and substract
+          *
+          * @param rScalar Resulting scalar field
+          * @param scalar Input scalar
+          * @param coeff Multiplicative coefficient
+          */
+         static void subRadVectProj(RTPScalar &rScalar, const RTPScalar &scalar, const EPMFloat coeff = 1.0);
+
+         /**
           * @brief Cross product of given field with \f$\hat{z}\f$ unit vector
           *
           * @param rField Resulting vector field

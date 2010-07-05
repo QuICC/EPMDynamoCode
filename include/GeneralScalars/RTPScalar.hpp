@@ -75,6 +75,14 @@ namespace EPMDynamo {
           * @param coeff Multiplicative coefficient
           */
          template <int TOp> void radVect(RTPField &rField, const EPMFloat = 1) const;
+
+         /**
+          * @brief Scalar product of scalar field with radial vector
+          *
+          * @param rScalar  Resulting scalar field
+          * @param coeff Multiplicative coefficient
+          */
+         template <int TOp> void radVectProj(RTPScalar &rField, const EPMFloat = 1) const;
          
       protected:
 
@@ -131,6 +139,23 @@ namespace EPMDynamo {
       else if(TOp < 0)
       {
          RTPOperators::subRadVect(rField, *this, coeff);
+      }
+
+   }
+
+   template <int TOp> inline void RTPScalar::radVectProj(RTPScalar &rScalar, const EPMFloat coeff) const
+   {
+      if(TOp == 0)
+      {
+         RTPOperators::radVectProj(rScalar, *this, coeff);
+      }
+      else if(TOp > 0)
+      {
+         RTPOperators::addRadVectProj(rScalar, *this, coeff);
+      }
+      else if(TOp < 0)
+      {
+         RTPOperators::subRadVectProj(rScalar, *this, coeff);
       }
 
    }

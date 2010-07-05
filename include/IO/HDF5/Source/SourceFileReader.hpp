@@ -22,6 +22,8 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
+    *
+    * \epmBug Magnetic and Velocity desactived due to missing "imposed" component
     */
    template <typename TSimType, template <typename> class TSimTraits> class SourceFileReader: public SourceFileReaderBase
    {
@@ -145,19 +147,19 @@ namespace EPMDynamo {
       // Read codensity coefficients
       if(this->mpCodC != NULL)
       {
-         this->readCodensity(this->mpCodC->rOc().rPerturbation().data());
+         this->readCodensity(this->mpCodC->rSrc().data());
       }
 
       // Read magnetic coefficients
       if(this->mpMagB != NULL)
       {
-         this->readMagnetic(this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
+//         this->readMagnetic(this->mpMagB->rSrc().rTor().data(), this->mpMagB->rSrc().rPol().data());
       }
       
       // Read velocity coefficients
       if(this->mpVelV != NULL)
       {
-         this->readVelocity(this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
+//         this->readVelocity(this->mpVelV->rSrc().rTor().data(), this->mpVelV->rSrc().rPol().data());
       }
    }
 

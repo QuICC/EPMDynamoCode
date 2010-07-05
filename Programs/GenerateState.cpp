@@ -74,8 +74,8 @@ void setSpecCodensity(Codensity &codC)
 {
    SmartTruncation pTrunc = codC.trunc();
 
-   codC.rOc().rPerturbation().rLShell(0)(0,0) = 0.25;
-   codC.rOc().rPerturbation().rLShell(0)(1,0) = 0.5;
+   codC.rOc().rPerturbation().rLShell(0)(0,0) = 1.0/4.0;
+   codC.rOc().rPerturbation().rLShell(0)(1,0) = -1.0/2.0;
 
 }
 
@@ -89,8 +89,12 @@ void setSpecVelocity(Velocity &velV)
 
    for(int l=1; l < pTrunc->local()->spec()->nL()-5; ++l)
    {
-      velV.rOc().rPerturbation().rTor().rLShell(l).row(0).setConstant(1.0e-7);
-      velV.rOc().rPerturbation().rPol().rLShell(l).row(0).setConstant(1.0e-7);
+      velV.rOc().rPerturbation().rTor().rLShell(l).row(0).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rTor().rLShell(l).row(1).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rTor().rLShell(l).row(2).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rPol().rLShell(l).row(0).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rPol().rLShell(l).row(1).setConstant(1.0e-5);
+      velV.rOc().rPerturbation().rPol().rLShell(l).row(2).setConstant(1.0e-5);
    }
 }
 

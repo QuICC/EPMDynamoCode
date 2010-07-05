@@ -86,7 +86,7 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> void TransportLinear<TSimType, TSimTraits>::updateRHS()
    {
       // Compute \f$u\cdot\hat{r}\f$
-      //this->mrV.oc().rtp().template dot<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().grad(), -1.0);
+      this->mrV.oc().rtp().r().template radVectProj<0>(this->mNTerms.rOc().rRTP(), -1.0);
    }
 
 }

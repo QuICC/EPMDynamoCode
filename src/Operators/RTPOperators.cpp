@@ -226,6 +226,66 @@ namespace EPMDynamo {
       }
    }
          
+   void RTPOperators::radVectProj(RTPScalar &rScalar, const RTPScalar &scalar, const EPMFloat coeff)
+   {
+      int nR = scalar.nR();
+      if(coeff == 1.0)
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            // Set scalar product
+            rScalar.rShell(n) = scalar.radGrid(n)*scalar.shell(n);
+         }
+      } else
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            // Set scalar product
+            rScalar.rShell(n) = coeff*(scalar.radGrid(n)*scalar.shell(n));
+         }
+      }
+   }
+         
+   void RTPOperators::addRadVectProj(RTPScalar &rScalar, const RTPScalar &scalar, const EPMFloat coeff)
+   {
+      int nR = scalar.nR();
+      if(coeff == 1.0)
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            // Add scalar product
+            rScalar.rShell(n) += scalar.radGrid(n)*scalar.shell(n);
+         }
+      } else
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            // Add scalar product
+            rScalar.rShell(n) += coeff*(scalar.radGrid(n)*scalar.shell(n));
+         }
+      }
+   }
+         
+   void RTPOperators::subRadVectProj(RTPScalar &rScalar, const RTPScalar &scalar, const EPMFloat coeff)
+   {
+      int nR = scalar.nR();
+      if(coeff == 1.0)
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            // Substract scalar product
+            rScalar.rShell(n) -= scalar.radGrid(n)*scalar.shell(n);
+         }
+      } else
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            // Substract scalar product
+            rScalar.rShell(n) -= coeff*(scalar.radGrid(n)*scalar.shell(n));
+         }
+      }
+   }
+         
    void RTPOperators::crossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
    {
       int nR = inField.nR();
