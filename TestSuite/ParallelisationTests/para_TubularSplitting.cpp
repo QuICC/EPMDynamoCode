@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
    epm::EPMDYNAMO_INITIALISER;
 
    // Storage for the return code of unit test
-   int code = 1;
+   int code = -1;
 
    try
    {

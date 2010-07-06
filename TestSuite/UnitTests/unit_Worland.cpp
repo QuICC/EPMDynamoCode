@@ -15,6 +15,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "General/EPMException.hpp"
 #include "Domain/Truncation.hpp"
 #include "Polynomials/RadialBasis.hpp"
 #include "Polynomials/WorlandPolynomial.hpp"
@@ -35,11 +36,13 @@ typedef SimulationType::RadialBasisType RadialBasisType;
  */
 int runUnitTest()
 {
+   // Set some truncation values
    int maxN = 12;
    int maxL = 32;
    int maxM = 10;
    int Mp = 1;
    int nCore = 1;
+
    const double ERROR_THRESHOLD = 1e-13;
 
    SmartTruncation  pTrunc = SimulationType::createTrunc(maxN, maxL, maxM, Mp, nCore);
@@ -79,10 +82,17 @@ int main(int argc, char* argv[])
    epm::EPMDYNAMO_INITIALISER;
 
    // Storage for the return code of unit test
-   int code;
+   int code = -1;
 
-   // Perform the actual test
-   code = runUnitTest();
+   try
+   {
+      // Perform the actual test
+      code = runUnitTest();
+   }
+   catch(epm::EPMException &e)
+   {
+      e.printStdMessage();
+   }
 
    // Finalise everything that can't be done inside a class
    epm::EPMDYNAMO_FINALIZER;
