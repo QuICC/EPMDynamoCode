@@ -47,6 +47,8 @@ namespace EPMDynamo {
           * \param rData Data to send
           *
           * \epmBug Removed minL(), might be bad idea
+          * \epmBug Removed minL(), might be bad idea
+          * \epmBug Doesn't work with splitted SH only
           */
          void receive(TForward &rData);
 
@@ -56,6 +58,7 @@ namespace EPMDynamo {
           * \param rData Data to send
           *
           * \epmBug Removed minL(), might be bad idea
+          * \epmBug Doesn't work with splitted SH only
           */
          void receive(FDSHDegreeScalar &rData);
          

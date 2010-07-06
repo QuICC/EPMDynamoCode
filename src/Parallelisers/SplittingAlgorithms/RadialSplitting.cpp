@@ -17,17 +17,20 @@
 
 // Project includes
 //
+#include "General/EPMException.hpp"
 
 namespace EPMDynamo {
 
    RadialSplitting::RadialSplitting(SmartSimTrunc pSimTrunc, const int nCore, const int id)
       : LoadSplitterBase(pSimTrunc, nCore, id)
    {
+      // Check the limits of the algorithms
+      this->checkLimits();
    }
 
    void RadialSplitting::splitR(int &rR0, int &rNr, const int id) const
    {
-      this->balancedSplit(rR0, rNr, sim()->rad()->nR(), id);
+      this->balancedSplit(rR0, rNr, this->sim()->rad()->nR(), id);
    }
 
    void RadialSplitting::splitRTP(int &rR0, int &rNr, ArrayI &rTh0, ArrayI &rNth, const int id) const
@@ -40,7 +43,7 @@ namespace EPMDynamo {
       rTh0.setConstant(0);
 
       // Set number of indexes  for full theta truncation
-      int n = sim()->hoz()->nTh();
+      int n = this->sim()->hoz()->nTh();
       rNth.resize(rNr);
       rNth.setConstant(n);
    }
@@ -53,15 +56,15 @@ namespace EPMDynamo {
       this->splitR(r0, nR, id);
 
       // Set start indexex for a balanced radial split
-      rR0.resize(sim()->hoz()->nM());
+      rR0.resize(this->sim()->hoz()->nM());
       rR0.setConstant(r0);
 
       // Set number of radial indexes for balanced radial split
-      rNr.resize(sim()->hoz()->nM());
+      rNr.resize(this->sim()->hoz()->nM());
       rNr.setConstant(nR);
 
       // Set full harmonic order truncation
-      rMs = sim()->hoz()->mArray();
+      rMs = this->sim()->hoz()->mArray();
    }
 
    void RadialSplitting::splitSpec(ArrayI &rLs, std::vector<ArrayI> &rMs, const int id) const
@@ -129,6 +132,19 @@ namespace EPMDynamo {
          }
       }
 
+   }
+
+   void RadialSplitting::checkLimits() const
+   {
+      if(this->nCore() > this->sim()->rad()->nR())
+      {
+         throw EPMException("RadialSplitting::checkLimits", "The number of CPUs is too big compared to the radial grid!");
+      }
+
+      if(this->nCore() > this->sim()->hoz()->nH())
+      {
+         throw EPMException("RadialSplitting::checkLimits", "The number of CPUs is too big spherical harmonics truncation!");
+      }
    }
 
 }

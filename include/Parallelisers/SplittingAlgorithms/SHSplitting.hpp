@@ -26,7 +26,7 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a spherical harmonics load splitting algorithm
     *
-    * \epmBug Implement everything ...
+    * \brief Improve load inbalance when doing M splitting
     */
    class SHSplitting: public LoadSplitterBase
    {
@@ -78,6 +78,18 @@ namespace EPMDynamo {
          virtual void splitSpec(ArrayI &rLs, std::vector<ArrayI> &rMs, const int id) const;
 
       private:
+         /**
+          * @brief Check the splitting limits of algorithm
+          */
+         void checkLimits() const;
+
+         /**
+          * @brief Split the harmonic orders load
+          *
+          * @param rMs Array of harmonic orders
+          * @param id CPU/Core id
+          */
+         void splitM(ArrayI &rMs, const int id) const;
    };
 
 }

@@ -1,5 +1,7 @@
 /** \file para_TubularSplitting.cpp
  *  \brief Parallelisation test for the tubular splitting algorithm
+ *
+ *  \epmBug This test is not really useful yet ...
  */
 
 // Configuration includes
@@ -16,6 +18,7 @@
 #include "General/EPMException.hpp"
 #include "Domain/Truncation.hpp"
 #include "Parallelisers/SplittingAlgorithms/TubularSplitting.hpp"
+#include "Parallelisers/SplittingAlgorithms/SHSplitting.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 
@@ -30,19 +33,21 @@ typedef epm::WSHSimulation SimulationType;
 int runParaTest()
 {
    int maxN = 12;
-   int maxL = 10;
-   int maxM = 10;
+   int maxL = 12;
+   int maxM = 12;
    int Mp = 1;
-   int nCore = 100;
+   int nCore = 2;
 
    epm::SmartTruncation     pTrunc = SimulationType::createTrunc(maxN, maxL, maxM, Mp, 1);
 
-   std::vector<epm::TubularSplitting>  pSplits;   
+   //std::vector<epm::TubularSplitting>  pSplits;   
+   std::vector<epm::SHSplitting>  pSplits;   
 
 
    for(int i = 0; i < nCore;  ++i)
    {
-      pSplits.push_back(epm::TubularSplitting(pTrunc->sim(), nCore, i));
+      pSplits.push_back(epm::SHSplitting(pTrunc->sim(), nCore, i));
+      //pSplits.push_back(epm::TubularSplitting(pTrunc->sim(), nCore, i));
    }
 
    // RTP data storage
@@ -60,30 +65,31 @@ int runParaTest()
    epm::ArrayI sL;
    std::vector<epm::ArrayI> sMs;
 
-   for(int i = 0; i < nCore;  ++i)
-   {
-      // Compute RTP data box splitting
-      pSplits.at(i).splitRTP(rR0, rNr, rTh0, rNth, i);
-
-      std::cerr << "r0: " << rR0 << std::endl;
-      std::cerr << "nR: " << rNr << std::endl;
-      std::cerr << "th0: " << rTh0.transpose() << std::endl;
-      std::cerr << "nTh: " << rNth.transpose() << std::endl;
-
-      // Compute FDSH data box splitting
-      pSplits.at(i).splitFDSH(fR0, fNr, fM, i);
-      std::cerr << "fR0: " << fR0.transpose() << std::endl;
-      std::cerr << "fNr: " << fNr.transpose() << std::endl;
-      std::cerr << "fM: " << fM.transpose() << std::endl;
-
-      // Compute Spectral data box splitting
-      pSplits.at(i).splitSpec(sL, sMs, i);
-      std::cerr << "sL: " << sL.transpose() << std::endl;
-      for(unsigned int j = 0; j < sMs.size(); ++j)
-      {
-         std::cerr << "sMs(" << j << "): " << sMs.at(j).transpose() << std::endl;
-      }
-   }
+// This doesn't work as all routines a protected
+//   for(int i = 0; i < nCore;  ++i)
+//   {
+//      // Compute RTP data box splitting
+//      pSplits.at(i).splitRTP(rR0, rNr, rTh0, rNth, i);
+//
+//      std::cerr << "r0: " << rR0 << std::endl;
+//      std::cerr << "nR: " << rNr << std::endl;
+//      std::cerr << "th0: " << rTh0.transpose() << std::endl;
+//      std::cerr << "nTh: " << rNth.transpose() << std::endl;
+//
+//      // Compute FDSH data box splitting
+//      pSplits.at(i).splitFDSH(fR0, fNr, fM, i);
+//      std::cerr << "fR0: " << fR0.transpose() << std::endl;
+//      std::cerr << "fNr: " << fNr.transpose() << std::endl;
+//      std::cerr << "fM: " << fM.transpose() << std::endl;
+//
+//      // Compute Spectral data box splitting
+//      pSplits.at(i).splitSpec(sL, sMs, i);
+//      std::cerr << "sL: " << sL.transpose() << std::endl;
+//      for(unsigned int j = 0; j < sMs.size(); ++j)
+//      {
+//         std::cerr << "sMs(" << j << "): " << sMs.at(j).transpose() << std::endl;
+//      }
+//   }
 
    return 0;
 }

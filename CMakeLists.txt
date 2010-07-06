@@ -130,9 +130,9 @@ endif(EPMDYNAMO_SPLIT_RADIAL)
 # Spherical harmonics splitting is only possible if radial transform is also
 # split (for the moment)
 #
-if(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
-   message(SEND_ERROR "Only parallelising the SH transform is not supported yet")
-endif(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
+#if(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
+#   message(SEND_ERROR "Only parallelising the SH transform is not supported yet")
+#endif(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
 
 #
 # If any of the previous settings is on activate MPI flag

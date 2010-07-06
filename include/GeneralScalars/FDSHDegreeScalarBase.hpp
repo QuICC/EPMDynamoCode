@@ -59,7 +59,7 @@ namespace EPMDynamo {
           * @brief Get the symmetry assumption
           */
          int   mp() const;
-         
+
       protected:
          /**
           * @brief Spectral truncation information

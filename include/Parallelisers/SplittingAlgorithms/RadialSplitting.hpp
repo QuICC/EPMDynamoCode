@@ -79,6 +79,11 @@ namespace EPMDynamo {
 
       private:
          /**
+          * @brief Check the splitting limits of algorithm
+          */
+         void checkLimits() const;
+
+         /**
           * @brief Split the load of th real space radii
           *
           * @param rR0 Start index of radial points
