@@ -411,7 +411,7 @@ void initTorPolSSH(TorPolFieldType &rToPoField)
 //   }
 }
 
-void combineRTPTransforms(const int entry, SpectralTransformType &sshTrans)
+void combineRTPTransforms(const int entry, SSHTransformType &sshTrans)
 {
    #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
       sshTrans.sshManipulator().initiateGroupedBSend(entry);
