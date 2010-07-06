@@ -145,6 +145,8 @@ namespace EPMDynamo {
           * @brief Choose best splitting option
           *
           * @param usableR vector of usable ratios
+          *
+          * \epmBug Could this be improved?
           */
          void chooseBestSplitting(const std::vector<int> &usableR);
 
@@ -164,14 +166,11 @@ namespace EPMDynamo {
          void splitPairsM();
 
          /**
-          * @brief Split the load for an even number of rows
+          * @brief Split the load for the remaining rows after pairing
+          *
+          * @param hasOddRows Is the number of rows odd?
           */
-         void splitEvenRowsM();
-
-         /**
-          * @brief Split the load for an odd number of rows
-          */
-         void splitOddRowsM();
+         void splitRemainingRowsM(const bool hasOddRows);
 
          /**
           * @brief Precompute the load splitting for M
@@ -180,6 +179,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Reshuffle splitting to improve memory load balancing
+          *
+          * \epmBug Could this be improved?
           */
          void reshuffleLoadSplitM();
 

@@ -28,7 +28,7 @@ namespace EPMDynamo {
       // Factorise number of CPUs
       this->factoriseCPUs();
 
-      // Set the splitting factors
+      // Check and set available splitting factors
       this->setSplitting();
 
       // Initialise the attributes required for computing the M splitting
@@ -122,6 +122,7 @@ namespace EPMDynamo {
          return false;
       }
 
+      // In all other cases accept the splitting
       return true;
    }
 
@@ -147,13 +148,14 @@ namespace EPMDynamo {
 
    void TubularSplitting::initLoadM()
    {
-      // Initialise the load list
+      // Initialise the load list and compute total load
       double totalLoad = 0.0;
+      int nL = this->sim()->hoz()->nL();
       int nM = this->sim()->hoz()->nM();
       for(int i = 0; i < nM; ++i)
       {
-         this->mLoadListM.push_back(nM - i);
-         totalLoad += static_cast<double>(nM -i);
+         this->mLoadListM.push_back(nL - i);
+         totalLoad += static_cast<double>(nL -i);
       }
 
       // Create the list of optimal loads per CPU
@@ -196,15 +198,17 @@ namespace EPMDynamo {
 
    void TubularSplitting::splitPairsM()
    {
-      // Compute the number of pairs that can be build
+      // Compute the number of rows avaiable per cpus
       int rows = static_cast<int>(std::ceil(static_cast<double>(this->sim()->hoz()->nM())/static_cast<double>(this->mMSplitting)));
+
+      // Check for special cases where care is required in the splitting
       bool oddRows = rows % 2;
       bool needCare = (this->sim()->hoz()->nM() % this->mMSplitting) + oddRows;
 
       int nPairs;
       int pairMaxM;
 
-      // Need careful splitting
+      // Need careful splitting ?
       if(needCare)
       {
          // Odd or even number of rows have different algorithm
@@ -216,10 +220,12 @@ namespace EPMDynamo {
             nPairs = rows/2 - 2;
          }
          pairMaxM = 2*nPairs*this->mMSplitting - 1;
+
       // Perfect split matching, can simply build all the pairs
       } else
       {
          nPairs = rows/2;
+
          pairMaxM = this->sim()->hoz()->maxM();
       }
       
@@ -242,9 +248,9 @@ namespace EPMDynamo {
       this->mLoadListM.erase(this->mLoadListM.begin(), this->mLoadListM.begin() + 2*k);
    }
 
-   void TubularSplitting::splitOddRowsM()
+   void TubularSplitting::splitRemainingRowsM(const bool hasOddRows)
    {
-      // Add an additional row to the assigned loads
+      // Add a additional row to the assigned loads (in all cases there are at least 2 rows left)
       for(int j = 0; j < this->mMSplitting; ++j)
       {
          this->mLoadSplitM.insert(std::make_pair(j, this->mLoadListM.at(j)));
@@ -252,6 +258,31 @@ namespace EPMDynamo {
 
       // Remove just added loads from list
       this->mLoadListM.erase(this->mLoadListM.begin(), this->mLoadListM.begin() + this->mMSplitting);
+
+      // Special treatment is required if the number of rows is even
+      if(! hasOddRows)
+      {
+         // Additional shifted row (the idea is to get a similar outcome than in the odd case)
+         //  Get "upper" half of the cpus
+         int uCPU = this->mMSplitting/2 + (this->mMSplitting % 2);
+         //  Get "lower" half of the cpus
+         int lCPU = this->mMSplitting - uCPU;
+
+         // Assign loads to upper part
+         for(int j = 0; j < uCPU; ++j)
+         {
+            this->mLoadSplitM.insert(std::make_pair(j, this->mLoadListM.at(this->mMSplitting -1  - 2*j)));
+         }
+
+         // Assign loads to lower part
+         for(int j = 0; j < lCPU; ++j)
+         {
+            this->mLoadSplitM.insert(std::make_pair(uCPU + j, this->mLoadListM.at(this->mMSplitting - 2  - 2*j)));
+         }
+
+         // Remove just added loads from list
+         this->mLoadListM.erase(this->mLoadListM.begin(), this->mLoadListM.begin() + this->mMSplitting);
+      }
 
       // Update the load sums per CPU
       this->updateLoadSumM();
@@ -289,7 +320,7 @@ namespace EPMDynamo {
             }
          }
 
-         // If suitable position has be found assigne load to it
+         // If suitable position has be found assign load to it
          if(current != -1)
          {
             // Assign load
@@ -310,98 +341,7 @@ namespace EPMDynamo {
             margin++;
          }
       }
-   }
 
-   void TubularSplitting::splitEvenRowsM()
-   {
-      // Add an additional row to the assigned loads
-      for(int j = 0; j < this->mMSplitting; ++j)
-      {
-         this->mLoadSplitM.insert(std::make_pair(j, this->mLoadListM.at(j)));
-      }
-
-      // Remove just added loads from list
-      this->mLoadListM.erase(this->mLoadListM.begin(), this->mLoadListM.begin() + this->mMSplitting);
-
-
-      // Additional shifted row (the idea is to get a similar outcome than in the odd case)
-      //  Get "upper" half of the cpus
-      int uCPU = this->mMSplitting/2 + (this->mMSplitting % 2);
-      //  Get "lower" half of the cpus
-      int lCPU = this->mMSplitting - uCPU;
-
-      // Assign loads to upper part
-      for(int j = 0; j < uCPU; ++j)
-      {
-         this->mLoadSplitM.insert(std::make_pair(j, this->mLoadListM.at(this->mMSplitting -1  - 2*j)));
-      }
-
-      // Assign loads to lower part
-      for(int j = 0; j < lCPU; ++j)
-      {
-         this->mLoadSplitM.insert(std::make_pair(uCPU + j, this->mLoadListM.at(this->mMSplitting - 2  - 2*j)));
-      }
-
-      // Remove just added loads from list
-      this->mLoadListM.erase(this->mLoadListM.begin(), this->mLoadListM.begin() + this->mMSplitting);
-
-      // Update the load sums per CPU
-      this->updateLoadSumM();
-
-      // Distribute the remaining loads
-      unsigned int leftLoads = this->mLoadListM.size();
-
-      // Progression counters
-      unsigned int idx = 0;
-      int current;
-      int curSum;
-
-      // Algorithm is not perfect, so add margin to fit
-      int margin = 0;
-
-      // Loop until there is no remaining load
-      while(idx < leftLoads)
-      {
-         // Reset selected CPU
-         current = -1;
-         curSum = -1;
-
-         // Search for best place to assign load
-         for(int j = 0; j < this->mMSplitting; ++j)
-         {
-            // Check if position is suitable
-            if(this->mLoadSumM.at(j) +  this->mLoadListM.at(idx) <= this->mLoadOptimalM.front() + margin && (this->mLoadSumM.at(j) +  this->mLoadListM.at(idx) > curSum))
-            {
-               // Set current best fit information
-               current = j;
-               curSum = this->mLoadSumM.at(j) +  this->mLoadListM.at(idx);
-
-               // Reset margin
-               margin = 0;
-            }
-         }
-
-         // If suitable position has be found assigne load to it
-         if(current != -1)
-         {
-            // Assign load
-            this->mLoadSplitM.insert(std::make_pair(current,this->mLoadListM.at(idx)));
-            // Update related sum
-            this->mLoadSumM.at(current) += this->mLoadListM.at(idx);
-            // increment counter
-            idx++;
-
-            // If CPU reach optimal load, remove it from load queue
-            if(this->mLoadSumM.at(current) == this->mLoadOptimalM.front())
-            {
-               this->mLoadOptimalM.pop();
-            }
-         // If no suitable position has be found, increase fit margin
-         } else
-         {
-            margin++;
-         }
-      }
    }
 
    void TubularSplitting::reshuffleLoadSplitM()
@@ -418,15 +358,9 @@ namespace EPMDynamo {
       {
          int rows = static_cast<int>(std::ceil(static_cast<double>(this->mLoadListM.size())/static_cast<double>(this->mMSplitting)));
          bool oddRows =  rows % 2;
-         // Use odd rows algorithm
-         if(oddRows)
-         {
-            this->splitOddRowsM();
-         // Use Even rows algorithm
-         } else
-         {
-            this->splitEvenRowsM();
-         }
+
+         // Split up the remaining rows
+         this->splitRemainingRowsM(oddRows);
 
          // Reshuffle to improve memory balancing
          this->reshuffleLoadSplitM();
@@ -447,7 +381,7 @@ namespace EPMDynamo {
 
       int off;
       int n;
-      // Split total number of grid points
+      // Split total number of grid points (nR * nTh)
       this->balancedSplit(off, n, this->sim()->hoz()->nTh()*rNr, this->mMSplitting, this->splitMID(id));
 
       // Compute starting point of grid points
@@ -505,26 +439,38 @@ namespace EPMDynamo {
       ArrayI   tmpMs;
       this->splitM(tmpMs, id);
 
+      // Create the queue of all harmonic modes
       std::queue< std::pair<int,int> >  modeQueue;
       int l_;
-      for(int l = 0; l < (this->sim()->hoz()->nL()+1)/2; ++l)
+
+      // Two degrees get added per iteration
+      for(int l = 0; l < this->sim()->hoz()->nL()/2; ++l)
       {
+         // Get the 'up-down' degree while l is the 'down-up'
          l_ = this->sim()->hoz()->maxL() - l;
+
+         // Add the 'down-up' mode to queue
          for(int i = 0; i < tmpMs.size(); ++i)
          {
+            // Check if harmoni degree and order are compatible
             if(tmpMs(i) <= l)
             {
                modeQueue.push(std::make_pair(l, tmpMs(i)));
             }
          }
+
+         // Add the 'up-down' mode to queue
          for(int i = 0; i < tmpMs.size(); ++i)
          {
+            // Check if harmoni degree and order are compatible
             if(tmpMs(i) <= l_)
             {
                modeQueue.push(std::make_pair(l_, tmpMs(i)));
             }
          }
       }
+
+      // Handle the forgotten mode in case of odd total 
       if(this->sim()->hoz()->nL()%2 == 1)
       {
          l_ = this->sim()->hoz()->nL()/2;
@@ -540,17 +486,21 @@ namespace EPMDynamo {
       int off;
       int nModes;
 
+      // Compute balanced splitting of total number of modes over R factorisation
       this->balancedSplit(off, nModes, modeQueue.size(), this->mRSplitting, this->splitRID(id));
 
+      // Remove offsetted modes from queue
       for(int i = 0; i < off; ++i)
       {
          modeQueue.pop();
       }
 
+      // Prepare sorters for the acquired modes
       std::set<int> sorterL;
       std::multimap<int, int> sorterM;
       std::pair<int, int>  front;
 
+      // Fill in the sorters with the needed modes
       for(int i = 0; i < nModes; ++i)
       {
          front = modeQueue.front();
@@ -559,8 +509,10 @@ namespace EPMDynamo {
          sorterM.insert(front);
       }
 
+      // Resize array of degrees to right size
       rLs.resize(sorterL.size());
 
+      // Store degree in outout array
       std::set<int>::iterator setIt;
       int i = 0;
       for(setIt = sorterL.begin(); setIt != sorterL.end(); ++setIt, ++i)
@@ -568,6 +520,7 @@ namespace EPMDynamo {
          rLs(i) = (*setIt);
       }
 
+      // Create vector of arrays of harmonic orders
       std::multimap<int, int>::iterator mmIt;
       std::pair<std::multimap<int, int>::iterator, std::multimap<int, int>::iterator > range;
       for(int j = 0; j < rLs.size(); ++j)
@@ -596,24 +549,23 @@ namespace EPMDynamo {
       // resize the array of harmonic orders
       rMs.resize(this->mLoadSplitM.count(this->splitMID(id)));
 
-      // File array of harmonic orders
+      // Get range of harmonic orders for given id
       range = this->mLoadSplitM.equal_range(this->splitMID(id));
 
       // Put them into set to be sure to get them in a sorted way and convert to orders
       std::set<int>  sorter;
       for(it = range.first; it != range.second; ++it)
       {
-         sorter.insert(this->sim()->hoz()->nM() - it->second);
+         sorter.insert(this->sim()->hoz()->nL() - it->second);
       }
 
-      // Extract the ordered harmonic orders from set
+      // Extract the ordered harmonic orders from set and store in output array
       std::set<int>::iterator setIt;
       int i = 0;
       for(setIt = sorter.begin(); setIt != sorter.end(); ++setIt, ++i)
       {
          rMs(i) = *setIt;
       }
-
    }
 
 }
