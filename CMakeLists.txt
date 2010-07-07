@@ -473,6 +473,7 @@ set(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 set(SrcDir ${CMAKE_SOURCE_DIR}/src)
 set(ExternalDir ${CMAKE_SOURCE_DIR}/External)
 set(TestSuiteDir ${CMAKE_SOURCE_DIR}/TestSuite)
+set(TestSuiteIncludeDir ${TestSuiteDir}/Tools/include)
 set(ProgramDir ${CMAKE_SOURCE_DIR}/Programs)
 set(EigenDir ${ExternalDir}/eigen2)
 set(XMLDir ${ExternalDir}/rapidxml)
@@ -486,6 +487,7 @@ include_directories(${IncludeDir})
 include_directories(${EigenDir})
 include_directories(${XMLDir})
 include_directories(${IFaceDir})
+include_directories(${TestSuiteIncludeDir})
 
 #
 # Create special rule for doxygen documentation
@@ -551,9 +553,22 @@ foreach(SrcSubDir ${SrcSubDirs})
 endforeach(SrcSubDir)
 
 #
+# Generate tools Source file list
+#
+set(ToolsSrcDirs
+      src)
+
+foreach(ToolsSrcDir ${ToolsSrcDirs})
+   set(ToolsSrcDirPath ${TestSuiteDir}/Tools/${ToolsSrcDir})
+   include(${ToolsSrcDirPath}/SourcesList.cmake)
+   foreach(source ${${ToolsSrcDir}_Srcs})
+      list(APPEND Tools_Srcs ${ToolsSrcDirPath}/${source})
+   endforeach(source)
+endforeach(ToolsSrcDir)
+
+#
 # Add project subdirectories
 #
-add_subdirectory(${SrcDir})
 add_subdirectory(${ProgramDir} EXCLUDE_FROM_ALL)
 add_subdirectory(${TestSuiteDir} EXCLUDE_FROM_ALL)
 

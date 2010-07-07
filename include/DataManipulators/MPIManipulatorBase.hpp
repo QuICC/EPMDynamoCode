@@ -828,6 +828,8 @@ namespace EPMDynamo {
    {
       if(this->isSending())
       {
+         MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mPacks), MPI_STATUSES_IGNORE);
+
          this->mIsSending = false;
       }
 
@@ -851,9 +853,6 @@ namespace EPMDynamo {
       this->mIsReceiving = true;
 
       // Post non blocking send calls 
-      int flag;
-      MPI_Testall(this->sizeGroupF(), this->pSendFRequests(this->mPacks), &flag, MPI_STATUSES_IGNORE);
-
       MPI_Startall(this->sizeGroupF(), this->pSendFRequests(this->mPacks));
       this->resetSendPositions();
       this->mIsSending = true;
@@ -863,6 +862,8 @@ namespace EPMDynamo {
    {
       if(this->isSending())
       {
+         MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mPacks), MPI_STATUSES_IGNORE);
+
          this->mIsSending = false;
       }
 
@@ -886,9 +887,6 @@ namespace EPMDynamo {
       this->mIsReceiving = true;
 
       // Post non blocking send calls 
-      int flag;
-      MPI_Testall(this->sizeGroupB(), this->pSendBRequests(this->mPacks), &flag, MPI_STATUSES_IGNORE);
-
       MPI_Startall(this->sizeGroupB(), this->pSendBRequests(this->mPacks));
       this->resetSendPositions();
       this->mIsSending = true;
