@@ -24,7 +24,7 @@ namespace EPMDynamo {
 
    void RTPDomain::setRadialGrid(SmartArray rad)
    {
-      if(rad->size() == nR())
+      if(rad->size() == this->nR())
       {
          this->mpRadGrid = rad;
       } else

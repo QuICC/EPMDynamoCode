@@ -82,7 +82,7 @@ namespace EPMDynamo {
           * @param rScalar  Resulting scalar field
           * @param coeff Multiplicative coefficient
           */
-         template <int TOp> void radVectProj(RTPScalar &rField, const EPMFloat = 1) const;
+         template <int TOp> void radVectProj(RTPScalar &rScalar, const EPMFloat = 1) const;
          
       protected:
 

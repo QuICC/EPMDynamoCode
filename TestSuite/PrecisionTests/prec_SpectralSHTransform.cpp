@@ -1055,9 +1055,9 @@ void setupTransform(SSHTransformType &sshTrans)
 int runPrecTest()
 {
    // Set some truncation values
-   int maxN = 20;
-   int maxL = 32;
-   int maxM = 32;
+   int maxN = 6;
+   int maxL = 24;
+   int maxM = 24;
    int Mp = 1;
    int nCore = 1;
 
@@ -1098,26 +1098,50 @@ int runPrecTest()
 
    int status = 0;
 
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
    // Run RTP scalar test
    status += runRTPScalarTest(pTrunc, sshTrans);
+
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run SSH scalar test
    status += runSSHScalarTest(pTrunc, sshTrans);
 
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
    // Run RTP div0 test
    status += runRTPDiv0Test(pTrunc, sshTrans);
+
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run Toroidal/Poloida test
    status += runTorPolTest(pTrunc, sshTrans);
 
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
    // Run Gradient test
    status += runGradientTest(pTrunc, sshTrans);
+
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run Curl test
    status += runCurlTest(pTrunc, sshTrans);
 
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
    // Run Non linear terms test
    status += runNTermsTest(pTrunc, sshTrans);
+
+   // Make sure CPUs are synchronized before gathering data
+   epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Gather total status from MPI run
    #ifdef EPMDYNAMO_MPI

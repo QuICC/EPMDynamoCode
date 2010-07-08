@@ -291,11 +291,20 @@ int runParaTest()
 
    int status = 0;
 
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
    // Run Radial split transpose test test
    status += runFDSHTransposeTest(pTrunc, sshTrans);
 
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
    // Run SH split transpose test test
    status += runSHTransposeTest(pTrunc, sshTrans);
+
+   // Make sure CPUs are synchronized before gathering results
+   epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Gather total status from MPI run
    #ifdef EPMDYNAMO_MPI
