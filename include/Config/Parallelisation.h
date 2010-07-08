@@ -31,7 +31,7 @@
    /// Serial finalisation operations
    #define  EPMDYNAMO_FINALIZER   SerialWorkflow::finalize()
    /// Serial rank of cpu
-   #define EPMDYNAMO_RANK   0
+   #define EPMDYNAMO_RANK   SerialWorkflow::rank()
    /// Flag for paralle version
    #define EPMDYNAMO_IS_PARALLEL   0
 #endif // EPMDYNAMO_MPI

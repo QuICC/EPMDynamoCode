@@ -4,6 +4,8 @@
  *  \epmBug Precision test not entirely implemented yet
  */
 
+#define EIGEN_DEFAULT_IO_FORMAT IOFormat(10)
+
 // Configuration includes
 //
 #include "Config/Parallelisation.h"
@@ -1053,9 +1055,9 @@ void setupTransform(SSHTransformType &sshTrans)
 int runPrecTest()
 {
    // Set some truncation values
-   int maxN = 10;
-   int maxL = 22;
-   int maxM = 22;
+   int maxN = 20;
+   int maxL = 32;
+   int maxM = 32;
    int Mp = 1;
    int nCore = 1;
 
@@ -1117,6 +1119,12 @@ int runPrecTest()
    // Run Non linear terms test
    status += runNTermsTest(pTrunc, sshTrans);
 
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    return status;
 }
 
@@ -1142,17 +1150,23 @@ int main(int argc, char* argv[])
       e.printStdMessage();
    }
 
-   // Finalise everything that can't be done inside a class
-   epm::EPMDYNAMO_FINALIZER;
-
    // Create output to be taken up by CTest
    if(code)
    {
-      std::cout << "Failed!" << std::endl;
+      if(epm::EPMDYNAMO_RANK == 0)
+      {
+         std::cout << "Failed!" << std::endl;
+      }
    } else
    {
-      std::cout << "Passed!" << std::endl;
+      if(epm::EPMDYNAMO_RANK == 0)
+      {
+         std::cout << "Passed!" << std::endl;
+      }
    }
+
+   // Finalise everything that can't be done inside a class
+   epm::EPMDYNAMO_FINALIZER;
 
    return code;
 }

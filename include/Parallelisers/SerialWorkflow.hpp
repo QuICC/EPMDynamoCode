@@ -41,6 +41,13 @@ namespace EPMDynamo {
          static void init();
 
          /**
+          * @brief Get the mpi rank
+          *
+          * This routine should only be used while the Truncation object is not available...
+          */
+         static int rank();
+
+         /**
           * @brief Synchronize
           */
          static void synchronize();

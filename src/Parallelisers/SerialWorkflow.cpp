@@ -27,6 +27,11 @@ namespace EPMDynamo {
    {
    }
 
+   int SerialWorkflow::rank()
+   {
+      return 0;
+   }
+
    void SerialWorkflow::setup()
    {
       this->checkCores(1);

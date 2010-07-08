@@ -4,6 +4,11 @@
 set(ParaTests ${ParaTests} para_TubularSplitting)
 
 #
+# Add data transpose para test
+#
+set(ParaTests ${ParaTests} para_DataTransposes)
+
+#
 # Create all the tests
 #
 foreach(ParaTest ${ParaTests})
