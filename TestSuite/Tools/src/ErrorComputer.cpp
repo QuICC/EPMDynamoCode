@@ -28,8 +28,9 @@ namespace EPMDynamo {
 
    void ErrorComputer::resetErrors()
    {
-      mMax = 0.0;
-      mRelMax = 0.0;
+      this->mMax = 0.0;
+
+      this->mRelMax = 0.0;
    }
 
 }

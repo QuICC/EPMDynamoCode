@@ -106,12 +106,12 @@ namespace EPMDynamo {
 
    inline double ErrorComputer::max() const
    {
-      return mMax;
+      return this->mMax;
    }
 
    inline double ErrorComputer::relMax() const
    {
-      return mRelMax;
+      return this->mRelMax;
    }
 
    template<typename T, int R, int C> int ErrorComputer::checkPrecision(const Eigen::Matrix<T, R, C>  &val1, const Eigen::Matrix<T, R, C> &val2)
@@ -119,14 +119,14 @@ namespace EPMDynamo {
       double error = this->maxError(val1, val2);
       double relError = this->maxRelError(val1, val2);
 
-      if(error > mMax)
+      if(error > this->mMax)
       {
-         mMax = error;
+         this->mMax = error;
       }
 
-      if(relError > mRelMax)
+      if(relError > this->mRelMax)
       {
-         mRelMax = relError;
+         this->mRelMax = relError;
       }
 
       int status;
@@ -147,14 +147,14 @@ namespace EPMDynamo {
       double error = this->maxError(val1, val2);
       double relError = this->maxRelError(val1, val2);
 
-      if(error > mMax)
+      if(error > this->mMax)
       {
-         mMax = error;
+         this->mMax = error;
       }
 
-      if(relError > mRelMax)
+      if(relError > this->mRelMax)
       {
-         mRelMax = relError;
+         this->mRelMax = relError;
       }
 
       int status;
@@ -172,7 +172,9 @@ namespace EPMDynamo {
 
    template<typename T, int R, int C> double ErrorComputer::maxError(const Eigen::Matrix<T, R, C>  &val1, const Eigen::Matrix<T, R, C> &val2)
    {
-      return (val1-val2).cwise().abs().maxCoeff();
+      double errMax = (val1-val2).cwise().abs().maxCoeff();
+
+      return errMax;
    }
 
    template<typename CT, int R, int C> double ErrorComputer::maxError(const Eigen::Matrix<std::complex<CT>, R, C>  &val1, const Eigen::Matrix<std::complex<CT>, R, C> &val2)
@@ -184,13 +186,9 @@ namespace EPMDynamo {
       double errRe = tmp.real().cwise().abs().maxCoeff();
       double errIm = tmp.imag().cwise().abs().maxCoeff();
 
-      if(errRe > errIm)
-      {
-         return errRe;
-      } else
-      {
-         return errIm;
-      }
+      double errMax = std::max(errRe, errIm);
+
+      return errMax;
    }
 
    template<typename T, int R, int C> double ErrorComputer::maxRelError(const Eigen::Matrix<T, R, C>  &val1, const Eigen::Matrix<T, R, C> &val2)
@@ -213,7 +211,9 @@ namespace EPMDynamo {
          }
       }
 
-      return tmp.cwise().abs().maxCoeff();
+      double errMax =  tmp.cwise().abs().maxCoeff();
+
+      return errMax;
    }
 
    template<typename CT, int R, int C> double ErrorComputer::maxRelError(const Eigen::Matrix<std::complex<CT>, R, C>  &val1, const Eigen::Matrix<std::complex<CT>, R, C> &val2)
@@ -244,13 +244,9 @@ namespace EPMDynamo {
       double errRe = tmp.real().cwise().abs().maxCoeff();
       double errIm = tmp.imag().cwise().abs().maxCoeff();
 
-      if(errRe > errIm)
-      {
-         return errRe;
-      } else
-      {
-         return errIm;
-      }
+      double errMax = std::max(errRe, errIm);
+
+      return errMax;
    }
 
 }

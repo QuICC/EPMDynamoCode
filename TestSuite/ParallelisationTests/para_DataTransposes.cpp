@@ -12,6 +12,7 @@
 
 // System includes
 //
+#include <fstream>
 #include <iostream>
 #include <Eigen/Array>
 
@@ -74,62 +75,91 @@ int runFDSHTransposeTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTran
 {
    int status = 0;
 
-   // Set the number of packs of communication
-   sshTrans.sshManipulator().addPacks(1);
+   // add Packet size of transform
+   sshTrans.sshManipulator().addPacks(3);
 
-   // Get temporary FDSHBackward data
-   SSHTransformType::FDSHBackwardType  &rLTmp = sshTrans.sshManipulator().provideBTmp();
+   // Get temporary storage
+   SSHTransformType::FDSHForwardType &rMTmpQ = sshTrans.sshManipulator().provideFTmp();
 
-   // Setup values for temporary data
-   for(int l =0; l < pTrunc->local()->spec()->nL(); ++l)
+   std::ofstream  file;
+   if(pTrunc->para().id() == 0)
    {
-      epm::ArrayI ls = pTrunc->local()->spec()->lArray();
-      epm::ArrayI ms;
-      for(int m =0; m < pTrunc->local()->spec()->nM(l); ++m)
-      {
-         ms = pTrunc->local()->spec()->mArray(l);
-         for(int n =0; n < pTrunc->sim()->rad()->nR(); ++n)
-         {
-            rLTmp.rLShell(l)(n, m).real() = static_cast<epm::EPMFloat>(1000*ls(l)+ms(m)+0.001*n);
-            rLTmp.rLShell(l)(n, m).imag() = -static_cast<epm::EPMFloat>(1000*ls(l)+ms(m)+0.001*n);
-         }
-      }
+      file.open("debug_0.txt", std::ios::app);
+   }
+   if(pTrunc->para().id() == 1)
+   {
+      file.open("debug_1.txt", std::ios::app);
    }
 
-   // Send data
-   sshTrans.sshManipulator().send(rLTmp);
-
-   // Get temporary storage for transposed data
-   SSHTransformType::FDSHForwardType  &rMTmp = sshTrans.sshManipulator().provideFTmp();
-
-   // Receive sent data
-   sshTrans.sshManipulator().receive(rMTmp);
-
-   // prepare transmission in other direction
-   sshTrans.sshManipulator().addPacks(1);
-
-   // Send data back
-   sshTrans.sshManipulator().send(rMTmp);
-
-   // Free M order data storage
-   sshTrans.sshManipulator().releaseTmp(rMTmp);
-
-   // Get second temporary L ordered data
-   SSHTransformType::FDSHBackwardType  &rLTmp2 = sshTrans.sshManipulator().provideBTmp();
-
-   // Receive data sent back
-   sshTrans.sshManipulator().receive(rLTmp2);
-
-   // Compare sent and received data
-   for(int l =0; l < pTrunc->local()->spec()->nL(); ++l)
+   for(int m = 0; m < rMTmpQ.nM(); ++m)
    {
-      status += std::ceil((rLTmp2.lshell(l)-rLTmp.lshell(l)).real().maxCoeff());
-      status += std::ceil((rLTmp2.lshell(l)-rLTmp.lshell(l)).imag().maxCoeff());
+      rMTmpQ.rMShell(m).setConstant(m);
+      file << "################# m = " << m << " ###################" << std::endl;
+      file << rMTmpQ.mshell(m) << std::endl;
+   }
+   file.close();
+
+   // Transpose the FDSHForwardType values to a suitable order for radial transform
+   sshTrans.sshManipulator().send(rMTmpQ);
+   sshTrans.sshManipulator().releaseTmp(rMTmpQ);
+
+
+   // Get temporary storage
+   SSHTransformType::FDSHForwardType &rMTmpS = sshTrans.sshManipulator().provideFTmp();
+   SSHTransformType::FDSHForwardType &rMTmpT = sshTrans.sshManipulator().provideFTmp();
+
+   for(int m = 0; m < rMTmpQ.nM(); ++m)
+   {
+      rMTmpS.rMShell(m).setConstant(-42);
+      rMTmpT.rMShell(m).setConstant(-42);
    }
 
-   // Free memory
-   sshTrans.sshManipulator().releaseTmp(rLTmp);
-   sshTrans.sshManipulator().freeTmp(rLTmp2);
+   // Transpose the FDSHForwardType values to a suitable order for radial transform
+   sshTrans.sshManipulator().send(rMTmpS);
+   sshTrans.sshManipulator().releaseTmp(rMTmpS);
+
+   // Transpose the FDSHForwardType values to a suitable order for radial transform
+   sshTrans.sshManipulator().send(rMTmpT);
+   sshTrans.sshManipulator().releaseTmp(rMTmpT);
+
+
+   // Get temporary storage and receive data
+   SSHTransformType::FDSHBackwardType &rLTmpQ = sshTrans.sshManipulator().provideBTmp();
+
+   sshTrans.sshManipulator().receive(rLTmpQ);
+
+   if(pTrunc->para().id() == 0)
+   {
+      file.open("debug_0.txt", std::ios::app);
+   }
+   if(pTrunc->para().id() == 1)
+   {
+      file.open("debug_1.txt", std::ios::app);
+   }
+
+   for(int l = 0; l < rLTmpQ.nL(); ++l)
+   {
+      file << "################# l = " << l << " ###################" << std::endl;
+      file << rLTmpQ.lshell(l) << std::endl;
+   }
+   file.close();
+
+   // Free temporary storage
+   sshTrans.sshManipulator().freeTmp(rLTmpQ);
+
+   // Get temporary storage and receive data
+   SSHTransformType::FDSHBackwardType &rLTmpS = sshTrans.sshManipulator().provideBTmp();
+   sshTrans.sshManipulator().receive(rLTmpS);
+
+   // Free temporary storage
+   sshTrans.sshManipulator().freeTmp(rLTmpS);
+
+   // Get temporary storage and receive data
+   SSHTransformType::FDSHBackwardType &rLTmpT = sshTrans.sshManipulator().provideBTmp();
+   sshTrans.sshManipulator().receive(rLTmpT);
+
+   // Free temporary storage
+   sshTrans.sshManipulator().freeTmp(rLTmpT);
 
    return status;
 }
@@ -269,9 +299,9 @@ void setupTransform(SSHTransformType &sshTrans)
 int runParaTest()
 {
    // Set some truncation values
-   int maxN = 20;
-   int maxL = 32;
-   int maxM = 32;
+   int maxN = 6;
+   int maxL = 24;
+   int maxM = 24;
    int Mp = 1;
    int nCore = 1;
 

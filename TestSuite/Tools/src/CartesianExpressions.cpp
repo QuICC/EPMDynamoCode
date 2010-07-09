@@ -28,13 +28,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mSth(th0 + th)*std::cos(mPhi(ph));
+            tmp(ph, th) = this->mSth(th0 + th)*std::cos(this->mPhi(ph));
          }
       }
 
@@ -46,13 +46,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mSth(th0 + th)*std::sin(mPhi(ph));
+            tmp(ph, th) = this->mSth(th0 + th)*std::sin(this->mPhi(ph));
          }
       }
 
@@ -64,13 +64,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mCth(th0 + th);
+            tmp(ph, th) = this->mCth(th0 + th);
          }
       }
 
@@ -82,13 +82,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mSth(th0 + th)*std::cos(mPhi(ph));
+            tmp(ph, th) = this->mSth(th0 + th)*std::cos(this->mPhi(ph));
          }
       }
 
@@ -104,9 +104,9 @@ namespace EPMDynamo {
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mSth(th0 + th)*std::sin(mPhi(ph));
+            tmp(ph, th) = this->mSth(th0 + th)*std::sin(this->mPhi(ph));
          }
       }
 
@@ -118,13 +118,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mCth(th0 + th);
+            tmp(ph, th) = this->mCth(th0 + th);
          }
       }
 
@@ -136,13 +136,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mCth(th0 + th)*std::cos(mPhi(ph));
+            tmp(ph, th) = this->mCth(th0 + th)*std::cos(this->mPhi(ph));
          }
       }
 
@@ -154,13 +154,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = mCth(th0 + th)*std::sin(mPhi(ph));
+            tmp(ph, th) = this->mCth(th0 + th)*std::sin(this->mPhi(ph));
          }
       }
 
@@ -172,13 +172,13 @@ namespace EPMDynamo {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
       int th0 = this->trunc()->local()->rtp()->th0(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = -mSth(th0 + th);
+            tmp(ph, th) = -this->mSth(th0 + th);
          }
       }
 
@@ -189,13 +189,13 @@ namespace EPMDynamo {
    {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = -std::sin(mPhi(ph));
+            tmp(ph, th) = -std::sin(this->mPhi(ph));
          }
       }
 
@@ -206,13 +206,13 @@ namespace EPMDynamo {
    {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       for(int th = 0; th < nTh; th++)
       {
-         for(int ph = 0; ph < mNph; ph++)
+         for(int ph = 0; ph < this->mNph; ph++)
          {
-            tmp(ph, th) = std::cos(mPhi(ph));
+            tmp(ph, th) = std::cos(this->mPhi(ph));
          }
       }
 
@@ -223,7 +223,7 @@ namespace EPMDynamo {
    {
       int nTh = this->trunc()->local()->rtp()->nTh(n);
 
-      Matrix   tmp(mNph, nTh);
+      Matrix   tmp(this->mNph, nTh);
 
       tmp.setConstant(0.0);
 

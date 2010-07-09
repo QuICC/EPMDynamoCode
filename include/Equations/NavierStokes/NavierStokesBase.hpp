@@ -89,7 +89,7 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
          return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
       #else
-         return 3*(TSimTraits<TSimType>::NeedVelocity && TSimTraits<TSimType>::NeedVelocityCurl);
+         return 3*(TSimTraits<TSimType>::NeedVelocity || TSimTraits<TSimType>::NeedVelocityCurl);
       #endif // EPMDYNAMO_SSH_GROUPEDCOMM
    }
 
@@ -98,7 +98,7 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
          return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
       #else
-         return (TSimTraits<TSimType>::NeedVelocity && TSimTraits<TSimType>::NeedVelocityCurl);
+         return (TSimTraits<TSimType>::NeedVelocity || TSimTraits<TSimType>::NeedVelocityCurl);
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 

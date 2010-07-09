@@ -119,15 +119,18 @@ void initRTPGradientField(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
 void initSpectralSHScalar(SpectralScalarType &rSSHValues)
 {
    int nN = rSSHValues.trunc()->sim()->rad()->nN();
-   int nM;
 
+   epm::ArrayI ls = rSSHValues.trunc()->local()->spec()->lArray();
    for(int l=0; l < rSSHValues.trunc()->local()->spec()->nL(); ++l)
    {
-      nM = rSSHValues.trunc()->local()->spec()->nM(l);
-      rSSHValues.rLShell(l).setRandom(nN, nM);
-      for(int n =0; n< nN; ++n)
+      rSSHValues.rLShell(l).setConstant(epm::EPMComplex(ls(l), -ls(l)));
+
+      if(rSSHValues.trunc()->local()->spec()->mArray(l)(0) == 0)
       {
-         rSSHValues.rLShell(l)(n,0).imag() = 0.0;
+         for(int n =0; n< nN; ++n)
+         {
+            rSSHValues.rLShell(l)(n,0).imag() = 0.0;
+         }
       }
    }
 }
@@ -394,21 +397,20 @@ void initTorPolSSH(TorPolFieldType &rToPoField)
       rToPoField.rPol().rLShell(l).setZero(nN, nM);
    }
 
+   epm::ArrayI ls = rToPoField.trunc()->local()->spec()->lArray();
    for(int l=rToPoField.tor().minL(); l < nL; ++l)
    {
-      nM = rToPoField.trunc()->local()->spec()->nM(l);
-      rToPoField.rTor().rLShell(l).setRandom(nN, nM);
-      rToPoField.rPol().rLShell(l).setRandom(nN, nM);
-      for(int n =0; n< nN; ++n)
+      rToPoField.rTor().rLShell(l).setConstant(epm::EPMComplex(ls(l),-ls(l)));
+      rToPoField.rPol().rLShell(l).setConstant(epm::EPMComplex(ls(l),-ls(l)));
+
+      if(rToPoField.trunc()->local()->spec()->mArray(l)(0) == 0)
       {
-         rToPoField.rTor().rLShell(l)(n,0).imag() = 0.0;
-         rToPoField.rPol().rLShell(l)(n,0).imag() = 0.0;
-     }
-   }
-   for(int n =0; n< nN; ++n)
-   {
-      rToPoField.rTor().rLShell(0)(n,0) = 0.0;
-      rToPoField.rPol().rLShell(0)(n,0) = 0.0;
+         for(int n =0; n< nN; ++n)
+         {
+            rToPoField.rTor().rLShell(l)(n,0).imag() = 0.0;
+            rToPoField.rPol().rLShell(l)(n,0).imag() = 0.0;
+         }
+      }
    }
 }
 
@@ -481,15 +483,31 @@ int runRTPScalarTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpScalar.shell(n), rtpScalar2.shell(n));
    }
 
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum Forward + Backward transforms error: " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error: " << error.relMax() << std::endl;
-   }
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error: " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error: " << errMax(1) << std::endl;
+   }
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -538,15 +556,31 @@ int runSSHScalarTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(sshScalar.lshell(l), sshScalar2.lshell(l));
    }
 
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum Forward + Backward transforms error: " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error: " << error.relMax() << std::endl;
-   }
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error: " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error: " << errMax(1) << std::endl;
+   }
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -595,10 +629,21 @@ int runRTPDiv0Test(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    {
       status += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
    }
+
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Forward + Backward transforms error (R Component) :" << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (R Component) :" << error.relMax() << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (R Component) :" << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (R Component) :" << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -606,10 +651,20 @@ int runRTPDiv0Test(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    {
       status += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
    }
+
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Forward + Backward transforms error (Theta Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (Theta Component): " << error.relMax() << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (Theta Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (Theta Component): " << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -617,16 +672,32 @@ int runRTPDiv0Test(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    {
       status += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
    }
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum Forward + Backward transforms error (Phi Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (Phi Component): " << error.relMax() << std::endl;
-   }
-   error.resetErrors();
+
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (Phi Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (Phi Component): " << errMax(1) << std::endl;
+   }
+   error.resetErrors();
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -676,10 +747,20 @@ int runTorPolTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(topoField.tor().lshell(l), topoField2.tor().lshell(l));
    }
 
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Backward + Forward transforms error (Toroidal Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Backward + Forward transforms relative error (Toroidal Component): " << error.relMax() << std::endl;
+      std::cout << "\t Maximum Backward + Forward transforms error (Toroidal Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Backward + Forward transforms relative error (Toroidal Component): " << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -688,16 +769,31 @@ int runTorPolTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(topoField.pol().lshell(l), topoField2.pol().lshell(l));
    }
 
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum Backward + Forward transforms error (Poloidal Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Backward + Forward transforms relative error (Poloidal Component): " << error.relMax() << std::endl;
-   }
-   error.resetErrors();
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl << std::endl;
+      std::cout << "\t Maximum Backward + Forward transforms error (Poloidal Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Backward + Forward transforms relative error (Poloidal Component): " << errMax(1) << std::endl;
+   }
+   error.resetErrors();
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -750,10 +846,20 @@ int runGradientTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
    }
 
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Forward + Backward transforms error (R Component) :" << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (R Component) :" << error.relMax() << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (R Component) :" << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (R Component) :" << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -762,10 +868,19 @@ int runGradientTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
    }
 
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Forward + Backward transforms error (Theta Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (Theta Component): " << error.relMax() << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (Theta Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (Theta Component): " << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -774,16 +889,31 @@ int runGradientTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
    }
 
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum Forward + Backward transforms error (Phi Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (Phi Component): " << error.relMax() << std::endl;
-   }
-   error.resetErrors();
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (Phi Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (Phi Component): " << errMax(1) << std::endl;
+   }
+   error.resetErrors();
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -835,10 +965,20 @@ int runCurlTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
    }
 
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Forward + Backward transforms error (R Component) :" << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (R Component) :" << error.relMax() << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (R Component) :" << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (R Component) :" << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -847,10 +987,19 @@ int runCurlTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
    }
 
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum Forward + Backward transforms error (Theta Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (Theta Component): " << error.relMax() << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (Theta Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (Theta Component): " << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -859,16 +1008,31 @@ int runCurlTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
    }
 
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum Forward + Backward transforms error (Phi Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum Forward + Backward transforms relative error (Phi Component): " << error.relMax() << std::endl;
-   }
-   error.resetErrors();
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms error (Phi Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum Forward + Backward transforms relative error (Phi Component): " << errMax(1) << std::endl;
+   }
+   error.resetErrors();
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -960,10 +1124,20 @@ int runNTermsTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(topoField.tor().lshell(l), sshScalar.lshell(l));
    }
 
+   epm::Array errMax(2);
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t Maximum curl error (Tor Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum curl relative error (Tor Component): " << error.relMax() << std::endl;
+      std::cout << "\t Maximum curl error (Tor Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum curl relative error (Tor Component): " << errMax(1) << std::endl;
    }
    error.resetErrors();
 
@@ -972,16 +1146,31 @@ int runNTermsTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       status += error.checkPrecision(topoField.pol().lshell(l), sshScalar2.lshell(l));
    }
 
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "\t Maximum curl curl error (Pol Component): " << error.max() << std::endl;
-      std::cout << "\t Maximum curl curl relative error (Pol Component): " << error.relMax() << std::endl;
-   }
-   error.resetErrors();
+   errMax(0) = error.max();
+   errMax(1) = error.relMax();
+
+   // Gather max error over all CPUs
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, errMax.data(), 2, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << std::endl;
+      std::cout << "\t Maximum curl curl error (Pol Component): " << errMax(0) << std::endl;
+      std::cout << "\t Maximum curl curl relative error (Pol Component): " << errMax(1) << std::endl;
+   }
+   error.resetErrors();
+
+   // Gather total status from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
    }
 
    return status;
@@ -1055,9 +1244,9 @@ void setupTransform(SSHTransformType &sshTrans)
 int runPrecTest()
 {
    // Set some truncation values
-   int maxN = 6;
-   int maxL = 24;
-   int maxM = 24;
+   int maxN = 20;
+   int maxL = 32;
+   int maxM = 32;
    int Mp = 1;
    int nCore = 1;
 
@@ -1143,12 +1332,6 @@ int runPrecTest()
    // Make sure CPUs are synchronized before gathering data
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   // Gather total status from MPI run
-   #ifdef EPMDYNAMO_MPI
-      // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-   #endif //EPMDYNAMO_MPI
-
    return status;
 }
 
@@ -1179,7 +1362,7 @@ int main(int argc, char* argv[])
    {
       if(epm::EPMDYNAMO_RANK == 0)
       {
-         std::cout << "Failed!" << std::endl;
+         std::cout << "Failed! (status: " << code << ")" << std::endl;
       }
    } else
    {

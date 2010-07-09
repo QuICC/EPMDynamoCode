@@ -79,7 +79,7 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
          return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
       #else
-         return 3*(TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedMagneticCurl);
+         return 3*(TSimTraits<TSimType>::NeedMagnetic || TSimTraits<TSimType>::NeedMagneticCurl);
       #endif // EPMDYNAMO_SSH_GROUPEDCOMM
    }
 
@@ -88,7 +88,7 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
          return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
       #else
-         return (TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedMagneticCurl);
+         return (TSimTraits<TSimType>::NeedMagnetic || TSimTraits<TSimType>::NeedMagneticCurl);
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 

@@ -212,28 +212,28 @@ namespace EPMDynamo {
 
    inline SmartTruncation CartesianExpressions::trunc() const
    {
-      return mpTrunc;
+      return this->mpTrunc;
    }
 
    inline Matrix  CartesianExpressions::x(const int n, const int power){
-      Matrix tmp = std::pow(mRad(n), power)*xMat(n).cwise().pow(power);
+      Matrix tmp = std::pow(this->mRad(n), power)*this->xMat(n).cwise().pow(power);
       return tmp;
    };
 
    inline Matrix  CartesianExpressions::y(const int n, const int power){
-      Matrix tmp = std::pow(mRad(n), power)*yMat(n).cwise().pow(power);
+      Matrix tmp = std::pow(this->mRad(n), power)*this->yMat(n).cwise().pow(power);
       return tmp;
    };
 
    inline Matrix  CartesianExpressions::z(const int n, const int power){
-      Matrix tmp = std::pow(mRad(n), power)*zMat(n).cwise().pow(power);
+      Matrix tmp = std::pow(this->mRad(n), power)*this->zMat(n).cwise().pow(power);
       return tmp;
    };
 
    inline Matrix CartesianExpressions::xyzToR(const Matrix& xComp, const Matrix& yComp, const Matrix& zComp, const int rIdx)
    {
       Matrix tmp;
-      tmp = xComp.cwise()*xToRMat(rIdx) + yComp.cwise()*yToRMat(rIdx) + zComp.cwise()*zToRMat(rIdx);
+      tmp = xComp.cwise()*this->xToRMat(rIdx) + yComp.cwise()*this->yToRMat(rIdx) + zComp.cwise()*this->zToRMat(rIdx);
 
       return tmp;
    };
@@ -241,7 +241,7 @@ namespace EPMDynamo {
    inline Matrix CartesianExpressions::xyzToTh(const Matrix& xComp, const Matrix& yComp, const Matrix& zComp, const int rIdx)
    {
       Matrix tmp;
-      tmp = xComp.cwise()*xToThMat(rIdx) + yComp.cwise()*yToThMat(rIdx) + zComp.cwise()*zToThMat(rIdx);
+      tmp = xComp.cwise()*this->xToThMat(rIdx) + yComp.cwise()*this->yToThMat(rIdx) + zComp.cwise()*this->zToThMat(rIdx);
 
       return tmp;
    };
@@ -249,7 +249,7 @@ namespace EPMDynamo {
    inline Matrix CartesianExpressions::xyzToPh(const Matrix& xComp, const Matrix& yComp, const Matrix& zComp, const int rIdx)
    {
       Matrix tmp;
-      tmp = xComp.cwise()*xToPhMat(rIdx) + yComp.cwise()*yToPhMat(rIdx) + zComp.cwise()*zToPhMat(rIdx);
+      tmp = xComp.cwise()*this->xToPhMat(rIdx) + yComp.cwise()*this->yToPhMat(rIdx) + zComp.cwise()*this->zToPhMat(rIdx);
 
       return tmp;
    };
