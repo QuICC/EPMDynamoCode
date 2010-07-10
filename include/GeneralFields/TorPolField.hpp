@@ -226,6 +226,7 @@ namespace EPMDynamo {
       EPMFloat shWeight;
       EPMFloat shFactor;
       int l_;
+
       for(int l = l0; l < nL; ++l)
       {
          l_ = ls(l);
@@ -251,11 +252,11 @@ namespace EPMDynamo {
                shFactor = shWeight;
             }
 
-
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
+
             this->rPol().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
          }
-         this->rPol().rSpectrumL()(l_) += tmpSpectrum.sum();
+         this->rPol().rSpectrumL()(l_) += tmpSpectrum.segment(ms(0), ms.size()).sum();
       }
 
       // Get the "global" spectra for MPI code
