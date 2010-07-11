@@ -199,7 +199,12 @@ namespace EPMDynamo {
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
             this->rTor().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
          }
-         this->rTor().rSpectrumL()(l_) += tmpSpectrum.sum();
+
+         // Compute energy in L spectrum
+         for(int i = 0; i < ms.size(); ++i)
+         {
+            this->rTor().rSpectrumL()(l_) += tmpSpectrum(ms(i));
+         }
       }
 
       // Get the "global" spectra for MPI code
@@ -256,7 +261,12 @@ namespace EPMDynamo {
 
             this->rPol().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
          }
-         this->rPol().rSpectrumL()(l_) += tmpSpectrum.segment(ms(0), ms.size()).sum();
+
+         // Compute energy in L spectrum
+         for(int i = 0; i < ms.size(); ++i)
+         {
+            this->rPol().rSpectrumL()(l_) += tmpSpectrum(ms(i));
+         }
       }
 
       // Get the "global" spectra for MPI code
