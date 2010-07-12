@@ -97,7 +97,7 @@ namespace EPMDynamo {
          /**
           * @brief EXTENSION of parameters file
           */
-         static const std::string   PHYSROSBYXML;
+         static const std::string   PHYSROSSBYXML;
 
          /**
           * @brief EXTENSION of parameters file

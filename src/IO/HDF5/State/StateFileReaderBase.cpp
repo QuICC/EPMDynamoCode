@@ -39,8 +39,8 @@ namespace EPMDynamo {
       // Read  Rayleigh scalar from file
       this->readScalar(StateFileDefs::RAYLEIGHTAG, Ra);
 
-      // Read  Rosby scalar from file
-      this->readScalar(StateFileDefs::ROSBYTAG, Ro);
+      // Read  Rossby scalar from file
+      this->readScalar(StateFileDefs::ROSSBYTAG, Ro);
       
       // close group
       H5Gclose(this->mGroup);

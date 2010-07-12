@@ -47,7 +47,7 @@ namespace EPMDynamo {
          /**
           * @brief HEADER part for State file
           */
-         static const std::string   ROSBYTAG;
+         static const std::string   ROSSBYTAG;
 
          /**
           * @brief HEADER part for State file

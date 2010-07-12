@@ -164,6 +164,8 @@ namespace EPMDynamo {
 
       // Initialise the Navier-Stokes equation
       this->mNavierStokes.init();
+
+      TimestepConfig::overruleMaxTimestep(1e-5);
    }
 
    template <typename TSimType> void ThermalConvectionSimulation<TSimType>::configureTransforms()

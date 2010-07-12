@@ -27,7 +27,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCVTraits
+#define TGENTRAITS epm::GenCTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
 
 typedef  epm::SourceGenerator<epm::WSHSimulation, TGENTRAITS>  SourceGenerator;
@@ -70,6 +70,21 @@ void setRTPVelocity(Velocity &velV)
    }
 }
 
+void setSpecCodensity(Codensity &codC)
+{
+   SmartTruncation pTrunc = codC.trunc();
+
+   codC.rSrc().rLShell(0)(0,0) = 3.0;
+}
+
+void setSpecMagnetic(Magnetic &magB)
+{
+}
+
+void setSpecVelocity(Velocity &velV)
+{
+}
+
 /**
  * @brief Velocity diffusion simulation
  */
@@ -98,6 +113,24 @@ int runProgram()
 
    // Transform the fields
    generator.transformRTP();
+
+   // Set the codensity field
+   if(GENTRAITS::NeedCodensity)
+   {
+      setSpecCodensity(generator.codC());
+   }
+
+   // Set the magetic field
+   if(GENTRAITS::NeedMagnetic)
+   {
+      setSpecMagnetic(generator.magB());
+   }
+
+   // Set the velocity field
+   if(GENTRAITS::NeedVelocity)
+   {
+      setSpecVelocity(generator.velV());
+   }
 
    // Initialise the state file
    generator.initOutput("Source");

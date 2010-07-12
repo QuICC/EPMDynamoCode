@@ -53,7 +53,7 @@ namespace EPMDynamo {
          virtual ~EquationParameters() {};
 
          /**
-          * @brief Get the Rosby number
+          * @brief Get the Rossby number
           */
          EPMFloat Ro() const; 
 
@@ -92,7 +92,7 @@ namespace EPMDynamo {
          EPMFloat mRa;
 
          /**
-          * @brief The Rosby number
+          * @brief The Rossby number
           */
          EPMFloat mRo;
    };

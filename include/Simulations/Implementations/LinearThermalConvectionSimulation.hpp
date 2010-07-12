@@ -28,7 +28,7 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/Transport/TransportLinear.hpp"
+#include "Equations/Transport/TransportMHD.hpp"
 #include "Equations/NavierStokes/NavierStokesLinThermal.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
@@ -129,7 +129,7 @@ namespace EPMDynamo {
          /**
           * @brief Transport equation
           */
-         TransportLinear<TSimType, LinearThermalConvectionTraits>    mTransport;
+         TransportMHD<TSimType, LinearThermalConvectionTraits>    mTransport;
 
          /**
           * @brief Navier Stokes equation
@@ -164,6 +164,8 @@ namespace EPMDynamo {
 
       // Initialise the Navier-Stokes equation
       this->mNavierStokes.init();
+
+      TimestepConfig::overruleMaxTimestep(1e-5);
    }
 
    template <typename TSimType> void LinearThermalConvectionSimulation<TSimType>::configureTransforms()

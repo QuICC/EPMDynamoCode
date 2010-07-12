@@ -45,7 +45,7 @@ namespace EPMDynamo {
 
    const std::string ParametersFileDefs::PHYSRAYLEIGHXML = "rayleigh";
 
-   const std::string ParametersFileDefs::PHYSROSBYXML = "rosby";
+   const std::string ParametersFileDefs::PHYSROSSBYXML = "rossby";
 
    const std::string ParametersFileDefs::TIMEXML = "timestepping";
 

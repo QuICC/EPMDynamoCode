@@ -153,7 +153,7 @@ namespace EPMDynamo {
 
             this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSRAYLEIGHXML);
 
-            this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSROSBYXML);
+            this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSROSSBYXML);
          } else
          {
             throw EPMException("ParametersFile::readPhysical", "Couldn't find tag!");

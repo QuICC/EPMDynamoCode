@@ -77,6 +77,13 @@ void setSpecCodensity(Codensity &codC)
    codC.rOc().rPerturbation().rLShell(0)(0,0) = 1.0/4.0;
    codC.rOc().rPerturbation().rLShell(0)(1,0) = -1.0/2.0;
 
+   for(int l=1; l < pTrunc->local()->spec()->nL()-5; ++l)
+   {
+      codC.rOc().rPerturbation().rLShell(l).row(0).setConstant(1.0e-6);
+      codC.rOc().rPerturbation().rLShell(l).row(1).setConstant(1.0e-6);
+      codC.rOc().rPerturbation().rLShell(l).row(2).setConstant(1.0e-6);
+   }
+
 }
 
 void setSpecMagnetic(Magnetic &magB)

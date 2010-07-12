@@ -25,7 +25,7 @@ namespace EPMDynamo {
 
    const std::string StateFileDefs::RAYLEIGHTAG = "Ra";
 
-   const std::string StateFileDefs::ROSBYTAG = "Ro";
+   const std::string StateFileDefs::ROSSBYTAG = "Ro";
 
    const std::string StateFileDefs::RUNTAG = "RunParameters";
 

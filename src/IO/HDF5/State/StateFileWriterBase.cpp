@@ -39,8 +39,8 @@ namespace EPMDynamo {
       // Write Rayleigh scalar to file
       this->writeScalar(StateFileDefs::RAYLEIGHTAG, Ra);
 
-      // Write Rosby scalar to file
-      this->writeScalar(StateFileDefs::ROSBYTAG, Ro);
+      // Write Rossby scalar to file
+      this->writeScalar(StateFileDefs::ROSSBYTAG, Ro);
       
       // close group
       H5Gclose(this->mGroup);
