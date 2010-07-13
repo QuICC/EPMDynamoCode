@@ -79,11 +79,11 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> inline int TransportBase<TSimType, TSimTraits>::nSSHBPacks() const
    {
-      #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
+      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
          return TSimTraits<TSimType>::NeedCodensity + 2*TSimTraits<TSimType>::NeedCodensityGrad;
       #else
          return std::max(static_cast<int>(TSimTraits<TSimType>::NeedCodensity), static_cast<int>(2*TSimTraits<TSimType>::NeedCodensityGrad));
-      #endif // EPMDYNAMO_SSH_GROUPEDCOMM
+      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
    template <typename TSimType, template <typename> class TSimTraits> inline int TransportBase<TSimType, TSimTraits>::nSHBPacks() const

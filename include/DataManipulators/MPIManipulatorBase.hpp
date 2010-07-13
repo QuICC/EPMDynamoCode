@@ -163,9 +163,14 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief The number of packs in the "previous/active" send
+          * @brief The number of packs in the "previous/active" Backward send
           */
-         int   mActiveSendPacks;
+         int   mActiveBSendPacks;
+
+         /**
+          * @brief The number of packs in the "previous/active" Forward send
+          */
+         int   mActiveFSendPacks;
 
          /**
           * @brief Storage for the Forward datatypes
@@ -504,7 +509,7 @@ namespace EPMDynamo {
    }
 
    template <typename TForward, typename TBackward> MPIManipulatorBase<TForward, TBackward>::MPIManipulatorBase(const SmartTruncation pTrunc, const int nFTmp, const int nBTmp)
-      : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp), mActiveSendPacks(1), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mInterFEntry(-1), mInterBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
+      : ManipulatorBase<TForward, TBackward>(pTrunc, nFTmp, nBTmp), mActiveBSendPacks(-1), mActiveFSendPacks(-1), mIsSending(false), mIsReceiving(false), mDesactivationValue(-4242), mInterFEntry(-1), mInterBEntry(-1), mDesactivateEntry(mDesactivationValue), mShiftEntry(0)
    {
    }
 
@@ -695,6 +700,10 @@ namespace EPMDynamo {
          i0F = this->mMaxFPacks;
       }
 
+      // Set the active packs to a possible value!
+      this->mActiveBSendPacks = i0B;
+      this->mActiveFSendPacks = i0F;
+
       std::vector<MPI_Request> tmp;
 
       int grpMe;
@@ -833,7 +842,7 @@ namespace EPMDynamo {
    {
       if(this->isSending())
       {
-         MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mActiveSendPacks), MPI_STATUSES_IGNORE);
+         MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mActiveFSendPacks), MPI_STATUSES_IGNORE);
          MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mPacks), MPI_STATUSES_IGNORE);
 
          this->mIsSending = false;
@@ -854,7 +863,7 @@ namespace EPMDynamo {
    template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::initiateFSend()
    {
       // Store the number of packs in active send
-      this->mActiveSendPacks = this->mPacks;
+      this->mActiveFSendPacks = this->mPacks;
 
       // Prepost the receive calls
       MPI_Startall(this->sizeGroupB(), this->pRecvBRequests(this->mPacks));
@@ -871,7 +880,7 @@ namespace EPMDynamo {
    {
       if(this->isSending())
       {
-         MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mActiveSendPacks), MPI_STATUSES_IGNORE);
+         MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mActiveBSendPacks), MPI_STATUSES_IGNORE);
          MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mPacks), MPI_STATUSES_IGNORE);
 
          this->mIsSending = false;
@@ -892,7 +901,7 @@ namespace EPMDynamo {
    template <typename TForward, typename TBackward> void MPIManipulatorBase<TForward, TBackward>::initiateBSend()
    {
       // Store the number of packs in active send
-      this->mActiveSendPacks = this->mPacks;
+      this->mActiveBSendPacks = this->mPacks;
 
       // Prepost the receive calls
       MPI_Startall(this->sizeGroupF(), this->pRecvFRequests(this->mPacks));

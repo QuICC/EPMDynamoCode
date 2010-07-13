@@ -193,7 +193,7 @@ namespace EPMDynamo {
       // Register transform data packs of navier stokes equation for SH
       this->registerSHPacks(this->mNavierStokes.nFSHPacks(), this->mNavierStokes.nSHBPacks());
 
-      // Configure the SSH manipulator
+      // Configure the SH manipulator
       this->configureSHManipulator();
 
       //

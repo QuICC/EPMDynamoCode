@@ -86,11 +86,11 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::nSSHBPacks() const
    {
-      #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
+      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
          return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
       #else
          return 3*(TSimTraits<TSimType>::NeedVelocity || TSimTraits<TSimType>::NeedVelocityCurl);
-      #endif // EPMDYNAMO_SSH_GROUPEDCOMM
+      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
    template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::nSHBPacks() const

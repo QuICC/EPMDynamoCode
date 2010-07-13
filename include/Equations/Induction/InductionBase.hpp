@@ -76,11 +76,11 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> inline int InductionBase<TSimType, TSimTraits>::nSSHBPacks() const
    {
-      #ifdef EPMDYNAMO_SSH_GROUPEDCOMM
+      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
          return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
       #else
          return 3*(TSimTraits<TSimType>::NeedMagnetic || TSimTraits<TSimType>::NeedMagneticCurl);
-      #endif // EPMDYNAMO_SSH_GROUPEDCOMM
+      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
    template <typename TSimType, template <typename> class TSimTraits> inline int InductionBase<TSimType, TSimTraits>::nSHBPacks() const
