@@ -4,7 +4,10 @@
 set(${SrcSubDir}_Srcs
       EPMException.cpp
       MathConstants.cpp
-      MPITimer.cpp
-      SerialTimer.cpp
       TimerBase.cpp
       )
+if(EPMDYNAMO_MPI)
+  list(APPEND ${SrcSubDir}_Srcs MPITimer.cpp)
+else(EPMDYNAMO_MPI)
+  list(APPEND ${SrcSubDir}_Srcs SerialTimer.cpp)
+endif(EPMDYNAMO_MPI)
