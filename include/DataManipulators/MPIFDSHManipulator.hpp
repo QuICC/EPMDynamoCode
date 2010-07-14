@@ -213,8 +213,8 @@ namespace EPMDynamo {
    template <typename TForward> void MPIFDSHManipulator<TForward>::buildBType(FDSHDegreeScalar &data, MPI_Datatype &type, const int coreID)
    {
       // Create unique ID out of indexes
-      const double nFactor = 1.0e4;
-      const double mFactor = 1.0e2;
+      const double nFactor = 1.0e8;
+      const double mFactor = 1.0e4;
       const double lFactor = 1.0;
 
       // Create  map to sort out the required indexes

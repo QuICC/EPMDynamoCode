@@ -25,8 +25,6 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
-    *
-    * \epmBug Is not implemented yet
     */
    template <typename TSimType, template <typename> class TSimTraits> class TransportLinear: public TransportSource<TSimType, TSimTraits>
    {

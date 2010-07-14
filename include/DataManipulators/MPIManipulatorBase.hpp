@@ -106,8 +106,6 @@ namespace EPMDynamo {
           * @brief Receive data
           *
           * \param rData Storage for received data
-          *
-          * \epmBug Removed minL(), might be bad idea
           */
          void receive(TForward &rData);
 
@@ -115,8 +113,6 @@ namespace EPMDynamo {
           * @brief Receive data
           *
           * \param rData Storage for received data
-          *
-          * \epmBug Removed minL(), might be bad idea
           */
          void receive(TBackward &rData);
 
