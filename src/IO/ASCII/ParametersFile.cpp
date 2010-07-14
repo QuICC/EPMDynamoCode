@@ -308,7 +308,7 @@ namespace EPMDynamo {
       MPI_Type_commit(&paramType);
 
       // Broadcast the information
-      MPI_Bcast(MPI_BOTTOM, 1, paramType, ioRank(), MPI_COMM_WORLD);
+      MPI_Bcast(MPI_BOTTOM, 1, paramType, this->ioRank(), MPI_COMM_WORLD);
       
       // Free the datatype
       MPI_Type_free(&paramType);
