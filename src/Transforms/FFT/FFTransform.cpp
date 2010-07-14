@@ -32,7 +32,20 @@ namespace EPMDynamo {
       this->cleanupFFT();
    }
 
+   // Fastest FFTW plan creation
+   #ifdef EPMDYNAMO_FFTW_ESTIMATE
+   unsigned int FFTransform::mFlags = FFTW_ESTIMATE;
+   #endif // EPMDYNAMO_FFTW_ESTIMATE
+
+   // Middle FFTW plan creation
+   #ifdef EPMDYNAMO_FFTW_MEASURE
+   unsigned int FFTransform::mFlags = FFTW_MEASURE;
+   #endif // EPMDYNAMO_FFTW_MEASURE
+
+   // Slow FFTW plan creation
+   #ifdef EPMDYNAMO_FFTW_PATIENT
    unsigned int FFTransform::mFlags = FFTW_PATIENT;
+   #endif // EPMDYNAMO_FFTW_PATIENT
 
    void FFTransform::initFFT()
    {

@@ -27,8 +27,10 @@ namespace EPMDynamo {
       public:
          /**
           * @brief Constructor
+          *
+          * @param autostart Should the timer start at creation ?
           */
-         MPITimer();
+         MPITimer(const bool autostart = false);
 
          /**
           * @brief Destructor

@@ -107,6 +107,32 @@ endif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
 
 
 ###################################################
+#------------ FFTW PLAN COMPUTATION --------------#
+###################################################
+
+#
+# Choose the fftw plan computation flag
+# Possible flags are: fast, medium, slow
+#
+set(EPMDYNAMO_FFTW_PLAN_FLAG "${EPMDYNAMO_FFTW_PLAN_FLAG}" CACHE STRING "FFTW flag: fast, medium, slow." FORCE)
+MARK_AS_ADVANCED(EPMDYNAMO_FFTW_PLAN_FLAG)
+
+# Use ESTIMATE FFTW plan flag
+if(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
+   add_definitions("-DEPMDYNAMO_FFTW_ESTIMATE")
+# Use MEASURE FFTW plan flag
+elseif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "medium")
+   add_definitions("-DEPMDYNAMO_FFTW_MEASURE")
+# Use PATIENT FFTW plan flag
+elseif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "slow")
+   add_definitions("-DEPMDYNAMO_FFTW_PATIENT")
+# Use ESTIMATE FFTW plan flag by default
+else(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
+   add_definitions("-DEPMDYNAMO_FFTW_ESTIMATE")
+endif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
+
+
+###################################################
 #------------- MPI PARALLELISATION ---------------#
 ###################################################
 

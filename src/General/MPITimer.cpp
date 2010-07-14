@@ -21,9 +21,14 @@
 
 namespace EPMDynamo {
 
-   MPITimer::MPITimer()
+   MPITimer::MPITimer(const bool autostart)
       : mStart(0.0), mStop(0.0)
    {
+      // Check if timer should be started
+      if(autostart)
+      {
+         this->start();
+      }
    }
 
    void MPITimer::start()

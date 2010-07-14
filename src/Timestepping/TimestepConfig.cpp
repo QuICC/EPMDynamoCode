@@ -33,9 +33,12 @@ namespace EPMDynamo {
 
    void TimestepConfig::overruleMaxTimestep(EPMFloat newMax)
    {
+      // Set new maximum timestep
       MAXIMUM_TIMESTEP = newMax;
 
+      // Print message about change of maximum timestep
       std::cout << "MAXIMUM TIMESTEP has been overruled and set to :" << MAXIMUM_TIMESTEP << std::endl;
+      std::cout << std::endl;
    }
 
 }

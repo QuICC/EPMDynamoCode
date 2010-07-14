@@ -17,18 +17,23 @@
 
 namespace EPMDynamo {
 
-   SerialTimer::SerialTimer()
+   SerialTimer::SerialTimer(const bool autostart)
    {
+      // Check if timer should be started
+      if(autostart)
+      {
+         this->start();
+      }
    }
 
    void SerialTimer::start()
    {
-      clock_gettime(CLOCK_REALTIME, &mStart);
+      clock_gettime(CLOCK_REALTIME, &this->mStart);
    }
 
    void SerialTimer::stop()
    {
-      clock_gettime(CLOCK_REALTIME, &mStop);
+      clock_gettime(CLOCK_REALTIME, &this->mStop);
    }
 
    EPMFloat SerialTimer::time() const

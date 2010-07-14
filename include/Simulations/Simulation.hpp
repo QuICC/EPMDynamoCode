@@ -68,10 +68,25 @@ namespace EPMDynamo {
    template <typename TSimType, template<typename > class TSimImpl> Simulation<TSimType, TSimImpl>::Simulation()
       : TSimImpl<TSimType>()
    {
+      // Stop timer for construction time
+      this->mTimer.stop();
+
+      // Print some information on simulation construction time
+      if(this->mpTrunc->para().id() == 0)
+      {
+         std::cout << std::endl;
+         std::cout << "----------------------------------------------------------" << std::endl;
+         std::cout << "*** Simulation construction successfull in " << static_cast<int>(std::ceil(this->mTimer.time())) << " seconds ***" << std::endl;
+         std::cout << "----------------------------------------------------------" << std::endl;
+         std::cout << std::endl;
+      }
    }
 
    template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::init()
    {
+      // Start timer
+      this->mTimer.start();
+
       try{
          // Initialise the simulation equations
          this->initEquations();
@@ -96,6 +111,27 @@ namespace EPMDynamo {
          e.printStdMessage();
 
          throw -1;
+      }
+
+      // Make sure CPUs are synchronized after initialisation
+      EPMDYNAMO_SYNCHRONIZE;
+
+      // Stop timer
+      this->mTimer.stop();
+
+      // Produce some nice output information for initialisation step
+      if(this->mpTrunc->para().id() == 0)
+      {
+         std::cout << "------------------------------------------------" << std::endl;
+         if(this->mTimer.time() < 1.0)
+         {
+            std::cout << "*** Initialisation successfull in < 1 second ***" << std::endl;
+         } else
+         {
+            std::cout << "*** Initialisation successfull in " << static_cast<int>(std::ceil(this->mTimer.time())) << " seconds ***" << std::endl;
+         }
+         std::cout << "------------------------------------------------" << std::endl;
+         std::cout << std::endl;
       }
    }
 

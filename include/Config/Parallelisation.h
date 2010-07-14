@@ -8,6 +8,7 @@
 #ifdef EPMDYNAMO_MPI
    #include <mpi.h>
    #include "Parallelisers/MPIWorkflow.hpp"
+   #include "General/MPITimer.hpp"
    /// Define MPI workflow type
    #define EPMDYNAMO_WORKFLOWTYPE  MPIWorkflow 
    /// MPI initialisation operations
@@ -22,6 +23,7 @@
    #define EPMDYNAMO_IS_PARALLEL   1
 #else
    #include "Parallelisers/SerialWorkflow.hpp"
+   #include "General/SerialTimer.hpp"
    /// Define MPI workflow type
    #define EPMDYNAMO_WORKFLOWTYPE  SerialWorkflow 
    /// Serial initialisation operations

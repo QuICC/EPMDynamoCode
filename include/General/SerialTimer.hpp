@@ -26,8 +26,10 @@ namespace EPMDynamo {
       public:
          /**
           * @brief Constructor
+          *
+          * @param autostart Should the timer start at creation ?
           */
-         SerialTimer();
+         SerialTimer(const bool autostart = false);
 
          /**
           * @brief Destructor

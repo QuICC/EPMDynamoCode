@@ -45,6 +45,11 @@ namespace EPMDynamo {
 
       protected:
          /**
+          * @brief General multi-purpose timer
+          */
+         TimerType   mTimer;
+
+         /**
           * @brief Constructor
           */
          SimulationBase();
@@ -227,7 +232,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
-      : mIOSys(), mpTrunc(TSimType::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0), mSSHFPacks(0), mSSHBPacks(0), mSHFPacks(0), mSHBPacks(0)
+      : mTimer(true), mIOSys(), mpTrunc(TSimType::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0), mSSHFPacks(0), mSSHBPacks(0), mSHFPacks(0), mSHBPacks(0)
    {
       // Finish initialisation of the truncation object by setting the physical grid values
       this->mTransform.initRTPDomains(this->mpTrunc);
