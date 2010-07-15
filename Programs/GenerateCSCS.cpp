@@ -41,6 +41,9 @@ typedef  epm::SmartTruncation  SmartTruncation;
  */
 int runProgram()
 {
+   // Use the CSCS grid output
+   epm::SimulationConstants::setCSCSGrid();
+
    // Create the genertor object
    CSCSGenerator   generator;
 
