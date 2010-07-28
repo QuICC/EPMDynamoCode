@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 2.6.2)
 
 #
 # Set platform
-# Possible platforms are: Core2 (gentoo), Brutus, Rosa 
+# Possible platforms are: Core2 (Gentoo), Brutus, Rosa 
 #
 set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa." FORCE)
 
@@ -33,6 +33,7 @@ elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
 # Set Rosa platform
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Rosa")
    set(EPMDYNAMO_ON_ROSA ON)
+# Error message if unknown platform is set
 else(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    message(SEND_ERROR "Unkown platform")
 endif(EPMDYNAMO_PLATFORM STREQUAL "Core2")
@@ -44,10 +45,10 @@ endif(EPMDYNAMO_PLATFORM STREQUAL "Core2")
 
 #
 # Choose compiler
-# Possible compilers are: GCC, PGI, Intel, Pathscale, Cray, Sun, Tau, TauInstr
+# Possible compilers are: GCC, PGI, Intel, Pathscale, Cray, Sun, TauGCC, TauGCC_intrument, ScalGCC
 # Not all compilers can be used everywhere.
 #
-set(EPMDYNAMO_COMPILER "${EPMDYNAMO_COMPILER}" CACHE STRING "Compiler to use: GCC, PGI, Intel, Pathscale, Cray, Sun, Tau, TauInstr." FORCE)
+set(EPMDYNAMO_COMPILER "${EPMDYNAMO_COMPILER}" CACHE STRING "Compiler to use: GCC, PGI, Intel, Pathscale, Cray, Sun, TauGCC, TauGCC_instrument, ScalGCC." FORCE)
 
 # Set GCC compiler
 if(EPMDYNAMO_COMPILER STREQUAL "GCC")
@@ -67,13 +68,20 @@ elseif(EPMDYNAMO_COMPILER STREQUAL "Cray")
 # Set Sun compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "Sun")
    set(EPMDYNAMO_USE_SUN ON)
-# Set Tau compiler
-elseif(EPMDYNAMO_COMPILER STREQUAL "Tau")
+# Set Tau compiler based on GCC
+elseif(EPMDYNAMO_COMPILER STREQUAL "TauGCC")
    set(EPMDYNAMO_USE_TAU ON)
-# Set Tau compiler with compiler instrumentation
-elseif(EPMDYNAMO_COMPILER STREQUAL "TauInstr")
-   set(EPMDYNAMO_USE_TAUINSTR ON)
-# Unknow compiler
+   set(EPMDYNAMO_USE_GCC ON)
+# Set Tau compiler based on GCC with compiler instrumentation setup
+elseif(EPMDYNAMO_COMPILER STREQUAL "TauGCC_instrument")
+   set(EPMDYNAMO_USE_TAU ON)
+   set(EPMDYNAMO_USE_TAU_INSTRUMENTED ON)
+   set(EPMDYNAMO_USE_GCC ON)
+# Set Scalasca compiler with gnu base compiler
+elseif(EPMDYNAMO_COMPILER STREQUAL "ScalGCC")
+   set(EPMDYNAMO_USE_GCC ON)
+   set(EPMDYNAMO_USE_SCALASCA ON)
+# Error message for unknow compiler
 else(EPMDYNAMO_COMPILER STREQUAL "GCC")
    message(SEND_ERROR "Unkown compiler")
 endif(EPMDYNAMO_COMPILER STREQUAL "GCC")
@@ -119,15 +127,19 @@ MARK_AS_ADVANCED(EPMDYNAMO_FFTW_PLAN_FLAG)
 
 # Use ESTIMATE FFTW plan flag
 if(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
+   message(STATUS "Setup fast FFTW plan computation (FFTW_ESTIMATE)")
    add_definitions("-DEPMDYNAMO_FFTW_ESTIMATE")
 # Use MEASURE FFTW plan flag
 elseif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "medium")
+   message(STATUS "Setup normal FFTW plan computation (FFTW_MEASURE)")
    add_definitions("-DEPMDYNAMO_FFTW_MEASURE")
 # Use PATIENT FFTW plan flag
 elseif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "slow")
+   message(STATUS "Setup slow FFTW plan computation (FFTW_PATIENT)")
    add_definitions("-DEPMDYNAMO_FFTW_PATIENT")
 # Use ESTIMATE FFTW plan flag by default
 else(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
+   message(STATUS "Setup fast FFTW plan computation (FFTW_ESTIMATE)")
    add_definitions("-DEPMDYNAMO_FFTW_ESTIMATE")
 endif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
 
@@ -141,6 +153,7 @@ endif(EPMDYNAMO_FFTW_PLAN_FLAG STREQUAL "fast")
 #
 option(EPMDYNAMO_SPLIT_SH "Use MPI spherical harmonics transform version?" OFF)
 if(EPMDYNAMO_SPLIT_SH)
+   message(STATUS "Setting up MPI splitted spherical harmonics transform")
    add_definitions("-DEPMDYNAMO_SPLIT_SH")
 endif(EPMDYNAMO_SPLIT_SH)
 
@@ -149,6 +162,7 @@ endif(EPMDYNAMO_SPLIT_SH)
 #
 option(EPMDYNAMO_SPLIT_RADIAL "Use MPI radial transform version?" OFF)
 if(EPMDYNAMO_SPLIT_RADIAL)
+   message(STATUS "Setting up MPI splitted radial transform")
    add_definitions("-DEPMDYNAMO_SPLIT_RADIAL")
 endif(EPMDYNAMO_SPLIT_RADIAL)
 
@@ -156,12 +170,12 @@ endif(EPMDYNAMO_SPLIT_RADIAL)
 # Spherical harmonics splitting is only possible if radial transform is also
 # split (for the moment)
 #
-#if(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
-#   message(SEND_ERROR "Only parallelising the SH transform is not supported yet")
-#endif(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
+if(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
+   message(SEND_ERROR "Only parallelising the SH transform is not supported yet")
+endif(EPMDYNAMO_SPLIT_SH AND NOT EPMDYNAMO_SPLIT_RADIAL)
 
 #
-# If any of the previous settings is on activate MPI flag
+# If any of the previous settings is on, activate MPI flag
 #
 if(EPMDYNAMO_SPLIT_SH OR EPMDYNAMO_SPLIT_RADIAL)
    set(EPMDYNAMO_MPI ON)
@@ -174,6 +188,7 @@ endif(EPMDYNAMO_SPLIT_SH OR EPMDYNAMO_SPLIT_RADIAL)
 option(EPMDYNAMO_SH_GROUPEDCOMM "Use grouped MPI communication for spherical harmonics transform" OFF)
 if(EPMDYNAMO_SH_GROUPEDCOMM)
    if(EPMDYNAMO_SPLIT_SH)
+      message(STATUS "Setting up grouped spherical harmonics transform communication")
       add_definitions("-DEPMDYNAMO_SH_GROUPEDCOMM")
    endif(EPMDYNAMO_SPLIT_SH)
 endif(EPMDYNAMO_SH_GROUPEDCOMM)
@@ -184,6 +199,7 @@ endif(EPMDYNAMO_SH_GROUPEDCOMM)
 option(EPMDYNAMO_RADIAL_GROUPEDCOMM "Use grouped MPI communication for radial transform?" OFF)
 if(EPMDYNAMO_RADIAL_GROUPEDCOMM)
    if(EPMDYNAMO_SPLIT_RADIAL)
+      message(STATUS "Setting up grouped radial transform communication")
       add_definitions("-DEPMDYNAMO_RADIAL_GROUPEDCOMM")
    endif(EPMDYNAMO_SPLIT_RADIAL)
 endif(EPMDYNAMO_RADIAL_GROUPEDCOMM)
@@ -194,17 +210,22 @@ endif(EPMDYNAMO_RADIAL_GROUPEDCOMM)
 ###################################################
 
 #
-# Choose the type of memory usage the code is allowed to do.
+# Choose the type of memory usage setup the code is using.
 # Possible options are: BigMem, LowMem
 #
-set(EPMDYNAMO_MEMORY_USAGE "${EPMDYNAMO_MEMORY_USAGE}" CACHE STRING "Possible types of memory usage: BigMem, LowMem." FORCE)
+set(EPMDYNAMO_MEMORY_USAGE "${EPMDYNAMO_MEMORY_USAGE}" CACHE STRING "Possible setups of memory usage: BigMem, LowMem." FORCE)
 
-# Set Core2 platform
+# Set up big memory usage version
 if(EPMDYNAMO_MEMORY_USAGE STREQUAL "BigMem")
+   message(STATUS "Setting up big memory usage version")
    add_definitions("-DEPMDYNAMO_BIGMEM")
+# Set up low memory usage version
 elseif(EPMDYNAMO_MEMORY_USAGE STREQUAL "LowMem")
    add_definitions("-DEPMDYNAMO_LOWMEM")
+   message(STATUS "Setting up low memory usage version")
+# If unset or unknown value set up big memory usage version
 else(EPMDYNAMO_MEMORY_USAGE STREQUAL "BigMem")
+   message(STATUS "Memory usage unset. Setting up big memory usage version")
    add_definitions("-DEPMDYNAMO_BIGMEM")
 endif(EPMDYNAMO_MEMORY_USAGE STREQUAL "BigMem")
 
@@ -228,14 +249,20 @@ set(CMAKE_CXX_FLAGS_RELEASE "-DEIGEN_NO_DEBUG -DNDEBUG" CACHE STRING "" FORCE)
 # General GCC compiler settings
 #
 if(EPMDYNAMO_USE_GCC)
+   # Set up C++x0 GCC options
    if(EPMDYNAMO_USE_CXX0X)
       set(CMAKE_CXX_FLAGS "-O2 -std=c++0x" CACHE STRING "" FORCE)
+   # Set up standard GCC options
    else(EPMDYNAMO_USE_CXX0X)
       set(CMAKE_CXX_FLAGS "-O2" CACHE STRING "" FORCE)
    endif(EPMDYNAMO_USE_CXX0X)
+   # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g" CACHE STRING "" FORCE)
+   # Set release flags
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -finline -funroll-loops -finline-functions" CACHE STRING "" FORCE)
+   # Set release flags with debug information
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "" FORCE)
+   # Set profiling flags 
    set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
    MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
 endif(EPMDYNAMO_USE_GCC)
@@ -244,11 +271,16 @@ endif(EPMDYNAMO_USE_GCC)
 # General PGI compiler Settings
 #
 if(EPMDYNAMO_USE_PGI)
-   #set(CMAKE_CXX_FLAGS "-fastsse")
+   # Set basic flags
+      #set(CMAKE_CXX_FLAGS "-fastsse")
    set(CMAKE_CXX_FLAGS "" CACHE STRING "" FORCE)
+   # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "-g" CACHE STRING "" FORCE)
+   # Set release flags
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Minline" CACHE STRING "" FORCE)
+   # Set release flags with debug information
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
+   # Set profiling flags
    set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
    MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
 endif(EPMDYNAMO_USE_PGI)
@@ -257,10 +289,15 @@ endif(EPMDYNAMO_USE_PGI)
 # General Intel compiler settings
 #
 if(EPMDYNAMO_USE_INTEL)
+   # Set basic flags
    set(CMAKE_CXX_FLAGS "" CACHE STRING "" FORCE)
+   # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
+   # Set release flags
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "" FORCE)
+   # Set release flags with debug information
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
+   # Set profiling flags
    set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
    MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
 endif(EPMDYNAMO_USE_INTEL)
@@ -269,10 +306,15 @@ endif(EPMDYNAMO_USE_INTEL)
 # General Pathscale compiler settings
 #
 if(EPMDYNAMO_USE_PATHSCALE)
+   # Set basic flags
    set(CMAKE_CXX_FLAGS "-OPT:Ofast" CACHE STRING "" FORCE)
+   # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
+   # Set release flags
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "" FORCE)
+   # Set release flags with debug information
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
+   # Set profiling flags
    set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
    MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
 endif(EPMDYNAMO_USE_PATHSCALE)
@@ -281,10 +323,15 @@ endif(EPMDYNAMO_USE_PATHSCALE)
 # General Cray compiler settings
 #
 if(EPMDYNAMO_USE_CRAY)
+   # Set basic flags
    set(CMAKE_CXX_FLAGS "" CACHE STRING "" FORCE)
+   # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
+   # Set release flags
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "" FORCE)
+   # Set release flags with debug information
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
+   # Set profiling flags
    set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
    MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
 endif(EPMDYNAMO_USE_CRAY)
@@ -293,10 +340,15 @@ endif(EPMDYNAMO_USE_CRAY)
 # General Sun compiler settings
 #
 if(EPMDYNAMO_USE_SUN)
+   # Set basic flags
    set(CMAKE_CXX_FLAGS "" CACHE STRING "" FORCE)
+   # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
+   # Set release flags
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "" FORCE)
+   # Set release flags with debug information
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
+   # Set profiling flags
    set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
    MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
 endif(EPMDYNAMO_USE_SUN)
@@ -305,109 +357,135 @@ endif(EPMDYNAMO_USE_SUN)
 # General Tau compiler settings
 #
 if(EPMDYNAMO_USE_TAU)
-   if(EPMDYNAMO_USE_CXX0X)
-      set(CMAKE_CXX_FLAGS "-O2 -std=c++0x" CACHE STRING "" FORCE)
-   else(EPMDYNAMO_USE_CXX0X)
-      set(CMAKE_CXX_FLAGS "-O2" CACHE STRING "" FORCE)
-   endif(EPMDYNAMO_USE_CXX0X)
-   set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
-   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -finline -funroll-loops -finline-functions" CACHE STRING "" FORCE)
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
-   set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
-   MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
+   # Set basic TAU flags
+   set(EPMDYNAMO_TAU_FLAGS "")
+   # Include TAU flags into basic compiler flags
+   set(CMAKE_CXX_FLAGS "${EPMDYNAMO_TAU_FLAGS} ${CMAKE_CXX_FLAGS}" CACHE STRING "" FORCE)
 endif(EPMDYNAMO_USE_TAU)
 
 #
 # General Tau compiler settings
 #
-if(EPMDYNAMO_USE_TAUINSTR)
-   if(EPMDYNAMO_USE_CXX0X)
-      set(CMAKE_CXX_FLAGS "-tau_options=-optCompInst -O2 -std=c++0x" CACHE STRING "" FORCE)
-   else(EPMDYNAMO_USE_CXX0X)
-      set(CMAKE_CXX_FLAGS "-tau_options=-optCompInst -O2" CACHE STRING "" FORCE)
-   endif(EPMDYNAMO_USE_CXX0X)
-   set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
-   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -finline -funroll-loops -finline-functions" CACHE STRING "" FORCE)
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "" FORCE)
-   set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE} -g" CACHE STRING "Flags for doing a profiling" FORCE)
-   MARK_AS_ADVANCED(CMAKE_CXX_FLAGS_PROFILE)
-endif(EPMDYNAMO_USE_TAUINSTR)
+if(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+   # Set basic TAU flags
+   set(EPMDYNAMO_TAU_INSTRUMENTED_FLAGS "-tau_options=-optCompInst")
+   # Include TAU compiler instrumented flags into basic compiler flags
+   set(CMAKE_CXX_FLAGS "${EPMDYNAMO_TAU_INSTRUMENTED_FLAGS} ${CMAKE_CXX_FLAGS}" CACHE STRING "" FORCE)
+endif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+
+#
+# General Scalasca compiler settings
+#
+if(EPMDYNAMO_USE_SCALASCA)
+endif(EPMDYNAMO_USE_SCALASCA)
 
 #
 # Add libraries to link with
 #
 if(EPMDYNAMO_ON_CORE2)
-   # give error if unavailable compiler is chosen
+   # Error message for unavailable PGI compiler
    if(EPMDYNAMO_USE_PGI)
-      message(SEND_ERROR "PGI compiler not available")
+      message(SEND_ERROR "PGI compiler is not available")
+   # Error message for unavailable Intel compiler
    elseif(EPMDYNAMO_USE_INTEL)
-      message(SEND_ERROR "Intel compiler not available")
+      message(SEND_ERROR "Intel compiler is not available")
+   # Error message for unavailable Pathscale compiler
    elseif(EPMDYNAMO_USE_PATHSCALE)
-      message(SEND_ERROR "Pathscale compiler not available")
+      message(SEND_ERROR "Pathscale compiler is not available")
+   # Error message for unavailable Cray compiler
    elseif(EPMDYNAMO_USE_CRAY)
-      message(SEND_ERROR "Cray compiler not available")
+      message(SEND_ERROR "Cray compiler is not available")
+   # Error message for unavailable Sun compiler
    elseif(EPMDYNAMO_USE_SUN)
-      message(SEND_ERROR "Sun compiler not available")
+      message(SEND_ERROR "Sun compiler is not available")
+   # Error message for unavailable TAU system
    elseif(EPMDYNAMO_USE_TAU)
-      message(SEND_ERROR "Tau compiler not available")
-   elseif(EPMDYNAMO_USE_TAUINSTR)
-      message(SEND_ERROR "Tau compiler not available")
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable TAU system with compiler instrumentation
+   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable Scalasca profiling system
+   elseif(EPMDYNAMO_USE_SCALASCA)
+      message(SEND_ERROR "Scalasca is not available")
    endif(EPMDYNAMO_USE_PGI)
 
-   # Set MPI Wrapper if mpi  is set
+   # Set MPI Wrapper if required
    if(EPMDYNAMO_MPI)
       set(CMAKE_CXX_COMPILER "mpicxx")
+   # Setup serial compilers
    else(EPMDYNAMO_MPI)
       if(EPMDYNAMO_USE_GCC)
          set(CMAKE_CXX_COMPILER "g++")
       endif(EPMDYNAMO_USE_GCC)
    endif(EPMDYNAMO_MPI)
 
+   # Set up platform specific compiler flags
    if(EPMDYNAMO_USE_GCC)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse3 -march=core2" CACHE STRING "" FORCE)
    endif(EPMDYNAMO_USE_GCC)
 
+   # Link to lapack library
    link_libraries(lapack)
+   # Link to FFTW3 library
    link_libraries(fftw3)
+   # Link to rt library
    link_libraries(rt)
+   # Link to HDF5 library
    link_libraries(hdf5)
 
 endif(EPMDYNAMO_ON_CORE2)
 
 if(EPMDYNAMO_ON_BRUTUS)
-   # give error if unavailable compiler is chosen
+   # Error message for unavailable PGI compiler
    if(EPMDYNAMO_USE_PGI)
-      message(SEND_ERROR "PGI compiler not tested")
+      message(SEND_ERROR "PGI compiler is not available")
+   # Error message for unavailable Pathscale compiler
    elseif(EPMDYNAMO_USE_PATHSCALE)
-      message(SEND_ERROR "Pathscale compiler not available")
+      message(SEND_ERROR "Pathscale compiler is not available")
+   # Error message for unavailable Cray compiler
    elseif(EPMDYNAMO_USE_CRAY)
-      message(SEND_ERROR "Cray compiler not available")
+      message(SEND_ERROR "Cray compiler is not available")
+   # Error message for unavailable TAU system
    elseif(EPMDYNAMO_USE_TAU)
-      message(SEND_ERROR "Tau compiler not available")
-   elseif(EPMDYNAMO_USE_TAUINSTR)
-      message(SEND_ERROR "Tau compiler not available")
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable TAU system with compiler instrumentation
+   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable Scalasca profiling system
+   elseif(EPMDYNAMO_USE_SCALASCA)
+      message(SEND_ERROR "Scalasca is not available")
    endif(EPMDYNAMO_USE_PGI)
 
+   # Setup MPIwrappers if required
    if(EPMDYNAMO_MPI)
       set(CMAKE_CXX_COMPILER "mpic++")
       if(EPMDYNAMO_USE_SUN)
          set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
       endif(EPMDYNAMO_USE_SUN)
+   # Setup serial compilers
    else(EPMDYNAMO_MPI)
+      # Set up GCC compiler
       if(EPMDYNAMO_USE_GCC)
          set(CMAKE_CXX_COMPILER "g++")
+      # Set up Intel compiler
       elseif(EPMDYNAMO_USE_INTEL)
          set(CMAKE_CXX_COMPILER "icc")
+      # Set up Sun compiler
       elseif(EPMDYNAMO_USE_SUN)
          set(CMAKE_CXX_COMPILER "sunCC")
          set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
       endif(EPMDYNAMO_USE_GCC)
    endif(EPMDYNAMO_MPI)
 
+   # Link to lapack library
    link_libraries(lapack)
+   # Link to FFTW3 library
    link_libraries(fftw3)
+   # Link to rt library
    link_libraries(rt)
+   # Link to HDF5 library
    link_libraries(hdf5)
+   # Link to ZLib library
    link_libraries(z)
 
    # Set special link libraries for GCC
@@ -424,58 +502,75 @@ if(EPMDYNAMO_ON_BRUTUS)
 endif(EPMDYNAMO_ON_BRUTUS)
 
 if(EPMDYNAMO_ON_ROSA)
-   # give error if unavailable compiler is chosen
+   # Error message for unavailable Intel compiler
    if(EPMDYNAMO_USE_INTEL)
-      message(SEND_ERROR "Intel compiler not  available")
+      message(SEND_ERROR "Intel compiler is not available")
+   # Error message for unavailable Cray compiler
    elseif(EPMDYNAMO_USE_CRAY)
-      message(SEND_ERROR "Cray compiler not working")
+      message(SEND_ERROR "Cray compiler is not available")
+   # Error message for unavailable Sun compiler
    elseif(EPMDYNAMO_USE_SUN)
-      message(SEND_ERROR "Sun compiler not  available")
+      message(SEND_ERROR "Sun compiler is not available")
    endif(EPMDYNAMO_USE_INTEL)
 
+   # Change general compilation setup for scalasca
+   if(EPMDYNAMO_USE_SCALASCA)
+      SET(CMAKE_CXX_COMPILE_OBJECT
+         "scalasca -instrument <CMAKE_CXX_COMPILER>  <DEFINES> <FLAGS> -o <OBJECT> -c <SOURCE>")
+   endif(EPMDYNAMO_USE_SCALASCA)
+
+   # Set compiler wrapper independently of chose compiler
+   set(CMAKE_CXX_COMPILER "CC")
+
+   # Setup MPI specific variables
    if(EPMDYNAMO_MPI)
-      set(CMAKE_CXX_COMPILER "CC")
+      # setup GCC specific variables
       if(EPMDYNAMO_USE_GCC)
          set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-parallel-gnu")
+      # setup Pathscale specific variables
       elseif(EPMDYNAMO_USE_PATHSCALE)
          set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-parallel-pathscale")
+      # setup PGI specific variables
       elseif(EPMDYNAMO_USE_PGI)
          set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
          set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-parallel-pgi")
       endif(EPMDYNAMO_USE_GCC)
+   # Setup MPI specific variables
    else(EPMDYNAMO_MPI)
+      # setup GCC specific variables
       if(EPMDYNAMO_USE_GCC)
-         set(CMAKE_CXX_COMPILER "CC")
          set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-gnu")
+      # setup Pathscale specific variables
       elseif(EPMDYNAMO_USE_PATHSCALE)
-         set(CMAKE_CXX_COMPILER "CC")
          set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-pathscale")
+      # setup PGI specific variables
       elseif(EPMDYNAMO_USE_PGI)
-         set(CMAKE_CXX_COMPILER "CC")
          set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
          set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-pgi")
       endif(EPMDYNAMO_USE_GCC)
    endif(EPMDYNAMO_MPI)
 
+   # Set general tau specific settings
    if(EPMDYNAMO_USE_TAU)
+      # Set up TAU compiler wrapper
       set(CMAKE_CXX_COMPILER "tau_cxx.sh")
-      # Set Boost definitions
+      # add missing boost compilation flags
 	   add_definitions($ENV{BOOST_POST_COMPILE_OPTS})
+      # add missing FFTW compilation flags
+	   add_definitions($ENV{FFTW_INCLUDE_OPTS})
+      # add missing FFTW linking flags
+	   add_definitions($ENV{FFTW_POST_COMPILE_OPTS})
+      # Remove MPICH  SEEK TAU specific multiple definition error
 	   add_definitions("-DMPICH_IGNORE_CXX_SEEK")
    endif(EPMDYNAMO_USE_TAU)
 
-   if(EPMDYNAMO_USE_TAUINSTR)
-      set(CMAKE_CXX_COMPILER "tau_cxx.sh")
-      # Set Boost definitions
-	   add_definitions($ENV{BOOST_POST_COMPILE_OPTS})
-	   add_definitions("-DMPICH_IGNORE_CXX_SEEK")
-   endif(EPMDYNAMO_USE_TAUINSTR)
-
-   # Set HDF5 definitions
+   # Set HDF5 library definitions (due to C library for C++ code
 	add_definitions(-I$ENV{CRAY_HDF5_DIR}/${HDF5_COMPILER_SPECIFIC_DIR}/include)
 	link_directories($ENV{CRAY_HDF5_DIR}/${HDF5_COMPILER_SPECIFIC_DIR}/lib)
 
+   # Link to HDF5 library
    link_libraries(hdf5)
+   # Link to ZLib library
    link_libraries(z)
 
 endif(EPMDYNAMO_ON_ROSA)

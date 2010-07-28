@@ -27,7 +27,7 @@ namespace EPMDynamo {
    void MPIWorkflow::init()
    {
       // Initiliase
-      MPI_Init(NULL, NULL);
+      MPI_Init(0, 0);
    }
 
    void MPIWorkflow::setup()

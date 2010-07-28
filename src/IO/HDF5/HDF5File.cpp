@@ -43,8 +43,8 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_MPI
          this->mDatasetPList = H5Pcreate(H5P_DATASET_XFER);
 
-         //H5Pset_dxpl_mpio(this->mDatasetPList, H5FD_MPIO_COLLECTIVE);
-         H5Pset_dxpl_mpio(this->mDatasetPList, H5FD_MPIO_INDEPENDENT);
+         H5Pset_dxpl_mpio(this->mDatasetPList, H5FD_MPIO_COLLECTIVE);
+         //H5Pset_dxpl_mpio(this->mDatasetPList, H5FD_MPIO_INDEPENDENT);
       #endif // EPMDYNAMO_MPI
    }
 
