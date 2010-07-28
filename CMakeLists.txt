@@ -515,8 +515,12 @@ if(EPMDYNAMO_ON_ROSA)
 
    # Change general compilation setup for scalasca
    if(EPMDYNAMO_USE_SCALASCA)
+      # Change compilation rule to include scalasca instrumentation
       SET(CMAKE_CXX_COMPILE_OBJECT
          "scalasca -instrument <CMAKE_CXX_COMPILER>  <DEFINES> <FLAGS> -o <OBJECT> -c <SOURCE>")
+      # Change executable linkage rule to include scalasca instrumentation
+      SET(CMAKE_CXX_LINK_EXECUTABLE
+         "scalasca -instrument <CMAKE_CXX_COMPILER>  <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
    endif(EPMDYNAMO_USE_SCALASCA)
 
    # Set compiler wrapper independently of chose compiler
