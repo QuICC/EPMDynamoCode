@@ -1,4 +1,4 @@
-/** \file prec_FFT.cpp
+/** \file prec_FFTransform.cpp
  *  \brief Precision test for Fast Fourier transforms
  *
  *  \epmBug Needs to be implemented correctly
@@ -99,11 +99,17 @@ void initBackwardTest(epm::FFTFlatScalar &rFFTValues, epm::RTPScalar &rRTPCorrec
  */
 int runForwardTest(SmartTruncation pTrunc, FFTransform &fft)
 {
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "Forward FFT test" << std::endl;
+   }
+
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   // Initialise status counter
-   int status = 0;
+   // Initialise failed comparisons counter
+   int failed = 0;
 
    // Create RTPScalar
    epm::RTPScalar    rtpValues(pTrunc);
@@ -126,11 +132,28 @@ int runForwardTest(SmartTruncation pTrunc, FFTransform &fft)
 
       if(error > 1e-14)
       {
-         status = 1;
+         failed = 1;
       }
    }
-   
-   return status;
+
+   // Gather total failed comparisons from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -141,8 +164,14 @@ int runBackwardTest(SmartTruncation pTrunc, FFTransform &fft)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   // Initialise status counter
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "Backward FFT test" << std::endl;
+   }
+
+   // Initialise failed comparison counter
+   int failed = 1;
 
    // Create RTPScalars
    epm::RTPScalar    rtpValues(pTrunc);
@@ -159,7 +188,24 @@ int runBackwardTest(SmartTruncation pTrunc, FFTransform &fft)
 
    // Check result
 
-   return status;
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -198,24 +244,24 @@ int runPrecTest()
    // Create the FFT object
    FFTransform    fft(pTrunc);
 
-   int status = 0;
+   int failed = 0;
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run forward FFT transform test
-   status += runForwardTest(pTrunc, fft);
+   failed += runForwardTest(pTrunc, fft);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run backward FFT transform test
-   status += runBackwardTest(pTrunc, fft);
+   failed += runBackwardTest(pTrunc, fft);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   return status;
+   return failed;
 }
 
 /**

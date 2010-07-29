@@ -149,12 +149,37 @@ int runIntgTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intg\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgTest(pTrunc); 
 
-   return status;
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -165,12 +190,37 @@ int runIntgTh2STest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgTh2S\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgTh2STest(pTrunc); 
 
-   return status;
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -181,12 +231,37 @@ int runIntgTh2TTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgTh2T\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgTh2TTest(pTrunc); 
 
-   return status;
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -197,12 +272,37 @@ int runIntgPh2STest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgPh2S\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgPh2STest(pTrunc); 
 
-   return status;
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -213,12 +313,37 @@ int runIntgPh2TTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgPh2T\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgPh2TTest(pTrunc); 
 
-   return status;
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 
@@ -234,12 +359,39 @@ int runProjTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"proj\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -250,12 +402,39 @@ int runProjS2ThTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projS2Th\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjS2ThTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -266,12 +445,39 @@ int runProjT2ThTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projT2Th\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjT2ThTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -282,12 +488,39 @@ int runProjS2PhTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projS2Ph\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjS2PhTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -298,12 +531,39 @@ int runProjT2PhTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projT2Ph\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjT2PhTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -314,12 +574,39 @@ int runProj2GradPhTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"proj2GradPh\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProj2GradPhTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -330,12 +617,39 @@ int runProj2GradThTest(SmartTruncation pTrunc, LegendreTransform &legTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"proj2GradTh\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProj2GradPhTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 
@@ -375,84 +689,84 @@ int runPrecTest()
    // Create the Legendre transform object
    LegendreTransform    legTransform(pTrunc);
 
-   int status = 0;
+   int failed = 0;
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intg" test
-   status += runIntgTest(pTrunc, legTransform);
+   failed += runIntgTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgTh2S" test
-   status += runIntgTh2STest(pTrunc, legTransform);
+   failed += runIntgTh2STest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgTh2T" test
-   status += runIntgTh2TTest(pTrunc, legTransform);
+   failed += runIntgTh2TTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgPh2S" test
-   status += runIntgPh2STest(pTrunc, legTransform);
+   failed += runIntgPh2STest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgPh2T" test
-   status += runIntgPh2TTest(pTrunc, legTransform);
+   failed += runIntgPh2TTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "proj" test
-   status += runProjTest(pTrunc, legTransform);
+   failed += runProjTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projS2Th" test
-   status += runProjS2ThTest(pTrunc, legTransform);
+   failed += runProjS2ThTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projT2Th" test
-   status += runProjT2ThTest(pTrunc, legTransform);
+   failed += runProjT2ThTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projS2Ph" test
-   status += runProjS2PhTest(pTrunc, legTransform);
+   failed += runProjS2PhTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projT2Ph" test
-   status += runProjT2PhTest(pTrunc, legTransform);
+   failed += runProjT2PhTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "proj2GradPh" test
-   status += runProj2GradPhTest(pTrunc, legTransform);
+   failed += runProj2GradPhTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "proj2GradTh" test
-   status += runProj2GradThTest(pTrunc, legTransform);
+   failed += runProj2GradThTest(pTrunc, legTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   return status;
+   return failed;
 }
 
 /**

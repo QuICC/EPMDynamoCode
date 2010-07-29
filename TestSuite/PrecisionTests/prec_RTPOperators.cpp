@@ -40,29 +40,54 @@ typedef epm::SmartTruncation  SmartTruncation;
 int PERFORMED_TESTS = 0;
 
 /**
- * @brief Create test run values for Curl test
+ * @brief Create test run values for Rotational test
  */
-void initCurlTest(SmartTruncation pTrunc)
+void initRotationalTest(SmartTruncation pTrunc)
 {
 }
 
 /**
- * @brief Compute a Curl test
+ * @brief Compute a Rotational test
  */
-int runCurlTest(SmartTruncation pTrunc)
+int runRotationalTest(SmartTruncation pTrunc)
 {
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   // Initialise status counter
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "Rotational computation test" << std::endl;
+   }
 
-   // Initialise the Curl test values
-   initCurlTest(pTrunc); 
+   // Initialise failed comparison counter
+   int failed = 1;
+
+   // Initialise the Rotational test values
+   initRotationalTest(pTrunc); 
+
+   // Compute operator
 
    // Check result
 
-   return status;
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -98,18 +123,18 @@ int runPrecTest()
       std::cout << std::endl << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   // Run Curl test
-   status += runCurlTest(pTrunc);
+   // Run Rotational test
+   failed += runRotationalTest(pTrunc);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   return status;
+   return failed;
 }
 
 /**

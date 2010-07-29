@@ -2,7 +2,7 @@
 # Add transform precision test
 #
 set(PrecTests ${PrecTests}
-      prec_FFT
+      prec_FFTransform
       prec_LegendreTransform
       prec_RTPOperators
       prec_SpectralSHTransform

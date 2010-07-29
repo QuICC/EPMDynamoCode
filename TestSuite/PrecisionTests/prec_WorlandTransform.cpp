@@ -161,12 +161,39 @@ int runIntgTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intg\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -177,12 +204,39 @@ int runIntgQ2PolTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgQ2Pol\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgQ2PolTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -193,12 +247,39 @@ int runIntgT2TorTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgT2Tor\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgT2TorTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -209,12 +290,39 @@ int runIntgQ2CurlCurlProjTest(SmartTruncation pTrunc, WorlandTransform &wTransfo
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgQ2CurlCurlProj\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgQ2CurlCurlProjTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -225,12 +333,39 @@ int runIntgS2CurlCurlProjTest(SmartTruncation pTrunc, WorlandTransform &wTransfo
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgS2CurlCurlProj\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgS2CurlCurlProjTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -241,12 +376,39 @@ int runIntgT2CurlProjTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"intgT2CurlProj\" integration test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initIntgT2CurlProjTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 
@@ -262,12 +424,39 @@ int runProjTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"proj\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -278,12 +467,39 @@ int runProj2GradTPTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"proj2GradTP\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProj2GradTPTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -294,12 +510,39 @@ int runProjPol2STest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projPol2S\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjPol2STest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -310,12 +553,39 @@ int runProjTor2TTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projTor2T\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjTor2TTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -326,12 +596,39 @@ int runProjTor2CurlQTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projTor2CurlQ\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjTor2CurlQTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -342,12 +639,39 @@ int runProjTor2CurlSTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projTor2CurlS\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjTor2CurlSTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -358,12 +682,39 @@ int runProjPol2CurlTTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projPol2CurlT\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjPol2CurlTTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 /**
@@ -374,12 +725,39 @@ int runProjPol2QTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
    // Increment number of performed tests
    PERFORMED_TESTS++;
 
-   int status = 1;
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "\"projPol2Q\" projection test" << std::endl;
+   }
+
+   int failed = 1;
 
    // Initialise the forward transform test values
    initProjPol2QTest(pTrunc); 
 
-   return status;
+   // Compute transform
+
+   // Check result
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 
@@ -419,96 +797,96 @@ int runPrecTest()
    // Create the Worland transform object
    WorlandTransform    wTransform(pTrunc);
 
-   int status = 0;
+   int failed = 0;
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intg" test
-   status += runIntgTest(pTrunc, wTransform);
+   failed += runIntgTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgQ2Pol" test
-   status += runIntgQ2PolTest(pTrunc, wTransform);
+   failed += runIntgQ2PolTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgT2Tor" test
-   status += runIntgT2TorTest(pTrunc, wTransform);
+   failed += runIntgT2TorTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgQ2CurlCurlProj" test
-   status += runIntgQ2CurlCurlProjTest(pTrunc, wTransform);
+   failed += runIntgQ2CurlCurlProjTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgS2CurlCurlProj" test
-   status += runIntgS2CurlCurlProjTest(pTrunc, wTransform);
+   failed += runIntgS2CurlCurlProjTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "intgT2CurlProj" test
-   status += runIntgT2CurlProjTest(pTrunc, wTransform);
+   failed += runIntgT2CurlProjTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "proj" test
-   status += runProjTest(pTrunc, wTransform);
+   failed += runProjTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "proj2GradTP" test
-   status += runProj2GradTPTest(pTrunc, wTransform);
+   failed += runProj2GradTPTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projPol2S" test
-   status += runProjPol2STest(pTrunc, wTransform);
+   failed += runProjPol2STest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projTor2T" test
-   status += runProjTor2TTest(pTrunc, wTransform);
+   failed += runProjTor2TTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projTor2CurlQ" test
-   status += runProjTor2CurlQTest(pTrunc, wTransform);
+   failed += runProjTor2CurlQTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projTor2CurlS" test
-   status += runProjTor2CurlSTest(pTrunc, wTransform);
+   failed += runProjTor2CurlSTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projPol2CurlT" test
-   status += runProjPol2CurlTTest(pTrunc, wTransform);
+   failed += runProjPol2CurlTTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run "projPol2Q" test
-   status += runProjPol2QTest(pTrunc, wTransform);
+   failed += runProjPol2QTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   return status;
+   return failed;
 }
 
 /**

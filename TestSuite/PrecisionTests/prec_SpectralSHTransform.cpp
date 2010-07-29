@@ -459,7 +459,7 @@ int runRTPScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Scalar precision test starting from RTP" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -487,7 +487,7 @@ int runRTPScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpScalar.shell(n), rtpScalar2.shell(n));
+      failed += error.checkPrecision(rtpScalar.shell(n), rtpScalar2.shell(n));
    }
 
    epm::Array errMax(2);
@@ -506,18 +506,24 @@ int runRTPScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "\t Maximum Forward + Backward transforms relative error: " << errMax(1) << std::endl;
    }
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status, 1);
+   return std::min(failed, 1);
 }
 
 /**
@@ -533,7 +539,7 @@ int runSSHScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Scalar precision test starting from SSH" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -563,7 +569,7 @@ int runSSHScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int l=0; l < pTrunc->local()->spec()->nL(); ++l)
    {
-      status += error.checkPrecision(sshScalar.lshell(l), sshScalar2.lshell(l));
+      failed += error.checkPrecision(sshScalar.lshell(l), sshScalar2.lshell(l));
    }
 
    epm::Array errMax(2);
@@ -582,18 +588,24 @@ int runSSHScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "\t Maximum Forward + Backward transforms relative error: " << errMax(1) << std::endl;
    }
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status,1);
+   return std::min(failed, 1);
 }
 
 /**
@@ -609,7 +621,7 @@ int runRTPDiv0Test(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Toroidal/Poloidal precision test from RTP" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -640,7 +652,7 @@ int runRTPDiv0Test(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
+      failed += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
    }
 
    epm::Array errMax(2);
@@ -662,7 +674,7 @@ int runRTPDiv0Test(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
+      failed += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
    }
 
    errMax(0) = error.max();
@@ -683,7 +695,7 @@ int runRTPDiv0Test(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
+      failed += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
    }
 
    errMax(0) = error.max();
@@ -702,18 +714,24 @@ int runRTPDiv0Test(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    }
    error.resetErrors();
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status,1);
+   return std::min(failed, 1);
 }
 
 /**
@@ -729,7 +747,7 @@ int runTorPolTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Toroidal/Poloidal precision test from SpectralSH" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -760,7 +778,7 @@ int runTorPolTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int l=0; l < pTrunc->local()->spec()->nL(); ++l)
    {
-      status += error.checkPrecision(topoField.tor().lshell(l), topoField2.tor().lshell(l));
+      failed += error.checkPrecision(topoField.tor().lshell(l), topoField2.tor().lshell(l));
    }
 
    epm::Array errMax(2);
@@ -782,7 +800,7 @@ int runTorPolTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int l=0; l < pTrunc->local()->spec()->nL(); ++l)
    {
-      status += error.checkPrecision(topoField.pol().lshell(l), topoField2.pol().lshell(l));
+      failed += error.checkPrecision(topoField.pol().lshell(l), topoField2.pol().lshell(l));
    }
 
    errMax(0) = error.max();
@@ -801,18 +819,24 @@ int runTorPolTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    }
    error.resetErrors();
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status,1);
+   return std::min(failed, 1);
 }
 
 /**
@@ -828,7 +852,7 @@ int runGradientTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Gradient computation check" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -862,7 +886,7 @@ int runGradientTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
+      failed += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
    }
 
    epm::Array errMax(2);
@@ -884,7 +908,7 @@ int runGradientTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
+      failed += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
    }
 
    errMax(0) = error.max();
@@ -905,7 +929,7 @@ int runGradientTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
+      failed += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
    }
 
    errMax(0) = error.max();
@@ -924,18 +948,24 @@ int runGradientTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    }
    error.resetErrors();
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status,1);
+   return std::min(failed, 1);
 }
 
 /**
@@ -951,7 +981,7 @@ int runCurlTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Toroidal/Poloidal curl precision test" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -984,7 +1014,7 @@ int runCurlTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
+      failed += error.checkPrecision(rtpField.r().shell(n), rtpField2.r().shell(n));
    }
 
    epm::Array errMax(2);
@@ -1006,7 +1036,7 @@ int runCurlTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
+      failed += error.checkPrecision(rtpField.theta().shell(n), rtpField2.theta().shell(n));
    }
 
    errMax(0) = error.max();
@@ -1027,7 +1057,7 @@ int runCurlTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int n=0; n< pTrunc->local()->rtp()->nR(); ++n)
    {
-      status += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
+      failed += error.checkPrecision(rtpField.phi().shell(n), rtpField2.phi().shell(n));
    }
 
    errMax(0) = error.max();
@@ -1046,18 +1076,24 @@ int runCurlTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    }
    error.resetErrors();
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status,1);
+   return std::min(failed, 1);
 }
 
 /**
@@ -1073,7 +1109,7 @@ int runNTermsTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
       std::cout << "Non linear terms projections computation check" << std::endl;
    }
 
-   int status = 0;
+   int failed = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -1146,7 +1182,7 @@ int runNTermsTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int l=0; l< pTrunc->local()->spec()->nL(); ++l)
    {
-      status += error.checkPrecision(topoField.tor().lshell(l), sshScalar.lshell(l));
+      failed += error.checkPrecision(topoField.tor().lshell(l), sshScalar.lshell(l));
    }
 
    epm::Array errMax(2);
@@ -1168,7 +1204,7 @@ int runNTermsTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    for(int l=0; l< pTrunc->local()->spec()->nL(); ++l)
    {
-      status += error.checkPrecision(topoField.pol().lshell(l), sshScalar2.lshell(l));
+      failed += error.checkPrecision(topoField.pol().lshell(l), sshScalar2.lshell(l));
    }
 
    errMax(0) = error.max();
@@ -1187,18 +1223,24 @@ int runNTermsTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
    }
    error.resetErrors();
 
-   // Gather total status from MPI run
+   // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
       // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &status, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
    #endif //EPMDYNAMO_MPI
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
    }
 
-   return std::min(status, 1);
+   return std::min(failed, 1);
 }
 
 void setupTransform(SSHTransformType &sshTrans)
@@ -1310,54 +1352,54 @@ int runPrecTest()
    // Setup the transform object for parallel versions
    setupTransform(sshTrans);
 
-   int status = 0;
+   int failed = 0;
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run RTP scalar test
-   status += runRTPScalarTest(pTrunc, sshTrans);
+   failed += runRTPScalarTest(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run SSH scalar test
-   status += runSSHScalarTest(pTrunc, sshTrans);
+   failed += runSSHScalarTest(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run RTP div0 test
-   status += runRTPDiv0Test(pTrunc, sshTrans);
+   failed += runRTPDiv0Test(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run Toroidal/Poloida test
-   status += runTorPolTest(pTrunc, sshTrans);
+   failed += runTorPolTest(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run Gradient test
-   status += runGradientTest(pTrunc, sshTrans);
+   failed += runGradientTest(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run Curl test
-   status += runCurlTest(pTrunc, sshTrans);
+   failed += runCurlTest(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run Non linear terms test
-   status += runNTermsTest(pTrunc, sshTrans);
+   failed += runNTermsTest(pTrunc, sshTrans);
 
    // Make sure CPUs are synchronized before gathering data
    epm::EPMDYNAMO_SYNCHRONIZE;
 
-   return status;
+   return failed;
 }
 
 /**
