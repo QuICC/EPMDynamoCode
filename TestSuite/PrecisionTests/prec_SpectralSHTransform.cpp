@@ -48,12 +48,16 @@ typedef  epm::WSHSimulation::ScalarType SpectralScalarType;
 /// Notation simplification typedef for Spectral tor/pol field type
 typedef  epm::TorPolField<epm::WSHSimulation> TorPolFieldType;
 
+/// Counter for the number of performed tests
+int PERFORMED_TESTS = 0;
+
+/// Number of steps required to perform the transform
 int TRANSFORM_STEPS = 1;
 
 /**
  * @brief initialise RTP scalar
  */
-void initRTPScalar(epm::RTPScalar &rRTPValues, epm::SmartTruncation pTrunc)
+void initRTPScalar(epm::RTPScalar &rRTPValues, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -67,7 +71,7 @@ void initRTPScalar(epm::RTPScalar &rRTPValues, epm::SmartTruncation pTrunc)
 /**
  * @brief initialise RTP scalar for gradient computation
  */
-void initRTPGradientScalar(epm::RTPScalar &rRTPValues, epm::SmartTruncation pTrunc)
+void initRTPGradientScalar(epm::RTPScalar &rRTPValues, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -81,7 +85,7 @@ void initRTPGradientScalar(epm::RTPScalar &rRTPValues, epm::SmartTruncation pTru
 /**
  * @brief initialise RTP Field solution to gradient computation
  */
-void initRTPGradientField(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPGradientField(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -138,7 +142,7 @@ void initSpectralSHScalar(SpectralScalarType &rSSHValues)
 /**
  * @brief initialise RTP Field
  */
-void initRTPField(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPField(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -173,7 +177,7 @@ void initRTPField(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
 /**
  * @brief initialise Divergence free RTP Field
  */
-void initDiv0RTPField(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initDiv0RTPField(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -208,7 +212,7 @@ void initDiv0RTPField(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
 /**
  * @brief initialise Divergence free RTP Field
  */
-void initRTPCurlTorPol(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPCurlTorPol(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -243,7 +247,7 @@ void initRTPCurlTorPol(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
 /**
  * @brief initialise Divergence free RTP Field
  */
-void initRTPCurlResult(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPCurlResult(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -279,7 +283,7 @@ void initRTPCurlResult(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
 /**
  * @brief initialise Divergence free RTP Field
  */
-void initRTPNTerms(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPNTerms(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -314,7 +318,7 @@ void initRTPNTerms(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
 /**
  * @brief initialise Divergence free RTP Field
  */
-void initRTPNTermsCurlResult(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPNTermsCurlResult(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -349,7 +353,7 @@ void initRTPNTermsCurlResult(epm::RTPField &rRTPField, epm::SmartTruncation pTru
 /**
  * @brief initialise Divergence free RTP Field
  */
-void initRTPNTermsCurlCurlResult(epm::RTPField &rRTPField, epm::SmartTruncation pTrunc)
+void initRTPNTermsCurlCurlResult(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 {
    epm::CartesianExpressions   helper(pTrunc);
 
@@ -445,8 +449,11 @@ void combineSpectralTransforms(const int entry, SSHTransformType &sshTrans)
 /**
  * @brief Scalar Test starting from RTP
  */
-int runRTPScalarTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runRTPScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Scalar precision test starting from RTP" << std::endl;
@@ -507,23 +514,26 @@ int runRTPScalarTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status, 1);
 }
 
 /**
  * @brief Scalar test starting from SpectralSH
  */
-int runSSHScalarTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runSSHScalarTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Scalar precision test starting from SSH" << std::endl;
    }
 
- int status = 0;
+   int status = 0;
 
    // Initialise Error tool
    epm::ErrorComputer  error;
@@ -580,17 +590,20 @@ int runSSHScalarTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status,1);
 }
 
 /**
  * @brief Toroidal/Poloidal test from RTP
  */
-int runRTPDiv0Test(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runRTPDiv0Test(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Toroidal/Poloidal precision test from RTP" << std::endl;
@@ -697,17 +710,20 @@ int runRTPDiv0Test(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status,1);
 }
 
 /**
  * @brief Toroidal/Poloidal test from SpectralSH
  */
-int runTorPolTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runTorPolTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Toroidal/Poloidal precision test from SpectralSH" << std::endl;
@@ -793,17 +809,20 @@ int runTorPolTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status,1);
 }
 
 /**
  * @brief Gradient test
  */
-int runGradientTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runGradientTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Gradient computation check" << std::endl;
@@ -913,17 +932,20 @@ int runGradientTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status,1);
 }
 
 /**
  * @brief Curl test
  */
-int runCurlTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runCurlTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Toroidal/Poloidal curl precision test" << std::endl;
@@ -1032,17 +1054,20 @@ int runCurlTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status,1);
 }
 
 /**
  * @brief Nonlinear test
  */
-int runNTermsTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
+int runNTermsTest(SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 {
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
    if(pTrunc->para().id() == 0)
    {
       std::cout << "Non linear terms projections computation check" << std::endl;
@@ -1170,10 +1195,10 @@ int runNTermsTest(epm::SmartTruncation  pTrunc, SSHTransformType &sshTrans)
 
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "\t (status: " << status << ")" << std::endl << std::endl;
+      std::cout << "\t (failed: " << status << ")" << std::endl << std::endl;
    }
 
-   return status;
+   return std::min(status, 1);
 }
 
 void setupTransform(SSHTransformType &sshTrans)
@@ -1362,7 +1387,7 @@ int main(int argc, char* argv[])
    {
       if(epm::EPMDYNAMO_RANK == 0)
       {
-         std::cout << "Failed! (status: " << code << ")" << std::endl;
+         std::cout << "Failed! (" << code << " out of " << PERFORMED_TESTS << ")" << std::endl;
       }
    } else
    {

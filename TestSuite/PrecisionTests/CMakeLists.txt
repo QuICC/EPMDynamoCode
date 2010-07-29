@@ -1,7 +1,13 @@
 #
 # Add transform precision test
 #
-set(PrecTests ${PrecTests} prec_SpectralSHTransform)
+set(PrecTests ${PrecTests}
+      prec_FFT
+      prec_LegendreTransform
+      prec_RTPOperators
+      prec_SpectralSHTransform
+      prec_WorlandTransform
+      )
 
 #
 # Create all the tests
