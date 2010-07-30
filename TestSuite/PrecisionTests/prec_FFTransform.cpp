@@ -1,7 +1,7 @@
 /** \file prec_FFTransform.cpp
  *  \brief Precision test for Fast Fourier transforms
  *
- *  \epmBug Needs to be implemented correctly
+ *  \epmBug Needs to be tested for MPI version
  */
 
 #define EIGEN_DEFAULT_IO_FORMAT IOFormat(10)
@@ -43,123 +43,62 @@ typedef epm::FFTransform  FFTransform;
 /// Counter for the number of performed tests
 int PERFORMED_TESTS = 0;
 
-/**
- * @brief Create test run values for forward FFT transform test
- */
-void initForwardTest(epm::RTPScalar &rRTPValues, epm::FFTFlatScalar &rFFTCorrect, SmartTruncation pTrunc)
-{
-   int m = 0;
-   for(int r = 0; r < pTrunc->sim()->rad()->nR(); ++r)
-   {
-      for(int th = 0; th < pTrunc->sim()->hoz()->nTh(); ++th)
-      {
-         rRTPValues.rShell(r).col(th) = (static_cast<double>(m)*pTrunc->sim()->hoz()->phGrid()).cwise().cos() + (static_cast<double>(-m)*pTrunc->sim()->hoz()->phGrid()).cwise().sin() ;
-         if(m < pTrunc->sim()->hoz()->nM())
-         {
-            m++;
-         }
-      }
-   }
-
-   int col = 0;
-   m = 0;
-   for(int r = 0; r < pTrunc->sim()->rad()->nR(); ++r)
-   {
-      for(int th = 0; th < pTrunc->sim()->hoz()->nTh(); ++th)
-      {
-         if(m != 0)
-         {
-            rFFTCorrect.rFlat()(m, col) = epm::EPMComplex(0.5, 0.5);
-         } else
-         {
-            rFFTCorrect.rFlat()(m, col) = epm::EPMComplex(1.0, 0.0);
-         }
-         col++;
-         if(m < pTrunc->sim()->hoz()->nM())
-         {
-            m++;
-         }
-      }
-   }
-}
+/// Error threshold value
+epm::EPMFloat  ERROR_THRESHOLD = 1e-14;
 
 /**
  * @brief Create test run values for forward FFT transform test
  */
-void initBackwardTest(epm::FFTFlatScalar &rFFTValues, epm::RTPScalar &rRTPCorrect, SmartTruncation pTrunc)
+void initBackwardTest(epm::FFTFlatScalar &rFFTValues, SmartTruncation pTrunc)
 {
-   for(int m = 0; m < pTrunc->sim()->hoz()->nM(); ++m)
+   // Make sure everything is 0
+   rFFTValues.rFlat().setZero();
+
+   // Fill used part with random values between (-1, 1)
+   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).setRandom();
+
+   // Rescale values to (-1, 1)
+   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).cwise() -= 1.0;
+   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()) *= 2.0;
+
+   // Set m = 0 imaginary part to zero
+   for(int c = 0; c < rFFTValues.nCols(); ++c)
    {
-      rFFTValues.rFlat().col(m).setRandom();
+      rFFTValues.rFlat()(0, c).imag() = 0.0;
    }
 }
 
 /**
- * @brief Compute a forward FFT test transform
+ * @brief Compare the two fft values
  */
-int runForwardTest(SmartTruncation pTrunc, FFTransform &fft)
+int compareFFTValues(const epm::FFTFlatScalar &fftValues, const epm::FFTFlatScalar &fftValues2)
 {
-   // Test presentation output
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "Forward FFT test" << std::endl;
-   }
-
-   // Increment number of performed tests
-   PERFORMED_TESTS++;
-
-   // Initialise failed comparisons counter
+   // initialise failed comparisons counter
    int failed = 0;
 
-   // Create RTPScalar
-   epm::RTPScalar    rtpValues(pTrunc);
-
-   // Create FFTFlatScalars
-   epm::FFTFlatScalar   fftValues(pTrunc);
-   epm::FFTFlatScalar   fftCorrect(pTrunc);
-
-   // Initialise the forward transform test values
-   initForwardTest(rtpValues, fftCorrect, pTrunc); 
-
-   // Compute forward transform
-   fft.forward(fftValues, rtpValues);
-
-   // Check result
    epm::EPMFloat  error;
+
+   // Loop over all coefficients to count the wrong results
    for(int c = 0; c < fftValues.nCols(); ++c)
    {
-      error = (fftValues.flat().col(c) - fftCorrect.flat().col(c)).cwise().abs().maxCoeff();
-
-      if(error > 1e-14)
+      for(int m = 0; m < fftValues.nM() ; ++m)
       {
-         failed = 1;
+         // Compute difference between results
+         error = std::abs(fftValues.flat()(m,c) - fftValues2.flat()(m,c));
+
+         if(error > ERROR_THRESHOLD)
+         {
+            failed++;
+         }
       }
    }
 
-   // Gather total failed comparisons from MPI run
-   #ifdef EPMDYNAMO_MPI
-      // For MPI case the number of CPU is set according to how it's run
-      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-   #endif //EPMDYNAMO_MPI
-
-   if(pTrunc->para().id() == 0)
-   {
-      if(failed != 0)
-      {
-         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
-      } else
-      {
-         std::cout << "\t (success)" << std::endl << std::endl;
-      }
-   }
-
-   return std::min(failed, 1);
+   return failed;
 }
-
 /**
- * @brief Compute a backward FFT test transform
+ * @brief Compute a tranform loop test
  */
-int runBackwardTest(SmartTruncation pTrunc, FFTransform &fft)
+int runLoopTest(SmartTruncation pTrunc, FFTransform &fft)
 {
    // Increment number of performed tests
    PERFORMED_TESTS++;
@@ -167,26 +106,33 @@ int runBackwardTest(SmartTruncation pTrunc, FFTransform &fft)
    // Test presentation output
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "Backward FFT test" << std::endl;
+      std::cout << "FFT transform loop test" << std::endl;
    }
 
    // Initialise failed comparison counter
-   int failed = 1;
+   int failed = 0;
 
    // Create RTPScalars
    epm::RTPScalar    rtpValues(pTrunc);
-   epm::RTPScalar    rtpCorrect(pTrunc);
 
    // Create FFTFlatScalar
    epm::FFTFlatScalar   fftValues(pTrunc);
+   epm::FFTFlatScalar   fftValues2(pTrunc);
 
    // Initialise the backward transform test values
-   initBackwardTest(fftValues, rtpCorrect, pTrunc); 
+   initBackwardTest(fftValues, pTrunc); 
 
    // Compute backward transform
    fft.backward(rtpValues, fftValues);
 
+   // Compute forward transform
+   fft.forward(fftValues2, rtpValues);
+
+   // Do the zero padding
+   fftValues2.doZeroPadding();
+
    // Check result
+   failed = compareFFTValues(fftValues, fftValues2);
 
    // Gather total failed comparison from MPI run
    #ifdef EPMDYNAMO_MPI
@@ -214,9 +160,9 @@ int runBackwardTest(SmartTruncation pTrunc, FFTransform &fft)
 int runPrecTest()
 {
    // Set test truncation values
-   int maxN = 20;
-   int maxL = 32;
-   int maxM = 32;
+   int maxN = 100;
+   int maxL = 256;
+   int maxM = 256;
    int Mp = 1;
    int nCore = 1;
 
@@ -250,13 +196,7 @@ int runPrecTest()
    epm::EPMDYNAMO_SYNCHRONIZE;
 
    // Run forward FFT transform test
-   failed += runForwardTest(pTrunc, fft);
-
-   // Make sure CPUs are synchronized before start of test
-   epm::EPMDYNAMO_SYNCHRONIZE;
-
-   // Run backward FFT transform test
-   failed += runBackwardTest(pTrunc, fft);
+   failed += runLoopTest(pTrunc, fft);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;
