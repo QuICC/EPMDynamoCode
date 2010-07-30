@@ -47,9 +47,9 @@ int PERFORMED_TESTS = 0;
 epm::EPMFloat  ERROR_THRESHOLD = 1e-14;
 
 /**
- * @brief Create test run values for forward FFT transform test
+ * @brief Create test run values for forward/backward FFT transform loop test
  */
-void initBackwardTest(epm::FFTFlatScalar &rFFTValues, SmartTruncation pTrunc)
+void initLoopTest(epm::FFTFlatScalar &rFFTValues, SmartTruncation pTrunc)
 {
    // Make sure everything is 0
    rFFTValues.rFlat().setZero();
@@ -83,8 +83,16 @@ int compareFFTValues(const epm::FFTFlatScalar &fftValues, const epm::FFTFlatScal
    {
       for(int m = 0; m < fftValues.nM() ; ++m)
       {
-         // Compute difference between results
-         error = std::abs(fftValues.flat()(m,c) - fftValues2.flat()(m,c));
+         // Compute difference between the real values
+         error = std::abs(fftValues.flat()(m,c).real() - fftValues2.flat()(m,c).real());
+
+         if(error > ERROR_THRESHOLD)
+         {
+            failed++;
+         }
+
+         // Compute difference between the imaginary values
+         error = std::abs(fftValues.flat()(m,c).imag() - fftValues2.flat()(m,c).imag());
 
          if(error > ERROR_THRESHOLD)
          {
@@ -95,6 +103,7 @@ int compareFFTValues(const epm::FFTFlatScalar &fftValues, const epm::FFTFlatScal
 
    return failed;
 }
+
 /**
  * @brief Compute a tranform loop test
  */
@@ -120,7 +129,7 @@ int runLoopTest(SmartTruncation pTrunc, FFTransform &fft)
    epm::FFTFlatScalar   fftValues2(pTrunc);
 
    // Initialise the backward transform test values
-   initBackwardTest(fftValues, pTrunc); 
+   initLoopTest(fftValues, pTrunc); 
 
    // Compute backward transform
    fft.backward(rtpValues, fftValues);

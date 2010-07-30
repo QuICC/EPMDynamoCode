@@ -42,6 +42,39 @@ typedef epm::RadialTransform<epm::WorlandPolynomial> WorlandTransform;
 /// Counter for the number of performed tests
 int PERFORMED_TESTS = 0;
 
+/// Error threshold value
+epm::EPMFloat  ERROR_THRESHOLD = 1e-12;
+
+//
+// Loop test initialisation
+//
+
+/**
+ * @brief Initialise test values for transform loop test
+ */
+void initLoopTest(epm::SpectralSHScalar &rSSHValues, SmartTruncation pTrunc)
+{
+   // Loop over harmonic degree shells
+   for(int l = 0; l < rSSHValues.nL(); ++l)
+   {
+      // Set random values
+      rSSHValues.rLShell(l).setRandom();
+
+      // Rescale values to (-1 ,1) interval
+      rSSHValues.rLShell(l).cwise() -= 1.0;
+      rSSHValues.rLShell(l) *= 2.0;
+   }
+
+   // Set imaginary part of m=0 to zero
+   for(int l = 0; l < rSSHValues.nL(); ++l)
+   {
+      for(int n = 0; n < rSSHValues.nN(); ++n)
+      {
+         rSSHValues.rLShell(l)(n, 0).imag() = 0.0;
+      }
+   }
+}
+
 //
 // Integration tests initialisations
 //
@@ -147,6 +180,104 @@ void initProjPol2CurlTTest(SmartTruncation pTrunc)
  */
 void initProjPol2QTest(SmartTruncation pTrunc)
 {
+}
+
+//
+// Test transform loop
+//
+
+/**
+ * @brief Compare the two fdsh values
+ */
+int compareSSHValues(const epm::SpectralSHScalar &sshValues, const epm::SpectralSHScalar &sshValues2)
+{
+   // initialise failed comparisons counter
+   int failed = 0;
+
+   epm::EPMFloat  error;
+
+   // Loop over all coefficients to count the wrong results
+   for(int l = 0; l < sshValues.nL() ; ++l)
+   {
+      for(int m = 0; m < sshValues.nM(l); ++m)
+      {
+         for(int n = 0; n < sshValues.nN(); ++n)
+         {
+            // Compute difference between real values
+            error = std::abs(sshValues.lshell(l)(n,m).real() - sshValues2.lshell(l)(n,m).real());
+
+            if(error > ERROR_THRESHOLD)
+            {
+               failed++;
+            }
+
+            // Compute difference between real values
+            error = std::abs(sshValues.lshell(l)(n,m).imag() - sshValues2.lshell(l)(n,m).imag());
+
+            if(error > ERROR_THRESHOLD)
+            {
+               failed++;
+            }
+         }
+      }
+   }
+
+   return failed;
+}
+
+/**
+ * @brief Test run for the transform loop
+ */
+int runLoopTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
+{
+   // Increment number of performed tests
+   PERFORMED_TESTS++;
+
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "Worland transform loop test" << std::endl;
+   }
+
+   int failed = 0;
+
+   // Create FDSHDegreeScalar
+   epm::FDSHDegreeScalar  fdshValues(pTrunc);
+
+   // Create SpectralSHScalars
+   epm::SpectralSHScalar sshValues(pTrunc, true);
+   epm::SpectralSHScalar sshValues2(pTrunc, true);
+
+   // Initialise the forward transform test values
+   initLoopTest(sshValues, pTrunc); 
+
+   // Compute the projection
+   wTransform.multL<epm::SetProduct>(fdshValues, sshValues, &epm::TorPolRadialOperator<epm::WorlandPolynomial>::proj);
+   
+   // Compute the integration
+   wTransform.multL<epm::SetProduct>(sshValues2, fdshValues, &epm::TorPolRadialOperator<epm::WorlandPolynomial>::intg);
+
+   // Check result
+   failed = compareSSHValues(sshValues, sshValues2);
+
+   // Gather total failed comparison from MPI run
+   #ifdef EPMDYNAMO_MPI
+      // For MPI case the number of CPU is set according to how it's run
+      MPI_Allreduce(MPI_IN_PLACE, &failed, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+   #endif //EPMDYNAMO_MPI
+
+   if(pTrunc->para().id() == 0)
+   {
+      if(failed != 0)
+      {
+         std::cout << "\t (" << failed << " failed)" << std::endl << std::endl;
+      } else
+      {
+         std::cout << "\t (success)" << std::endl << std::endl;
+      }
+   }
+
+   return std::min(failed, 1);
 }
 
 //
@@ -767,9 +898,9 @@ int runProjPol2QTest(SmartTruncation pTrunc, WorlandTransform &wTransform)
 int runPrecTest()
 {
    // Set test truncation values
-   int maxN = 20;
-   int maxL = 32;
-   int maxM = 32;
+   int maxN = 100;
+   int maxL = 64;
+   int maxM = 64;
    int Mp = 1;
    int nCore = 1;
 
@@ -798,6 +929,12 @@ int runPrecTest()
    WorlandTransform    wTransform(pTrunc);
 
    int failed = 0;
+
+   // Make sure CPUs are synchronized before start of test
+   epm::EPMDYNAMO_SYNCHRONIZE;
+
+   // Run "intg" test
+   failed += runLoopTest(pTrunc, wTransform);
 
    // Make sure CPUs are synchronized before start of test
    epm::EPMDYNAMO_SYNCHRONIZE;

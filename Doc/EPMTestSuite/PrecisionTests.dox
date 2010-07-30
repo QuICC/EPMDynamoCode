@@ -1,2 +1,18 @@
 /** \page epmTSPrecisionTests Precision tests
+ *
+ * \section epmTSPrecFFT prec_FFTransform: 
+ *
+ * \section epmTSPrecALB prec_AssociatedLegendreBasis: 
+ *
+ * \section epmTSPrecLegT prec_LegendreTransform: 
+ *
+ * \section epmTSPrecSHT prec_SphericalHarmonicsTransform: 
+ *
+ * \section epmTSPrecWB prec_WorlandBasis:
+ *
+ * \section epmTSPrecWT prec_WorlandTransform:
+ *
+ * \section epmTSPrecSSHT prec_SpectralSHTransform:
+ *
+ * \section epmTSPrecCheby prec_ChebyshevPolynomials:
  */

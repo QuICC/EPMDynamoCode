@@ -2,10 +2,12 @@
 # Add transform precision test
 #
 set(PrecTests ${PrecTests}
+      prec_AssocLegendreBasis
       prec_FFTransform
       prec_LegendreTransform
       prec_RTPOperators
       prec_SpectralSHTransform
+      prec_WorlandBasis
       prec_WorlandTransform
       )
 
