@@ -27,6 +27,7 @@
 #include "General/EPMException.hpp"
 #include "General/MathConstants.hpp"
 #include "Domain/Truncation.hpp"
+#include "Polynomials/PolynomialOperator.hpp"
 #include "Polynomials/WorlandPolynomial.hpp"
 #include "Polynomials/RadialBasis.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
@@ -38,11 +39,19 @@ namespace epm = EPMDynamo;
 typedef epm::WSHSimulation SimulationType;
 /// Notation simplification typedef for truncation type
 typedef epm::SmartTruncation  SmartTruncation;
+/// Notation simplification typedef for worland operator type
+typedef epm::TorPolRadialOperator<epm::WorlandPolynomial> WorlandOperator;
 /// Notation simplification typedef for worland radial basis type
-typedef epm::RadialBasis<epm::TorPolRadialOperator<epm::WorlandPolynomial> > WorlandBasis;
+typedef epm::RadialBasis<WorlandOperator> WorlandBasis;
 
 /// Base name for all files
 std::string testBasename = "wp_";
+
+/// Base name for the grid data files
+std::string gridBasename;
+
+/// File ordering character
+const std::string orderString = "_L";
 
 /**
  * @brief Write setup data to file
@@ -81,6 +90,24 @@ int writeSetupData(SmartTruncation pTrunc)
 }
 
 /**
+ * @brief Create grid data filename base
+ */
+void setGridBasename(SmartTruncation pTrunc)
+{
+   // Stringstream for the conversion
+   std::stringstream converter;
+
+   // Convert grid size
+   converter << pTrunc->sim()->rad()->nR();
+
+   // Create base name
+   gridBasename = testBasename + "N" + converter.str() + "_";
+
+   // Empty string stream
+   converter.str("");
+}
+
+/**
  * @brief Write "grid" data to file
  */
 int writeGridData(SmartTruncation pTrunc, WorlandBasis &wBasis)
@@ -107,7 +134,7 @@ int writeGridData(SmartTruncation pTrunc, WorlandBasis &wBasis)
    converter << pTrunc->sim()->rad()->nR();
 
    // Create base name
-   basename = testBasename + "N" + converter.str() + "_grid.dat";
+   basename = gridBasename + "grid.dat";
 
    // Empty string stream
    converter.str("");
@@ -120,6 +147,63 @@ int writeGridData(SmartTruncation pTrunc, WorlandBasis &wBasis)
 
    // close file
    file.close();
+
+   return status;
+}
+
+/**
+ * @brief Write data to file
+ */
+template<class T, typename TExp> int writeData(std::string name, const epm::PolynomialOperator<TExp>& (T::*Tptr)() const, SmartTruncation pTrunc, WorlandBasis &wBasis)
+{
+   // File writing status
+   int status = 0;
+
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "Writing \"" + name + "\" data to file" << std::endl;
+   }
+
+   // Create file object
+   std::ofstream  file;
+
+   // Filename base string
+   std::string basename;
+
+   // Filename string
+   std::string filename;
+
+   // Stringstream for the conversion
+   std::stringstream converter;
+
+   // Create base name
+   basename = gridBasename + name + orderString;
+
+   // Empty string stream
+   converter.str("");
+
+   // Loop over all harmonic orders
+   for(int l = 0; l < pTrunc->sim()->hoz()->nL(); ++l)
+   {
+      // Convert harmonic order
+      converter << l;
+
+      // Build filename
+      filename = basename + converter.str() + ".dat";
+
+      // Open file
+      file.open(filename.c_str());
+
+      // Write data to file
+      file << (wBasis.at(l).*Tptr)().op();
+
+      // close file
+      file.close();
+
+      // empty stringstream
+      converter.str("");
+   }
 
    return status;
 }
@@ -151,7 +235,7 @@ int writeWeightsData(SmartTruncation pTrunc, WorlandBasis &wBasis)
    converter << pTrunc->sim()->rad()->nR();
 
    // Create base name
-   basename = testBasename + "N" + converter.str() + "_weights.dat";
+   basename = gridBasename + "weights.dat";
 
    // Empty string stream
    converter.str("");
@@ -169,134 +253,14 @@ int writeWeightsData(SmartTruncation pTrunc, WorlandBasis &wBasis)
 }
 
 /**
- * @brief Write "intg" data to file
- */
-int writeIntgData(SmartTruncation pTrunc, WorlandBasis &wBasis)
-{
-   // File writing status
-   int status = 0;
-
-   // Test presentation output
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "Writing \"intg\" data to file" << std::endl;
-   }
-
-   // Create file object
-   std::ofstream  file;
-
-   // Filename base string
-   std::string basename;
-
-   // Filename string
-   std::string filename;
-
-   // Stringstream for the conversion
-   std::stringstream converter;
-
-   // Convert grid size
-   converter << pTrunc->sim()->rad()->nR();
-
-   // Create base name
-   basename = testBasename + "N" + converter.str() + "_intg" + "_L";
-
-   // Empty string stream
-   converter.str("");
-
-   // Loop over all harmonic orders
-   for(int l = 0; l < pTrunc->sim()->hoz()->nL(); ++l)
-   {
-      // Convert harmonic order
-      converter << l;
-
-      // Build filename
-      filename = basename + converter.str() + ".dat";
-
-      // Open file
-      file.open(filename.c_str());
-
-      // Write data to file
-      file << wBasis.at(l).intg().op();
-
-      // close file
-      file.close();
-
-      // empty stringstream
-      converter.str("");
-   }
-
-   return status;
-}
-
-/**
- * @brief Write "proj" data to file
- */
-int writeProjData(SmartTruncation pTrunc, WorlandBasis &wBasis)
-{
-   // File writing status
-   int status = 0;
-
-   // Test presentation output
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "Writing \"proj\" data to file" << std::endl;
-   }
-
-   // Create file object
-   std::ofstream  file;
-
-   // Filename base string
-   std::string basename;
-
-   // Filename string
-   std::string filename;
-
-   // Stringstream for the conversion
-   std::stringstream converter;
-
-   // Convert grid size
-   converter << pTrunc->sim()->rad()->nR();
-
-   // Create base name
-   basename = testBasename + "N" + converter.str() + "_proj" + "_L";
-
-   // Empty string stream
-   converter.str("");
-
-   // Loop over all harmonic orders
-   for(int l = 0; l < pTrunc->sim()->hoz()->nL(); ++l)
-   {
-      // Convert harmonic order
-      converter << l;
-
-      // Build filename
-      filename = basename + converter.str() + ".dat";
-
-      // Open file
-      file.open(filename.c_str());
-
-      // Write data to file
-      file << wBasis.at(l).proj().op();
-
-      // close file
-      file.close();
-
-      // empty stringstream
-      converter.str("");
-   }
-
-   return status;
-}
-
-/**
  * @brief Perform all the tests
  */
 int runPrecTest()
 {
    // Set test truncation values
-   int maxN = 100;
-   int maxL = 64;
-   int maxM = 64;
+   int maxN = 20;
+   int maxL = 32;
+   int maxM = 32;
    int Mp = 1;
    int nCore = 1;
 
@@ -326,6 +290,9 @@ int runPrecTest()
    // Create the Worland basis object
    WorlandBasis    wBasis(pTrunc);
 
+   // Set "grid" data basename
+   setGridBasename(pTrunc);
+
    // Write setup data to file
    status += writeSetupData(pTrunc);
 
@@ -336,10 +303,46 @@ int runPrecTest()
    status += writeWeightsData(pTrunc, wBasis);
 
    // Write "intg" data to file
-   status += writeIntgData(pTrunc, wBasis);
+   status += writeData("intg", &WorlandOperator::intg, pTrunc, wBasis);
+
+   // Write "intgQ2Pol" data to file
+   status += writeData("intgQ2Pol", &WorlandOperator::intgQ2Pol, pTrunc, wBasis);
+
+   // Write "intgT2Tor" data to file
+   status += writeData("intgT2Tor", &WorlandOperator::intgT2Tor, pTrunc, wBasis);
+
+   // Write "intgQ2CurlCurlProj" data to file
+   status += writeData("intgQ2CurlCurlProj", &WorlandOperator::intgQ2CurlCurlProj, pTrunc, wBasis);
+
+   // Write "intgS2CurlCurlProj" data to file
+   status += writeData("intgS2CurlCurlProj", &WorlandOperator::intgS2CurlCurlProj, pTrunc, wBasis);
+
+   // Write "intgT2CurlProj" data to file
+   status += writeData("intgT2CurlProj", &WorlandOperator::intgT2CurlProj, pTrunc, wBasis);
 
    // Write "proj" data to file
-   status += writeProjData(pTrunc, wBasis);
+   status += writeData("proj", &WorlandOperator::proj, pTrunc, wBasis);
+
+   // Write "proj2GradTP" data to file
+   status += writeData("proj2GradTP", &WorlandOperator::proj2GradTP, pTrunc, wBasis);
+
+   // Write "projPol2Q" data to file
+   status += writeData("projPol2Q", &WorlandOperator::projPol2Q, pTrunc, wBasis);
+
+   // Write "projPol2S" data to file
+   status += writeData("projPol2S", &WorlandOperator::projPol2S, pTrunc, wBasis);
+
+   // Write "projTor2T" data to file
+   status += writeData("projTor2T", &WorlandOperator::projTor2T, pTrunc, wBasis);
+
+   // Write "projTor2CurlQ" data to file
+   status += writeData("projTor2CurlQ", &WorlandOperator::projTor2CurlQ, pTrunc, wBasis);
+
+   // Write "projTor2CurlS" data to file
+   status += writeData("projTor2CurlS", &WorlandOperator::projTor2CurlS, pTrunc, wBasis);
+
+   // Write "projPol2CurlT" data to file
+   status += writeData("projPol2CurlT", &WorlandOperator::projPol2CurlT, pTrunc, wBasis);
 
    return status;
 }

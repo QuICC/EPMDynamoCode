@@ -27,6 +27,8 @@
 #include "General/EPMException.hpp"
 #include "General/MathConstants.hpp"
 #include "Domain/Truncation.hpp"
+#include "Polynomials/PolynomialOperator.hpp"
+#include "Polynomials/AssociatedLegendreOperator.hpp"
 #include "Polynomials/AssocLegendreBasis.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
@@ -37,9 +39,19 @@ namespace epm = EPMDynamo;
 typedef epm::WSHSimulation SimulationType;
 /// Notation simplification typedef for truncation type
 typedef epm::SmartTruncation  SmartTruncation;
+/// Notation simplification typedef for associated Legendre operator type
+typedef epm::AssociatedLegendreOperator AssocLegendreOperator;
+/// Notation simplification typedef for associated legendre basis type
+typedef epm::AssocLegendreBasis AssocLegendreBasis;
 
 /// Base name for all files
 std::string testBasename = "alp_";
+
+/// Base name for the grid data files
+std::string gridBasename;
+
+/// File ordering character
+const std::string orderString = "_M";
 
 /**
  * @brief Write setup data to file
@@ -78,9 +90,27 @@ int writeSetupData(SmartTruncation pTrunc)
 }
 
 /**
+ * @brief Create grid data filename base
+ */
+void setGridBasename(SmartTruncation pTrunc)
+{
+   // Stringstream for the conversion
+   std::stringstream converter;
+
+   // Convert grid size
+   converter << pTrunc->sim()->hoz()->nTh();
+
+   // Create base name
+   gridBasename = testBasename + "N" + converter.str() + "_";
+
+   // Empty string stream
+   converter.str("");
+}
+
+/**
  * @brief Write "grid" data to file
  */
-int writeGridData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
+int writeGridData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
 {
    // File writing status
    int status = 0;
@@ -104,7 +134,7 @@ int writeGridData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
    converter << pTrunc->sim()->hoz()->nTh();
 
    // Create base name
-   basename = testBasename + "N" + converter.str() + "_grid.dat";
+   basename = gridBasename + "grid.dat";
 
    // Empty string stream
    converter.str("");
@@ -124,7 +154,7 @@ int writeGridData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
 /**
  * @brief Write "weights" data to file
  */
-int writeWeightsData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
+int writeWeightsData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
 {
    // File writing status
    int status = 0;
@@ -148,7 +178,7 @@ int writeWeightsData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
    converter << pTrunc->sim()->hoz()->nTh();
 
    // Create base name
-   basename = testBasename + "N" + converter.str() + "_weights.dat";
+   basename = gridBasename + "weights.dat";
 
    // Empty string stream
    converter.str("");
@@ -166,9 +196,9 @@ int writeWeightsData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
 }
 
 /**
- * @brief Write "intg" data to file
+ * @brief Write data to file
  */
-int writeIntgData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
+template<class T, typename TExp> int writeData(std::string name, const epm::PolynomialOperator<TExp>& (T::*Tptr)() const, SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
 {
    // File writing status
    int status = 0;
@@ -176,7 +206,7 @@ int writeIntgData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
    // Test presentation output
    if(pTrunc->para().id() == 0)
    {
-      std::cout << "Writing \"intg\" data to file" << std::endl;
+      std::cout << "Writing \"" + name + "\" data to file" << std::endl;
    }
 
    // Create file object
@@ -191,11 +221,8 @@ int writeIntgData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
    // Stringstream for the conversion
    std::stringstream converter;
 
-   // Convert grid size
-   converter << pTrunc->sim()->hoz()->nTh();
-
    // Create base name
-   basename = testBasename + "N" + converter.str() + "_intg" + "_M";
+   basename = gridBasename + name + orderString;
 
    // Empty string stream
    converter.str("");
@@ -213,67 +240,7 @@ int writeIntgData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
       file.open(filename.c_str());
 
       // Write data to file
-      file << legBasis.at(m).intg().op();
-
-      // close file
-      file.close();
-
-      // empty stringstream
-      converter.str("");
-   }
-
-   return status;
-}
-
-/**
- * @brief Write "proj" data to file
- */
-int writeProjData(SmartTruncation pTrunc, epm::AssocLegendreBasis &legBasis)
-{
-   // File writing status
-   int status = 0;
-
-   // Test presentation output
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "Writing \"proj\" data to file" << std::endl;
-   }
-
-   // Create file object
-   std::ofstream  file;
-
-   // Filename base string
-   std::string basename;
-
-   // Filename string
-   std::string filename;
-
-   // Stringstream for the conversion
-   std::stringstream converter;
-
-   // Convert grid size
-   converter << pTrunc->sim()->hoz()->nTh();
-
-   // Create base name
-   basename = testBasename + "N" + converter.str() + "_proj" + "_M";
-
-   // Empty string stream
-   converter.str("");
-
-   // Loop over all harmonic orders
-   for(int m = 0; m < pTrunc->sim()->hoz()->nM(); ++m)
-   {
-      // Convert harmonic order
-      converter << m;
-
-      // Build filename
-      filename = basename + converter.str() + ".dat";
-
-      // Open file
-      file.open(filename.c_str());
-
-      // Write data to file
-      file << legBasis.at(m).proj().op();
+      file << (legBasis.at(m).*Tptr)().productOp();
 
       // close file
       file.close();
@@ -321,7 +288,10 @@ int runPrecTest()
    }
 
    // Create the Associated Legendre Basis object
-   epm::AssocLegendreBasis    legBasis(pTrunc);
+   AssocLegendreBasis    legBasis(pTrunc);
+
+   // Set "grid" data basename
+   setGridBasename(pTrunc);
 
    // Write setup data to file
    status += writeSetupData(pTrunc);
@@ -333,10 +303,40 @@ int runPrecTest()
    status += writeWeightsData(pTrunc, legBasis);
 
    // Write "intg" data to file
-   status += writeIntgData(pTrunc, legBasis);
+   status += writeData("intg", &AssocLegendreOperator::intg, pTrunc, legBasis);
+
+   // Write "intgTh2S" data to file
+   status += writeData("intgTh2S", &AssocLegendreOperator::intgTh2S, pTrunc, legBasis);
+
+   // Write "intgTh2T" data to file
+   status += writeData("intgTh2T", &AssocLegendreOperator::intgTh2T, pTrunc, legBasis);
+
+   // Write "intgPh2S" data to file
+   status += writeData("intgPh2S", &AssocLegendreOperator::intgPh2S, pTrunc, legBasis);
+
+   // Write "intgPh2T" data to file
+   status += writeData("intgPh2T", &AssocLegendreOperator::intgPh2T, pTrunc, legBasis);
 
    // Write "proj" data to file
-   status += writeProjData(pTrunc, legBasis);
+   status += writeData("proj", &AssocLegendreOperator::proj, pTrunc, legBasis);
+
+   // Write "projS2Th" data to file
+   status += writeData("projS2Th", &AssocLegendreOperator::projS2Th, pTrunc, legBasis);
+
+   // Write "projT2Th" data to file
+   status += writeData("projT2Th", &AssocLegendreOperator::projT2Th, pTrunc, legBasis);
+
+   // Write "projS2Ph" data to file
+   status += writeData("projS2Ph", &AssocLegendreOperator::projS2Ph, pTrunc, legBasis);
+
+   // Write "projT2Ph" data to file
+   status += writeData("projT2Ph", &AssocLegendreOperator::projT2Ph, pTrunc, legBasis);
+
+   // Write "proj2GradTh" data to file
+   status += writeData("proj2GradTh", &AssocLegendreOperator::proj2GradTh, pTrunc, legBasis);
+
+   // Write "proj2GradPh" data to file
+   status += writeData("proj2GradPh", &AssocLegendreOperator::proj2GradPh, pTrunc, legBasis);
 
    return status;
 }
