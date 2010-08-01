@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[    100706,       2597]
-NotebookOptionsPosition[     96044,       2475]
-NotebookOutlinePosition[     96383,       2490]
-CellTagsIndexPosition[     96340,       2487]
+NotebookDataLength[     75573,       1984]
+NotebookOptionsPosition[     71685,       1880]
+NotebookOutlinePosition[     72022,       1895]
+CellTagsIndexPosition[     71979,       1892]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -477,20 +477,19 @@ Cell["\<\
 ******************************************\
 \>", "Text",
  CellChangeTimes->{{3.48947274172893*^9, 3.489472742120906*^9}, {
-  3.489472773569173*^9, 3.489472853849657*^9}},
- FormatType->"TextForm"],
+  3.489472773569173*^9, 3.489472853849657*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"wEPMDir", " ", "=", " ", "\"\</tmp/tmpEPM/\>\""}], ";"}]], "Input",\
-
+  RowBox[{"wEPMDir", " ", "=", " ", "\"\</home/philippe/tmp/tmpEPM/\>\""}], 
+  ";"}]], "Input",
  CellChangeTimes->{{3.4613844071984167`*^9, 3.461384418643629*^9}, {
    3.4894716622384157`*^9, 3.489471665047596*^9}, {3.4894718186063128`*^9, 
    3.489471837342657*^9}, 3.4894718866090517`*^9, {3.489471939144067*^9, 
    3.489471939358347*^9}, {3.489471973344121*^9, 3.489471989040464*^9}, {
    3.4894722913458652`*^9, 3.489472300825264*^9}, {3.4894729182512074`*^9, 
    3.4894729354422503`*^9}, {3.489486961045001*^9, 3.48948696233454*^9}, 
-   3.489487009154276*^9}],
+   3.489487009154276*^9, {3.489673623028677*^9, 3.489673634035244*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -569,6 +568,15 @@ Cell[TextData[{
   3.457848122553792*^9, 3.4578481256984367`*^9}, {3.489472676253929*^9, 
   3.4894727288557653`*^9}, {3.4894728500928917`*^9, 3.489472850233614*^9}, {
   3.489487178478841*^9, 3.489487179068445*^9}}],
+
+Cell[BoxData[
+ RowBox[{"wNorm", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+   RowBox[{"0", "-", 
+    RowBox[{"1", "/", "2"}]}], ",", "3"}], "]"}]], "Input",
+ CellChangeTimes->{{3.4896830792701406`*^9, 3.489683099560362*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -759,6 +767,253 @@ Cell[BoxData[
   3.489487106932056*^9, 3.489487107143866*^9}, {3.4894871683370943`*^9, 
   3.489487172391837*^9}}],
 
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"maxErrPlot", "[", 
+   RowBox[{"name_", ",", " ", "maxRange_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"mathData", ",", "epmData", ",", "loop", ",", " ", "errData"}], 
+     "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"errData", " ", "=", 
+      RowBox[{"Table", "[", " ", 
+       RowBox[{"1", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", " ", "0", ",", " ", "maxRange"}], "}"}]}], "]"}]}],
+      " ", ";", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"loop", "=", "0"}], ",", " ", 
+       RowBox[{"loop", " ", "\[LessEqual]", " ", "maxRange"}], ",", " ", 
+       RowBox[{"loop", "++"}], ",", 
+       RowBox[{
+        RowBox[{"mathData", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"ToExpression", "[", 
+             RowBox[{"\"\<wMathProj\>\"", "<>", "name"}], "]"}], "[", 
+            RowBox[{"n", ",", "loop", ",", " ", 
+             RowBox[{"wMathGrid", "[", 
+              RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
+        RowBox[{"epmData", " ", "=", 
+         RowBox[{"SetPrecision", "[", 
+          RowBox[{
+           RowBox[{"Import", "[", 
+            RowBox[{
+            "wEPMFileBase", "<>", "\"\<_proj\>\"", "<>", "name", "<>", 
+             "\"\<_L\>\"", "<>", 
+             RowBox[{"ToString", "[", "loop", "]"}], "<>", "\"\<.dat\>\""}], 
+            "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
+        RowBox[{
+         RowBox[{"errData", "[", 
+          RowBox[{"[", 
+           RowBox[{"loop", "+", "1"}], "]"}], "]"}], "=", 
+         RowBox[{"errValues", "[", 
+          RowBox[{"mathData", ",", "epmData"}], "]"}]}], ";"}]}], "]"}], ";", 
+     
+     RowBox[{"ListLogPlot", "[", 
+      RowBox[{
+       RowBox[{"Transpose", "[", "errData", "]"}], ",", " ", 
+       RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
+       RowBox[{"PlotLegend", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], 
+       ",", " ", 
+       RowBox[{"LegendPosition", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.489484335492992*^9, 3.4894843507655993`*^9}, {
+  3.489674518902451*^9, 3.4896747419275*^9}, {3.489674783788457*^9, 
+  3.48967491158576*^9}, {3.489674954807781*^9, 3.4896749872032747`*^9}, {
+  3.489675072538855*^9, 3.489675075379737*^9}, {3.489675137894755*^9, 
+  3.4896751381422358`*^9}, {3.4896845616208267`*^9, 3.489684574747674*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getBothData", "[", 
+   RowBox[{"name_", ",", " ", "test_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"mathData", ",", "epmData"}], "}"}], ",", "\[IndentingNewLine]", 
+    
+    RowBox[{
+     RowBox[{"mathData", " ", "=", " ", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"ToExpression", "[", 
+          RowBox[{"\"\<wMathProj\>\"", "<>", "name"}], "]"}], "[", 
+         RowBox[{"n", ",", "test", ",", " ", 
+          RowBox[{"wMathGrid", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
+     RowBox[{"epmData", " ", "=", 
+      RowBox[{"SetPrecision", "[", 
+       RowBox[{
+        RowBox[{"Import", "[", 
+         RowBox[{
+         "wEPMFileBase", "<>", "\"\<_proj\>\"", "<>", "name", "<>", 
+          "\"\<_L\>\"", "<>", 
+          RowBox[{"ToString", "[", "test", "]"}], "<>", "\"\<.dat\>\""}], 
+         "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"mathData", ",", " ", "epmData"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.489484335492992*^9, 3.4894843507655993`*^9}, {
+  3.489674518902451*^9, 3.4896747419275*^9}, {3.489674783788457*^9, 
+  3.48967491158576*^9}, {3.489674954807781*^9, 3.4896749872032747`*^9}, {
+  3.489675072538855*^9, 3.489675075379737*^9}, {3.489675137894755*^9, 
+  3.4896751381422358`*^9}, {3.4896845616208267`*^9, 3.489684652409554*^9}, {
+  3.4896846966427183`*^9, 3.4896847081130867`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"getBothWeightedData", "[", 
+   RowBox[{"name_", ",", " ", "test_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"mathData", ",", "epmData"}], "}"}], ",", "\[IndentingNewLine]", 
+    
+    RowBox[{
+     RowBox[{"mathData", " ", "=", " ", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{
+         FractionBox["1", 
+          RowBox[{"wNorm", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+            RowBox[{"test", "-", 
+             RowBox[{"1", "/", "2"}]}], ",", "n"}], "]"}]], 
+         RowBox[{"wMathWeights", "[", 
+          RowBox[{"[", "i", "]"}], "]"}], 
+         RowBox[{
+          RowBox[{"ToExpression", "[", 
+           RowBox[{"\"\<wMathIntg\>\"", "<>", "name"}], "]"}], "[", 
+          RowBox[{"n", ",", "test", ",", " ", 
+           RowBox[{"wMathGrid", "[", 
+            RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"epmData", " ", "=", 
+      RowBox[{"SetPrecision", "[", 
+       RowBox[{
+        RowBox[{"Import", "[", 
+         RowBox[{
+         "wEPMFileBase", "<>", "\"\<_intg\>\"", "<>", "name", "<>", 
+          "\"\<_L\>\"", "<>", 
+          RowBox[{"ToString", "[", "test", "]"}], "<>", "\"\<.dat\>\""}], 
+         "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"mathData", ",", " ", "epmData"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.489684669362658*^9, 3.489684727249338*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"maxErrWeightedPlot", "[", 
+   RowBox[{"name_", ",", " ", "maxRange_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"mathData", ",", "epmData", ",", "loop", ",", " ", "errData"}], 
+     "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"errData", " ", "=", 
+      RowBox[{"Table", "[", " ", 
+       RowBox[{"1", ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", " ", "0", ",", " ", "maxRange"}], "}"}]}], "]"}]}],
+      " ", ";", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"loop", "=", "0"}], ",", " ", 
+       RowBox[{"loop", " ", "\[LessEqual]", " ", "maxRange"}], ",", " ", 
+       RowBox[{"loop", "++"}], ",", 
+       RowBox[{
+        RowBox[{"mathData", " ", "=", " ", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{
+            FractionBox["1", 
+             RowBox[{"wNorm", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+               RowBox[{"loop", "-", 
+                RowBox[{"1", "/", "2"}]}], ",", "n"}], "]"}]], 
+            RowBox[{"wMathWeights", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], 
+            RowBox[{
+             RowBox[{"ToExpression", "[", 
+              RowBox[{"\"\<wMathIntg\>\"", "<>", "name"}], "]"}], "[", 
+             RowBox[{"n", ",", "loop", ",", " ", 
+              RowBox[{"wMathGrid", "[", 
+               RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"epmData", " ", "=", 
+         RowBox[{"SetPrecision", "[", 
+          RowBox[{
+           RowBox[{"Import", "[", 
+            RowBox[{
+            "wEPMFileBase", "<>", "\"\<_intg\>\"", "<>", "name", "<>", 
+             "\"\<_L\>\"", "<>", 
+             RowBox[{"ToString", "[", "loop", "]"}], "<>", "\"\<.dat\>\""}], 
+            "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
+        RowBox[{
+         RowBox[{"errData", "[", 
+          RowBox[{"[", 
+           RowBox[{"loop", "+", "1"}], "]"}], "]"}], "=", 
+         RowBox[{"errValues", "[", 
+          RowBox[{"mathData", ",", "epmData"}], "]"}]}], ";"}]}], "]"}], ";", 
+     
+     RowBox[{"ListLogPlot", "[", 
+      RowBox[{
+       RowBox[{"Transpose", "[", "errData", "]"}], ",", " ", 
+       RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
+       RowBox[{"PlotLegend", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], 
+       ",", " ", 
+       RowBox[{"LegendPosition", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
+       RowBox[{"PlotStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.489682541867029*^9, 3.4896825652166653`*^9}, {
+  3.489682599274951*^9, 3.489682617693594*^9}, {3.489682705348015*^9, 
+  3.4896827078262672`*^9}, {3.489682753084167*^9, 3.4896828034491653`*^9}, {
+  3.4896830195621347`*^9, 3.489683028335607*^9}, {3.4896831460213423`*^9, 
+  3.4896831463603086`*^9}, {3.489683197627296*^9, 3.4896832018273582`*^9}}],
+
 Cell[TextData[{
  "***************** ",
  StyleBox["Mathematica",
@@ -807,17 +1062,21 @@ Cell[BoxData[
        RowBox[{"{", 
         RowBox[{"r", ",", "_Real"}], "}"}]}], "}"}], ",", 
      RowBox[{
-      FractionBox["r", 
-       RowBox[{"l", 
-        RowBox[{"(", 
-         RowBox[{"l", "+", "1"}], ")"}]}]], 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"l", " ", "\[NotEqual]", " ", "0"}], ",", 
+        FractionBox["1", 
+         RowBox[{"l", 
+          RowBox[{"(", 
+           RowBox[{"l", "+", "1"}], ")"}]}]], ",", "0"}], "]"}], "r", " ", 
       RowBox[{"wMathP", "[", 
        RowBox[{"n", ",", "l", ",", "r"}], "]"}]}]}], "]"}]}], ";"}]], "Input",\
 
  CellChangeTimes->{{3.4895579342138166`*^9, 3.489557951892569*^9}, {
    3.489558197037554*^9, 3.4895582179717293`*^9}, 3.489670789123124*^9, 
    3.489670825128602*^9, {3.489670867244131*^9, 3.489670872041388*^9}, {
-   3.489671065100338*^9, 3.489671065614936*^9}}],
+   3.489671065100338*^9, 3.489671065614936*^9}, {3.489683443427507*^9, 
+   3.489683461465356*^9}, {3.489683494185012*^9, 3.489683511752359*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -833,19 +1092,23 @@ Cell[BoxData[
        RowBox[{"{", 
         RowBox[{"r", ",", "_Real"}], "}"}]}], "}"}], ",", 
      RowBox[{
-      FractionBox[
-       RowBox[{"-", "1"}], 
-       SqrtBox[
-        RowBox[{"l", 
-         RowBox[{"(", 
-          RowBox[{"l", "+", "1"}], ")"}]}]]], 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"l", " ", "\[NotEqual]", " ", "0"}], ",", 
+        FractionBox[
+         RowBox[{"-", "1"}], 
+         SqrtBox[
+          RowBox[{"l", 
+           RowBox[{"(", 
+            RowBox[{"l", "+", "1"}], ")"}]}]]], ",", "0"}], "]"}], 
       RowBox[{"wMathP", "[", 
        RowBox[{"n", ",", "l", ",", "r"}], "]"}]}]}], "]"}]}], ";"}]], "Input",\
 
  CellChangeTimes->{{3.4895579342138166`*^9, 3.489557951892569*^9}, {
    3.489558197037554*^9, 3.4895582209255743`*^9}, 3.489670795149438*^9, 
    3.489670828303071*^9, {3.48967088400799*^9, 3.489670888299549*^9}, {
-   3.489671060697453*^9, 3.4896710613808613`*^9}}],
+   3.489671060697453*^9, 3.4896710613808613`*^9}, {3.4896836543111973`*^9, 
+   3.489683672047686*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -884,12 +1147,15 @@ Cell[BoxData[
        RowBox[{"{", 
         RowBox[{"r", ",", "_Real"}], "}"}]}], "}"}], ",", 
      RowBox[{
-      FractionBox[
-       RowBox[{"-", "r"}], 
-       SqrtBox[
-        RowBox[{"l", 
-         RowBox[{"(", 
-          RowBox[{"l", "+", "1"}], ")"}]}]]], 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"l", " ", "\[NotEqual]", " ", "0"}], ",", 
+        FractionBox[
+         RowBox[{"-", "1"}], 
+         SqrtBox[
+          RowBox[{"l", 
+           RowBox[{"(", 
+            RowBox[{"l", "+", "1"}], ")"}]}]]], ",", "0"}], "]"}], "r", " ", 
       RowBox[{"wMathP", "[", 
        RowBox[{"n", ",", "l", ",", "r"}], "]"}], "1", " ", 
       RowBox[{"wMathDP", "[", 
@@ -902,7 +1168,8 @@ Cell[BoxData[
    3.489558197037554*^9, 3.489558198401328*^9}, {3.489558231712687*^9, 
    3.489558234783424*^9}, {3.4896708092416477`*^9, 3.489670832568314*^9}, {
    3.489671013591967*^9, 3.48967105228224*^9}, 3.489671104167408*^9, {
-   3.489671168817999*^9, 3.489671178624728*^9}}],
+   3.489671168817999*^9, 3.489671178624728*^9}, {3.489683855973818*^9, 
+   3.489683864260182*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -918,12 +1185,15 @@ Cell[BoxData[
        RowBox[{"{", 
         RowBox[{"r", ",", "_Real"}], "}"}]}], "}"}], ",", 
      RowBox[{
-      FractionBox[
-       RowBox[{"-", "1"}], 
-       SqrtBox[
-        RowBox[{"l", 
-         RowBox[{"(", 
-          RowBox[{"l", "+", "1"}], ")"}]}]]], 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"l", " ", "\[NotEqual]", " ", "0"}], ",", 
+        FractionBox[
+         RowBox[{"-", "1"}], 
+         SqrtBox[
+          RowBox[{"l", 
+           RowBox[{"(", 
+            RowBox[{"l", "+", "1"}], ")"}]}]]], ",", "0"}], "]"}], 
       RowBox[{"wMathP", "[", 
        RowBox[{"n", ",", "l", ",", "r"}], "]"}]}]}], "]"}]}], ";"}]], "Input",\
 
@@ -931,7 +1201,7 @@ Cell[BoxData[
   3.489558197037554*^9, 3.489558198401328*^9}, {3.489558237391922*^9, 
   3.48955823981496*^9}, {3.489670814896743*^9, 3.489670836471807*^9}, {
   3.489670944644188*^9, 3.489670947362575*^9}, {3.48967107416791*^9, 
-  3.4896710748104*^9}}],
+  3.4896710748104*^9}, {3.4896836837912617`*^9, 3.489683689037467*^9}}],
 
 Cell[TextData[{
  "***************** ",
@@ -946,7 +1216,7 @@ Cell[TextData[{
   3.457848122553792*^9, 3.4578481256984367`*^9}, {3.489472676253929*^9, 
   3.4894727288557653`*^9}, {3.4894728500928917`*^9, 3.489472850233614*^9}, {
   3.489487178478841*^9, 3.489487179068445*^9}, {3.489558180903933*^9, 
-  3.4895581927002068`*^9}}],
+  3.4895581927002068`*^9}, {3.489673989226391*^9, 3.4896739959815598`*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -1026,17 +1296,32 @@ Cell[BoxData[
         RowBox[{"l", ",", "_Integer"}], "}"}], ",", 
        RowBox[{"{", 
         RowBox[{"r", ",", "_Real"}], "}"}]}], "}"}], ",", 
-     RowBox[{
-      SqrtBox[
-       RowBox[{"l", 
-        RowBox[{"(", 
-         RowBox[{"l", "+", "1"}], ")"}]}]], 
-      RowBox[{"wMathP", "[", 
-       RowBox[{"n", ",", "l", ",", "r"}], "]"}]}]}], "]"}]}], ";"}]], "Input",\
-
+     RowBox[{"Evaluate", "[", 
+      RowBox[{
+       SqrtBox[
+        RowBox[{"l", 
+         RowBox[{"(", 
+          RowBox[{"l", "+", "1"}], ")"}]}]], 
+       FractionBox["1", "r"], 
+       RowBox[{"D", "[", 
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["r", 
+           RowBox[{"l", "+", "1"}]], 
+          RowBox[{"JacobiP", "[", 
+           RowBox[{"n", ",", 
+            RowBox[{
+             RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+            RowBox[{"l", "-", 
+             RowBox[{"1", "/", "2"}]}], ",", 
+            RowBox[{
+             RowBox[{"2", 
+              SuperscriptBox["r", "2"]}], "-", "1"}]}], "]"}]}], ",", "r"}], 
+        "]"}]}], "]"}]}], "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.4895579342138166`*^9, 3.4895579789686813`*^9}, 
    3.489671225574911*^9, 3.4896712611814613`*^9, {3.48967140507141*^9, 
-   3.489671407961809*^9}}],
+   3.489671407961809*^9}, {3.489673227318054*^9, 3.489673266111952*^9}, {
+   3.4896811850284557`*^9, 3.489681187239903*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -1103,17 +1388,33 @@ Cell[BoxData[
         RowBox[{"l", ",", "_Integer"}], "}"}], ",", 
        RowBox[{"{", 
         RowBox[{"r", ",", "_Real"}], "}"}]}], "}"}], ",", 
-     RowBox[{
-      SqrtBox[
-       RowBox[{"l", 
-        RowBox[{"(", 
-         RowBox[{"l", "+", "1"}], ")"}]}]], 
-      RowBox[{"wMathP", "[", 
-       RowBox[{"n", ",", "l", ",", "r"}], "]"}]}]}], "]"}]}], ";"}]], "Input",\
-
+     RowBox[{"Evaluate", "[", 
+      RowBox[{
+       SqrtBox[
+        RowBox[{"l", 
+         RowBox[{"(", 
+          RowBox[{"l", "+", "1"}], ")"}]}]], 
+       FractionBox["1", "r"], 
+       RowBox[{"D", "[", 
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["r", 
+           RowBox[{"l", "+", "1"}]], 
+          RowBox[{"JacobiP", "[", 
+           RowBox[{"n", ",", 
+            RowBox[{
+             RowBox[{"-", "1"}], "/", "2"}], ",", " ", 
+            RowBox[{"l", "-", 
+             RowBox[{"1", "/", "2"}]}], ",", 
+            RowBox[{
+             RowBox[{"2", 
+              SuperscriptBox["r", "2"]}], "-", "1"}]}], "]"}]}], ",", "r"}], 
+        "]"}]}], "]"}]}], "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.4895579342138166`*^9, 3.489557951892569*^9}, {
    3.4895579897394247`*^9, 3.489557991391307*^9}, 3.489671236690999*^9, 
-   3.489671267815611*^9, {3.4896715111484203`*^9, 3.489671514258194*^9}}],
+   3.489671267815611*^9, {3.4896715111484203`*^9, 3.489671514258194*^9}, 
+   3.489673214896954*^9, {3.489673287730249*^9, 3.4896733130327063`*^9}, 
+   3.489674020199614*^9, {3.489681291536203*^9, 3.489681294015823*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -1223,77 +1524,9 @@ Cell[TextData[{
   3.489478538312434*^9}, {3.489558118058846*^9, 3.489558118460853*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wIntgErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}, {3.4895581445201674`*^9, 
-  3.489558145860775*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathIntg", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_intg_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wIntgErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-  3.4895580097165537`*^9}, {3.489558121343872*^9, 3.489558152637949*^9}, {
-  3.489559063247528*^9, 3.489559065304871*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wIntgErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}, {
-  3.4895581394850683`*^9, 3.489558139922278*^9}}],
+ RowBox[{"maxErrWeightedPlot", "[", 
+  RowBox[{"\"\<\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489682634944916*^9, 3.489682649039979*^9}}],
 
 Cell[TextData[{
  "                    ********************** Comparison of ",
@@ -1309,78 +1542,9 @@ Cell[TextData[{
   3.48955835626562*^9, 3.489558358277673*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wIntgErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}, {3.4895581445201674`*^9, 
-  3.489558145860775*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathIntgQ2Pol", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_intgQ2Pol_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wIntgErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-  3.4895580097165537`*^9}, {3.489558121343872*^9, 3.489558152637949*^9}, {
-  3.489558360597569*^9, 3.4895583644112053`*^9}, {3.489559070174789*^9, 
-  3.489559071740151*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wIntgErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}, {
-  3.4895581394850683`*^9, 3.489558139922278*^9}}],
+ RowBox[{"maxErrWeightedPlot", "[", 
+  RowBox[{"\"\<Q2Pol\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489683272386204*^9, 3.489683274122725*^9}}],
 
 Cell[TextData[{
  "                ********************** Comparison of ",
@@ -1397,78 +1561,9 @@ Cell[TextData[{
   3.489558378879558*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wIntgErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}, {3.4895581445201674`*^9, 
-  3.489558145860775*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathIntgT2Tor", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_intgT2Tor_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wIntgErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-  3.4895580097165537`*^9}, {3.489558121343872*^9, 3.489558152637949*^9}, {
-  3.489558322475567*^9, 3.48955832728743*^9}, {3.489559077107067*^9, 
-  3.489559078583502*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wIntgErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}, {
-  3.4895581394850683`*^9, 3.489558139922278*^9}}],
+ RowBox[{"maxErrWeightedPlot", "[", 
+  RowBox[{"\"\<T2Tor\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.4896832668557377`*^9, 3.4896832676022673`*^9}}],
 
 Cell[TextData[{
  "            ******************** Comparison of ",
@@ -1485,78 +1580,9 @@ Cell[TextData[{
   3.4895583811412*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wIntgErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}, {3.4895581445201674`*^9, 
-  3.489558145860775*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathIntgQ2CurlCurlProj", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_intgQ2CurlCurlProj_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wIntgErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-  3.4895580097165537`*^9}, {3.489558121343872*^9, 3.489558152637949*^9}, {
-  3.489558306486534*^9, 3.4895583126084023`*^9}, {3.4895590822865267`*^9, 
-  3.489559083988817*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wIntgErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}, {
-  3.4895581394850683`*^9, 3.489558139922278*^9}}],
+ RowBox[{"maxErrWeightedPlot", "[", 
+  RowBox[{"\"\<Q2CurlCurlProj\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489683257141226*^9, 3.4896832610881147`*^9}}],
 
 Cell[TextData[{
  "               ****************** Comparison of ",
@@ -1573,78 +1599,9 @@ Cell[TextData[{
   3.4895583873828487`*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wIntgErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}, {3.4895581445201674`*^9, 
-  3.489558145860775*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathIntgS2CurlCurlProj", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_intgS2CurlCurlProj_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wIntgErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-  3.4895580097165537`*^9}, {3.489558121343872*^9, 3.489558152637949*^9}, {
-  3.489558289826598*^9, 3.489558297149701*^9}, {3.489559090083253*^9, 
-  3.4895590914603767`*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wIntgErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}, {
-  3.4895581394850683`*^9, 3.489558139922278*^9}}],
+ RowBox[{"maxErrWeightedPlot", "[", 
+  RowBox[{"\"\<S2CurlCurlProj\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489683249315474*^9, 3.489683252656896*^9}}],
 
 Cell[TextData[{
  "               ********************** Comparison of ",
@@ -1661,78 +1618,9 @@ Cell[TextData[{
   3.489558391233979*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wIntgErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}, {3.4895581445201674`*^9, 
-  3.489558145860775*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathIntgT2CurlProj", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_intgT2CurlProj_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wIntgErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-  3.4895580097165537`*^9}, {3.489558121343872*^9, 3.489558152637949*^9}, {
-  3.4895582764965963`*^9, 3.489558284275264*^9}, {3.489559095596444*^9, 
-  3.4895590968149757`*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wIntgErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}, {
-  3.4895581394850683`*^9, 3.489558139922278*^9}}],
+ RowBox[{"maxErrWeightedPlot", "[", 
+  RowBox[{"\"\<T2CurlProj\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489683241757505*^9, 3.489683243245481*^9}}],
 
 Cell[TextData[{
  "                    ********************** Comparison of ",
@@ -1747,74 +1635,8 @@ Cell[TextData[{
   3.489478538312434*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProj", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_proj_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", "\[IndentingNewLine]", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-   3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-   3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-   3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489558008446033*^9, 
-   3.4895580097165537`*^9}, 3.489559585520341*^9}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<\>\"", ",", " ", "wMaxL"}], "]"}]], "Input"],
 
 Cell[TextData[{
  "               ********************** Comparison of ",
@@ -1830,74 +1652,9 @@ Cell[TextData[{
   3.489558395171771*^9, 3.4895583957794323`*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProj2GradTP", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_proj2GradTP_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.489558035000684*^9, 3.489558041125807*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<2GradTP\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489680625721633*^9, 3.489680626855277*^9}}],
 
 Cell[TextData[{
  "              ********************** Comparison of ",
@@ -1914,75 +1671,10 @@ Cell[TextData[{
   3.489558398160178*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProjPol2Q", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_projPol2Q_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.489557787100031*^9, 3.489557789109273*^9}, {
-  3.489558048081695*^9, 3.4895580498936863`*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<Pol2Q\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.4896807904886103`*^9, 3.4896807934907017`*^9}, {
+  3.489680969784327*^9, 3.4896809721471043`*^9}}],
 
 Cell[TextData[{
  "               ********************* Comparison of ",
@@ -1999,75 +1691,9 @@ Cell[TextData[{
   3.489558401355937*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProjPol2S", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_projPol2S_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.489557803983489*^9, 3.4895578047062893`*^9}, {
-  3.4895580536068563`*^9, 3.489558055157114*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<Pol2S\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489681002302108*^9, 3.48968100483123*^9}}],
 
 Cell[TextData[{
  "               ********************** Comparison of ",
@@ -2084,75 +1710,9 @@ Cell[TextData[{
   3.4895584035827*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProjTor2T", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_projTor2T_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.489557817815942*^9, 3.489557818533986*^9}, {
-  3.489558059175753*^9, 3.489558060847681*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<Tor2T\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489681229651515*^9, 3.489681231546977*^9}}],
 
 Cell[TextData[{
  "           ********************** Comparison of ",
@@ -2169,75 +1729,9 @@ Cell[TextData[{
   3.489558406546327*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProjTor2CurlS", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_projTor2CurlQ_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.489557833979398*^9, 3.489557835364077*^9}, {
-  3.489558064465722*^9, 3.489558068705825*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<Tor2CurlQ\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489681262951549*^9, 3.489681265750455*^9}}],
 
 Cell[TextData[{
  "            ********************** Comparison of ",
@@ -2254,75 +1748,9 @@ Cell[TextData[{
   3.489558409492552*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProjTor2CurlS", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_projTor2CurlS_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.4895578478343487`*^9, 3.489557850485121*^9}, {
-  3.489558072584011*^9, 3.489558074991128*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<Tor2CurlS\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489682193000346*^9, 3.4896821957661343`*^9}}],
 
 Cell[TextData[{
  "             ********************** Comparison of ",
@@ -2339,78 +1767,13 @@ Cell[TextData[{
   3.489558412118959*^9}}],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"wProjErrValues", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{",", " ", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", " ", "0", ",", " ", "wMaxL"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489484530387624*^9, 3.489484550150485*^9}, {
-  3.489487290285555*^9, 3.48948729513988*^9}}],
-
-Cell[BoxData[
- RowBox[{"For", "[", 
-  RowBox[{
-   RowBox[{"wTestL", "=", "0"}], ",", " ", 
-   RowBox[{"wTestL", " ", "\[LessEqual]", " ", "wMaxL"}], ",", " ", 
-   RowBox[{"wTestL", "++"}], ",", 
-   RowBox[{
-    RowBox[{"wMathData", " ", "=", " ", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"wMathProjPol2CurlT", "[", 
-        RowBox[{"n", ",", "wTestL", ",", " ", 
-         RowBox[{"wMathGrid", "[", 
-          RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-       RowBox[{"{", 
-        RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{"wEPMData", " ", "=", 
-     RowBox[{"SetPrecision", "[", 
-      RowBox[{
-       RowBox[{"Import", "[", 
-        RowBox[{"wEPMFileBase", "<>", "\"\<_projPol2CurlT_L\>\"", "<>", 
-         RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-        "]"}], ",", " ", "myPrecision"}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"wProjErrValues", "[", 
-      RowBox[{"[", 
-       RowBox[{"wTestL", "+", "1"}], "]"}], "]"}], "=", 
-     RowBox[{"errValues", "[", 
-      RowBox[{"wMathData", ",", "wEPMData"}], "]"}]}], ";"}]}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.489484372130271*^9, 3.489484456244844*^9}, {
-  3.489484522908237*^9, 3.4894845653268023`*^9}, {3.48948729782679*^9, 
-  3.489487385087077*^9}, {3.4894875505478983`*^9, 3.489487583839485*^9}, {
-  3.489487966641057*^9, 3.4894879669629097`*^9}, {3.489557712448732*^9, 
-  3.489557715627516*^9}, {3.489557864984902*^9, 3.489557866317648*^9}, {
-  3.4895580794858847`*^9, 3.4895580823168373`*^9}}],
-
-Cell[BoxData[
- RowBox[{"ListLogPlot", "[", 
-  RowBox[{
-   RowBox[{"Transpose", "[", "wProjErrValues", "]"}], ",", " ", 
-   RowBox[{"PlotRange", "\[Rule]", "All"}], ",", " ", 
-   RowBox[{"PlotLegend", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<Absolute\>\"", ",", " ", "\"\<Relative\>\""}], "}"}]}], ",",
-    " ", 
-   RowBox[{"LegendPosition", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"1", ",", "0"}], "}"}]}], ",", " ", 
-   RowBox[{"PlotStyle", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"Red", ",", " ", "Green"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.489484664617735*^9, 3.489484714180162*^9}, {
-  3.48948483949986*^9, 3.489484856288846*^9}, {3.489484971892314*^9, 
-  3.489484996193325*^9}, {3.489485299972801*^9, 3.489485309303791*^9}, {
-  3.489486029323436*^9, 3.489486074856758*^9}, {3.4894862462625437`*^9, 
-  3.489486251480431*^9}, {3.489487365730967*^9, 3.4894873660094337`*^9}}],
+ RowBox[{"maxErrPlot", "[", 
+  RowBox[{"\"\<Pol2CurlT\>\"", ",", " ", "wMaxL"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489682227757659*^9, 3.489682231470592*^9}}],
 
 Cell[TextData[{
- "                               ********************** Detailed plots",
+ "                               ********************** Detailed \"proj\" \
+plots",
  StyleBox[" ",
   FontSlant->"Italic"],
  "***********************"
@@ -2421,44 +1784,86 @@ Cell[TextData[{
   3.48947831279856*^9, 3.489478324652398*^9}, {3.4894784732014723`*^9, 
   3.489478538312434*^9}, {3.489557701654327*^9, 3.489557702823284*^9}, {
   3.489557745983741*^9, 3.4895577486975403`*^9}, {3.489558416406457*^9, 
-  3.489558417248653*^9}}],
+  3.489558417248653*^9}, {3.489684093196783*^9, 3.489684094406527*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"wTestL", "=", "0"}], ";"}]], "Input",
+  RowBox[{"wTestL", "=", "7"}], ";"}]], "Input",
  CellChangeTimes->{{3.489478595795702*^9, 3.489478599940086*^9}, {
    3.4894824946242113`*^9, 3.489482494746176*^9}, {3.489483792097747*^9, 
    3.489483815377578*^9}, 3.489485493655078*^9, {3.489487368500978*^9, 
-   3.489487371356441*^9}}],
+   3.489487371356441*^9}, {3.4896741608856163`*^9, 3.489674163096099*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"wMathData", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{
-     RowBox[{"wMathProj", "[", 
-      RowBox[{"n", ",", "wTestL", ",", " ", 
-       RowBox[{"wMathGrid", "[", 
-        RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"n", ",", "0", ",", "wMaxN"}], "}"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", "1", ",", "wGridN"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",
- CellChangeTimes->{{3.489558088857745*^9, 3.489558089150795*^9}}],
+  RowBox[{
+   RowBox[{"wName", " ", "=", " ", "\"\<\>\""}], ";"}], " "}]], "Input",
+ CellChangeTimes->{{3.489684081729604*^9, 3.4896840834561157`*^9}, {
+  3.489684118537561*^9, 3.489684120825696*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"wEPMData", " ", "=", 
-   RowBox[{"SetPrecision", "[", 
-    RowBox[{
-     RowBox[{"Import", "[", 
-      RowBox[{"wEPMFileBase", "<>", "\"\<_proj_L\>\"", "<>", 
-       RowBox[{"ToString", "[", "wTestL", "]"}], "<>", "\"\<.dat\>\""}], 
-      "]"}], ",", " ", "myPrecision"}], "]"}]}], ";"}]], "Input",
- CellChangeTimes->{{3.489478617628833*^9, 3.489478624958098*^9}, {
-  3.489487375966691*^9, 3.489487382498475*^9}, {3.489488069713397*^9, 
-  3.489488070095837*^9}}],
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"wMathData", ",", " ", "wEPMData"}], "}"}], " ", "=", 
+    RowBox[{"getBothData", "[", 
+     RowBox[{"\"\<\>\"", ",", " ", "wTestL"}], "]"}]}], ";"}], " "}]], "Input",\
+
+ CellChangeTimes->{{3.489558088857745*^9, 3.489558089150795*^9}, {
+  3.48967408575708*^9, 3.489674087462771*^9}, {3.489674287957107*^9, 
+  3.489674304086349*^9}, {3.489684810058215*^9, 3.489684854059029*^9}}],
+
+Cell[BoxData[
+ RowBox[{"errValuePlot", "[", 
+  RowBox[{"wMathData", ",", "wEPMData"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489485911868793*^9, 3.489485913342957*^9}, {
+  3.489488017665761*^9, 3.4894880195688753`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"errAllPlots", "[", 
+  RowBox[{"wMathData", ",", "wEPMData"}], "]"}]], "Input",
+ CellChangeTimes->{{3.489478637236474*^9, 3.4894786439265413`*^9}, {
+  3.489480865069158*^9, 3.489480867004508*^9}, {3.489483599426443*^9, 
+  3.489483600800086*^9}, {3.489488021490211*^9, 3.489488023343439*^9}}],
+
+Cell[TextData[{
+ "                               ********************** Detailed \"intg\" \
+plots",
+ StyleBox[" ",
+  FontSlant->"Italic"],
+ "***********************"
+}], "Text",
+ CellChangeTimes->{{3.457847854856942*^9, 3.457847892268086*^9}, {
+  3.457848122553792*^9, 3.4578481256984367`*^9}, {3.489472676253929*^9, 
+  3.4894727288557653`*^9}, {3.4894728500928917`*^9, 3.489472850233614*^9}, {
+  3.48947831279856*^9, 3.489478324652398*^9}, {3.4894784732014723`*^9, 
+  3.489478538312434*^9}, {3.489557701654327*^9, 3.489557702823284*^9}, {
+  3.489557745983741*^9, 3.4895577486975403`*^9}, {3.489558416406457*^9, 
+  3.489558417248653*^9}, {3.489684093196783*^9, 3.489684107747377*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"wTestL", "=", "7"}], ";"}]], "Input",
+ CellChangeTimes->{{3.489478595795702*^9, 3.489478599940086*^9}, {
+   3.4894824946242113`*^9, 3.489482494746176*^9}, {3.489483792097747*^9, 
+   3.489483815377578*^9}, 3.489485493655078*^9, {3.489487368500978*^9, 
+   3.489487371356441*^9}, {3.4896741608856163`*^9, 3.489674163096099*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"wMathData", ",", " ", "wEPMData"}], "}"}], "=", 
+    RowBox[{"getBothWeightedData", "[", 
+     RowBox[{"\"\<\>\"", ",", " ", "wTestL"}], "]"}]}], ";"}], " "}]], "Input",\
+
+ CellChangeTimes->{{3.489558088857745*^9, 3.489558089150795*^9}, {
+  3.48967408575708*^9, 3.489674087462771*^9}, {3.489674287957107*^9, 
+  3.489674304086349*^9}, {3.489684143360607*^9, 3.489684144837841*^9}, {
+  3.4896844280592823`*^9, 3.489684430233535*^9}, {3.489684738228345*^9, 
+  3.489684780048695*^9}}],
 
 Cell[BoxData[
  RowBox[{"errValuePlot", "[", 
@@ -2473,8 +1878,8 @@ Cell[BoxData[
   3.489480865069158*^9, 3.489480867004508*^9}, {3.489483599426443*^9, 
   3.489483600800086*^9}, {3.489488021490211*^9, 3.489488023343439*^9}}]
 },
-WindowSize->{640, 750},
-WindowMargins->{{Automatic, 315}, {120, Automatic}},
+WindowSize->{1112, 654},
+WindowMargins->{{Automatic, 22}, {Automatic, 0}},
 FrontEndVersion->"7.0 for Linux x86 (64-bit) (February 25, 2009)",
 StyleDefinitions->"Default.nb"
 ]
@@ -2492,113 +1897,95 @@ Notebook[{
 Cell[545, 20, 98, 2, 32, "Input",
  CellID->1488026107],
 Cell[646, 24, 769, 12, 32, "Input"],
-Cell[1418, 38, 2459, 68, 253, "Input"],
-Cell[3880, 108, 3705, 98, 363, "Input"],
-Cell[7588, 208, 1603, 38, 165, "Input"],
-Cell[9194, 248, 1936, 47, 143, "Input"],
-Cell[11133, 297, 1142, 31, 121, "Input"],
-Cell[12278, 330, 5604, 142, 605, "Input"],
-Cell[17885, 474, 266, 6, 31, "Text"],
-Cell[18154, 482, 573, 10, 32, "Input"],
-Cell[18730, 494, 287, 6, 32, "Input"],
-Cell[19020, 502, 307, 6, 32, "Input"],
-Cell[19330, 510, 428, 8, 32, "Input"],
-Cell[19761, 520, 459, 9, 32, "Input"],
-Cell[20223, 531, 359, 7, 32, "Input"],
-Cell[20585, 540, 338, 7, 32, "Input"],
-Cell[20926, 549, 375, 7, 32, "Input"],
-Cell[21304, 558, 461, 12, 31, "Text"],
-Cell[21768, 572, 949, 28, 100, "Input"],
-Cell[22720, 602, 1439, 34, 55, "Input"],
-Cell[24162, 638, 1254, 33, 55, "Input"],
-Cell[25419, 673, 984, 30, 55, "Input"],
-Cell[26406, 705, 563, 13, 31, "Text"],
-Cell[26972, 720, 833, 24, 105, "Input"],
-Cell[27808, 746, 497, 13, 52, "Input"],
-Cell[28308, 761, 516, 13, 31, "Text"],
-Cell[28827, 776, 674, 17, 55, "Input"],
-Cell[29504, 795, 861, 24, 105, "Input"],
-Cell[30368, 821, 905, 26, 114, "Input"],
-Cell[31276, 849, 791, 21, 105, "Input"],
-Cell[32070, 872, 1192, 32, 114, "Input"],
-Cell[33265, 906, 951, 27, 114, "Input"],
-Cell[34219, 935, 516, 13, 31, "Text"],
-Cell[34738, 950, 601, 16, 55, "Input"],
-Cell[35342, 968, 711, 20, 105, "Input"],
-Cell[36056, 990, 769, 23, 106, "Input"],
-Cell[36828, 1015, 757, 23, 93, "Input"],
-Cell[37588, 1040, 781, 24, 93, "Input"],
-Cell[38372, 1066, 844, 24, 106, "Input"],
-Cell[39219, 1092, 808, 23, 93, "Input"],
-Cell[40030, 1117, 806, 23, 93, "Input"],
-Cell[40839, 1142, 422, 9, 31, "Text"],
-Cell[41264, 1153, 479, 10, 31, "Text"],
-Cell[41746, 1165, 627, 12, 55, "Input"],
-Cell[42376, 1179, 543, 8, 32, "Input"],
-Cell[42922, 1189, 579, 12, 77, "Input"],
-Cell[43504, 1203, 446, 7, 32, "Input"],
-Cell[43953, 1212, 532, 10, 31, "Text"],
-Cell[44488, 1224, 393, 10, 32, "Input"],
-Cell[44884, 1236, 1604, 37, 187, "Input"],
-Cell[46491, 1275, 958, 20, 77, "Input"],
-Cell[47452, 1297, 585, 11, 31, "Text"],
-Cell[48040, 1310, 393, 10, 32, "Input"],
-Cell[48436, 1322, 1665, 38, 187, "Input"],
-Cell[50104, 1362, 958, 20, 77, "Input"],
-Cell[51065, 1384, 632, 12, 31, "Text"],
-Cell[51700, 1398, 393, 10, 32, "Input"],
-Cell[52096, 1410, 1662, 38, 187, "Input"],
-Cell[53761, 1450, 958, 20, 77, "Input"],
-Cell[54722, 1472, 628, 12, 31, "Text"],
-Cell[55353, 1486, 393, 10, 32, "Input"],
-Cell[55749, 1498, 1685, 38, 209, "Input"],
-Cell[57437, 1538, 958, 20, 77, "Input"],
-Cell[58398, 1560, 635, 12, 31, "Text"],
-Cell[59036, 1574, 393, 10, 32, "Input"],
-Cell[59432, 1586, 1683, 38, 209, "Input"],
-Cell[61118, 1626, 958, 20, 77, "Input"],
-Cell[62079, 1648, 637, 12, 31, "Text"],
-Cell[62719, 1662, 393, 10, 32, "Input"],
-Cell[63115, 1674, 1677, 38, 209, "Input"],
-Cell[64795, 1714, 958, 20, 77, "Input"],
-Cell[65756, 1736, 486, 10, 31, "Text"],
-Cell[66245, 1748, 342, 9, 32, "Input"],
-Cell[66590, 1759, 1558, 36, 187, "Input"],
-Cell[68151, 1797, 907, 19, 77, "Input"],
-Cell[69061, 1818, 585, 11, 31, "Text"],
-Cell[69649, 1831, 342, 9, 32, "Input"],
-Cell[69994, 1842, 1567, 36, 187, "Input"],
-Cell[71564, 1880, 907, 19, 77, "Input"],
-Cell[72474, 1901, 633, 12, 31, "Text"],
-Cell[73110, 1915, 342, 9, 32, "Input"],
-Cell[73455, 1926, 1614, 37, 187, "Input"],
-Cell[75072, 1965, 907, 19, 77, "Input"],
-Cell[75982, 1986, 629, 12, 31, "Text"],
-Cell[76614, 2000, 342, 9, 32, "Input"],
-Cell[76959, 2011, 1616, 37, 187, "Input"],
-Cell[78578, 2050, 907, 19, 77, "Input"],
-Cell[79488, 2071, 629, 12, 31, "Text"],
-Cell[80120, 2085, 342, 9, 32, "Input"],
-Cell[80465, 2096, 1612, 37, 187, "Input"],
-Cell[82080, 2135, 907, 19, 77, "Input"],
-Cell[82990, 2156, 632, 12, 31, "Text"],
-Cell[83625, 2170, 342, 9, 32, "Input"],
-Cell[83970, 2181, 1620, 37, 187, "Input"],
-Cell[85593, 2220, 907, 19, 77, "Input"],
-Cell[86503, 2241, 635, 12, 31, "Text"],
-Cell[87141, 2255, 342, 9, 32, "Input"],
-Cell[87486, 2266, 1622, 37, 187, "Input"],
-Cell[89111, 2305, 907, 19, 77, "Input"],
-Cell[90021, 2326, 636, 12, 31, "Text"],
-Cell[90660, 2340, 342, 9, 32, "Input"],
-Cell[91005, 2351, 1624, 37, 187, "Input"],
-Cell[92632, 2390, 907, 19, 77, "Input"],
-Cell[93542, 2411, 627, 12, 31, "Text"],
-Cell[94172, 2425, 312, 6, 32, "Input"],
-Cell[94487, 2433, 513, 14, 55, "Input"],
-Cell[95003, 2449, 497, 11, 99, "Input"],
-Cell[95503, 2462, 220, 4, 32, "Input"],
-Cell[95726, 2468, 314, 5, 32, "Input"]
+Cell[1418, 38, 2459, 68, 165, "Input"],
+Cell[3880, 108, 3705, 98, 209, "Input"],
+Cell[7588, 208, 1603, 38, 99, "Input"],
+Cell[9194, 248, 1936, 47, 99, "Input"],
+Cell[11133, 297, 1142, 31, 77, "Input"],
+Cell[12278, 330, 5604, 142, 319, "Input"],
+Cell[17885, 474, 241, 5, 31, "Text"],
+Cell[18129, 481, 634, 10, 32, "Input"],
+Cell[18766, 493, 287, 6, 32, "Input"],
+Cell[19056, 501, 307, 6, 32, "Input"],
+Cell[19366, 509, 428, 8, 32, "Input"],
+Cell[19797, 519, 459, 9, 32, "Input"],
+Cell[20259, 530, 359, 7, 32, "Input"],
+Cell[20621, 539, 338, 7, 32, "Input"],
+Cell[20962, 548, 375, 7, 32, "Input"],
+Cell[21340, 557, 461, 12, 31, "Text"],
+Cell[21804, 571, 257, 7, 32, "Input"],
+Cell[22064, 580, 949, 28, 57, "Input"],
+Cell[23016, 610, 1439, 34, 32, "Input"],
+Cell[24458, 646, 1254, 33, 32, "Input"],
+Cell[25715, 681, 984, 30, 32, "Input"],
+Cell[26702, 713, 563, 13, 31, "Text"],
+Cell[27268, 728, 833, 24, 78, "Input"],
+Cell[28104, 754, 497, 13, 52, "Input"],
+Cell[28604, 769, 2947, 70, 209, "Input"],
+Cell[31554, 841, 1737, 41, 121, "Input"],
+Cell[33294, 884, 1787, 47, 188, "Input"],
+Cell[35084, 933, 3385, 81, 288, "Input"],
+Cell[38472, 1016, 516, 13, 31, "Text"],
+Cell[38991, 1031, 674, 17, 32, "Input"],
+Cell[39668, 1050, 1095, 28, 56, "Input"],
+Cell[40766, 1080, 1089, 30, 62, "Input"],
+Cell[41858, 1112, 791, 21, 54, "Input"],
+Cell[42652, 1135, 1384, 36, 93, "Input"],
+Cell[44039, 1173, 1131, 30, 62, "Input"],
+Cell[45173, 1205, 564, 13, 31, "Text"],
+Cell[45740, 1220, 601, 16, 32, "Input"],
+Cell[46344, 1238, 711, 20, 54, "Input"],
+Cell[47058, 1260, 769, 23, 55, "Input"],
+Cell[47830, 1285, 1338, 38, 84, "Input"],
+Cell[49171, 1325, 781, 24, 44, "Input"],
+Cell[49955, 1351, 844, 24, 55, "Input"],
+Cell[50802, 1377, 1437, 39, 84, "Input"],
+Cell[52242, 1418, 806, 23, 44, "Input"],
+Cell[53051, 1443, 422, 9, 31, "Text"],
+Cell[53476, 1454, 479, 10, 31, "Text"],
+Cell[53958, 1466, 627, 12, 32, "Input"],
+Cell[54588, 1480, 543, 8, 32, "Input"],
+Cell[55134, 1490, 579, 12, 32, "Input"],
+Cell[55716, 1504, 446, 7, 32, "Input"],
+Cell[56165, 1513, 532, 10, 31, "Text"],
+Cell[56700, 1525, 176, 3, 32, "Input"],
+Cell[56879, 1530, 585, 11, 31, "Text"],
+Cell[57467, 1543, 181, 3, 32, "Input"],
+Cell[57651, 1548, 632, 12, 31, "Text"],
+Cell[58286, 1562, 185, 3, 32, "Input"],
+Cell[58474, 1567, 628, 12, 31, "Text"],
+Cell[59105, 1581, 192, 3, 32, "Input"],
+Cell[59300, 1586, 635, 12, 31, "Text"],
+Cell[59938, 1600, 190, 3, 32, "Input"],
+Cell[60131, 1605, 637, 12, 31, "Text"],
+Cell[60771, 1619, 186, 3, 32, "Input"],
+Cell[60960, 1624, 486, 10, 31, "Text"],
+Cell[61449, 1636, 102, 2, 32, "Input"],
+Cell[61554, 1640, 585, 11, 31, "Text"],
+Cell[62142, 1653, 175, 3, 32, "Input"],
+Cell[62320, 1658, 633, 12, 31, "Text"],
+Cell[62956, 1672, 228, 4, 32, "Input"],
+Cell[63187, 1678, 629, 12, 31, "Text"],
+Cell[63819, 1692, 172, 3, 32, "Input"],
+Cell[63994, 1697, 629, 12, 31, "Text"],
+Cell[64626, 1711, 173, 3, 32, "Input"],
+Cell[64802, 1716, 632, 12, 31, "Text"],
+Cell[65437, 1730, 177, 3, 32, "Input"],
+Cell[65617, 1735, 635, 12, 31, "Text"],
+Cell[66255, 1749, 179, 3, 32, "Input"],
+Cell[66437, 1754, 636, 12, 31, "Text"],
+Cell[67076, 1768, 177, 3, 32, "Input"],
+Cell[67256, 1773, 684, 13, 31, "Text"],
+Cell[67943, 1788, 360, 6, 32, "Input"],
+Cell[68306, 1796, 224, 5, 32, "Input"],
+Cell[68533, 1803, 456, 11, 32, "Input"],
+Cell[68992, 1816, 220, 4, 32, "Input"],
+Cell[69215, 1822, 314, 5, 32, "Input"],
+Cell[69532, 1829, 684, 13, 31, "Text"],
+Cell[70219, 1844, 360, 6, 32, "Input"],
+Cell[70582, 1852, 559, 13, 32, "Input"],
+Cell[71144, 1867, 220, 4, 32, "Input"],
+Cell[71367, 1873, 314, 5, 32, "Input"]
 }
 ]
 *)
