@@ -26,11 +26,8 @@ namespace EPMDynamo {
     * that the values stored in a AssociatedLegendrePolynomial object are all the \f$l\f$ modes for
     * a fixed \f$m\f$.
     *
-    * The computed polynomials are Schmidt quasi-normalised.
-    *
-    * \epmBug Explain the factor 2 required for m=0.
-    *
-    * \epmBug Explain the factor \f$\sqrt{2}\f$ required.
+    * The computed polynomials are Schmidt quasi-normalised. A special factor 2 has to be introduced
+    * for m=0. This is required because the harmonic is real in this case.
     */
    class AssociatedLegendrePolynomial: public WeightedPolynomial
    {
