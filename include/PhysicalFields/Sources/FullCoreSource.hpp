@@ -54,7 +54,7 @@ namespace EPMDynamo {
          /**
           * @brief Set values of inner core source term
           */
-         typename SpectralFieldType&  rIcSrc();
+         SpectralFieldType&  rIcSrc();
 
          /**
           * @brief Get values of outer core source term
@@ -64,7 +64,7 @@ namespace EPMDynamo {
          /**
           * @brief Set values of outer core source term
           */
-         typename SpectralFieldType&  rOcSrc();
+         SpectralFieldType&  rOcSrc();
          
       protected:
 

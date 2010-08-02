@@ -26,9 +26,6 @@ namespace EPMDynamo {
    template <typename TSimType>  class DefaultVelTraits
    {
       public:
-         /// Typedef for the magnetic fields
-         typedef  DefaultVelFieldTraits<TSimType>   FieldTraits;
-
          /// Typedef for the variable type
          typedef FullSphereField<TSimType, DefaultVelFieldTraits> VariableType;
    };

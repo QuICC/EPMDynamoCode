@@ -26,9 +26,6 @@ namespace EPMDynamo {
    template <typename TSimType>  class DefaultCodTraits
    {
       public:
-         /// Typedef for the domain traits
-         typedef DefaultCodDomainTraits<TSimType> DomainTraits;
-
          /// Typedef for the variable type
          typedef OuterCoreSource<TSimType, DefaultCodDomainTraits> VariableType;
    };
