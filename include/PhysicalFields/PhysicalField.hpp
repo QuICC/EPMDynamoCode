@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/PhysicalFieldBase.hpp"
+#include "PhysicalFields/Fields/PhysicalFieldBase.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/QSTField.hpp"
 

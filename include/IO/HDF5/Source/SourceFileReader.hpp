@@ -147,19 +147,19 @@ namespace EPMDynamo {
       // Read codensity coefficients
       if(this->mpCodC != NULL)
       {
-         this->readCodensity(this->mpCodC->rSrc().data());
+         this->readCodensity(this->mpCodC->rOcSrc().data());
       }
 
       // Read magnetic coefficients
       if(this->mpMagB != NULL)
       {
-//         this->readMagnetic(this->mpMagB->rSrc().rTor().data(), this->mpMagB->rSrc().rPol().data());
+//         this->readMagnetic(this->mpMagB->rOcSrc().rTor().data(), this->mpMagB->rOcSrc().rPol().data());
       }
       
       // Read velocity coefficients
       if(this->mpVelV != NULL)
       {
-//         this->readVelocity(this->mpVelV->rSrc().rTor().data(), this->mpVelV->rSrc().rPol().data());
+//         this->readVelocity(this->mpVelV->rOcSrc().rTor().data(), this->mpVelV->rOcSrc().rPol().data());
       }
    }
 

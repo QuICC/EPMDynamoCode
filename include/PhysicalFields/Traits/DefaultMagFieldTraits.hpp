@@ -1,8 +1,41 @@
-template <typename TSimType>  class DefaultMagFieldTraits
-{
-   typedef PhysicalTorPolBase<TSimType> OCFieldBase;
-   typedef PhysicalTorPolBase<TSimType> ICFieldBase;
+/** \file DefaultMagFieldTraits.hpp
+ *  \brief Traits for the field of the default magnetic field
+ */
 
-   typedef PhysicalTorPolField<TSimType, OCFieldBase> OCFieldType;
-   typedef PhysicalTorPolField<TSimType, ICFieldBase> ICFieldType;
+#ifndef DEFAULTMAGFIELDTRAITS_HPP
+#define DEFAULTMAGFIELDTRAITS_HPP
+
+// System includes
+//
+
+// External includes
+//
+
+// Project includes
+//
+#include "PhysicalFields/Fields/PhysicalTorPolBase.hpp"
+#include "PhysicalFields/Fields/PhysicalTorPolField.hpp"
+
+namespace EPMDynamo {
+
+   /**
+    * \brief Traits for the field of the default magnetic field
+    *
+    * \tparam TSimType Type of the simulation
+    */
+   template <typename TSimType>  class DefaultMagFieldTraits
+   {
+      public:
+         /// Typedef for the type of the spectral field
+         typedef typename PhysicalTorPolField<TSimType, PhysicalTorPolBase>::SpectralFieldType  SpectralFieldType;
+
+         /// Typedef for the type of an inner core field
+         typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> ICFieldType;
+
+         /// Typedef for the type of an outer core field
+         typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> OCFieldType;
+   };
+
 }
+
+#endif // DEFAULTMAGFIELDTRAITS_HPP

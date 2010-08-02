@@ -60,7 +60,7 @@ namespace EPMDynamo {
          /**
           * @brief Storage for the OC (or full sphere) part
           */
-         FieldType   mOCVar;
+         OCFieldType   mOCVar;
 
       private:
    };
@@ -75,7 +75,7 @@ namespace EPMDynamo {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename> class TFieldTraits> FullSphereField<TSimType, TFieldTraits>::OCFieldType& FullSphereField<TSimType, TFieldTraits>::rOc()
+   template <typename TSimType, template <typename> class TFieldTraits> typename FullSphereField<TSimType, TFieldTraits>::OCFieldType& FullSphereField<TSimType, TFieldTraits>::rOc()
    {
       return this->mOCVar;
    }

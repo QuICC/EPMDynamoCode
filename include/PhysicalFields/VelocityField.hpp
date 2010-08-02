@@ -25,7 +25,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TVelTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TVelTraits = PhysicalNoDivField> class VelocityField: public PhysicalVariable<TSimType, TVelTraits>
+   template <typename TSimType, template <typename> class TVelTraits = DefaultVelTraits> class VelocityField: public PhysicalVariable<TSimType, TVelTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type

@@ -24,7 +24,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> TBase> class PhysicalScalar: public TBase<TSimType>
+   template <typename TSimType, template <typename> class TBase> class PhysicalScalar: public TBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local scalar type

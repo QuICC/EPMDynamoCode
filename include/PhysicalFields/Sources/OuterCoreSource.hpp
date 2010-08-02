@@ -24,7 +24,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TSourceTraits Traits describing the field
     */
-   template <typename TSimType, template <typename> class TSourceTraits> class OuterCoreSource: public TSourceTraits<TSim>::DomainType
+   template <typename TSimType, template <typename> class TSourceTraits> class OuterCoreSource: public TSourceTraits<TSimType>::DomainType
    {
       public:
          /// Typedef from Simulation trait to local transform type

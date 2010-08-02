@@ -88,7 +88,7 @@ namespace EPMDynamo {
 
       for(int l = l0; l < nL; ++l)
       {
-         this->mNTerms.rOc().rPerturbation().rLShell(l) += this->mrX.src().lshell(l);
+         this->mNTerms.rOc().rPerturbation().rLShell(l) += this->mrX.ocSrc().lshell(l);
       }
    }
 

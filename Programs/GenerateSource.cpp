@@ -74,7 +74,7 @@ void setSpecCodensity(Codensity &codC)
 {
    SmartTruncation pTrunc = codC.trunc();
 
-   codC.rSrc().rLShell(0)(0,0) = 3.0;
+   codC.rOcSrc().rLShell(0)(0,0) = 3.0;
 }
 
 void setSpecMagnetic(Magnetic &magB)

@@ -96,7 +96,7 @@ namespace EPMDynamo {
    {
    }
 
-   template<typename TSimType> inline void PhysicalTorPolField<TSimType, TBase>::transform(const int step)
+   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolField<TSimType, TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {

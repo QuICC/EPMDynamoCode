@@ -176,19 +176,19 @@ namespace EPMDynamo {
       // Write the codensity coefficients
       if(this->mpCodC != NULL)
       {
-         this->writeCodensity(this->mpCodC->src().data());
+         this->writeCodensity(this->mpCodC->ocSrc().data());
       }
 
       // Write the magnetic coefficients
       if(this->mpMagB != NULL)
       {
-//         this->writeMagnetic(this->mpMagB->src().tor().data(), this->mpMagB->src().pol().data());
+//         this->writeMagnetic(this->mpMagB->ocSrc().tor().data(), this->mpMagB->ocSrc().pol().data());
       }
 
       // Write the velocity coefficients
       if(this->mpVelV != NULL)
       {
-//         this->writeVelocity(this->mpVelV->src().tor().data(), this->mpVelV->src().pol().data());
+//         this->writeVelocity(this->mpVelV->ocSrc().tor().data(), this->mpVelV->ocSrc().pol().data());
       }
 
       // Close file
