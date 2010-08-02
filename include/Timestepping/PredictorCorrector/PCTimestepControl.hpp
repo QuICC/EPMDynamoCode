@@ -41,7 +41,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         ~PCTimestepControl() {};
+         virtual ~PCTimestepControl() {};
 
          /**
           * @brief Check that the timestepping is converging

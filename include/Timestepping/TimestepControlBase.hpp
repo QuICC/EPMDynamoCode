@@ -42,7 +42,7 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         ~TimestepControlBase() {};
+         virtual ~TimestepControlBase() {};
 
          /**
           * @brief Should the simulation keep running?

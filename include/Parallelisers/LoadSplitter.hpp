@@ -83,6 +83,15 @@ namespace EPMDynamo {
           * @param pLocal Local truncation information
           */
          void checkLoad(SmartLocalTrunc pLocal) const;
+
+         /**
+          * @brief Describe the setup splitting
+          *
+          * Just gives a small summary of how the workload has been splitten
+          *
+          * @param pRemote Remote truncation information
+          */
+         void describeSplitting(const std::vector<SmartCoreTrunc>  &pRemote) const;
    };
 
    template <typename TSplitAlgo> LoadSplitter<TSplitAlgo>::LoadSplitter(SmartSimTrunc pSimTrunc, const int nCore, const int id)
@@ -144,6 +153,9 @@ namespace EPMDynamo {
 
       // Check RTP load splitting
       this->checkLoad(pLocal);
+
+      // Describe the setup splitting
+      this->describeSplitting(pRemote);
    }
 
    template <typename TSplitAlgo> void LoadSplitter<TSplitAlgo>::checkConsistency(const std::vector<SmartCoreTrunc>  &pRemote) const
@@ -236,6 +248,29 @@ namespace EPMDynamo {
          std::cout << "***\t FDSH: " << std::ceil(inbalance[1]*100.0) << "%" << std::endl;
          std::cout << "***\t Spec: " << std::ceil(inbalance[2]*100.0) << "%" << std::endl;
          std::cout << "**********************************" << std::endl;
+         std::cout << std::endl;
+      }
+   }
+
+   template <typename TSplitAlgo> void LoadSplitter<TSplitAlgo>::describeSplitting(const std::vector<SmartCoreTrunc>  &pRemote) const
+   {
+      // Make it look nice ;)
+      if(this->id() == 0)
+      {
+         std::cout << "*******************************" << std::endl;
+         std::cout << "***  Splitting description  ***" << std::endl;
+         std::cout << "*******************************" << std::endl;
+
+         std::cout << std::endl;
+         std::cout << "######## IN DEVELOPMENT #######" << std::endl;
+         std::cout << std::endl;
+         std::cout << "*******************************" << std::endl;
+         std::cout << std::endl;
+         std::cout << "######## IN DEVELOPMENT #######" << std::endl;
+         std::cout << std::endl;
+
+         std::cout << "*******************************" << std::endl;
+         std::cout << std::endl;
       }
    }
 }
