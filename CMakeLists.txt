@@ -27,12 +27,15 @@ set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms:
 # Set Core2 platform
 if(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    set(EPMDYNAMO_ON_CORE2 ON)
+   message(STATUS "***** Setup system for \"Core2\" platform *****")
 # Set Brutus platform
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
    set(EPMDYNAMO_ON_BRUTUS ON)
+   message(STATUS "***** Setup system for \"Brutus\" platform *****")
 # Set Rosa platform
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Rosa")
    set(EPMDYNAMO_ON_ROSA ON)
+   message(STATUS "***** Setup system for \"Rosa\" platform *****")
 # Error message if unknown platform is set
 else(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    message(SEND_ERROR "Unkown platform")
@@ -53,34 +56,43 @@ set(EPMDYNAMO_COMPILER "${EPMDYNAMO_COMPILER}" CACHE STRING "Compiler to use: GC
 # Set GCC compiler
 if(EPMDYNAMO_COMPILER STREQUAL "GCC")
    set(EPMDYNAMO_USE_GCC ON)
+   message(STATUS "***** Setup system with \"GCC\" compiler *****")
 # Set PGI compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "PGI")
    set(EPMDYNAMO_USE_PGI ON)
+   message(STATUS "***** Setup system with \"PGI\" compiler *****")
 # Set Inte; compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "Intel")
    set(EPMDYNAMO_USE_INTEL ON)
+   message(STATUS "***** Setup system with \"Intel\" compiler *****")
 # Set Pathscale compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "Pathscale")
    set(EPMDYNAMO_USE_PATHSCALE ON)
+   message(STATUS "***** Setup system with \"Pathscale\" compiler *****")
 # Set Cray compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "Cray")
    set(EPMDYNAMO_USE_CRAY ON)
+   message(STATUS "***** Setup system with \"Cray\" compiler *****")
 # Set Sun compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "Sun")
    set(EPMDYNAMO_USE_SUN ON)
+   message(STATUS "***** Setup system with \"Sun\" compiler *****")
 # Set Tau compiler based on GCC
 elseif(EPMDYNAMO_COMPILER STREQUAL "TauGCC")
    set(EPMDYNAMO_USE_TAU ON)
    set(EPMDYNAMO_USE_GCC ON)
+   message(STATUS "***** Setup system with \"Tau with GCC\" compiler *****")
 # Set Tau compiler based on GCC with compiler instrumentation setup
 elseif(EPMDYNAMO_COMPILER STREQUAL "TauGCC_instrument")
    set(EPMDYNAMO_USE_TAU ON)
    set(EPMDYNAMO_USE_TAU_INSTRUMENTED ON)
    set(EPMDYNAMO_USE_GCC ON)
+   message(STATUS "***** Setup system with \"Tau with GCC instrumentation\" compiler *****")
 # Set Scalasca compiler with gnu base compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "ScalGCC")
    set(EPMDYNAMO_USE_GCC ON)
    set(EPMDYNAMO_USE_SCALASCA ON)
+   message(STATUS "***** Setup system with \"Scalasca with GCC\" compiler *****")
 # Error message for unknow compiler
 else(EPMDYNAMO_COMPILER STREQUAL "GCC")
    message(SEND_ERROR "Unkown compiler")
