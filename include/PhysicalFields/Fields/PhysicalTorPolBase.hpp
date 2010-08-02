@@ -102,7 +102,7 @@ namespace EPMDynamo {
 
       this->mNeedCurlTransform = 0;
 
-      return mPerturbation;
+      return this->mPerturbation;
    }
 
 }
