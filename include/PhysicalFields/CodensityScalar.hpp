@@ -14,9 +14,8 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/PhysicalScalar.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
-#include "PhysicalFields/Extensions/WithSpectralSource.hpp"
+#include "PhysicalFields/Traits/DefaultCodTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -24,9 +23,9 @@ namespace EPMDynamo {
     * \brief Implementation of the Codensity scalar
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TFieldType Type of the field
+    * \tparam TCodTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TFieldType = PhysicalScalar> class CodensityScalar: public PhysicalVariable<TSimType, TFieldType, WithSpectralSource>
+   template <typename TSimType, template <typename> class TCodTraits = DefaultCodTraits> class CodensityScalar: public PhysicalVariable<TSimType, TCodTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -52,8 +51,8 @@ namespace EPMDynamo {
    };
 
 
-   template <typename TSimType, template <typename> class TFieldType> CodensityScalar<TSimType, TFieldType>::CodensityScalar(SmartTruncation pTrunc, typename CodensityScalar<TSimType, TFieldType>::TransformType &transform)
-      : PhysicalVariable<TSimType, TFieldType, WithSpectralSource>(pTrunc, transform)
+   template <typename TSimType, template <typename> class TCodTraits> CodensityScalar<TSimType, TCodTraits>::CodensityScalar(SmartTruncation pTrunc, typename CodensityScalar<TSimType, TCodTraits>::TransformType &transform)
+      : PhysicalVariable<TSimType, TCodTraits>(pTrunc, transform)
    {
    }
 

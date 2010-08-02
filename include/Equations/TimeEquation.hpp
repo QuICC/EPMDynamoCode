@@ -15,7 +15,6 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "PhysicalFields/PhysicalVariable.hpp"
 
 namespace EPMDynamo {
 

@@ -15,7 +15,6 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
-#include "PhysicalFields/Extensions/SimpleField.hpp"
 
 namespace EPMDynamo {
 
@@ -23,10 +22,9 @@ namespace EPMDynamo {
     * @brief This class implements the abstract concept of a physical variable, independently of it being a vector field or a scalar field
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TFieldType Type of the field
-    * \tparam TSource Special extension of the field
+    * \tparam TVariableTraits Traits describing properties of field (domain, sources, imposed, ...)
     */
-   template <typename TSimType, template <typename> class TFieldType, template <typename, template <typename> class> class TSource = SimpleField> class PhysicalVariable : public TSource<TSimType, TFieldType>
+   template <typename TSimType, template <typename> class TVariableTraits> class PhysicalVariable : public TVariableTraits<TSimType>::VariableType
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -55,12 +53,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename>  class TFieldType, template <typename, template <typename> class> class TSource> PhysicalVariable<TSimType, TFieldType, TSource>::PhysicalVariable(SmartTruncation pTrunc, typename PhysicalVariable<TSimType,TFieldType,TSource>::TransformType &transform)
-      : TSource<TSimType, TFieldType>(pTrunc, transform)
+   template <typename TSimType, template <typename>  class TVariableTraits> PhysicalVariable<TSimType, TVariableTraits>::PhysicalVariable(SmartTruncation pTrunc, typename PhysicalVariable<TSimType,TVariableTraits>::TransformType &transform)
+      : TVariableTraits<TSimType>::VariableType(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename>  class TFieldType, template <typename, template <typename> class> class TSource> const SmartTruncation PhysicalVariable<TSimType, TFieldType, TSource>::trunc() const
+   template <typename TSimType, template <typename>  class TVariableTraits> const SmartTruncation PhysicalVariable<TSimType, TVariableTraits>::trunc() const
    {
       return this->oc().trunc();
    }

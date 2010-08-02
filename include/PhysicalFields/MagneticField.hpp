@@ -15,7 +15,7 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
-#include "PhysicalFields/PhysicalNoDivField.hpp"
+#include "PhysicalFields/Traits/DefaultMagTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -23,9 +23,9 @@ namespace EPMDynamo {
     * \brief Implementation of the Magnetic vector field
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TFieldType Type of the field
+    * \tparam TMagTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TFieldType = PhysicalNoDivField> class MagneticField: public PhysicalVariable<TSimType, TFieldType>
+   template <typename TSimType, template <typename> class TMagTraits = DefaultMagTraits> class MagneticField: public PhysicalVariable<TSimType, TMagTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -49,8 +49,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TFieldType> MagneticField<TSimType, TFieldType>::MagneticField(SmartTruncation pTrunc, typename MagneticField<TSimType, TFieldType>::TransformType &transform)
-      : PhysicalVariable<TSimType, TFieldType>(pTrunc, transform)
+   template <typename TSimType, template <typename> class TMagTraits> MagneticField<TSimType, TMagTraits>::MagneticField(SmartTruncation pTrunc, typename MagneticField<TSimType, TMagTraits>::TransformType &transform)
+      : PhysicalVariable<TSimType, TMagTraits>(pTrunc, transform)
    {
    }
 }

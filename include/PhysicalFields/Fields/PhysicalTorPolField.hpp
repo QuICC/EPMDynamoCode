@@ -1,9 +1,9 @@
-/** \file PhysicalNoDivImposed.hpp
- *  \brief Implementation of divergence free field with imposed field
+/** \file PhysicalTorPolField.hpp
+ *  \brief Implementation of Toroidal/Poloidal expanded field
  */
 
-#ifndef PHYSICALNODIVIMPOSED_HPP
-#define PHYSICALNODIVIMPOSED_HPP
+#ifndef PHYSICALTORPOLFIELD_HPP
+#define PHYSICALTORPOLFIELD_HPP
 
 // System includes
 //
@@ -14,23 +14,30 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/PhysicalNoDivBase.hpp"
+#include "GeneralFields/TorPolField.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of divergence free field with imposed field
+    * \brief Implementation of Toroidal/Poloidal expanded field
+    *
+    * The used spectral expansion is a Toroidal/Poloidal expansion to take advantage of
+    * the divergence free aspect of the field
     *
     * \tparam TSimType Type of the simulation
+    * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType> class PhysicalNoDivImposed : public PhysicalNoDivBase<TSimType>
+   template <typename TSimType, template <typename> class TBase> class PhysicalTorPolField: public TBase<TSimType> 
    {
       public:
+         /// Typedef from Simulation trait to local scalar type
+         typedef typename TSimType::ScalarType    ScalarType;
+
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef typename PhysicalNoDivBase<TSimType>::SpectralFieldType  SpectralFieldType;
+         typedef TorPolField<TSimType>  SpectralFieldType;
 
          /**
           * @brief Constructs the underlying rtp and spectral fields
@@ -38,32 +45,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param transform Reference to the transform object
           */
-         PhysicalNoDivImposed(SmartTruncation pTrunc, TransformType &transform);
+         PhysicalTorPolField(SmartTruncation pTrunc, TransformType &transform);
 
          /**
          * @brief Destructor
          */
-         virtual ~PhysicalNoDivImposed() {};
-
-         /**
-          * @brief Get decomposition of the field (total field)
-          */
-         const SpectralFieldType&  totalField() const;
-
-         /**
-          * @brief Get imposed field
-          */
-         const SpectralFieldType&  imposed() const;
-
-         /**
-          * @brief set imposed field 
-          */
-         SpectralFieldType&  rImposed();
-
-         /**
-          * @brief Update the value of the total field (perturbation + imposed)
-          */
-         void updateTotalField();
+         virtual ~PhysicalTorPolField() {};
 
          /**
           * @brief Compute RTP values of the field
@@ -100,60 +87,16 @@ namespace EPMDynamo {
          virtual Matrix spectrumL() const;
          
       protected:
-         /**
-          * @brief Spectral decomposition of the field (total field)
-          */
-         SpectralFieldType    mTotalField;
-
-         /**
-          * @brief Spectral decomposition of the imposed field
-          */
-         SpectralFieldType    mImposedField;
 
       private:
    };
 
-   template<typename TSimType> PhysicalNoDivImposed<TSimType>::PhysicalNoDivImposed(SmartTruncation pTrunc, typename PhysicalNoDivImposed<TSimType>::TransformType &transform)
-      : PhysicalNoDivBase<TSimType>(pTrunc, transform), mTotalField(pTrunc), mImposedField(pTrunc)
+   template<typename TSimType, template <typename> class TBase> PhysicalTorPolField<TSimType, TBase>::PhysicalTorPolField(SmartTruncation pTrunc, typename PhysicalTorPolField<TSimType, TBase>::TransformType &transform)
+      : TBase<TSimType>(pTrunc, transform)
    {
    }
 
-   template<typename TSimType> inline const typename PhysicalNoDivImposed<TSimType>::SpectralFieldType& PhysicalNoDivImposed<TSimType>::totalField() const
-   {
-      return this->mTotalField;
-   }
-
-   template<typename TSimType> inline const typename PhysicalNoDivImposed<TSimType>::SpectralFieldType& PhysicalNoDivImposed<TSimType>::imposed() const
-   {
-      return this->mImposedField;
-   }
-
-   template<typename TSimType> inline typename PhysicalNoDivImposed<TSimType>::SpectralFieldType& PhysicalNoDivImposed<TSimType>::rImposed()
-   {
-      return this->mImposedField;
-   }
-
-   template<typename TSimType> inline void PhysicalNoDivImposed<TSimType>::updateTotalField()
-   {
-      if((this->mNeedTransform == 0) && (this->mNeedCurlTransform == 0))
-      {
-         // Set toroidal part
-         int nL = this->perturbation().tor().nL();
-         for(int l = this->perturbation().tor().minL(); l < nL ; ++l)
-         {
-            this->mTotalField.rTor().rLShell(l) = this->perturbation().tor().lshell(l) + this->imposed().tor().lshell(l);
-         }
-
-         // Set poloidal part
-         nL = this->perturbation().pol().nL();
-         for(int l = this->perturbation().pol().minL(); l < nL ; ++l)
-         {
-            this->mTotalField.rPol().rLShell(l) = this->perturbation().pol().lshell(l) + this->imposed().pol().lshell(l);
-         }
-      }
-   }
-
-   template<typename TSimType> inline void PhysicalNoDivImposed<TSimType>::transform(const int step)
+   template<typename TSimType> inline void PhysicalTorPolField<TSimType, TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -165,7 +108,7 @@ namespace EPMDynamo {
       }
    }
 
-   template<typename TSimType> inline void PhysicalNoDivImposed<TSimType>::curlTransform(const int step)
+   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolField<TSimType, TBase>::curlTransform(const int step)
    {
       if(step == this->mNeedCurlTransform)
       {
@@ -177,14 +120,14 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> void PhysicalNoDivImposed<TSimType>::updateSpectra()
+   template <typename TSimType, template <typename> class TBase> void PhysicalTorPolField<TSimType, TBase>::updateSpectra()
    {
       this->rPerturbation().computeTorSpectra(this->mrTransform.radBasis());
 
       this->rPerturbation().computePolSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType> Array PhysicalNoDivImposed<TSimType>::energy() const
+   template <typename TSimType, template <typename> class TBase> Array PhysicalTorPolField<TSimType, TBase>::energy() const
    {
       // Toroidal Energy
       Array torE = this->perturbation().tor().energy();
@@ -201,7 +144,7 @@ namespace EPMDynamo {
       return energy;
    }
 
-   template <typename TSimType> Matrix PhysicalNoDivImposed<TSimType>::spectrumL() const
+   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolField<TSimType, TBase>::spectrumL() const
    {
       // Toroidal Energy spectrum
       Array torE = this->perturbation().tor().spectrumL();
@@ -220,7 +163,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType> Matrix PhysicalNoDivImposed<TSimType>::spectrumM() const
+   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolField<TSimType, TBase>::spectrumM() const
    {
       // Toroidal Energy spectrum
       Array torE = this->perturbation().tor().spectrumM();
@@ -241,4 +184,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // PHYSICALNODIVIMPOSED_HPP
+#endif // PHYSICALTORPOLFIELD_HPP

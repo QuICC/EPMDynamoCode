@@ -48,6 +48,11 @@ namespace EPMDynamo {
          const SmartTruncation   trunc() const;
 
          /**
+          * @brief Update the value of the total field (perturbation + imposed)
+          */
+         virtual void updateTotalField() {};
+
+         /**
           * @brief Generic methode name for perforing the transform to RTP
           *
           * @param step Current step in a multistep transform

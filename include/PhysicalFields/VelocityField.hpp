@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/PhysicalNoDivField.hpp"
+#include "PhysicalFields/Traits/DefaultVelTraits.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
 
 namespace EPMDynamo {
@@ -23,9 +23,9 @@ namespace EPMDynamo {
     * \brief Implementation of the Velocity vector field
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TFieldType Type of the field
+    * \tparam TVelTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TFieldType = PhysicalNoDivField> class VelocityField: public PhysicalVariable<TSimType, TFieldType>
+   template <typename TSimType, template <typename> class TVelTraits = PhysicalNoDivField> class VelocityField: public PhysicalVariable<TSimType, TVelTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -49,8 +49,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TFieldType> VelocityField<TSimType, TFieldType>::VelocityField(SmartTruncation pTrunc, typename VelocityField<TSimType, TFieldType>::TransformType &transform)
-      : PhysicalVariable<TSimType, TFieldType>(pTrunc, transform)
+   template <typename TSimType, template <typename> class TVelTraits> VelocityField<TSimType, TVelTraits>::VelocityField(SmartTruncation pTrunc, typename VelocityField<TSimType, TVelTraits>::TransformType &transform)
+      : PhysicalVariable<TSimType, TVelTraits>(pTrunc, transform)
    {
    }
 
