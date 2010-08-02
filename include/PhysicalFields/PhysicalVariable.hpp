@@ -16,6 +16,8 @@
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
+#include "boost/static_assert.hpp"
+
 namespace EPMDynamo {
 
    /**
@@ -42,11 +44,6 @@ namespace EPMDynamo {
           * @brief Simple empty destructor
           */
          virtual ~PhysicalVariable() {};
-
-         /**
-          * @brief Get truncation information
-          */
-         const SmartTruncation trunc() const;
          
       protected:
 
@@ -56,11 +53,6 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename>  class TVariableTraits> PhysicalVariable<TSimType, TVariableTraits>::PhysicalVariable(SmartTruncation pTrunc, typename PhysicalVariable<TSimType,TVariableTraits>::TransformType &transform)
       : TVariableTraits<TSimType>::VariableType(pTrunc, transform)
    {
-   }
-
-   template <typename TSimType, template <typename>  class TVariableTraits> const SmartTruncation PhysicalVariable<TSimType, TVariableTraits>::trunc() const
-   {
-      return this->oc().trunc();
    }
 
 }

@@ -140,7 +140,7 @@ namespace EPMDynamo {
    }
 
    template <typename TSimType, typename TFieldType> ScalarDiffusionEquation<TSimType,TFieldType>::ScalarDiffusionEquation(TFieldType &rC, typename ScalarDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBC, EPMFloat a, EPMFloat b)
-      : TimeEquation<TSimType, TFieldType>(rC, transform, tsteps), mTStepper(a, b, transform.radBasis(), tsteps, rC.trunc(), true)
+      : TimeEquation<TSimType, TFieldType>(rC, transform, tsteps), mTStepper(a, b, transform.radBasis(), tsteps, rC.oc().trunc(), true)
    {
       // Set the boundary condition counter
       this->mBCCounter = nBC;

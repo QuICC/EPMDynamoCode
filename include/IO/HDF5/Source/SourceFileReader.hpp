@@ -104,32 +104,32 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("full", codC.trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
+      : SourceFileReaderBase("full", codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("codVel", codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
+      : SourceFileReaderBase("codVel", codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("magVel", magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
+      : SourceFileReaderBase("magVel", magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC)
-      : SourceFileReaderBase("cod", codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
+      : SourceFileReaderBase("cod", codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::MagType &magB)
-      : SourceFileReaderBase("mag", magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
+      : SourceFileReaderBase("mag", magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("vel", velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
+      : SourceFileReaderBase("vel", velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
    {
    }
 

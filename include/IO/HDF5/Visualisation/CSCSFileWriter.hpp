@@ -120,32 +120,32 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> CSCSFileWriter<TSimType, TSimTraits>::CSCSFileWriter(std::string gridName, const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const TimestepParameters &tsParams)
-      : CSCSFileWriterBase(gridName, codC.trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV), mrTSParams(tsParams)
+      : CSCSFileWriterBase(gridName, codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV), mrTSParams(tsParams)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> CSCSFileWriter<TSimType, TSimTraits>::CSCSFileWriter(std::string gridName, const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV, const TimestepParameters &tsParams)
-      : CSCSFileWriterBase(gridName, codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV), mrTSParams(tsParams)
+      : CSCSFileWriterBase(gridName, codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV), mrTSParams(tsParams)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> CSCSFileWriter<TSimType, TSimTraits>::CSCSFileWriter(std::string gridName, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const TimestepParameters &tsParams)
-      : CSCSFileWriterBase(gridName, magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV), mrTSParams(tsParams)
+      : CSCSFileWriterBase(gridName, magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV), mrTSParams(tsParams)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> CSCSFileWriter<TSimType, TSimTraits>::CSCSFileWriter(std::string gridName, const typename TSimTraits<TSimType>::CodType &codC, const TimestepParameters &tsParams)
-      : CSCSFileWriterBase(gridName, codC.trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL), mrTSParams(tsParams)
+      : CSCSFileWriterBase(gridName, codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL), mrTSParams(tsParams)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> CSCSFileWriter<TSimType, TSimTraits>::CSCSFileWriter(std::string gridName, const typename TSimTraits<TSimType>::MagType &magB, const TimestepParameters &tsParams)
-      : CSCSFileWriterBase(gridName, magB.trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL), mrTSParams(tsParams)
+      : CSCSFileWriterBase(gridName, magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL), mrTSParams(tsParams)
    {
    }
 
    template <typename TSimType, template <typename> class TSimTraits> CSCSFileWriter<TSimType, TSimTraits>::CSCSFileWriter(std::string gridName, const typename TSimTraits<TSimType>::VelType &velV, const TimestepParameters &tsParams)
-      : CSCSFileWriterBase(gridName, velV.trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV), mrTSParams(tsParams)
+      : CSCSFileWriterBase(gridName, velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV), mrTSParams(tsParams)
    {
    }
 

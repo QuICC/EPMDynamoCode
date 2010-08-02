@@ -173,7 +173,7 @@ namespace EPMDynamo {
    }
 
    template <typename TSimType, typename TFieldType, template <typename> class TInfluenceTraits> TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::TorPolDiffusionEquation(TFieldType &rF, typename TorPolDiffusionEquation<TSimType, TFieldType, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, int nBCT, int nBCP, EPMFloat a, EPMFloat b)
-      : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mTorTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), false), mPolTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), false)
+      : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mTorTStepper(a, b, transform.radBasis(), tsteps, rF.oc().trunc(), false), mPolTStepper(a, b, transform.radBasis(), tsteps, rF.oc().trunc(), false)
    {
       // Set counter to total number of boundary conditions (doesn't make the difference between toroidal or poloidal)
       this->mBCCounter = nBCT + nBCP;

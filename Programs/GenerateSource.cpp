@@ -38,7 +38,7 @@ typedef  epm::SmartTruncation  SmartTruncation;
 
 void setRTPCodensity(Codensity &codC)
 {
-   SmartTruncation pTrunc = codC.trunc();
+   SmartTruncation pTrunc = codC.oc().trunc();
 
    for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
    {
@@ -48,7 +48,7 @@ void setRTPCodensity(Codensity &codC)
 
 void setRTPMagnetic(Magnetic &magB)
 {
-   SmartTruncation pTrunc = magB.trunc();
+   SmartTruncation pTrunc = magB.oc().trunc();
 
    for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
    {
@@ -60,7 +60,7 @@ void setRTPMagnetic(Magnetic &magB)
 
 void setRTPVelocity(Velocity &velV)
 {
-   SmartTruncation pTrunc = velV.trunc();
+   SmartTruncation pTrunc = velV.oc().trunc();
 
    for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
    {
@@ -72,7 +72,7 @@ void setRTPVelocity(Velocity &velV)
 
 void setSpecCodensity(Codensity &codC)
 {
-   SmartTruncation pTrunc = codC.trunc();
+   SmartTruncation pTrunc = codC.oc().trunc();
 
    codC.rOcSrc().rLShell(0)(0,0) = 3.0;
 }
