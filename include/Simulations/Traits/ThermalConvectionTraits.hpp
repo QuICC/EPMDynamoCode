@@ -37,6 +37,14 @@ namespace EPMDynamo {
          /// Does the codensity field have an OC source ?
          static const bool HasCodOCSource = true;
 
+         /// Does simulation required a codensity field
+         static const bool NeedCodensity = true;
+
+         /// Does simulation required a codensity gradient field
+         static const bool NeedCodensityGrad = true;
+
+
+
          /// Typedef for the magnetic field type
          typedef MagneticField<TSimType>  MagType;
 
@@ -46,6 +54,14 @@ namespace EPMDynamo {
          /// Does the magnetic field have an OC source ?
          static const bool HasMagOCSource = false;
 
+         /// Does simulation required a magnetic field
+         static const bool NeedMagnetic = false;
+
+         /// Does simulation required a magnetic curl field
+         static const bool NeedMagneticCurl = false;
+
+
+
          /// Typedef for the velocity field type
          typedef VelocityField<TSimType>   VelType; 
 
@@ -54,18 +70,6 @@ namespace EPMDynamo {
 
          /// Does the velocity field have an OC source ?
          static const bool HasVelOCSource = false;
-
-         /// Does simulation required a codensity field
-         static const bool NeedCodensity = true;
-
-         /// Does simulation required a codensity gradient field
-         static const bool NeedCodensityGrad = true;
-
-         /// Does simulation required a magnetic field
-         static const bool NeedMagnetic = false;
-
-         /// Does simulation required a magnetic curl field
-         static const bool NeedMagneticCurl = false;
 
          /// Does simulation required a velocity field
          static const bool NeedVelocity = true;
