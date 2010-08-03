@@ -80,7 +80,7 @@ namespace EPMDynamo {
    };
 
    template<typename TSimType> ImposedScalar<TSimType>::ImposedScalar(SmartTruncation pTrunc, typename ImposedScalar<TSimType>::TransformType &transform)
-      : PhysicalScalarBase<TSimType>(pTrunc, transform), mTotalField(pTrunc), mImposedField(pTrunc)
+      : PhysicalScalarBase<TSimType>(pTrunc, transform), mTotalField(pTrunc, true), mImposedField(pTrunc, true)
    {
    }
 

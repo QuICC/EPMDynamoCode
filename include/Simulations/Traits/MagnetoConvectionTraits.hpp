@@ -17,6 +17,7 @@
 #include "PhysicalFields/CodensityScalar.hpp"
 #include "PhysicalFields/MagneticField.hpp"
 #include "PhysicalFields/VelocityField.hpp"
+#include "PhysicalFields/Traits/ImposedMagTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -52,7 +53,7 @@ namespace EPMDynamo {
 
 
          /// Typedef for the magnetic field type
-         typedef MagneticField<TSimType>  MagType;
+         typedef MagneticField<TSimType, ImposedMagTraits>  MagType;
 
          /// Does the magnetic field have an IC source ?
          static const bool HasMagICSource = false;
@@ -64,7 +65,7 @@ namespace EPMDynamo {
          static const bool HasMagICImposed = false; 
 
          /// Does the magnetic field have an OC imposed field ? 
-         static const bool HasMagOCImposed = false; 
+         static const bool HasMagOCImposed = true; 
 
          /// Does simulation required a magnetic field
          static const bool NeedMagnetic = true;

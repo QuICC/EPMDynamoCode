@@ -1,9 +1,9 @@
-/** \file DefaultMagFieldTraits.hpp
- *  \brief Traits for the field of the default magnetic field
+/** \file GenVelFieldTraits.hpp
+ *  \brief Traits for the field of the generators velocity field
  */
 
-#ifndef DEFAULTMAGFIELDTRAITS_HPP
-#define DEFAULTMAGFIELDTRAITS_HPP
+#ifndef GENVELFIELDTRAITS_HPP
+#define GENVELFIELDTRAITS_HPP
 
 // System includes
 //
@@ -20,11 +20,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the field of the default magnetic field
+    * \brief Traits for the field of the generators velocity field
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class DefaultMagFieldTraits
+   template <typename TSimType>  class GenVelFieldTraits
    {
       public:
          /// Typedef for the type of the spectral field
@@ -34,9 +34,9 @@ namespace EPMDynamo {
          typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> ICFieldType;
 
          /// Typedef for the type of an outer core field
-         typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> OCFieldType;
+         typedef PhysicalTorPolField<TSimType, ImposedTorPol> OCFieldType;
    };
 
 }
 
-#endif // DEFAULTMAGFIELDTRAITS_HPP
+#endif // GENVELFIELDTRAITS_HPP

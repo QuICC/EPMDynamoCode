@@ -50,21 +50,6 @@ namespace EPMDynamo {
          virtual ~PhysicalScalar() {};
 
          /**
-          * @brief Get spectral expansion scalar (perturbation part)
-          */
-         const ScalarType&  perturbation() const;
-
-         /**
-          * @brief Get spectral expansion scalar (Total scalar field)
-          */
-         const ScalarType&  totalField() const;
-
-         /**
-          * @brief Set spectral expansion scalar
-          */
-         ScalarType&  rPerturbation();
-
-         /**
           * @brief Compute RTP values the scalar
           *
           * @param step Current step in a multistep transform
@@ -101,40 +86,11 @@ namespace EPMDynamo {
       protected:
 
       private:
-
-         /**
-          * @brief Spectral expansion scalar
-          */
-         ScalarType   mPerturbation;
-
-         /**
-          * @brief Flag to check if grad transform has already been computed
-          */
-         int  mNeedGradTransform;
    };
    
    template <typename TSimType, template <typename> class TBase> PhysicalScalar<TSimType, TBase>::PhysicalScalar(SmartTruncation pTrunc, typename PhysicalScalar<TSimType, TBase>::TransformType &transform)
-      : TBase<TSimType>(pTrunc, transform), mPerturbation(pTrunc, true), mNeedGradTransform(0)
+      : TBase<TSimType>(pTrunc, transform)
    {
-   }
-
-   template <typename TSimType, template <typename> class TBase> inline const typename PhysicalScalar<TSimType, TBase>::ScalarType& PhysicalScalar<TSimType, TBase>::perturbation() const
-   {
-      return this->mPerturbation;
-   }
-
-   template <typename TSimType, template <typename> class TBase> inline const typename PhysicalScalar<TSimType, TBase>::ScalarType& PhysicalScalar<TSimType, TBase>::totalField() const
-   {
-      return this->mPerturbation;
-   }
-
-   template <typename TSimType, template <typename> class TBase> inline typename PhysicalScalar<TSimType, TBase>::ScalarType& PhysicalScalar<TSimType, TBase>::rPerturbation()
-   {
-      this->mNeedTransform = 0;
-
-      this->mNeedGradTransform = 0;
-
-      return this->mPerturbation;
    }
 
    template <typename TSimType, template <typename> class TBase> inline void PhysicalScalar<TSimType, TBase>::transform(const int step)

@@ -17,6 +17,9 @@
 #include "PhysicalFields/CodensityScalar.hpp"
 #include "PhysicalFields/MagneticField.hpp"
 #include "PhysicalFields/VelocityField.hpp"
+#include "PhysicalFields/Traits/GenCodTraits.hpp"
+#include "PhysicalFields/Traits/GenMagTraits.hpp"
+#include "PhysicalFields/Traits/GenVelTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -29,7 +32,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the codensity scalar type
-         typedef CodensityScalar<TSimType>  CodType;
+         typedef CodensityScalar<TSimType, GenCodTraits>  CodType;
 
          /// Does the codensity field have an IC source ?
          static const bool HasCodICSource = false;
@@ -41,7 +44,7 @@ namespace EPMDynamo {
          static const bool HasCodICImposed = false; 
 
          /// Does the codensity field have an OC imposed field ? 
-         static const bool HasCodOCImposed = false; 
+         static const bool HasCodOCImposed = true; 
 
          /// Does simulation required a codensity field
          static const bool NeedCodensity = false;
@@ -52,19 +55,19 @@ namespace EPMDynamo {
 
 
          /// Typedef for the magnetic field type
-         typedef MagneticField<TSimType>  MagType;
+         typedef MagneticField<TSimType, GenMagTraits>  MagType;
 
          /// Does the magnetic field have an IC source ?
          static const bool HasMagICSource = false;
 
          /// Does the magnetic field have an OC source ?
-         static const bool HasMagOCSource = false;
+         static const bool HasMagOCSource = true;
 
          /// Does the magnetic field have an IC imposed field ? 
          static const bool HasMagICImposed = false; 
 
          /// Does the magnetic field have an OC imposed field ? 
-         static const bool HasMagOCImposed = false; 
+         static const bool HasMagOCImposed = true; 
 
          /// Does simulation required a magnetic field
          static const bool NeedMagnetic = false;
@@ -75,19 +78,19 @@ namespace EPMDynamo {
 
 
          /// Typedef for the velocity field type
-         typedef VelocityField<TSimType>   VelType; 
+         typedef VelocityField<TSimType, GenVelTraits>   VelType; 
 
          /// Does the velocity field have an IC source ?
          static const bool HasVelICSource = false;
 
          /// Does the velocity field have an OC source ?
-         static const bool HasVelOCSource = false;
+         static const bool HasVelOCSource = true;
 
          /// Does the velocity field have an IC imposed field ? 
          static const bool HasVelICImposed = false; 
 
          /// Does the velocity field have an OC imposed field ? 
-         static const bool HasVelOCImposed = false; 
+         static const bool HasVelOCImposed = true; 
 
          /// Does simulation required a velocity field
          static const bool NeedVelocity = true;

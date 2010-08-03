@@ -1,5 +1,5 @@
 /** \file PhysicalScalarBase.hpp
- *  \brief Base of the implementation of a physical scalar
+ *  \brief Implementation of physical scalar base
  */
 
 #ifndef PHYSICALSCALARBASE_HPP
@@ -14,29 +14,33 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/Fields/PhysicalBase.hpp"
-#include "Domain/Truncation.hpp"
-#include "GeneralScalars/RTPScalar.hpp"
-#include "GeneralFields/RTPField.hpp"
+#include "PhysicalFields/Fields/PhysicalScalarFieldBase.hpp"
+#include "General/EPMTypedefs.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Base of the implementation of a physical scalar
+    * \brief Implementation of physical scalar base
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalScalarBase : public PhysicalBase<TSimType>
+   template <typename TSimType> class PhysicalScalarBase: public PhysicalScalarFieldBase<TSimType>
    {
       public:
+         /// Typedef from Simulation trait to local scalar type
+         typedef typename TSimType::ScalarType  ScalarType;
+
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef typename SimulationTraits<TSimType>::TransformType  TransformType;
+
+         /// Typedef for the spectral field type
+         typedef ScalarType SpectralFieldType;
 
          /**
-         * @brief Constructs the basic information required for a physical scalar
+         * @brief Constructor
          *
          * @param pTrunc Truncation information
-         * @param transform Transform object
+         * @param transform Reference to transform object
          */
          PhysicalScalarBase(SmartTruncation pTrunc, TransformType &transform);
 
@@ -46,70 +50,56 @@ namespace EPMDynamo {
          virtual ~PhysicalScalarBase() {};
 
          /**
-          * @brief Get the RTP scalar values
+          * @brief Get spectral expansion scalar (perturbation part)
           */
-         const RTPScalar&   rtp() const;
+         const ScalarType&  perturbation() const;
 
          /**
-          * @brief Set the RTP scalar values
+          * @brief Get spectral expansion scalar (Total scalar field)
           */
-         RTPScalar&   rRTP();
+         const ScalarType&  totalField() const;
 
          /**
-          * @brief Get the RTP gradient field values
+          * @brief Set spectral expansion scalar
           */
-         const RTPField&   grad() const;
-
-         /**
-          * @brief Compute RTP values of the gradient of the scalar
-          *
-          * @param step Current step in multistep transform
-          */
-         virtual void gradTransform(const int step) = 0;
+         ScalarType&  rPerturbation();
          
       protected:
+         /**
+          * @brief Flag to check if grad transform has already been computed
+          */
+         int  mNeedGradTransform;
 
          /**
-          * @brief Set the RTP gradient field values
+          * @brief Spectral expansion scalar
           */
-         RTPField&   rGrad();
+         ScalarType   mPerturbation;
 
       private:
-
-         /**
-          * @brief Real space scalar values
-          */
-         RTPScalar mRTP;
-
-         /**
-          * @brief Real space gradient field values
-          */
-         RTPField mGrad;
    };
-
-   template<typename TSimType> inline PhysicalScalarBase<TSimType>::PhysicalScalarBase(SmartTruncation pTrunc, typename PhysicalScalarBase<TSimType>::TransformType &transform)
-      : PhysicalBase<TSimType>(pTrunc, transform), mRTP(pTrunc), mGrad(pTrunc)
+   
+   template <typename TSimType> PhysicalScalarBase<TSimType>::PhysicalScalarBase(SmartTruncation pTrunc, typename PhysicalScalarBase<TSimType>::TransformType &transform)
+      : PhysicalScalarFieldBase<TSimType>(pTrunc, transform), mNeedGradTransform(0), mPerturbation(pTrunc, true)
    {
    }
 
-   template<typename TSimType> inline const RTPScalar&  PhysicalScalarBase<TSimType>::rtp() const
+   template <typename TSimType> inline const typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::perturbation() const
    {
-      return this->mRTP;
+      return this->mPerturbation;
    }
 
-   template<typename TSimType> inline RTPScalar&  PhysicalScalarBase<TSimType>::rRTP()
+   template <typename TSimType> inline const typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::totalField() const
    {
-      return this->mRTP;
+      return this->mPerturbation;
    }
 
-   template<typename TSimType> inline const RTPField&  PhysicalScalarBase<TSimType>::grad() const
+   template <typename TSimType> inline typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::rPerturbation()
    {
-      return this->mGrad;
-   }
+      this->mNeedTransform = 0;
 
-   template<typename TSimType> inline RTPField&  PhysicalScalarBase<TSimType>::rGrad()
-   {
-      return this->mGrad;
+      this->mNeedGradTransform = 0;
+
+      return this->mPerturbation;
    }
 
 }
