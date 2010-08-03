@@ -44,7 +44,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Read magnetic soure from file
+          * @brief Read magnetic source from file
           */
          virtual void readMag();
 
@@ -96,7 +96,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Read magnetic soure from file
+          * @brief Read magnetic source from file
           */
          virtual void readMag(){};
 

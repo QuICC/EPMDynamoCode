@@ -16,7 +16,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Implementationts/MagnetoConvectionSimulation.hpp"
+#include "Simulations/Implementations/MagnetoConvectionSimulation.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 

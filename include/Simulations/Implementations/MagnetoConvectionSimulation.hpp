@@ -260,7 +260,7 @@ namespace EPMDynamo {
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::addHDF5Output()
    {
-      EPMSHARED_PTR<StateFileWriter<TSimType, MagnetoConvectionTraits> >  pOutState(new vStateFileWriter<TSimType, MagnetoConvectionTraits>(this->mMagB, this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
+      EPMSHARED_PTR<StateFileWriter<TSimType, MagnetoConvectionTraits> >  pOutState(new StateFileWriter<TSimType, MagnetoConvectionTraits>(this->mMagB, this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
    }

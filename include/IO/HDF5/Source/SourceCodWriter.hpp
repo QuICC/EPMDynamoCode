@@ -44,7 +44,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Write codensity soure from file
+          * @brief Write codensity source from file
           */
          virtual void writeCod();
 
@@ -96,7 +96,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Write codensity soure from file
+          * @brief Write codensity source from file
           */
          virtual void writeCod(){};
 

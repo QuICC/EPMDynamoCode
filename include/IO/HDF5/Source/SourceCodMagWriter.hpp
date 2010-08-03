@@ -44,7 +44,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief write magnetic soure to file
+          * @brief write magnetic source to file
           */
          virtual void writeMag();
 
@@ -96,7 +96,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Write magnetic soure from file
+          * @brief Write magnetic source from file
           */
          virtual void writeMag(){};
 

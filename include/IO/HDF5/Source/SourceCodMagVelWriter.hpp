@@ -44,7 +44,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief write velocity soure to file
+          * @brief write velocity source to file
           */
          virtual void writeVel();
 

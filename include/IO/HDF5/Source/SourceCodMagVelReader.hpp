@@ -44,7 +44,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Read velocity soure from file
+          * @brief Read velocity source from file
           */
          virtual void readVel();
 
@@ -96,7 +96,7 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Read magnetic soure from file
+          * @brief Read magnetic source from file
           */
          virtual void readVel(){};
 
