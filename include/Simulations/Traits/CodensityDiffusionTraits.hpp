@@ -37,6 +37,12 @@ namespace EPMDynamo {
          /// Does the codensity field have an OC source ?
          static const bool HasCodOCSource = true;
 
+         /// Does the codensity field have an IC imposed field ? 
+         static const bool HasCodICImposed = false; 
+
+         /// Does the codensity field have an OC imposed field ? 
+         static const bool HasCodOCImposed = false; 
+
          /// Does simulation required a codensity field
          static const bool NeedCodensity = true;
 
@@ -54,6 +60,12 @@ namespace EPMDynamo {
          /// Does the magnetic field have an OC source ?
          static const bool HasMagOCSource = false;
 
+         /// Does the magnetic field have an IC imposed field ? 
+         static const bool HasMagICImposed = false; 
+
+         /// Does the magnetic field have an OC imposed field ? 
+         static const bool HasMagOCImposed = false; 
+
          /// Does simulation required a magnetic field
          static const bool NeedMagnetic = false;
 
@@ -70,6 +82,12 @@ namespace EPMDynamo {
 
          /// Does the velocity field have an OC source ?
          static const bool HasVelOCSource = false;
+
+         /// Does the velocity field have an IC imposed field ? 
+         static const bool HasVelICImposed = false; 
+
+         /// Does the velocity field have an OC imposed field ? 
+         static const bool HasVelOCImposed = false; 
 
          /// Does simulation required a velocity field
          static const bool NeedVelocity = false;
