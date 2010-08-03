@@ -31,11 +31,29 @@ namespace EPMDynamo {
          /// Typedef for the codensity scalar type
          typedef CodensityScalar<TSimType>  CodType;
 
+         /// Does the codensity field have an IC source ?
+         static const bool HasCodICSource = false;
+
+         /// Does the codensity field have an OC source ?
+         static const bool HasCodOCSource = true;
+
          /// Typedef for the magnetic field type
          typedef MagneticField<TSimType>  MagType;
 
+         /// Does the magnetic field have an IC source ?
+         static const bool HasMagICSource = false;
+
+         /// Does the magnetic field have an OC source ?
+         static const bool HasMagOCSource = false;
+
          /// Typedef for the velocity field type
          typedef VelocityField<TSimType>   VelType; 
+
+         /// Does the velocity field have an IC source ?
+         static const bool HasVelICSource = false;
+
+         /// Does the velocity field have an OC source ?
+         static const bool HasVelOCSource = false;
 
          /// Does simulation required a codensity field
          static const bool NeedCodensity = true;

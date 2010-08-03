@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "IO/HDF5/Source/SourceFileReaderBase.hpp"
+#include "IO/HDF5/Source/SourceCodMagVelReader.hpp"
 
 namespace EPMDynamo {
 
@@ -22,10 +22,8 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
-    *
-    * \epmBug Magnetic and Velocity desactived due to missing "imposed" component
     */
-   template <typename TSimType, template <typename> class TSimTraits> class SourceFileReader: public SourceFileReaderBase
+   template <typename TSimType, template <typename> class TSimTraits> class SourceFileReader: public SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>
    {
       public:
          /**
@@ -85,52 +83,52 @@ namespace EPMDynamo {
          virtual void read();
          
       protected:
-         /**
-          * @brief Pointer to the condensity variable
-          */
-         typename TSimTraits<TSimType>::CodType*  mpCodC;
-
-         /**
-          * @brief Pointer to the magnetic variable
-          */
-         typename TSimTraits<TSimType>::MagType*  mpMagB;
-
-         /**
-          * @brief Pointer to the velocity variable
-          */
-         typename TSimTraits<TSimType>::VelType*  mpVelV;
 
       private:
    };
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("full", codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
+      : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("full", codC.oc().trunc())
    {
+      this->mpCodC = &codC;
+
+      this->mpMagB = &magB;
+
+      this->mpVelV = &velV;
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("codVel", codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
+      : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("codVel", codC.oc().trunc())
    {
+      this->mpCodC = &codC;
+
+      this->mpVelV = &velV;
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("magVel", magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
+      : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("magVel", magB.oc().trunc())
    {
+      this->mpMagB = &magB;
+
+      this->mpVelV = &velV;
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC)
-      : SourceFileReaderBase("cod", codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
+      : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("cod", codC.oc().trunc())
    {
+      this->mpCodC = &codC;
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::MagType &magB)
-      : SourceFileReaderBase("mag", magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
+      : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("mag", magB.oc().trunc())
    {
+      this->mpMagB = &magB;
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::VelType &velV)
-      : SourceFileReaderBase("vel", velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
+      : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("vel", velV.oc().trunc())
    {
+      this->mpVelV = &velV;
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void SourceFileReader<TSimType, TSimTraits>::read()
@@ -144,23 +142,14 @@ namespace EPMDynamo {
       // Set Read arguments
       this->setReadArguments();
 
-      // Read codensity coefficients
-      if(this->mpCodC != NULL)
-      {
-         this->readCodensity(this->mpCodC->rOcSrc().data());
-      }
+      // Read codensity coefficients (if applicable)
+      this->readCod();
 
-      // Read magnetic coefficients
-      if(this->mpMagB != NULL)
-      {
-//         this->readMagnetic(this->mpMagB->rOcSrc().rTor().data(), this->mpMagB->rOcSrc().rPol().data());
-      }
-      
-      // Read velocity coefficients
-      if(this->mpVelV != NULL)
-      {
-//         this->readVelocity(this->mpVelV->rOcSrc().rTor().data(), this->mpVelV->rOcSrc().rPol().data());
-      }
+      // Read magnetic coefficients (if applicable)
+      this->readMag();
+
+      // Read velocity coefficients (if applicable)
+      this->readVel();
    }
 
 }
