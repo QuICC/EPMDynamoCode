@@ -838,8 +838,20 @@ namespace EPMDynamo {
    {
       if(this->isSending())
       {
-         MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mActiveFSendPacks), MPI_STATUSES_IGNORE);
-         MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mPacks), MPI_STATUSES_IGNORE);
+         int flag;
+         // Make sure previous communication has finished (the test + wait was required on Brutus to work)
+         MPI_Testall(this->sizeGroupF(), this->pSendFRequests(this->mActiveFSendPacks), &flag, MPI_STATUSES_IGNORE);
+         if(! flag)
+         {
+            MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mActiveFSendPacks), MPI_STATUSES_IGNORE);
+         }
+
+         // Make sure communication to be used are all finished (the test + wait was required on Brutus to work)
+         MPI_Testall(this->sizeGroupF(), this->pSendFRequests(this->mPacks), &flag, MPI_STATUSES_IGNORE);
+         if(! flag)
+         {
+            MPI_Waitall(this->sizeGroupF(), this->pSendFRequests(this->mPacks), MPI_STATUSES_IGNORE);
+         }
 
          this->mIsSending = false;
       }
@@ -876,8 +888,20 @@ namespace EPMDynamo {
    {
       if(this->isSending())
       {
-         MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mActiveBSendPacks), MPI_STATUSES_IGNORE);
-         MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mPacks), MPI_STATUSES_IGNORE);
+         int flag;
+         // Make sure previous communication has finished (the test + wait was required on Brutus to work)
+         MPI_Testall(this->sizeGroupB(), this->pSendBRequests(this->mActiveBSendPacks), &flag, MPI_STATUSES_IGNORE);
+         if(! flag)
+         {
+            MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mActiveBSendPacks), MPI_STATUSES_IGNORE);
+         }
+
+         // Make sure communication to be used are all finished (the test + wait was required on Brutus to work)
+         MPI_Testall(this->sizeGroupB(), this->pSendBRequests(this->mPacks), &flag, MPI_STATUSES_IGNORE);
+         if(! flag)
+         {
+            MPI_Waitall(this->sizeGroupB(), this->pSendBRequests(this->mPacks), MPI_STATUSES_IGNORE);
+         }
 
          this->mIsSending = false;
       }
