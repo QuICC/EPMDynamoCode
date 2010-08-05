@@ -22,8 +22,6 @@ namespace EPMDynamo {
     * \brief Base of the implementation of a Toroidal/Poloidal set of radial operators
     *
     * \tparam TPolynomial Type of the underlying polynomial
-    *
-    * \epmBug Rewrite the polynomial operators in a cleaner and simpler way
     */
    template <typename TPolynomial> class TorPolRadialOperatorBase: public RadialOperatorBase<TPolynomial>
    {

@@ -28,6 +28,8 @@ namespace EPMDynamo {
 
    /**
     * \brief Implemenation of a massive load splitting in a tubular fashion
+    *
+    * \epmTodo Review implementation and improve splitting algorithm. The choice of splitting factors can most likely be improved!
     */
    class TubularSplitting: public LoadSplitterBase
    {
@@ -143,8 +145,6 @@ namespace EPMDynamo {
           * @brief Choose best splitting option
           *
           * @param usableR vector of usable ratios
-          *
-          * \epmBug Could this be improved?
           */
          void chooseBestSplitting(const std::vector<int> &usableR);
 
@@ -177,8 +177,6 @@ namespace EPMDynamo {
 
          /**
           * @brief Reshuffle splitting to improve memory load balancing
-          *
-          * \epmBug Could this be improved?
           */
          void reshuffleLoadSplitM();
 

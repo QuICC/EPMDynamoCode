@@ -28,8 +28,6 @@ namespace EPMDynamo {
     * the required special operators.
     *
     * \tparam TPolynomial Type of the underlying polynomial
-    *
-    * \epmBug Rewrite the polynomial operators and simpler and cleaner way
     */
    template <typename TPolynomial> class TorPolRadialOperator: public TorPolRadialOperatorBase<TPolynomial>
    {

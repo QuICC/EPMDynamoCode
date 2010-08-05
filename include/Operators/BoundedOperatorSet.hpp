@@ -33,7 +33,7 @@ namespace EPMDynamo {
     *
     * \tparam TOpType Type of the operator
     *
-    * \epmBug Think about implication of removing protected part
+    * \epmBug Protected part has beend made public. Is there a better solution?
     */
    template <typename TOpType> class BoundedOperatorSet
    {

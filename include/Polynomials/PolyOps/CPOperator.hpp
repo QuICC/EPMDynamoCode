@@ -18,8 +18,6 @@ namespace EPMDynamo {
 
    /**
     * @brief This class implements a polynomial operator expression of the type: C P
-    *
-    * \epmBug Needs cleaning and restructuring
     */
    template <typename TC> class CPOperator
    {

@@ -1,7 +1,7 @@
 /** \file prec_SpectralSHTransform.cpp
  *  \brief Precision test for SpectralSH transforms
  *
- *  \epmBug Precision test not entirely implemented yet
+ *  \epmTSTodo Precision test not entirely implemented yet
  */
 
 #define EIGEN_DEFAULT_IO_FORMAT IOFormat(10)

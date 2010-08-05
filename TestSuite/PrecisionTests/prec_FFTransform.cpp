@@ -1,7 +1,7 @@
 /** \file prec_FFTransform.cpp
  *  \brief Precision test for Fast Fourier transforms
  *
- *  \epmBug Needs to be tested for MPI version
+ *  \epmTSTodo Needs to be tested for MPI version
  */
 
 #define EIGEN_DEFAULT_IO_FORMAT IOFormat(10)

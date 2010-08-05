@@ -87,7 +87,7 @@ namespace EPMDynamo {
          /**
           * @brief write data to files
           *
-          * \epmBug This methods needs to be rename and cleaned out
+          * \epmTodo Rename this to a more explicit name and review the used approach
           */
          void writeFiles();
 
@@ -138,14 +138,14 @@ namespace EPMDynamo {
          /**
           * @brief Combine Spectral 2 RTP transforms
           *
-          * \epmBug This methods needs some more thoughts
+          * \epmTodo The multistep transform approach needs a review and maybe a refactoring
           */
          void combineRTPTransforms(const int entry);
 
          /**
           * @brief Combine RTP 2 Spectral transforms
           *
-          * \epmBug This methods needs some more thoughts
+          * \epmTodo The multistep transform approach needs a review and maybe a refactoring
           */
          void combineSpectralTransforms(const int entry);
 

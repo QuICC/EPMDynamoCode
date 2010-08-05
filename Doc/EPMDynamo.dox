@@ -1,10 +1,9 @@
-/** \mainpage Full Sphere Dynamo Code (experimental)
+/** \mainpage EPM Full Sphere Dynamo Code
  *
  * <center>
  * \subpage epmFeatures | 
  * \subpage epmRequirements | 
  * \subpage epmTutorial | 
- * \subpage epmTestSuite |
  * \subpage epmRoadmap | 
  * \subpage epmDevelopment 
  * </center>

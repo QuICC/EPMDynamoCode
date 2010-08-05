@@ -1,7 +1,7 @@
 /** \file prec_RTPOperators.cpp
  *  \brief Precision test for RTP operators
  *
- *  \epmBug Needs to be implemented correctly
+ *  \epmTSTodo Needs to be implemented correctly
  */
 
 #define EIGEN_DEFAULT_IO_FORMAT IOFormat(10)

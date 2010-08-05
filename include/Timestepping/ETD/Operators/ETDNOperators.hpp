@@ -188,7 +188,7 @@ namespace EPMDynamo {
           *
           * @param mat Matrix to exponentiate
           *
-          * \epmBug Currently uses a naive Taylor series
+          * \epmTodo Implement a better computation than a naive Taylor series
           */
          void computeExponential(Matrix& mat);
 

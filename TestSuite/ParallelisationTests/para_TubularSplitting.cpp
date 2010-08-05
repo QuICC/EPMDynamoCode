@@ -1,7 +1,7 @@
 /** \file para_TubularSplitting.cpp
  *  \brief Parallelisation test for the tubular splitting algorithm
  *
- *  \epmBug This test is not really useful yet ...
+ *  \epmTSTodo This test is not really useful yet ...
  */
 
 // Configuration includes

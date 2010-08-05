@@ -1,0 +1,13 @@
+/** \page epmExtensionIdeas Extension ideas
+ *
+ * This is an unsorted list of more or less useful ideas about how to extend improve the code.
+ *
+ *    - Migrate the computations to Eigen3
+ *
+ *    - Take advantage of the new Eigen3 module allowing the use of MPFR multiprecision computations. A complete multiprecision implementation would require the use of a new FFT library (maybe ALGLIB ?). It could also just be used in the precomputation step.
+ *
+ *    - Make it possible to do spherical shell computations.
+ *
+ *    - ...
+ *
+*/

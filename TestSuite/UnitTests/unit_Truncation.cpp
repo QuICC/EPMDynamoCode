@@ -1,7 +1,7 @@
 /** \file unit_Truncation.cpp
  *  \brief Unit test for the truncation setup
  *
- *  \epmBug Unit test not implemented yet
+ *  \epmTSTodo Unit test not implemented yet
  */
 
 // Configuration includes

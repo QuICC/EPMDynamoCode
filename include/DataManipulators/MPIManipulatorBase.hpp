@@ -29,7 +29,7 @@ namespace EPMDynamo {
     * \tparam TForward Type of data for the forward transform
     * \tparam TBackward Type of data for the backward transform
     *
-    * \epmBug Review/Cleanup code
+    * \epmTodo Review and cleanup the code. Some more documentation would also be useful
     */
    template <typename TForward, typename TBackward> class MPIManipulatorBase: public ManipulatorBase<TForward, TBackward>
    {

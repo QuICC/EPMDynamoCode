@@ -24,7 +24,7 @@ namespace EPMDynamo {
     *
     * \tparam TPolynomial Type of the underlying polynomial
     *
-    * \epmBug Review the energy integrals
+    * \epmTodo Review exactly how the energy integrals are computed
     */
    template <typename TPolynomial> class RadialOperatorBase: public TPolynomial
    {

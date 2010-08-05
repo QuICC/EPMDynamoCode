@@ -31,7 +31,7 @@ PROJECT_NAME           = "Full Sphere Dynamo Code (Experimental)"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 0.99.30
+PROJECT_NUMBER         = 0.99.35
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -181,6 +181,9 @@ TAB_SIZE               = 8
 
 ALIASES                += "epmBug=\xrefitem epmBug \"Known bugs\" \"Known bugs\""
 ALIASES                += "epmTodo=\xrefitem epmTodo \"ToDo's\" \"Todo's\""
+
+ALIASES                += "epmTSBug=\xrefitem epmTSBug \"Test's bugs\" \"Test's bugs\""
+ALIASES                += "epmTSTodo=\xrefitem epmTSTodo \"Test's ToDo's\" \"Test's Todo's\""
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C 
 # sources only. Doxygen will then generate output that is more tailored for C. 

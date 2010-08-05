@@ -1,7 +1,7 @@
 /** \file unit_ImposedField.cpp
  *  \brief Unit test for the reading/writing of HDF5 imposed field files
  *
- *  \epmBug Unit test not implemented yet
+ *  \epmTSTodo Unit test not implemented yet
  */
 
 // Configuration includes

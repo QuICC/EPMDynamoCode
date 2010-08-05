@@ -26,7 +26,7 @@ namespace EPMDynamo {
     *
     * \tparam TPoly Type of the polynomial
     *
-    * \epmBug Review this implementation, make it possible to store less polynomials (ie for example odd and even)
+    * \epmTodo Review this general implementation. It could be worth to try to make it possible to store less polynomials (for example if only odd and even basis is required) but still provide the same interface
     */
    template <typename TPoly> class PolynomialBasis
    {

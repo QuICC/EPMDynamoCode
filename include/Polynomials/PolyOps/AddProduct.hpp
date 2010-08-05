@@ -18,8 +18,6 @@ namespace EPMDynamo {
 
    /**
     * @brief Add the results of the matrix multiplication
-    *
-    * \epmBug Needs cleaning and restructuring
     */
    class AddProduct
    {

@@ -1,5 +1,10 @@
 /** \page epmTestSuite Test Suite
  *
+ * <center>
+ *    \subpage epmTSTodo | 
+ *    \subpage epmTSBug 
+ * </center>
+ *
  * The goal of these tests is to make sure the implementation of the different algorithms is done correctly. There are different categories of tests:
  *
  *    - \subpage epmTSUnitTests :Simple unit tests to verify that the implementation is working.

@@ -1,3 +1,36 @@
 /** \page epmRoadmap Roadmap
-*
-*/
+ *
+ * This is an approximative roadmap for the next version(s).
+ *
+ * \section epmRoadV1 Version 1.y.z
+ *    - Correct CSCS visualisation output (correct pole and origin fields)
+ *
+ *    - A useful set of precision tests for the most important computations. These will also be very useful as regression tests for further
+ *    changes to the code.
+ *
+ *    - Implement a reader class for NG_AshCode's HDF5 inner core data
+ *
+ *    - Add documentation until it is more or less usable by someone else than me ;)
+ *
+ *
+ * \section epmRoadV2 Version 2.y.z
+ *    - Do compiler tests to see which what is working and what not.
+ *    
+ *    - Finish implementation of ETD scheme. 
+ *
+ *    - Provide a simple implementation of an RK scheme.
+ *
+ *    - Implement new PolynomialOperators.
+ *
+ *    - Implement a more flexible and efficient PolynomialBasis/RadialBasis.
+ *
+ *    - Implement an approximative (continuous second derivative) radial basis. This will most likely required the two points above.
+ *
+ *    - Improve the MPI part of the code. There are a few Allgather/gather calls that should be modified. And general improvement is
+ *    certainly also possible.
+ *
+ *    - Implement the pure SH splitting for completeness and testing purpose. It puts quite hard contrains on the whole code.
+ *
+ *    - Finish and cleanup the implementation of the different radial grids. The Chebyshev is currently used but a Legendre grid version is
+ *    possible. A preliminary version is provided but not working yet.dd
+ */

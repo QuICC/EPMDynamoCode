@@ -1,7 +1,7 @@
 /** \file unit_Worland.cpp
  *  \brief Unit test for the Worland polynomials
  *
- *  \epmBug Unit test not implemented yet
+ *  \epmTSTodo Unit test not implemented yet
  */
 
 // Configuration includes

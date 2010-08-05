@@ -18,8 +18,6 @@ namespace EPMDynamo {
 
    /**
     * @brief This class implements the generic polynomial operator
-    *
-    * \epmBug Needs cleaning and restructuring
     */
    template <typename TExp> class StoredOperator : public TExp
    {

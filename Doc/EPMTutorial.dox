@@ -2,9 +2,33 @@
  *
  * \section epmTutIntro Introduction
  *
+ * This small tutorial should provide the information required to configure, compile and run the EPMDynamoCode's programs. Some information 
+ * about how to add new simulations, equations, ... will also be provided.
+ *
  * \section epmTutConfig Configuration
  *
+ * The configuration is done through CMake. The compilation should be done out of the source tree. As long a the code is run on the 
+ * supported platform there should be no need to modify the CMakeLists.txt file.
+ *
+ * The configuration of the build tree is done by running "ccmake /path/to/epm/source" from within the directory. The text gui will provide a few options:
+ *    - Build type: "Release" for best performance
+ *    - Compiler: "GCC" is the best tested compiler
+ *    - Platform: "Core2", "Brutus", "Rosa" depending where the code should run
+ *    - Radial_Groupedcomm: "ON" will give best performance but requires more memory 
+ *    - SH_Groupedcomm: "ON" will give best performance/scaling but requires more memory 
+ *    - Split_Radial: "ON" to configure for MPI using radial split algorithm
+ *    - Split_SH: "ON" to configure for MPI using splitted spherical harmonics
+ *
  * \section epmTutCompile Compilation
+ *
+ * The executables are provided in "Programs/". A "make DynamoRun" will for example compile the executable for a dynamo simulation. Some
+ * test programs are also provided in the TestSuite directory.
+ *
+ * \section epmTutrun Running the executables
+ *
+ * All simulation executables require at least two files. The "parameters.cfg" file which sets the resolution and similar parameters, a simple case ca be found in "Config/". The second file is the initial spectral state of the simulation stored as an HDF5 file which should be named "state_initial.hdf5". A initial state generator is provided by the GenerateState executable.
+ *
+ * Depending on the simulation some extra files will be required. If sources are required they have to be provided as "source_TYPE.hdf5" file, and imposed fields are provided as "imposed_TYPE.hdf5" files.
  *
  * \section epmTutSimImpl  Implementation of a new simulation
  *

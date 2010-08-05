@@ -1,7 +1,7 @@
 /** \file unit_Parallelisers.cpp
  *  \brief Unit test for the parallelisers
  *
- *  \epmBug Unit test not implemented yet
+ *  \epmTSTodo Unit test not implemented yet
  */
 
 // Configuration includes

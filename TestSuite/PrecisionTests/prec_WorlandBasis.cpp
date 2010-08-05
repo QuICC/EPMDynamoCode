@@ -1,7 +1,7 @@
 /** \file prec_WorlandBasis.cpp
  *  \brief Precision test for the Worland polynomials
  *
- *  \epmBug Needs to be implemented correctly
+ *  \epmTSTodo Needs to be implemented correctly
  */
 
 #define EIGEN_DEFAULT_IO_FORMAT IOFormat(16)

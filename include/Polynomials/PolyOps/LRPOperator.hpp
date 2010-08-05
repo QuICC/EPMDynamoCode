@@ -17,8 +17,7 @@
 namespace EPMDynamo {
 
    /**
-    *
-    * \epmBug Needs cleaning and restructuring
+    * @brief This class implements a polynomial operator expression of the type: L P R
     */
    class LRPOperator
    {

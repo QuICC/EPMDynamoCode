@@ -20,7 +20,7 @@ namespace EPMDynamo {
    /**
     * @brief Implementation of some tools used to compute errors in the tests
     *
-    * \epmBug Need to finish documentation
+    * \epmTSTodo Need to finish documentation
     */
    class ErrorComputer
    {

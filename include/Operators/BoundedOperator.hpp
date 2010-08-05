@@ -57,8 +57,6 @@ namespace EPMDynamo {
           *
           * @param factor Multiplicative factor
           * @param polyOp Polynomial operator defining the operator
-          *
-          * \epmBug PolynomialOperator needs restructuring
           */
          virtual void constructBOperator(const EPMFloat factor, const PolynomialOperator<POperator>& polyOp);
 

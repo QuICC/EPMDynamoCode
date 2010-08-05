@@ -1,7 +1,7 @@
 /** \file unit_ParametersFile.cpp
  *  \brief Unit test for the xml parameters file
  *
- *  \epmBug Unit test not implemented yet
+ *  \epmTSTodo Unit test not implemented yet
  */
 
 // Configuration includes

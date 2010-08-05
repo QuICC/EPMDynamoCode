@@ -18,8 +18,6 @@ namespace EPMDynamo {
 
    /**
     * @brief This class implements a polynomial operator expression of the type: L P
-    *
-    * \epmBug Needs cleaning and restructuring
     */
    class LPOperator
    {

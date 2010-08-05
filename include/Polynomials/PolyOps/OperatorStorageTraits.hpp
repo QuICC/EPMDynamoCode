@@ -21,8 +21,6 @@ namespace EPMDynamo {
 
    /**
     * @brief These traits defines the storage type of the operators
-    *
-    * \epmBug Needs cleaning and restructuring
     */
    template <typename TExp> class OperatorStorageTraits
    {

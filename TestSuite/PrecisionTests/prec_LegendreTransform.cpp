@@ -1,7 +1,7 @@
 /** \file prec_LegendreTransform.cpp
  *  \brief Precision test for Legendre transforms
  *
- *  \epmBug Needs to be implemented correctly
+ *  \epmTSTodo Needs to be implemented correctly
  */
 
 #define EIGEN_DEFAULT_IO_FORMAT IOFormat(10)

@@ -1,8 +1,9 @@
-/** \page epmDevelopment Code development
+/** \page epmDevelopment Development
  *
  * <center>
  * \subpage epmTodo | 
- * \subpage epmWishList | 
- * \subpage epmBug
+ * \subpage epmBug | 
+ * \subpage epmTestSuite |
+ * \subpage epmExtensionIdeas 
  * </center>
 */
