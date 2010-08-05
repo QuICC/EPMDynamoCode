@@ -133,6 +133,11 @@ namespace EPMDynamo {
           * @param n Order of the polynomial
           */
          EPMFloat normaliseW(const int n);
+
+         /**
+          * @brief Correct the polynomials for special cases (for example CSCS output)
+          */
+         void correctPolynomials();
    };
 }
 

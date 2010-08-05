@@ -66,6 +66,18 @@ namespace EPMDynamo {
       }
    }
 
+   void CSCSFileTools::reverseOrder(Array& reverse, const Array &data)
+   {
+      // Copy data into reverse
+      reverse = data;
+
+      // Reverse order
+      for(int j=0; j < reverse.rows()/2; ++j)
+      {
+         reverse.row(j).swap(reverse.row(reverse.rows() - 1 - j));
+      }
+   }
+
    CSCSFileTools::CSCSFileTools()
    {
    }

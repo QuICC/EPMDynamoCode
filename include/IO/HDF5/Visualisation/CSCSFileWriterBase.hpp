@@ -110,9 +110,29 @@ namespace EPMDynamo {
          const std::string    mGridName;
 
          /**
+          * @brief Store radial pole components
+          */
+         Matrix   mRadialPole;
+
+         /**
+          * @brief Store theta pole components
+          */
+         Matrix   mThetaPole;
+
+         /**
+          * @brief Store phi pole components
+          */
+         Matrix   mPhiPole;
+
+         /**
           * @brief Set the maximum number of IO operations
           */
          void setMaxIO();
+
+         /**
+          * @brief Create pole corrections values
+          */
+         void createPoleValues(const Array& grid, const std::vector<SphericalShell> &radial, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi);
    };
 
    inline SmartTruncation  CSCSFileWriterBase::runTrunc() const

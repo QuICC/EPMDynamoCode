@@ -66,42 +66,42 @@ namespace EPMDynamo {
       // Create file with all fields
       if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
       {
-         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV(), "4242"));
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV(), "4CSCS"));
 
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->magB(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with Codensity and Velocity fields
       } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedVelocity)
       {
-         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->velV(), "4242"));
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), this->velV(), "4CSCS"));
 
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with Magnetic and Velocity fields
       } else if(TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
       {
-         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), this->velV(), "4242"));
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), this->velV(), "4CSCS"));
 
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->velV(), this->mSimControl.tsParams()));
 
       // Create file with only codensity field
       } else if(TGenTraits<TSimType>::NeedCodensity)
       {
-         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), "4242"));
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->codC(), "4CSCS"));
 
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->codC(), this->mSimControl.tsParams()));
 
       // Create file with only magnetic field
       } else if(TGenTraits<TSimType>::NeedMagnetic)
       {
-         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), "4242"));
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->magB(), "4CSCS"));
 
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->magB(), this->mSimControl.tsParams()));
 
       // Create file with only velocity field
       } else if(TGenTraits<TSimType>::NeedVelocity)
       {
-         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->velV(), "4242"));
+         pInFile.reset(new StateFileReader<TSimType, TGenTraits>(this->velV(), "4CSCS"));
 
          pOutFile.reset(new CSCSFileWriter<TSimType, TGenTraits>("FSOuter", this->velV(), this->mSimControl.tsParams()));
       }

@@ -34,6 +34,7 @@ namespace EPMDynamo {
 
    void HorizontalTruncation::correctGridSizes()
    {
+      // In the case of the ParaView visualisation output the poles have to be added
       if(SimulationConstants::isCSCSGrid())
       {
          this->mNth += 2;

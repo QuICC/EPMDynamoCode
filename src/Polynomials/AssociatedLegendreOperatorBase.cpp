@@ -27,12 +27,8 @@ namespace EPMDynamo {
       // Compute the corresponding 1/sqrt(l(l+1)) values
       this->computeSll_1();
 
-      // Treat the CSCS case differently (has 2 extraneous grid points)
-      if(SimulationConstants::isCSCSGrid())
-      {
-         // Setup the ones and P/Sin for CSCS grids
-         this->computeSpecialOperators();
-      }
+      // Setup special operators (for example required in the CSCS output case)
+      this->computeSpecialOperators();
    }
 
    AssociatedLegendreOperatorBase::AssociatedLegendreOperatorBase(const int pM, const SmartArray grid, const int nL, const SmartArray weights)
@@ -44,33 +40,30 @@ namespace EPMDynamo {
       // Compute the corresponding 1/sqrt(l(l+1)) values
       this->computeSll_1();
 
-      // Treat the CSCS case differently (has 2 extraneous grid points)
-      if(SimulationConstants::isCSCSGrid())
-      {
-         // Setup the ones and P/Sin for CSCS grids
-         this->computeSpecialOperators();
-      }
+      // Setup special operators (for example required in the CSCS output case)
+      this->computeSpecialOperators();
    }
 
    void AssociatedLegendreOperatorBase::computeSin_1Theta()
    {
+      // Shift factor in case of additional special values
+      int shift = 0;
+
       // Treat the CSCS case differently (has 2 extraneous grid points)
       if(SimulationConstants::isCSCSGrid())
       {
-         // Compute the array of 1.0/sin(theta) coordinates from grid points theta values
+         // shift the starting value
+         shift = 1;
+
+         // Set the poles by hand
          this->mSin_1Theta(0) = 0.0;
-         for(int i=1; i < this->gridN() - 1; ++i)
-         {
-            this->mSin_1Theta(i) = 1.0/this->rSinTheta()(i);
-         }
          this->mSin_1Theta(this->gridN()-1) = 0.0;
-      } else
+      }
+
+      // Compute the array of 1.0/sin(theta) coordinates from grid points theta values
+      for(int i=shift; i < this->gridN()-shift; ++i)
       {
-         // Compute the array of 1.0/sin(theta) coordinates from grid points theta values
-         for(int i=0; i < this->gridN(); ++i)
-         {
-            this->mSin_1Theta(i) = 1.0/this->rSinTheta()(i);
-         }
+         this->mSin_1Theta(i) = 1.0/this->rSinTheta()(i);
       }
    }
 
@@ -92,19 +85,23 @@ namespace EPMDynamo {
 
    void AssociatedLegendreOperatorBase::computeSpecialOperators()
    {
-      // Set the special array for 1/Sin(theta)
-      this->mSin_1Ones = this->mSin_1Theta;
-      this->mSin_1Ones(0) = 1.0;
-      this->mSin_1Ones(this->mSin_1Ones.size()-1) = 1.0;
-
-      // Set the special Poly/Sin matrix
-      this->mSin_1Poly = this->poly();
-
-      // Set the field values to the phi=0 coordinate system value
-      for(int i = 0; i < this->diff(1).rows(); ++i)
+      // Treat the CSCS grid differently (it has 2 addition nodes)
+      if(SimulationConstants::isCSCSGrid())
       {
-//         this->mSin_1Poly(i,0) = -this->diff(1)(0,0);
-//         this->mSin_1Poly(i,this->mSin_1Ones.size()-1) = this->diff(1)(0,this->mSin_1Ones.size()-1);
+         // Set the special array for 1/Sin(theta)
+         this->mSin_1Ones = this->mSin_1Theta;
+         this->mSin_1Ones(0) = 1.0;
+         this->mSin_1Ones(this->mSin_1Ones.size()-1) = 1.0;
+
+         // Set the special Poly/Sin matrix
+         this->mSin_1Poly = this->poly();
+
+         // Set the field values to the phi=0 coordinate system value
+         for(int i = 0; i < this->diff(1).rows(); ++i)
+         {
+            // this->mSin_1Poly(i,0) = -this->diff(1)(0,0);
+            // this->mSin_1Poly(i,this->mSin_1Ones.size()-1) = this->diff(1)(0,this->mSin_1Ones.size()-1);
+         }
       }
    }
 }

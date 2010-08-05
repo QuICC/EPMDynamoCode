@@ -20,7 +20,7 @@
 namespace EPMDynamo {
 
    CSCSFileWriterBase::CSCSFileWriterBase(const std::string gridName, SmartTruncation pTrunc)
-      : HDF5NWriter(CSCSFileDefs::BASENAME, CSCSFileDefs::EXTENSION, CSCSFileDefs::HEADER, CSCSFileDefs::VERSION), mpTrunc(pTrunc), mGridName(gridName)
+      : HDF5NWriter(CSCSFileDefs::BASENAME, CSCSFileDefs::EXTENSION, CSCSFileDefs::HEADER, CSCSFileDefs::VERSION), mpTrunc(pTrunc), mGridName(gridName), mRadialPole(pTrunc->sim()->hoz()->nPh(), 2), mThetaPole(pTrunc->sim()->hoz()->nPh(), 2), mPhiPole(pTrunc->sim()->hoz()->nPh(), 2)
    {
       // Set dataset dimensions
       this->setDatasetSize();
@@ -107,8 +107,12 @@ namespace EPMDynamo {
       // Write the radial array to file
       this->writeArray(CSCSFileDefs::RADIALAXISTAG, radial);
 
-      // Write the radial array to file
-      this->writeArray(CSCSFileDefs::THETAAXISTAG, theta);
+      // Reorder the theta grid
+      Array revTheta;
+      CSCSFileTools::reverseOrder(revTheta, theta);
+
+      // Write the theta array to file
+      this->writeArray(CSCSFileDefs::THETAAXISTAG, revTheta);
 
       // Storage for the corrected version
       Array corrected;
@@ -137,6 +141,10 @@ namespace EPMDynamo {
       
       // close group
       H5Gclose(this->mGroup);
+   }
+
+   void CSCSFileWriterBase::createPoleValues(const Array& grid, const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)
+   {
    }
 
    void CSCSFileWriterBase::writeMagnetic(const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)

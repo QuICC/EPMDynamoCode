@@ -151,6 +151,11 @@ namespace EPMDynamo {
           * This computes and stores the values \f$ \int_{0}^{1} r^2 P d r\f$
           */
          void computeEnergyIntegrals();
+
+         /**
+          * @brief Correct operators computations in special cases (for example CSCS ouput)
+          */
+         void correctOperators();
    };
 
    //
@@ -204,26 +209,8 @@ namespace EPMDynamo {
       // Compute the energy integrals
       this->computeEnergyIntegrals();
 
-      // Treat the CSCS case differently (has 2 extraneous grid points)
-      if(SimulationConstants::isCSCSGrid())
-      {
-         this->mR_1(0) = 0.0;
-
-         if(this->l() == 0)
-         {
-            this->mR_1DRPoly.col(0).setConstant(0.0);
-         }
-
-         if(this->l() == 1)
-         {
-            this->mR_1DRPoly.col(0) = 2.0*this->diff(1).col(0);
-         }
-
-         if(this->l() > 1)
-         {
-            this->mR_1DRPoly.col(0).setConstant(0.0);
-         }
-      }
+      // Correct operators in special cases (for example CSCS output)
+      this->correctOperators();
    }
 
    template <typename TPolynomial> RadialOperatorBase<TPolynomial>::RadialOperatorBase(const int pL, const SmartArray grid, const int nN, const SmartArray weights)
@@ -244,26 +231,8 @@ namespace EPMDynamo {
       // Compute the energy integrals
       this->computeEnergyIntegrals();
 
-      // Treat the CSCS case differently (has 2 extraneous grid points)
-      if(SimulationConstants::isCSCSGrid())
-      {
-         this->mR_1(0) = 0.0;
-
-         if(this->l() == 0)
-         {
-            this->mR_1DRPoly.col(0).setConstant(0.0);
-         }
-
-         if(this->l() == 1)
-         {
-            this->mR_1DRPoly.col(0) = 2.0*this->diff(1).col(0);
-         }
-
-         if(this->l() > 1)
-         {
-            this->mR_1DRPoly.col(0).setConstant(0.0);
-         }
-      }
+      // Correct operators in special cases (for example CSCS output)
+      this->correctOperators();
    }
 
    template <typename TPolynomial> void RadialOperatorBase<TPolynomial>::initLlFactors()
@@ -349,6 +318,34 @@ namespace EPMDynamo {
          {
             this->mEWeights(i,n) = (tmpPoly.poly().row(n).cwise()*tmpPoly.poly().row(i)).dot (eGrid->cwise().pow(2).cwise()*(*eWeights));
          }  
+      }
+   }
+
+   template <typename TPolynomial> void RadialOperatorBase<TPolynomial>::correctOperators()
+   {
+      // Treat the CSCS case differently (has 2 extraneous grid points)
+      if(SimulationConstants::isCSCSGrid())
+      {
+         // Set 1/r to zero for r=0
+         this->mR_1(0) = 0.0;
+
+         // Set special values for r=0 for l = 0
+         if(this->l() == 0)
+         {
+            this->mR_1DRPoly.col(0).setConstant(0.0);
+         }
+
+         // Set special values for r=0 for l = 1
+         if(this->l() == 1)
+         {
+            this->mR_1DRPoly.col(0) = 2.0*this->diff(1).col(0);
+         }
+
+         // Set special values for r=0 for l > 1
+         if(this->l() > 1)
+         {
+            this->mR_1DRPoly.col(0).setConstant(0.0);
+         }
       }
    }
 

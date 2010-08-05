@@ -54,22 +54,8 @@ namespace EPMDynamo {
       // Compute the Weighted polynomials
       this->computeWPolynomials();
 
-      // Treat the CSCS case differently (has 2 extraneous grid points)
-      if(SimulationConstants::isCSCSGrid())
-      {
-         if(this->l() < 1)
-         {
-            this->rDiff(1).col(0).setConstant(0.0);
-            this->rWDiff(1).row(0).setConstant(0.0);
-         }
-
-         if(this->l() < 2)
-         {
-            this->rDiff(2).col(0).setConstant(0.0);
-            this->rWDiff(2).row(0).setConstant(0.0);
-         }
-      }
-
+      // Correct the polynomials for special cases (for example CSCS output)
+      this->correctPolynomials();
    }
 
    void WorlandPolynomial::initPartial()
@@ -94,20 +80,8 @@ namespace EPMDynamo {
       // Compute the Weighted polynomials
       this->computeWPolynomials();
 
-      // Treat the CSCS case differently (has 2 extraneous grid points)
-      if(SimulationConstants::isCSCSGrid())
-      {
-         if(this->l() < 1)
-         {
-            this->rDiff(1).col(0).setConstant(0.0);
-            this->rWDiff(1).row(0).setConstant(0.0);
-         }
-         if(this->l() < 2)
-         {
-            this->rDiff(2).col(0).setConstant(0.0);
-            this->rWDiff(2).row(0).setConstant(0.0);
-         }
-      }
+      // Correct the polynomials for special cases (for example CSCS output)
+      this->correctPolynomials();
    }
 
    EPMFloat WorlandPolynomial::normaliseW(const int n)
@@ -220,6 +194,27 @@ namespace EPMDynamo {
          for(int n = 0; n < this->polyN(); ++n)
          {
             this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().cwise() * this->weights() * this->normaliseW(n);
+         }
+      }
+   }
+
+   void WorlandPolynomial::correctPolynomials()
+   {
+      // Treat the CSCS case differently (has 2 extraneous grid points)
+      if(SimulationConstants::isCSCSGrid())
+      {
+         // Set special values for r=0 and l < 1
+         if(this->l() < 1)
+         {
+            this->rDiff(1).col(0).setConstant(0.0);
+            this->rWDiff(1).row(0).setConstant(0.0);
+         }
+
+         // Set special values for r=0 and l < 2
+         if(this->l() < 2)
+         {
+            this->rDiff(2).col(0).setConstant(0.0);
+            this->rWDiff(2).row(0).setConstant(0.0);
          }
       }
    }

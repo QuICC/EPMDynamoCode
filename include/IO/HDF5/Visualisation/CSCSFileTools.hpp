@@ -35,6 +35,14 @@ namespace EPMDynamo {
          static void padPhiGrid(Array &corrected, const Array &phi);
 
          /**
+          * @brief Reverse the order of the given array
+          *
+          * @param reversed Reversed order array
+          * @param data Input data
+          */
+         static void reverseOrder(Array &reverse, const Array &data);
+
+         /**
           * @brief Adapt RTP field to CSCS output
           *
           * @param corrected Corrected RTP field

@@ -27,6 +27,7 @@ namespace EPMDynamo {
 
    void RadialTruncation::correctGridSizes()
    {
+      // In the case of ParaView visualiation r=0 and r=1 have to be added
       if(SimulationConstants::isCSCSGrid())
       {
          this->mNr += 2;

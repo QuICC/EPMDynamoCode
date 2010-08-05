@@ -82,6 +82,8 @@ namespace EPMDynamo {
           *
           * @param left Left offset
           * @param right Right offset
+          *
+          * \epmTodo The Legendre CSCS grid seems to only add r=1 and not r=0!
           */
          void addCSCSRadial(int &left, int &right);
    };
