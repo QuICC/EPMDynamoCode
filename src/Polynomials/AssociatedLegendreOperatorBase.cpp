@@ -95,13 +95,6 @@ namespace EPMDynamo {
 
          // Set the special Poly/Sin matrix
          this->mSin_1Poly = this->poly();
-
-         // Set the field values to the phi=0 coordinate system value
-         for(int i = 0; i < this->diff(1).rows(); ++i)
-         {
-            // this->mSin_1Poly(i,0) = -this->diff(1)(0,0);
-            // this->mSin_1Poly(i,this->mSin_1Ones.size()-1) = this->diff(1)(0,this->mSin_1Ones.size()-1);
-         }
       }
    }
 }

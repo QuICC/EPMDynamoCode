@@ -20,7 +20,7 @@
 namespace EPMDynamo {
 
    CSCSFileWriterBase::CSCSFileWriterBase(const std::string gridName, SmartTruncation pTrunc)
-      : HDF5NWriter(CSCSFileDefs::BASENAME, CSCSFileDefs::EXTENSION, CSCSFileDefs::HEADER, CSCSFileDefs::VERSION), mpTrunc(pTrunc), mGridName(gridName), mRadialPole(pTrunc->sim()->hoz()->nPh(), 2), mThetaPole(pTrunc->sim()->hoz()->nPh(), 2), mPhiPole(pTrunc->sim()->hoz()->nPh(), 2)
+      : HDF5NWriter(CSCSFileDefs::BASENAME, CSCSFileDefs::EXTENSION, CSCSFileDefs::HEADER, CSCSFileDefs::VERSION), mpTrunc(pTrunc), mGridName(gridName)
    {
       // Set dataset dimensions
       this->setDatasetSize();
@@ -49,13 +49,13 @@ namespace EPMDynamo {
    void CSCSFileWriterBase::setDatasetSize()
    {
       // Set radial dimension
-      this->mFileDims.push_back(mpTrunc->sim()->rad()->nR());
+      this->mFileDims.push_back(this->mpTrunc->sim()->rad()->nR());
 
       // Set theta dimension inluding the padding
-      this->mFileDims.push_back(mpTrunc->sim()->hoz()->nTh());
+      this->mFileDims.push_back(this->mpTrunc->sim()->hoz()->nTh());
 
       // Set phi dimension inluding the padding
-      this->mFileDims.push_back(mpTrunc->sim()->hoz()->nPh() + 1);
+      this->mFileDims.push_back(this->mpTrunc->sim()->hoz()->nPh() + 1);
    }
 
    void CSCSFileWriterBase::setDatasetOffsets()
@@ -133,7 +133,7 @@ namespace EPMDynamo {
 
       // Make data suitable for file
       std::vector<SphericalShell>   corrected;
-      CSCSFileTools::padRTPField(corrected, scalar, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+      CSCSFileTools::padRTPField(corrected, scalar, this->mpTrunc);
 
       // Write the codensity expansion
       this->writeMatrixVector3D(CSCSFileDefs::CODENSITYTAG, corrected);
@@ -141,10 +141,6 @@ namespace EPMDynamo {
       
       // close group
       H5Gclose(this->mGroup);
-   }
-
-   void CSCSFileWriterBase::createPoleValues(const Array& grid, const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)
-   {
    }
 
    void CSCSFileWriterBase::writeMagnetic(const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)
@@ -155,21 +151,32 @@ namespace EPMDynamo {
 
       // data storage for corrected field for file
       std::vector<SphericalShell>   corrected;
-      CSCSFileTools::padRTPField(corrected, r, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+
+      // Pad the radial component
+      CSCSFileTools::padRTPField(corrected, r, this->mpTrunc);
+
+      // Correct pole values (rotate around z axis)
+      CSCSFileTools::correctRadialPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
       this->writeMatrixVector3D(CSCSFileDefs::MAGNETICTAG+CSCSFileDefs::RADIALTAG, corrected);
       corrected.clear();
 
-      // Make theta data suitable for file
-      CSCSFileTools::padRTPField(corrected, theta, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+      // Pad the theta component
+      CSCSFileTools::padRTPField(corrected, theta, this->mpTrunc);
+
+      // Correct pole values (rotate around z axis)
+      CSCSFileTools::correctThetaPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
       this->writeMatrixVector3D(CSCSFileDefs::MAGNETICTAG+CSCSFileDefs::THETATAG, corrected);
       corrected.clear();
 
-      // Make phi data suitable for file
-      CSCSFileTools::padRTPField(corrected, phi, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+      // Pad the theta component
+      CSCSFileTools::padRTPField(corrected, phi, this->mpTrunc);
+
+      // Correct pole values (rotate around z axis)
+      CSCSFileTools::correctPhiPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
       this->writeMatrixVector3D(CSCSFileDefs::MAGNETICTAG+CSCSFileDefs::PHITAG, corrected);
@@ -187,19 +194,34 @@ namespace EPMDynamo {
 
       // data storage for corrected field for file
       std::vector<SphericalShell>   corrected;
-      CSCSFileTools::padRTPField(corrected, r, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+
+      // Pad the radial component
+      CSCSFileTools::padRTPField(corrected, r, this->mpTrunc);
+
+      // Correct pole values (rotate around z axis)
+      CSCSFileTools::correctRadialPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
       this->writeMatrixVector3D(CSCSFileDefs::VELOCITYTAG+CSCSFileDefs::RADIALTAG, corrected);
       corrected.clear();
 
-      // Write the radial component
-      CSCSFileTools::padRTPField(corrected, theta, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+      // Pad the theat component
+      CSCSFileTools::padRTPField(corrected, theta, this->mpTrunc);
+
+      // Correct pole values (rotate around z axis)
+      CSCSFileTools::correctThetaPole(corrected, r, theta, phi, this->mpTrunc);
+
+      // Write the theta component
       this->writeMatrixVector3D(CSCSFileDefs::VELOCITYTAG+CSCSFileDefs::THETATAG, corrected);
       corrected.clear();
 
-      // Write the radial component
-      CSCSFileTools::padRTPField(corrected, phi, mpTrunc->sim()->hoz()->nTh(), mpTrunc->local()->rtp()->th0Array(), mpTrunc->local()->rtp()->nThArray());
+      // Pad the phi component
+      CSCSFileTools::padRTPField(corrected, phi, this->mpTrunc);
+
+      // Correct pole values (rotate around z axis)
+      CSCSFileTools::correctPhiPole(corrected, r, theta, phi, this->mpTrunc);
+
+      // Write the phi component
       this->writeMatrixVector3D(CSCSFileDefs::VELOCITYTAG+CSCSFileDefs::PHITAG, corrected);
       corrected.clear();
       

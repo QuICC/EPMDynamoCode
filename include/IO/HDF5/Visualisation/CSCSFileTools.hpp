@@ -15,13 +15,15 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief Some tools to create the CSCS output file
     *
-    * \epmTodo The field computation need correction for the pole and origin values
+    * \epmTodo the corrections for the pole and origin values could be improved
+    * \epmTodo Doesn not work yet with tubular parallelisation
     */
    class CSCSFileTools
    {
@@ -47,11 +49,42 @@ namespace EPMDynamo {
           *
           * @param corrected Corrected RTP field
           * @param field Input field
-          * @param totNth Total number of theta points
-          * @param th0 Array of start index of theta points
-          * @param nTh Array of number of theta points
+          * @param pTrunc Truncation information
           */
-         static void padRTPField(std::vector<Matrix> &corrected, const std::vector<Matrix> &field, const int totNth, const ArrayI &th0, const ArrayI &nTh);
+         static void padRTPField(std::vector<Matrix> &corrected, const std::vector<Matrix> &field, SmartTruncation pTrunc);
+
+         /**
+          * @brief Correct the pole values of the radial component
+          *
+          * @param corrected Corrected RTP field
+          * @param r Radial component
+          * @param theta Theta component
+          * @param phi Phi component
+          * @param pTrunc Truncation information
+          */
+         static void correctRadialPole(std::vector<Matrix> &corrected, const std::vector<Matrix> &r, const std::vector<Matrix> &theta, const std::vector<Matrix> &phi, SmartTruncation pTrunc);
+
+         /**
+          * @brief Correct the pole values of the theta component
+          *
+          * @param corrected Corrected RTP field
+          * @param r Radial component
+          * @param theta Theta component
+          * @param phi Phi component
+          * @param pTrunc Truncation information
+          */
+         static void correctThetaPole(std::vector<Matrix> &corrected, const std::vector<Matrix> &r, const std::vector<Matrix> &theta, const std::vector<Matrix> &phi, SmartTruncation pTrunc);
+
+         /**
+          * @brief Correct the pole values of the phi component
+          *
+          * @param corrected Corrected RTP field
+          * @param r Radial component
+          * @param theta Theta component
+          * @param phi Phi component
+          * @param pTrunc Truncation information
+          */
+         static void correctPhiPole(std::vector<Matrix> &corrected, const std::vector<Matrix> &r, const std::vector<Matrix> &theta, const std::vector<Matrix> &phi, SmartTruncation pTrunc);
 
          /**
          * @brief Destructor
