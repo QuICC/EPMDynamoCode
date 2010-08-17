@@ -1,6 +1,6 @@
 [submodule "External/eigen2"]
 	path = External/eigen2
-	url = git@broceliande.ethz.ch:EPMDynamoEigen2.git
+	url = git@broceliande.ethz.ch:SubmoduleEigen2.git
 [submodule "External/eigen3"]
 	path = External/eigen3
-	url = git@broceliande.ethz.ch:EPMDynamoEigen3.git
+	url = git@broceliande.ethz.ch:SubmoduleEigen3.git
