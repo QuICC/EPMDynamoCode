@@ -94,8 +94,6 @@ namespace EPMDynamo {
 
          /**
           * @brief Compute special operators (for example CSCS stuff)
-          *
-          * \epmBug This routine contains commented out code! Need to be reviewed and corrected (probably just CSCS IO related)
           */
          void computeSpecialOperators();
 
