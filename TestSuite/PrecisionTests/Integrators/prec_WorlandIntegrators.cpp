@@ -296,12 +296,6 @@ int runPrecTest()
    // Write setup data to file
    status += writeSetupData(pTrunc);
 
-   // Write "grid" data to file
-   status += writeGridData(pTrunc, wBasis);
-
-   // Write "weights" data to file
-   status += writeWeightsData(pTrunc, wBasis);
-
    // Write "intg" data to file
    status += writeData("intg", &WorlandOperator::intg, pTrunc, wBasis);
 
@@ -319,30 +313,6 @@ int runPrecTest()
 
    // Write "intgT2CurlProj" data to file
    status += writeData("intgT2CurlProj", &WorlandOperator::intgT2CurlProj, pTrunc, wBasis);
-
-   // Write "proj" data to file
-   status += writeData("proj", &WorlandOperator::proj, pTrunc, wBasis);
-
-   // Write "proj2GradTP" data to file
-   status += writeData("proj2GradTP", &WorlandOperator::proj2GradTP, pTrunc, wBasis);
-
-   // Write "projPol2Q" data to file
-   status += writeData("projPol2Q", &WorlandOperator::projPol2Q, pTrunc, wBasis);
-
-   // Write "projPol2S" data to file
-   status += writeData("projPol2S", &WorlandOperator::projPol2S, pTrunc, wBasis);
-
-   // Write "projTor2T" data to file
-   status += writeData("projTor2T", &WorlandOperator::projTor2T, pTrunc, wBasis);
-
-   // Write "projTor2CurlQ" data to file
-   status += writeData("projTor2CurlQ", &WorlandOperator::projTor2CurlQ, pTrunc, wBasis);
-
-   // Write "projTor2CurlS" data to file
-   status += writeData("projTor2CurlS", &WorlandOperator::projTor2CurlS, pTrunc, wBasis);
-
-   // Write "projPol2CurlT" data to file
-   status += writeData("projPol2CurlT", &WorlandOperator::projPol2CurlT, pTrunc, wBasis);
 
    return status;
 }

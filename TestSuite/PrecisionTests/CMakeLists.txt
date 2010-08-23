@@ -1,13 +1,26 @@
 #
+# Add the polynomials precision tests
+#
+add_subdirectory(Polynomials)
+
+#
+# Add the projectors precision tests
+#
+add_subdirectory(Projectors)
+
+#
+# Add the integrators precision tests
+#
+add_subdirectory(Integrators)
+
+#
 # Add transform precision test
 #
 set(PrecTests ${PrecTests}
-      prec_AssocLegendreBasis
       prec_FFTransform
       prec_LegendreTransform
       prec_RTPOperators
       prec_SpectralSHTransform
-      prec_WorlandBasis
       prec_WorlandTransform
       )
 

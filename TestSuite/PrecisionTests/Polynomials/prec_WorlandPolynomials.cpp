@@ -1,5 +1,5 @@
-/** \file prec_AssocLegendreBasis.cpp
- *  \brief Precision test for the Associated Legendre polynomials
+/** \file prec_WorlandBasis.cpp
+ *  \brief Precision test for the Worland polynomials
  *
  *  \epmTSTodo Needs to be implemented correctly
  */
@@ -28,8 +28,8 @@
 #include "General/MathConstants.hpp"
 #include "Domain/Truncation.hpp"
 #include "Polynomials/PolynomialOperator.hpp"
-#include "Polynomials/AssociatedLegendreOperator.hpp"
-#include "Polynomials/AssocLegendreBasis.hpp"
+#include "Polynomials/WorlandPolynomial.hpp"
+#include "Polynomials/RadialBasis.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 
@@ -39,19 +39,19 @@ namespace epm = EPMDynamo;
 typedef epm::WSHSimulation SimulationType;
 /// Notation simplification typedef for truncation type
 typedef epm::SmartTruncation  SmartTruncation;
-/// Notation simplification typedef for associated Legendre operator type
-typedef epm::AssociatedLegendreOperator AssocLegendreOperator;
-/// Notation simplification typedef for associated legendre basis type
-typedef epm::AssocLegendreBasis AssocLegendreBasis;
+/// Notation simplification typedef for worland operator type
+typedef epm::TorPolRadialOperator<epm::WorlandPolynomial> WorlandOperator;
+/// Notation simplification typedef for worland radial basis type
+typedef epm::RadialBasis<WorlandOperator> WorlandBasis;
 
 /// Base name for all files
-std::string testBasename = "alp_";
+std::string testBasename = "wp_";
 
 /// Base name for the grid data files
 std::string gridBasename;
 
 /// File ordering character
-const std::string orderString = "_M";
+const std::string orderString = "_L";
 
 /**
  * @brief Write setup data to file
@@ -79,9 +79,9 @@ int writeSetupData(SmartTruncation pTrunc)
    // Open file
    file.open(filename.c_str());
 
-   // write Harmonic truncation to file
-   file << pTrunc->sim()->hoz()->maxL() << std::endl;
-   file << pTrunc->sim()->hoz()->maxM();
+   // write Harmonic and radial truncation to file
+   file << pTrunc->sim()->rad()->maxN() << std::endl;
+   file << pTrunc->sim()->hoz()->maxL();
 
    // close file
    file.close();
@@ -98,7 +98,7 @@ void setGridBasename(SmartTruncation pTrunc)
    std::stringstream converter;
 
    // Convert grid size
-   converter << pTrunc->sim()->hoz()->nTh();
+   converter << pTrunc->sim()->rad()->nR();
 
    // Create base name
    gridBasename = testBasename + "N" + converter.str() + "_";
@@ -110,7 +110,7 @@ void setGridBasename(SmartTruncation pTrunc)
 /**
  * @brief Write "grid" data to file
  */
-int writeGridData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
+int writeGridData(SmartTruncation pTrunc, WorlandBasis &wBasis)
 {
    // File writing status
    int status = 0;
@@ -131,7 +131,7 @@ int writeGridData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
    std::stringstream converter;
 
    // Convert grid size
-   converter << pTrunc->sim()->hoz()->nTh();
+   converter << pTrunc->sim()->rad()->nR();
 
    // Create base name
    basename = gridBasename + "grid.dat";
@@ -143,51 +143,7 @@ int writeGridData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
    file.open(basename.c_str());
 
    // Write data to file
-   file << legBasis.at(0).grid();
-
-   // close file
-   file.close();
-
-   return status;
-}
-
-/**
- * @brief Write "weights" data to file
- */
-int writeWeightsData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
-{
-   // File writing status
-   int status = 0;
-
-   // Test presentation output
-   if(pTrunc->para().id() == 0)
-   {
-      std::cout << "Writing \"weights\" data to file" << std::endl;
-   }
-
-   // Create file object
-   std::ofstream  file;
-
-   // Filename base string
-   std::string basename;
-
-   // Stringstream for the conversion
-   std::stringstream converter;
-
-   // Convert grid size
-   converter << pTrunc->sim()->hoz()->nTh();
-
-   // Create base name
-   basename = gridBasename + "weights.dat";
-
-   // Empty string stream
-   converter.str("");
-
-   // Open file
-   file.open(basename.c_str());
-
-   // Write data to file
-   file << legBasis.at(0).weights();
+   file << wBasis.at(0).grid();
 
    // close file
    file.close();
@@ -198,7 +154,7 @@ int writeWeightsData(SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
 /**
  * @brief Write data to file
  */
-template<class T, typename TExp> int writeData(std::string name, const epm::PolynomialOperator<TExp>& (T::*Tptr)() const, SmartTruncation pTrunc, AssocLegendreBasis &legBasis)
+template<class T, typename TExp> int writeData(std::string name, const epm::PolynomialOperator<TExp>& (T::*Tptr)() const, SmartTruncation pTrunc, WorlandBasis &wBasis)
 {
    // File writing status
    int status = 0;
@@ -228,10 +184,10 @@ template<class T, typename TExp> int writeData(std::string name, const epm::Poly
    converter.str("");
 
    // Loop over all harmonic orders
-   for(int m = 0; m < pTrunc->sim()->hoz()->nM(); ++m)
+   for(int l = 0; l < pTrunc->sim()->hoz()->nL(); ++l)
    {
       // Convert harmonic order
-      converter << m;
+      converter << l;
 
       // Build filename
       filename = basename + converter.str() + ".dat";
@@ -240,7 +196,7 @@ template<class T, typename TExp> int writeData(std::string name, const epm::Poly
       file.open(filename.c_str());
 
       // Write data to file
-      file << (legBasis.at(m).*Tptr)().productOp();
+      file << (wBasis.at(l).*Tptr)().op();
 
       // close file
       file.close();
@@ -253,14 +209,58 @@ template<class T, typename TExp> int writeData(std::string name, const epm::Poly
 }
 
 /**
+ * @brief Write "weights" data to file
+ */
+int writeWeightsData(SmartTruncation pTrunc, WorlandBasis &wBasis)
+{
+   // File writing status
+   int status = 0;
+
+   // Test presentation output
+   if(pTrunc->para().id() == 0)
+   {
+      std::cout << "Writing \"weights\" data to file" << std::endl;
+   }
+
+   // Create file object
+   std::ofstream  file;
+
+   // Filename base string
+   std::string basename;
+
+   // Stringstream for the conversion
+   std::stringstream converter;
+
+   // Convert grid size
+   converter << pTrunc->sim()->rad()->nR();
+
+   // Create base name
+   basename = gridBasename + "weights.dat";
+
+   // Empty string stream
+   converter.str("");
+
+   // Open file
+   file.open(basename.c_str());
+
+   // Write data to file
+   file << wBasis.at(0).weights();
+
+   // close file
+   file.close();
+
+   return status;
+}
+
+/**
  * @brief Perform all the tests
  */
 int runPrecTest()
 {
    // Set test truncation values
-   int maxN = 100;
-   int maxL = 64;
-   int maxM = 64;
+   int maxN = 20;
+   int maxL = 32;
+   int maxM = 32;
    int Mp = 1;
    int nCore = 1;
 
@@ -278,7 +278,7 @@ int runPrecTest()
    {
       std::cout << "Truncation information:" << std::endl;
       std::cout << "\t Radial N: " << pTrunc->sim()->rad()->nR() << std::endl;
-      std::cout << "\t Theta N: " << pTrunc->sim()->hoz()->nTh() << std::endl;
+      std::cout << "\t Theta N: " << pTrunc->sim()->rad()->nR() << std::endl;
       std::cout << "\t Phi N: " << pTrunc->sim()->hoz()->nPh() << std::endl;
       std::cout << "\t Max N: " << pTrunc->sim()->rad()->maxN() << std::endl;
       std::cout << "\t Max L: " << pTrunc->sim()->hoz()->maxL() << std::endl;
@@ -287,8 +287,8 @@ int runPrecTest()
       std::cout << std::endl << std::endl;
    }
 
-   // Create the Associated Legendre Basis object
-   AssocLegendreBasis    legBasis(pTrunc);
+   // Create the Worland basis object
+   WorlandBasis    wBasis(pTrunc);
 
    // Set "grid" data basename
    setGridBasename(pTrunc);
@@ -297,46 +297,13 @@ int runPrecTest()
    status += writeSetupData(pTrunc);
 
    // Write "grid" data to file
-   status += writeGridData(pTrunc, legBasis);
+   status += writeGridData(pTrunc, wBasis);
 
    // Write "weights" data to file
-   status += writeWeightsData(pTrunc, legBasis);
-
-   // Write "intg" data to file
-   status += writeData("intg", &AssocLegendreOperator::intg, pTrunc, legBasis);
-
-   // Write "intgTh2S" data to file
-   status += writeData("intgTh2S", &AssocLegendreOperator::intgTh2S, pTrunc, legBasis);
-
-   // Write "intgTh2T" data to file
-   status += writeData("intgTh2T", &AssocLegendreOperator::intgTh2T, pTrunc, legBasis);
-
-   // Write "intgPh2S" data to file
-   status += writeData("intgPh2S", &AssocLegendreOperator::intgPh2S, pTrunc, legBasis);
-
-   // Write "intgPh2T" data to file
-   status += writeData("intgPh2T", &AssocLegendreOperator::intgPh2T, pTrunc, legBasis);
+   status += writeWeightsData(pTrunc, wBasis);
 
    // Write "proj" data to file
-   status += writeData("proj", &AssocLegendreOperator::proj, pTrunc, legBasis);
-
-   // Write "projS2Th" data to file
-   status += writeData("projS2Th", &AssocLegendreOperator::projS2Th, pTrunc, legBasis);
-
-   // Write "projT2Th" data to file
-   status += writeData("projT2Th", &AssocLegendreOperator::projT2Th, pTrunc, legBasis);
-
-   // Write "projS2Ph" data to file
-   status += writeData("projS2Ph", &AssocLegendreOperator::projS2Ph, pTrunc, legBasis);
-
-   // Write "projT2Ph" data to file
-   status += writeData("projT2Ph", &AssocLegendreOperator::projT2Ph, pTrunc, legBasis);
-
-   // Write "proj2GradTh" data to file
-   status += writeData("proj2GradTh", &AssocLegendreOperator::proj2GradTh, pTrunc, legBasis);
-
-   // Write "proj2GradPh" data to file
-   status += writeData("proj2GradPh", &AssocLegendreOperator::proj2GradPh, pTrunc, legBasis);
+   status += writeData("poly", &WorlandOperator::proj, pTrunc, wBasis);
 
    return status;
 }
