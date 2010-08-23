@@ -27,7 +27,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCVTraits
+#define TGENTRAITS epm::GenCBVTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
 
 typedef  epm::InitialStateGenerator<epm::WSHSimulation, TGENTRAITS>  IStateGenerator;
@@ -76,32 +76,37 @@ void setSpecCodensity(Codensity &codC)
 
    codC.rOc().rPerturbation().rLShell(0)(0,0) = 1.0/4.0;
    codC.rOc().rPerturbation().rLShell(0)(1,0) = -1.0/2.0;
-
-   for(int l=1; l < pTrunc->local()->spec()->nL()-5; ++l)
-   {
-      codC.rOc().rPerturbation().rLShell(l).row(0).setConstant(1.0e-6);
-      codC.rOc().rPerturbation().rLShell(l).row(1).setConstant(1.0e-6);
-      codC.rOc().rPerturbation().rLShell(l).row(2).setConstant(1.0e-6);
-   }
-
 }
 
 void setSpecMagnetic(Magnetic &magB)
 {
+   SmartTruncation pTrunc = magB.oc().trunc();
+
+   for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
+   {
+      // Set some perturbation random energy in Toroidal component
+      magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+      magB.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
+
+      // Set some perturbation random energy in Poloidal component
+      magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+      magB.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
+   }
 }
 
 void setSpecVelocity(Velocity &velV)
 {
    SmartTruncation pTrunc = velV.oc().trunc();
 
-   for(int l=1; l < pTrunc->local()->spec()->nL()-5; ++l)
+   for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
    {
-      velV.rOc().rPerturbation().rTor().rLShell(l).row(0).setConstant(1.0e-5);
-      velV.rOc().rPerturbation().rTor().rLShell(l).row(1).setConstant(1.0e-5);
-      velV.rOc().rPerturbation().rTor().rLShell(l).row(2).setConstant(1.0e-5);
-      velV.rOc().rPerturbation().rPol().rLShell(l).row(0).setConstant(1.0e-5);
-      velV.rOc().rPerturbation().rPol().rLShell(l).row(1).setConstant(1.0e-5);
-      velV.rOc().rPerturbation().rPol().rLShell(l).row(2).setConstant(1.0e-5);
+      // Set some perturbation random energy in Toroidal component
+      velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+      velV.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
+
+      // Set some perturbation random energy in Poloidal component
+      velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+      velV.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5, 0.0);
    }
 }
 
