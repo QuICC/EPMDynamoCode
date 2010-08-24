@@ -258,9 +258,9 @@ template<class T, typename TExp> int writeData(std::string name, const epm::Poly
 int runPrecTest()
 {
    // Set test truncation values
-   int maxN = 100;
-   int maxL = 64;
-   int maxM = 64;
+   int maxN = 10;
+   int maxL = 32;
+   int maxM = 32;
    int Mp = 1;
    int nCore = 1;
 

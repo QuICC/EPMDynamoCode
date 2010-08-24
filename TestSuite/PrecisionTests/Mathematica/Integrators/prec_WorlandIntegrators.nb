@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[     12444,        329]
-NotebookOptionsPosition[     11264,        291]
-NotebookOutlinePosition[     11624,        307]
-CellTagsIndexPosition[     11581,        304]
+NotebookDataLength[     24806,        674]
+NotebookOptionsPosition[     23604,        636]
+NotebookOutlinePosition[     23963,        652]
+CellTagsIndexPosition[     23920,        649]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -141,10 +141,13 @@ Cell[BoxData[
   RowBox[{"Module", "[", 
    RowBox[{
     RowBox[{"{", 
-     RowBox[{"codeValues", ",", " ", "mathValues", ",", " ", "plots"}], "}"}],
-     ",", " ", 
+     RowBox[{
+     "codeValues", ",", " ", "mathValues", ",", "errData", ",", " ", 
+      "logErrData"}], "}"}], ",", " ", 
     RowBox[{
-     RowBox[{"plots", " ", "=", " ", 
+     RowBox[{"errData", " ", "=", " ", 
+      RowBox[{"{", "}"}]}], ";", 
+     RowBox[{"logErrData", " ", "=", " ", 
       RowBox[{"{", "}"}]}], ";", 
      RowBox[{"For", "[", 
       RowBox[{
@@ -179,118 +182,460 @@ Cell[BoxData[
           RowBox[{"wMaxN", ",", " ", "wMaxL", ",", " ", "l"}], "]"}]}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"AppendTo", "[", 
-         RowBox[{"plots", ",", 
-          RowBox[{"ListPlot", "[", 
+         RowBox[{"errData", ",", 
+          RowBox[{"Abs", "[", 
+           RowBox[{"codeValues", "-", "mathValues"}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"logErrData", ",", 
+          RowBox[{"(", 
            RowBox[{
-            RowBox[{"Abs", "[", 
-             RowBox[{"codeValues", "-", "mathValues"}], "]"}], ",", " ", 
-            RowBox[{"PlotStyle", "\[Rule]", "Red"}], ",", " ", 
-            RowBox[{"PlotLabel", "\[Rule]", 
-             RowBox[{"\"\<Integrator \>\"", "<>", 
-              RowBox[{"integratorList", "[", 
-               RowBox[{"[", "id", "]"}], "]"}], "<>", 
-              "\"\< errors for l=\>\"", "<>", 
-              RowBox[{"ToString", "[", "l", "]"}]}]}], ",", " ", 
-            RowBox[{"AxesLabel", "\[Rule]", 
-             RowBox[{"{", 
-              RowBox[{"\"\<Grid point\>\"", ",", " ", "\"\<Abs error\>\""}], 
-              "}"}]}]}], "]"}]}], "]"}], ";"}]}], "]"}], ";", 
-     "\[IndentingNewLine]", "plots"}]}], "]"}]}]], "Input",
+            RowBox[{"SetPrecision", "[", 
+             RowBox[{
+              RowBox[{"Log10", "[", 
+               RowBox[{"Chop", "[", 
+                RowBox[{
+                 RowBox[{"Abs", "[", 
+                  RowBox[{"codeValues", "-", "mathValues"}], "]"}], ",", 
+                 SuperscriptBox["10", 
+                  RowBox[{"-", "20"}]]}], "]"}], "]"}], ",", "5"}], "]"}], "/.", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"-", "\[Infinity]"}], "\[Rule]", 
+               RowBox[{"-", "20"}]}], ",", " ", 
+              RowBox[{"Indeterminate", "\[Rule]", 
+               RowBox[{"-", "20"}]}]}], "}"}]}], ")"}]}], "]"}], ";"}]}], 
+      "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"errData", ",", " ", "logErrData"}], "}"}]}]}], 
+   "]"}]}]], "Input",
  CellChangeTimes->{{3.491554359461729*^9, 3.4915544646145887`*^9}, {
   3.491554556560215*^9, 3.491554563061357*^9}, {3.4915547073577833`*^9, 
-  3.49155472158877*^9}, {3.491554858954526*^9, 3.491554918900095*^9}}],
+  3.49155472158877*^9}, {3.491554858954526*^9, 3.491554918900095*^9}, {
+  3.491624560507947*^9, 3.49162459825919*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"intgPlots", " ", "=", " ", 
+  RowBox[{"intgData", " ", "=", " ", 
    RowBox[{"integratorPlots", "[", "1", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.491554473224504*^9, 3.49155448277798*^9}, {
-  3.4915549257354927`*^9, 3.491554941842802*^9}}],
+   3.4915549257354927`*^9, 3.491554941842802*^9}, 3.4916246214333477`*^9}],
 
-Cell[BoxData[
- RowBox[{"intgPlots", "[", 
-  RowBox[{"[", 
-   RowBox[{"-", "1"}], "]"}], "]"}]], "Input",
- CellChangeTimes->{{3.491554610596036*^9, 3.49155466424198*^9}, 
-   3.491554696507799*^9, 3.491554936674963*^9}],
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"plotL", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GraphicsRow", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"ListLogPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"PlotStyle", "\[Rule]", "Red"}]}], "]"}], ",", 
+    RowBox[{"ListContourPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Contours", "\[Rule]", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"-", "17"}], ",", 
+         RowBox[{"-", "10"}], ",", " ", "0.5"}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"ListDensityPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}]}], "]"}]}], "}"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.491624646989216*^9, 3.491624647036387*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"intgPlots", " ", "=", " ", 
+  RowBox[{"intgData", " ", "=", " ", 
    RowBox[{"integratorPlots", "[", "2", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.491554473224504*^9, 3.49155448277798*^9}, {
-  3.4915549257354927`*^9, 3.491554941842802*^9}, {3.491555017287671*^9, 
-  3.491555017487626*^9}}],
+   3.4915549257354927`*^9, 3.491554941842802*^9}, {3.491555017287671*^9, 
+   3.491555017487626*^9}, 3.491624621443386*^9}],
 
-Cell[BoxData[
- RowBox[{"intgPlots", "[", 
-  RowBox[{"[", 
-   RowBox[{"-", "1"}], "]"}], "]"}]], "Input",
- CellChangeTimes->{{3.491554610596036*^9, 3.49155466424198*^9}, 
-   3.491554696507799*^9, 3.491554936674963*^9}],
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"plotL", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GraphicsRow", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"ListLogPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"PlotStyle", "\[Rule]", "Red"}]}], "]"}], ",", 
+    RowBox[{"ListContourPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Contours", "\[Rule]", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"-", "17"}], ",", 
+         RowBox[{"-", "10"}], ",", " ", "0.5"}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"ListDensityPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}]}], "]"}]}], "}"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.491624646989216*^9, 3.491624647036387*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"intgPlots", " ", "=", " ", 
+  RowBox[{"intgData", " ", "=", " ", 
    RowBox[{"integratorPlots", "[", "3", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.491554473224504*^9, 3.49155448277798*^9}, {
-  3.4915549257354927`*^9, 3.491554941842802*^9}, {3.4915550198264513`*^9, 
-  3.491555019952981*^9}}],
+   3.4915549257354927`*^9, 3.491554941842802*^9}, {3.4915550198264513`*^9, 
+   3.491555019952981*^9}, 3.491624621452347*^9}],
 
-Cell[BoxData[
- RowBox[{"intgPlots", "[", 
-  RowBox[{"[", 
-   RowBox[{"-", "1"}], "]"}], "]"}]], "Input",
- CellChangeTimes->{{3.491554610596036*^9, 3.49155466424198*^9}, 
-   3.491554696507799*^9, 3.491554936674963*^9}],
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"plotL", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GraphicsRow", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"ListLogPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"PlotStyle", "\[Rule]", "Red"}]}], "]"}], ",", 
+    RowBox[{"ListContourPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Contours", "\[Rule]", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"-", "17"}], ",", 
+         RowBox[{"-", "10"}], ",", " ", "0.5"}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"ListDensityPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}]}], "]"}]}], "}"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.491624646989216*^9, 3.491624647036387*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"intgPlots", " ", "=", " ", 
+  RowBox[{"intgData", " ", "=", " ", 
    RowBox[{"integratorPlots", "[", "4", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.491554473224504*^9, 3.49155448277798*^9}, {
-  3.4915549257354927`*^9, 3.491554941842802*^9}, {3.491555022045225*^9, 
-  3.49155502213995*^9}}],
+   3.4915549257354927`*^9, 3.491554941842802*^9}, {3.491555022045225*^9, 
+   3.49155502213995*^9}, 3.491624621463183*^9}],
 
-Cell[BoxData[
- RowBox[{"intgPlots", "[", 
-  RowBox[{"[", 
-   RowBox[{"-", "1"}], "]"}], "]"}]], "Input",
- CellChangeTimes->{{3.491554610596036*^9, 3.49155466424198*^9}, 
-   3.491554696507799*^9, 3.491554936674963*^9}],
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"plotL", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GraphicsRow", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"ListLogPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"PlotStyle", "\[Rule]", "Red"}]}], "]"}], ",", 
+    RowBox[{"ListContourPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Contours", "\[Rule]", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"-", "17"}], ",", 
+         RowBox[{"-", "10"}], ",", " ", "0.5"}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"ListDensityPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}]}], "]"}]}], "}"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.491624646989216*^9, 3.491624647036387*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"intgPlots", " ", "=", " ", 
+  RowBox[{"intgData", " ", "=", " ", 
    RowBox[{"integratorPlots", "[", "5", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.491554473224504*^9, 3.49155448277798*^9}, {
-  3.4915549257354927`*^9, 3.491554941842802*^9}, {3.4915550248960543`*^9, 
-  3.491555025022737*^9}}],
+   3.4915549257354927`*^9, 3.491554941842802*^9}, {3.4915550248960543`*^9, 
+   3.491555025022737*^9}, 3.491624621471067*^9}],
 
-Cell[BoxData[
- RowBox[{"intgPlots", "[", 
-  RowBox[{"[", 
-   RowBox[{"-", "1"}], "]"}], "]"}]], "Input",
- CellChangeTimes->{{3.491554610596036*^9, 3.49155466424198*^9}, 
-   3.491554696507799*^9, 3.491554936674963*^9}],
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"plotL", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GraphicsRow", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"ListLogPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"PlotStyle", "\[Rule]", "Red"}]}], "]"}], ",", 
+    RowBox[{"ListContourPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Contours", "\[Rule]", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"-", "17"}], ",", 
+         RowBox[{"-", "10"}], ",", " ", "0.5"}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"ListDensityPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}]}], "]"}]}], "}"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.491624646989216*^9, 3.491624647036387*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"intgPlots", " ", "=", " ", 
+  RowBox[{"intgData", " ", "=", " ", 
    RowBox[{"integratorPlots", "[", "6", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.491554473224504*^9, 3.49155448277798*^9}, {
-  3.4915549257354927`*^9, 3.491554941842802*^9}, {3.49155502665598*^9, 
-  3.491555026739028*^9}}],
+   3.4915549257354927`*^9, 3.491554941842802*^9}, {3.49155502665598*^9, 
+   3.491555026739028*^9}, 3.491624621481593*^9}],
 
-Cell[BoxData[
- RowBox[{"intgPlots", "[", 
-  RowBox[{"[", 
-   RowBox[{"-", "1"}], "]"}], "]"}]], "Input",
- CellChangeTimes->{{3.491554610596036*^9, 3.49155466424198*^9}, 
-   3.491554696507799*^9, 3.491554936674963*^9}]
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"plotL", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"GraphicsRow", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"ListLogPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"PlotStyle", "\[Rule]", "Red"}]}], "]"}], ",", 
+    RowBox[{"ListContourPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}], ",", " ", 
+      RowBox[{"Contours", "\[Rule]", 
+       RowBox[{"Range", "[", 
+        RowBox[{
+         RowBox[{"-", "17"}], ",", 
+         RowBox[{"-", "10"}], ",", " ", "0.5"}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"ListDensityPlot", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"intgData", "[", 
+        RowBox[{"[", "2", "]"}], "]"}], "[", 
+       RowBox[{"[", 
+        RowBox[{"plotL", "+", "1"}], "]"}], "]"}], ",", " ", 
+      RowBox[{"ColorFunction", "\[Rule]", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ColorData", "[", "\"\<ThermometerColors\>\"", "]"}], "[", 
+          RowBox[{"Rescale", "[", 
+           RowBox[{"#", ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "20"}], ",", 
+              RowBox[{"-", "10"}]}], "}"}]}], "]"}], "]"}], "&"}], ")"}]}], 
+      ",", " ", 
+      RowBox[{"ColorFunctionScaling", "\[Rule]", "False"}]}], "]"}]}], "}"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.491624646989216*^9, 3.491624647036387*^9}}]
 },
 WindowSize->{1101, 654},
-WindowMargins->{{Automatic, 226}, {Automatic, 11}},
+WindowMargins->{{Automatic, 222}, {Automatic, 0}},
 ShowSelection->True,
 FrontEndVersion->"7.0 for Linux x86 (64-bit) (February 25, 2009)",
 StyleDefinitions->"Default.nb"
@@ -318,19 +663,19 @@ Cell[3815, 96, 514, 11, 32, "Input"],
 Cell[4332, 109, 155, 3, 32, "Input"],
 Cell[4490, 114, 483, 10, 31, "Text"],
 Cell[4976, 126, 407, 9, 32, "Input"],
-Cell[5386, 137, 2825, 63, 231, "Input"],
-Cell[8214, 202, 244, 5, 32, "Input"],
-Cell[8461, 209, 217, 5, 32, "Input"],
-Cell[8681, 216, 293, 6, 32, "Input"],
-Cell[8977, 224, 217, 5, 32, "Input"],
-Cell[9197, 231, 295, 6, 32, "Input"],
-Cell[9495, 239, 217, 5, 32, "Input"],
-Cell[9715, 246, 292, 6, 32, "Input"],
-Cell[10010, 254, 217, 5, 32, "Input"],
-Cell[10230, 261, 295, 6, 32, "Input"],
-Cell[10528, 269, 217, 5, 32, "Input"],
-Cell[10748, 276, 292, 6, 32, "Input"],
-Cell[11043, 284, 217, 5, 32, "Input"]
+Cell[5386, 137, 3272, 78, 253, "Input"],
+Cell[8661, 217, 268, 5, 32, "Input"],
+Cell[8932, 224, 2176, 60, 143, "Input"],
+Cell[11111, 286, 316, 6, 32, "Input"],
+Cell[11430, 294, 2176, 60, 143, "Input"],
+Cell[13609, 356, 318, 6, 32, "Input"],
+Cell[13930, 364, 2176, 60, 143, "Input"],
+Cell[16109, 426, 315, 6, 32, "Input"],
+Cell[16427, 434, 2176, 60, 143, "Input"],
+Cell[18606, 496, 318, 6, 32, "Input"],
+Cell[18927, 504, 2176, 60, 143, "Input"],
+Cell[21106, 566, 315, 6, 32, "Input"],
+Cell[21424, 574, 2176, 60, 143, "Input"]
 }
 ]
 *)

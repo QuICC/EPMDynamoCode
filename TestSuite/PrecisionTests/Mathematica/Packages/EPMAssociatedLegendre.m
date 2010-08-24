@@ -86,20 +86,20 @@ schmidtNorm[l_,m_] = If[l==0 && m ==0, 1,If[m==0, Sqrt[(l-m)!/(l+m)!],Sqrt[2] Sq
 
 
 (*****************  Create private polynomials and derivatives computations *******************)
-alPoly[l_Integer, m_Integer, x_Real]:= schmidtNorm[l,m]LegendreP[l,m,x];
-alDPoly[l_Integer, m_Integer, x_Real]:= schmidtNorm[l,m]Evaluate[-Sin[ArcCos[x]] D[LegendreP[l,m,x],x]];
-alProj[l_Integer, m_Integer, x_Real]:= alPoly[l,m,x];
-alProjS2Th[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
-alProjT2Th[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
-alProjS2Ph[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
-alProjT2Ph[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
-alProj2GradTh[l_Integer, m_Integer, x_Real]:= alDPoly[l,m,x];
-alProj2GradPh[l_Integer, m_Integer, x_Real]:= 1/Sin[ArcCos[x]] alDPoly[l,m,x];
-alIntg[l_Integer, m_Integer, x_Real]:= alPoly[l,m,x];
-alIntgTh2S[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
-alIntgTh2T[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
-alIntgPh2S[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
-alIntgPh2T[l_Integer, m_Integer, x_Real]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
+alPoly[l_Integer, m_Integer, x_]:= schmidtNorm[l,m]LegendreP[l,m,x];
+alDPoly[l_Integer, m_Integer, x_]:= schmidtNorm[l,m]Evaluate[-Sin[ArcCos[x]] D[LegendreP[l,m,t],t]/.{t->x}];
+alProj[l_Integer, m_Integer, x_]:= alPoly[l,m,x];
+alProjS2Th[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] alDPoly[l,m,x];
+alProjT2Th[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
+alProjS2Ph[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
+alProjT2Ph[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
+alProj2GradTh[l_Integer, m_Integer, x_]:= alDPoly[l,m,x];
+alProj2GradPh[l_Integer, m_Integer, x_]:= 1/Sin[ArcCos[x]] alDPoly[l,m,x];
+alIntg[l_Integer, m_Integer, x_]:= alPoly[l,m,x];
+alIntgTh2S[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
+alIntgTh2T[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
+alIntgPh2S[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
+alIntgPh2T[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
 
 
 (*****************  Create high precision grid values *******************)
