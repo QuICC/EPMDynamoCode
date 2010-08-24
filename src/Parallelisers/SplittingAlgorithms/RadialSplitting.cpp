@@ -147,4 +147,14 @@ namespace EPMDynamo {
       }
    }
 
+   void RadialSplitting::printSpectralInfo() const
+   {
+      std::cout << "########## IN DEVELOPMENT ###########" << std::endl;
+   }
+
+   void RadialSplitting::printSphHarmonicsInfo() const
+   {
+      std::cout << "        No load splitting required!" << std::endl;
+   }
+
 }

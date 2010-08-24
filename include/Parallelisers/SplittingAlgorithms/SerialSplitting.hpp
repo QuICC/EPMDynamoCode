@@ -42,6 +42,16 @@ namespace EPMDynamo {
           * @brief Destructor
           */
          virtual ~SerialSplitting() {};
+
+         /**
+          * @brief Print splitting information for spectral transform
+          */
+         void printSpectralInfo() const;
+
+         /**
+          * @brief Print splitting information for spherical harmonics transform
+          */
+         void printSphHarmonicsInfo() const;
          
       protected:
 

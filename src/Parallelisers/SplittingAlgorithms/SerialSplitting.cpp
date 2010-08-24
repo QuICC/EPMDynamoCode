@@ -67,4 +67,14 @@ namespace EPMDynamo {
       }
    }
 
+   void SerialSplitting::printSpectralInfo() const
+   {
+      std::cout << "        No load splitting required!" << std::endl;
+   }
+
+   void SerialSplitting::printSphHarmonicsInfo() const
+   {
+      std::cout << "        No load splitting required!" << std::endl;
+   }
+
 }

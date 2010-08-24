@@ -257,19 +257,23 @@ namespace EPMDynamo {
       // Make it look nice ;)
       if(this->id() == 0)
       {
-         std::cout << "*******************************" << std::endl;
-         std::cout << "***  Splitting description  ***" << std::endl;
-         std::cout << "*******************************" << std::endl;
+         std::cout << "**********************************************" << std::endl;
+         std::cout << "********  Load splitting description  ********" << std::endl;
+         std::cout << "**********************************************" << std::endl;
 
          std::cout << std::endl;
-         std::cout << "######## IN DEVELOPMENT #######" << std::endl;
+         std::cout << "############# Spectral transform #############" << std::endl;
+         this->printSpectralInfo();
+
          std::cout << std::endl;
-         std::cout << "*******************************" << std::endl;
-         std::cout << std::endl;
-         std::cout << "######## IN DEVELOPMENT #######" << std::endl;
+         std::cout << "**********************************************" << std::endl;
          std::cout << std::endl;
 
-         std::cout << "*******************************" << std::endl;
+         std::cout << "######## Spherical harmonics transform #######" << std::endl;
+         this->printSphHarmonicsInfo();
+         std::cout << std::endl;
+
+         std::cout << "**********************************************" << std::endl;
          std::cout << std::endl;
       }
    }

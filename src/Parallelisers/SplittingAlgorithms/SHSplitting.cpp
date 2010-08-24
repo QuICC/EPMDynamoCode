@@ -139,4 +139,14 @@ namespace EPMDynamo {
       }
    }
 
+   void SHSplitting::printSpectralInfo() const
+   {
+      std::cout << "        No load splitting required!" << std::endl;
+   }
+
+   void SHSplitting::printSphHarmonicsInfo() const
+   {
+      std::cout << "########## IN DEVELOPMENT ###########" << std::endl;
+   }
+
 }

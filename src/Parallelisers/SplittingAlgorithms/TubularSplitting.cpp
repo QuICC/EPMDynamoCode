@@ -110,6 +110,12 @@ namespace EPMDynamo {
          return false;
       }
 
+      // Both splitting factors have to be even (always two in communication)
+      if(this->mRSplitting % 2 == 1 || this->mMSplitting % 2 == 1)
+      {
+         return false;
+      }
+
       // Load balancing requires at least 2 harmonic orders per CPU
       if(this->sim()->hoz()->nM() / this->mMSplitting < 2)
       {
@@ -566,6 +572,20 @@ namespace EPMDynamo {
       {
          rMs(i) = *setIt;
       }
+   }
+
+   void TubularSplitting::printSpectralInfo() const
+   {
+      std::cout << "########## IN DEVELOPMENT ###########" << std::endl;
+      std::cout << "     Harmonic degree splitting factor: " << this->mRSplitting << std::endl;
+      std::cout << "     Harmonic order splitting factor: " << this->mMSplitting << std::endl;
+   }
+
+   void TubularSplitting::printSphHarmonicsInfo() const
+   {
+      std::cout << "########## IN DEVELOPMENT ###########" << std::endl;
+      std::cout << "     Radial splitting factor: " << this->mRSplitting << std::endl;
+      std::cout << "     Harmonic order splitting factor: " << this->mMSplitting << std::endl;
    }
 
 }
