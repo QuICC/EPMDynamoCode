@@ -20,6 +20,9 @@
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
 
+#include <fstream>
+#include <sstream>
+
 namespace EPMDynamo {
 
    /**
@@ -221,7 +224,9 @@ t_sync += this->mTimer.time();
 std::ofstream  file;
 std::ostringstream oss;
 oss << EPMDYNAMO_RANK;
-file.open("sim_timings"+oss.str()+".dat");
+std::string name = "sim_timings"+oss.str()+".dat";
+
+file.open(name.c_str());
 file << t_upRTP << std::endl;
 file << t_upRHS << std::endl;
 file << t_trRHS << std::endl;
@@ -230,17 +235,6 @@ file << t_upTim << std::endl;
 file << t_tiEqu << std::endl;
 file << t_siUpd << std::endl;
 file << t_wrFil << std::endl;
-file << t_sync << std::endl;
-
-file << std::endl << std::endl << std::endl;
-file << t_upRTP << "\t";
-file << t_upRHS << "\t";
-file << t_trRHS << "\t";
-file << t_exInf << "\t";
-file << t_upTim << "\t";
-file << t_tiEqu << "\t";
-file << t_siUpd << "\t";
-file << t_wrFil << "\t";
 file << t_sync << std::endl;
 file.close();
 
