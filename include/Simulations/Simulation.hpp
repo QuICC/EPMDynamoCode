@@ -69,7 +69,6 @@ namespace EPMDynamo {
       : TSimImpl<TSimType>()
    {
       // Stop timer for construction time
-      this->mTimer.stop();
       this->mExecTimer.stop();
       this->mExecTimer.update(1);
 
@@ -77,9 +76,9 @@ namespace EPMDynamo {
       if(this->mpTrunc->para().id() == 0)
       {
          std::cout << std::endl;
-         std::cout << "----------------------------------------------------------" << std::endl;
-         std::cout << "*** Simulation construction successfull in " << static_cast<int>(std::ceil(this->mTimer.time())) << " seconds ***" << std::endl;
-         std::cout << "----------------------------------------------------------" << std::endl;
+         std::cout << "-------------------------------------------" << std::endl;
+         std::cout << "*** Simulation construction successfull ***" << std::endl;
+         std::cout << "-------------------------------------------" << std::endl;
          std::cout << std::endl;
       }
    }
@@ -87,7 +86,6 @@ namespace EPMDynamo {
    template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::init()
    {
       // Start timer
-      this->mTimer.start();
       this->mExecTimer.start();
 
       try{
@@ -120,22 +118,15 @@ namespace EPMDynamo {
       EPMDYNAMO_SYNCHRONIZE;
 
       // Stop timer
-      this->mTimer.stop();
       this->mExecTimer.stop();
       this->mExecTimer.update(2);
 
       // Produce some nice output information for initialisation step
       if(this->mpTrunc->para().id() == 0)
       {
-         std::cout << "------------------------------------------------" << std::endl;
-         if(this->mTimer.time() < 1.0)
-         {
-            std::cout << "*** Initialisation successfull in < 1 second ***" << std::endl;
-         } else
-         {
-            std::cout << "*** Initialisation successfull in " << static_cast<int>(std::ceil(this->mTimer.time())) << " seconds ***" << std::endl;
-         }
-         std::cout << "------------------------------------------------" << std::endl;
+         std::cout << "---------------------------------------------" << std::endl;
+         std::cout << "*** Simulation initialisation successfull ***" << std::endl;
+         std::cout << "---------------------------------------------" << std::endl;
          std::cout << std::endl;
       }
    }

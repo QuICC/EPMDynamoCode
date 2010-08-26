@@ -56,7 +56,7 @@ namespace EPMDynamo {
    void ExecutionTimer::printInfo() const
    {
       std::cout << std::endl;
-      std::cout << "***************** Execution time information *****************" << std::endl;
+      std::cout << "************* Execution time information *************" << std::endl;
 
       std::cout << "     Construction time: " << static_cast<int>(std::ceil(this->mMeanTimes(1))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(1))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(1))) << " seconds" << std::endl;
 
@@ -68,11 +68,11 @@ namespace EPMDynamo {
 
       std::cout << "     PostRun time: " << static_cast<int>(std::ceil(this->mMeanTimes(5))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(5))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(5))) << " seconds" << std::endl;
 
-      std::cout << "--------------------------------------------------------------" << std::endl;
+      std::cout << "------------------------------------------------------" << std::endl;
 
       std::cout << "     Total execution time: " << static_cast<int>(std::ceil(this->mMeanTimes(0))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(0))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(0))) << " seconds" << std::endl;
 
-      std::cout << "**************************************************************" << std::endl;
+      std::cout << "******************************************************" << std::endl;
    }
 
 }
