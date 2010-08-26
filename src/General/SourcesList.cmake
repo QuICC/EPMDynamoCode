@@ -3,6 +3,7 @@
 #
 set(${SrcSubDir}_Srcs
       EPMException.cpp
+      ExecutionTimer.cpp
       MathConstants.cpp
       TimerBase.cpp
       )

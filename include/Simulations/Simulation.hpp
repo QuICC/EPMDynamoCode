@@ -70,6 +70,8 @@ namespace EPMDynamo {
    {
       // Stop timer for construction time
       this->mTimer.stop();
+      this->mExecTimer.stop();
+      this->mExecTimer.update(1);
 
       // Print some information on simulation construction time
       if(this->mpTrunc->para().id() == 0)
@@ -86,6 +88,7 @@ namespace EPMDynamo {
    {
       // Start timer
       this->mTimer.start();
+      this->mExecTimer.start();
 
       try{
          // Initialise the simulation equations
@@ -118,6 +121,8 @@ namespace EPMDynamo {
 
       // Stop timer
       this->mTimer.stop();
+      this->mExecTimer.stop();
+      this->mExecTimer.update(2);
 
       // Produce some nice output information for initialisation step
       if(this->mpTrunc->para().id() == 0)
@@ -137,8 +142,18 @@ namespace EPMDynamo {
 
    template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::run()
    {
+      // Start timer
+      this->mExecTimer.start();
+
       // Execute last initialisation before run
       this->preRun();
+
+      // Stop pre run timing
+      this->mExecTimer.stop();
+      this->mExecTimer.update(3);
+
+      // Start timer
+      this->mExecTimer.start();
 
       // Start looping as long as requested
       while(this->mSimControl.keepRunning())
@@ -180,18 +195,32 @@ namespace EPMDynamo {
          // Synchronize simulation
          EPMDYNAMO_SYNCHRONIZE;
       }
+      // Stop pre run timing
+      this->mExecTimer.stop();
+      this->mExecTimer.update(4);
+
+      // Start timer
+      this->mExecTimer.start();
 
       // Execute last initialisation before end
       this->postRun();
 
       // Synchronize simulation
       EPMDYNAMO_SYNCHRONIZE;
+
+      // Stop post run timing
+      this->mExecTimer.stop();
+      this->mExecTimer.update(5);
    }
 
    template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::finalise()
    {
       // Print timestepping infos
       this->mSimControl.printInfo();
+
+      // Print execution timer infos
+      this->mExecTimer.analyze();
+      this->mExecTimer.printInfo();
 
       // Close and finalise writers
       this->mIOSys.finaliseWriters();
