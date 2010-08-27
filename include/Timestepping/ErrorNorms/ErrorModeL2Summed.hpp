@@ -1,9 +1,13 @@
-/** \file ErrorL2.hpp
- *  \brief Implementation of the L2 error norm computation
+/** \file ErrorModeL2Summed.hpp
+ *  \brief Implementation of the relative L2 max error norm per harmonic mode computation
  */
 
-#ifndef ERRORL2_HPP
-#define ERRORL2_HPP
+#ifndef ERRORMODEL2SUMMED_HPP
+#define ERRORMODEL2SUMMED_HPP
+
+// Configuration includes
+//
+#include "Config/Parallelisation.h"
 
 // System includes
 //
@@ -18,18 +22,18 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of the L2 error norm computation
+    * \brief Implementation of the L2 max error norm computation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ErrorL2
+   template <typename TSimType> class ErrorModeL2Summed
    {
       public:
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
          /**
-          * @brief Compute the L2 error norm
+          * @brief Compute the Max error norm
           *
           * @param rVar Input variable
           * @param rRef Reference variable for relative error
@@ -50,15 +54,15 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         ErrorL2();
+         ErrorModeL2Summed();
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~ErrorL2() {};
+         virtual ~ErrorModeL2Summed() {}; 
    };
 
-   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::computeNorm(const typename ErrorL2<TSimType>::ScalarType& rVar, const typename ErrorL2<TSimType>::ScalarType& rRef)
+   template <typename TSimType> EPMFloat ErrorModeL2Summed<TSimType>::computeNorm(const typename ErrorModeL2Summed<TSimType>::ScalarType& rVar, const typename ErrorModeL2Summed<TSimType>::ScalarType& rRef)
    {
       // Create temporary storage
       EPMFloat norm = 0.0;
@@ -77,17 +81,17 @@ namespace EPMDynamo {
          for(int m=0; m < nM; ++m)
          {
             // Compute L2 norm            
-            tmp += rVar.lshell(l).col(m).real().dot(rVar.lshell(l).col(m).real()) + rVar.lshell(l).col(m).imag().dot(rVar.lshell(l).col(m).imag());
-            refVal += rRef.lshell(l).col(m).real().dot(rRef.lshell(l).col(m).real()) + rRef.lshell(l).col(m).imag().dot(rRef.lshell(l).col(m).imag());
+            tmp = rVar.lshell(l).col(m).real().dot(rVar.lshell(l).col(m).real()) + rVar.lshell(l).col(m).imag().dot(rVar.lshell(l).col(m).imag());
+            tmp = std::sqrt(tmp);
+            refVal = rRef.lshell(l).col(m).real().dot(rRef.lshell(l).col(m).real()) + rRef.lshell(l).col(m).imag().dot(rRef.lshell(l).col(m).imag());
+            refVal = std::sqrt(refVal);
+            if(refVal > TimestepConfig::TIMESTEP_RELERROR_THRESHOLD)
+            {
+               tmp /= refVal;
+            }
+            norm += tmp;
          }
       }
-      tmp = std::sqrt(tmp);
-      refVal = std::sqrt(refVal);
-      if(refVal > TimestepConfig::TIMESTEP_RELERROR_THRESHOLD)
-      {
-         tmp /= refVal;
-      }
-      norm = std::max(norm, tmp);
 
       // Get the "global" norm for MPI code
       #ifdef EPMDYNAMO_MPI
@@ -97,15 +101,15 @@ namespace EPMDynamo {
       return norm;
    }
 
-   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
+   template <typename TSimType> inline EPMFloat ErrorModeL2Summed<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
    }
 
-   template <typename TSimType> ErrorL2<TSimType>::ErrorL2()
+   template <typename TSimType> ErrorModeL2Summed<TSimType>::ErrorModeL2Summed()
    {
    }
 
 }
 
-#endif // ERRORL2_HPP
+#endif // ERRORMODEL2SUMMED_HPP

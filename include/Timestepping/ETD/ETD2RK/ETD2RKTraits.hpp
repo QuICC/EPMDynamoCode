@@ -18,7 +18,7 @@
 namespace EPMDynamo {
 
    // Forward declarations
-   template <typename> class ErrorL2Max;
+   template <typename> class ErrorModeL2Max;
 
    /**
     * \brief Traits to some global aspects of the ETD2RK scheme
@@ -29,7 +29,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the error norm type
-         typedef ErrorL2Max<TSimType>   ErrorNormType;
+         typedef ErrorModeL2Max<TSimType>   ErrorNormType;
 
          /// Type of timestep controller to use
          static const TimestepCtrlTypes  CtrlType = ElementaryCtrl;

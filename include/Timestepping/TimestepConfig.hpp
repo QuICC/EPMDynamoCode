@@ -82,6 +82,13 @@ namespace EPMDynamo {
           * The exact meaning of this values depends on the implemented scheme
           */
          static const EPMFloat TIMESTEP_ERROR_EPSILON;
+
+         /**
+          * @brief Lower threshold for relative error computation
+          *
+          * (To compute the absolute error in place of the relative error, set the threshold very high. To be absolutely sure use: std::numeric_limits<EPMFloat>::max(). This should only be used for test purpose, if absolute errors are really required it should be implemented in a separated ErrorNorms class!)
+          */
+         static const EPMFloat TIMESTEP_RELERROR_THRESHOLD;
          
       protected:
 

@@ -31,6 +31,8 @@ namespace EPMDynamo {
 
    const EPMFloat TimestepConfig::TIMESTEP_ERROR_EPSILON = TimestepConfig::TIMESTEP_ERROR_THETA*TimestepConfig::TIMESTEP_ERROR_TOLERANCE;
 
+   const EPMFloat TimestepConfig::TIMESTEP_RELERROR_THRESHOLD = 1e-14;
+
    void TimestepConfig::overruleMaxTimestep(EPMFloat newMax)
    {
       // Set new maximum timestep

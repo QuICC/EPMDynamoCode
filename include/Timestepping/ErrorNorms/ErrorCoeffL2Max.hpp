@@ -1,9 +1,13 @@
-/** \file ErrorL2.hpp
- *  \brief Implementation of the L2 error norm computation
+/** \file ErrorCoeffL2Max.hpp
+ *  \brief Implementation of the relative L2 max error norm per radial coefficient computation
  */
 
-#ifndef ERRORL2_HPP
-#define ERRORL2_HPP
+#ifndef ERRORCOEFFL2MAX_HPP
+#define ERRORCOEFFL2MAX_HPP
+
+// Configuration includes
+//
+#include "Config/Parallelisation.h"
 
 // System includes
 //
@@ -18,18 +22,18 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of the L2 error norm computation
+    * \brief Implementation of the L2 max error norm computation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ErrorL2
+   template <typename TSimType> class ErrorCoeffL2Max
    {
       public:
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
          /**
-          * @brief Compute the L2 error norm
+          * @brief Compute the Max error norm
           *
           * @param rVar Input variable
           * @param rRef Reference variable for relative error
@@ -50,15 +54,15 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         ErrorL2();
+         ErrorCoeffL2Max();
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~ErrorL2() {};
+         virtual ~ErrorCoeffL2Max() {}; 
    };
 
-   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::computeNorm(const typename ErrorL2<TSimType>::ScalarType& rVar, const typename ErrorL2<TSimType>::ScalarType& rRef)
+   template <typename TSimType> EPMFloat ErrorCoeffL2Max<TSimType>::computeNorm(const typename ErrorCoeffL2Max<TSimType>::ScalarType& rVar, const typename ErrorCoeffL2Max<TSimType>::ScalarType& rRef)
    {
       // Create temporary storage
       EPMFloat norm = 0.0;
@@ -68,6 +72,7 @@ namespace EPMDynamo {
       // Get truncation information
       const int l0 = rVar.minL();
       int nL = rVar.nL();
+      int nN = rVar.nN();
       int nM;
 
       // Loop over harmonic modes
@@ -76,18 +81,21 @@ namespace EPMDynamo {
          nM = rVar.nM(l);
          for(int m=0; m < nM; ++m)
          {
-            // Compute L2 norm            
-            tmp += rVar.lshell(l).col(m).real().dot(rVar.lshell(l).col(m).real()) + rVar.lshell(l).col(m).imag().dot(rVar.lshell(l).col(m).imag());
-            refVal += rRef.lshell(l).col(m).real().dot(rRef.lshell(l).col(m).real()) + rRef.lshell(l).col(m).imag().dot(rRef.lshell(l).col(m).imag());
+            // Compute L2 norm
+            for(int n=0; n < nN; ++n)
+            {
+               tmp = rVar.lshell(l)(n,m).real()*rVar.lshell(l)(n,m).real() + rVar.lshell(l)(n,m).imag()*rVar.lshell(l)(n,m).imag();
+               tmp = std::sqrt(tmp);
+               refVal = rRef.lshell(l)(n,m).real()*rRef.lshell(l)(n,m).real() + rRef.lshell(l)(n,m).imag()*rRef.lshell(l)(n,m).imag();
+               refVal = std::sqrt(refVal);
+               if(refVal > TimestepConfig::TIMESTEP_RELERROR_THRESHOLD)
+               {
+                  tmp /= refVal;
+               }
+               norm = std::max(norm, tmp);
+            }
          }
       }
-      tmp = std::sqrt(tmp);
-      refVal = std::sqrt(refVal);
-      if(refVal > TimestepConfig::TIMESTEP_RELERROR_THRESHOLD)
-      {
-         tmp /= refVal;
-      }
-      norm = std::max(norm, tmp);
 
       // Get the "global" norm for MPI code
       #ifdef EPMDYNAMO_MPI
@@ -97,15 +105,15 @@ namespace EPMDynamo {
       return norm;
    }
 
-   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
+   template <typename TSimType> inline EPMFloat ErrorCoeffL2Max<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
    }
 
-   template <typename TSimType> ErrorL2<TSimType>::ErrorL2()
+   template <typename TSimType> ErrorCoeffL2Max<TSimType>::ErrorCoeffL2Max()
    {
    }
 
 }
 
-#endif // ERRORL2_HPP
+#endif // ERRORCOEFFL2MAX_HPP

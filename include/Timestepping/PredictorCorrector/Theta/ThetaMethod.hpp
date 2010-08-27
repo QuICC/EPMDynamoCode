@@ -232,7 +232,7 @@ namespace EPMDynamo {
    template <typename TSimType> void ThetaMethod<TSimType>::useCorrection(typename ThetaMethod<TSimType>::ScalarType& rVar)
    {
       // Update simulation wide value of corrector norm
-      this->rTSParams().updateError(ErrorControl<TSimType>::errorNorm(this->mPreviousNTerms, this->rTSParams().error()));
+      this->rTSParams().updateError(ErrorControl<TSimType>::errorNorm(this->mPreviousNTerms, this->oldVar(), this->rTSParams().error()));
 
       // Add correction to unknown
       this->addCorrection(rVar, this->mPreviousNTerms);
