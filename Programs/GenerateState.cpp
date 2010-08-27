@@ -74,8 +74,22 @@ void setSpecCodensity(Codensity &codC)
 {
    SmartTruncation pTrunc = codC.oc().trunc();
 
-   codC.rOc().rPerturbation().rLShell(0)(0,0) = 1.0/4.0;
-   codC.rOc().rPerturbation().rLShell(0)(1,0) = -1.0/2.0;
+   // Set some perturbation random energy
+   for(int l=0; l < pTrunc->local()->spec()->nL()/2; ++l)
+   {
+      codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+      codC.rOc().rPerturbation().rLShell(l) *= epm::EPMComplex(1.0e-8,0.0);
+
+      // Make sure the m=0 imaginary part is zero!
+      for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
+      {
+         codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag() = 0.0;
+      }
+   }
+
+   // Create basic state
+   codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
+   codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
 }
 
 void setSpecMagnetic(Magnetic &magB)
@@ -84,13 +98,16 @@ void setSpecMagnetic(Magnetic &magB)
 
    for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
    {
+      magB.rOc().rPerturbation().rTor().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
+      magB.rOc().rPerturbation().rPol().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
+
       // Set some perturbation random energy in Toroidal component
-      magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-      magB.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
+//      magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+//      magB.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
 
       // Set some perturbation random energy in Poloidal component
-      magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-      magB.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
+//      magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+//      magB.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
    }
 }
 
@@ -100,13 +117,16 @@ void setSpecVelocity(Velocity &velV)
 
    for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
    {
+      velV.rOc().rPerturbation().rTor().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
+      velV.rOc().rPerturbation().rPol().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
+
       // Set some perturbation random energy in Toroidal component
-      velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-      velV.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
+//      velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+//      velV.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
 
       // Set some perturbation random energy in Poloidal component
-      velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-      velV.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5, 0.0);
+//      velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+//      velV.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5, 0.0);
    }
 }
 
