@@ -50,19 +50,19 @@ int runProgram()
    // Create the genertor object
    IStateGenerator   generator;
 
-   // Set the codensity field
+   // Set the codensity field on RTP decomposition
    if(GENTRAITS::NeedCodensity)
    {
       StateType::setRTPCodensity(generator.codC());
    }
 
-   // Set the magetic field
+   // Set the magetic field on RTP decomposition
    if(GENTRAITS::NeedMagnetic)
    {
       StateType::setRTPMagnetic(generator.magB());
    }
 
-   // Set the velocity field
+   // Set the velocity field on RTP decomposition
    if(GENTRAITS::NeedVelocity)
    {
       StateType::setRTPVelocity(generator.velV());
@@ -71,19 +71,19 @@ int runProgram()
    // Transform the fields
    generator.transformRTP();
 
-   // Set the codensity field
+   // Set the codensity field on Spectral decomposition
    if(GENTRAITS::NeedCodensity)
    {
       StateType::setSpecCodensity(generator.codC());
    }
 
-   // Set the magetic field
+   // Set the magetic field on Spectral decomposition
    if(GENTRAITS::NeedMagnetic)
    {
       StateType::setSpecMagnetic(generator.magB());
    }
 
-   // Set the velocity field
+   // Set the velocity field on Spectral decomposition
    if(GENTRAITS::NeedVelocity)
    {
       StateType::setSpecVelocity(generator.velV());

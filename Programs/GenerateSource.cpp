@@ -25,65 +25,20 @@
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
+#include "Utilities/Sources/SakurabaSource.hpp"
+
 namespace epm = EPMDynamo;
 
 #define TGENTRAITS epm::GenCTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
+
+typedef epm::SakurabaSource<GENTRAITS>  SourceType;
 
 typedef  epm::SourceGenerator<epm::WSHSimulation, TGENTRAITS>  SourceGenerator;
 typedef  GENTRAITS::CodType  Codensity;
 typedef  GENTRAITS::MagType  Magnetic;
 typedef  GENTRAITS::VelType  Velocity;
 typedef  epm::SmartTruncation  SmartTruncation;
-
-void setRTPCodensity(Codensity &codC)
-{
-   SmartTruncation pTrunc = codC.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      codC.rOc().rRTP().rShell(n).setConstant(0.0);
-   }
-}
-
-void setRTPMagnetic(Magnetic &magB)
-{
-   SmartTruncation pTrunc = magB.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
-      magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
-      magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
-   }
-}
-
-void setRTPVelocity(Velocity &velV)
-{
-   SmartTruncation pTrunc = velV.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      velV.rOc().rRTP().rR().rShell(n).setConstant(0.);
-      velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.);
-      velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.);
-   }
-}
-
-void setSpecCodensity(Codensity &codC)
-{
-   SmartTruncation pTrunc = codC.oc().trunc();
-
-   codC.rOcSrc().rLShell(0)(0,0) = 3.0;
-}
-
-void setSpecMagnetic(Magnetic &magB)
-{
-}
-
-void setSpecVelocity(Velocity &velV)
-{
-}
 
 /**
  * @brief Velocity diffusion simulation
@@ -93,43 +48,43 @@ int runProgram()
    // Create the genertor object
    SourceGenerator   generator;
 
-   // Set the codensity field
+   // Set the codensity field on RTP decomposition
    if(GENTRAITS::NeedCodensity)
    {
-      setRTPCodensity(generator.codC());
+      SourceType::setRTPCodensity(generator.codC());
    }
 
-   // Set the magetic field
+   // Set the magetic field on RTP decomposition
    if(GENTRAITS::NeedMagnetic)
    {
-      setRTPMagnetic(generator.magB());
+      SourceType::setRTPMagnetic(generator.magB());
    }
 
-   // Set the velocity field
+   // Set the velocity field on RTP decomposition
    if(GENTRAITS::NeedVelocity)
    {
-      setRTPVelocity(generator.velV());
+      SourceType::setRTPVelocity(generator.velV());
    }
 
    // Transform the fields
    generator.transformRTP();
 
-   // Set the codensity field
+   // Set the codensity field on Spectral decomposition
    if(GENTRAITS::NeedCodensity)
    {
-      setSpecCodensity(generator.codC());
+      SourceType::setSpecCodensity(generator.codC());
    }
 
-   // Set the magetic field
+   // Set the magetic field on Spectral decomposition
    if(GENTRAITS::NeedMagnetic)
    {
-      setSpecMagnetic(generator.magB());
+      SourceType::setSpecMagnetic(generator.magB());
    }
 
-   // Set the velocity field
+   // Set the velocity field on Spectral decomposition
    if(GENTRAITS::NeedVelocity)
    {
-      setSpecVelocity(generator.velV());
+      SourceType::setSpecVelocity(generator.velV());
    }
 
    // Initialise the state file

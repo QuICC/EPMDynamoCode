@@ -25,50 +25,20 @@
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
+#include "Utilities/Imposed/BasicImposed.hpp"
+
 namespace epm = EPMDynamo;
 
 #define TGENTRAITS epm::GenCVTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
+
+typedef epm::BasicImposed<GENTRAITS>  ImposedType;
 
 typedef  epm::ImposedFieldGenerator<epm::WSHSimulation, TGENTRAITS>  ImposedFieldGenerator;
 typedef  GENTRAITS::CodType  Codensity;
 typedef  GENTRAITS::MagType  Magnetic;
 typedef  GENTRAITS::VelType  Velocity;
 typedef  epm::SmartTruncation  SmartTruncation;
-
-void setRTPCodensity(Codensity &codC)
-{
-   SmartTruncation pTrunc = codC.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      codC.rOc().rRTP().rShell(n).setConstant(0.0);
-   }
-}
-
-void setRTPMagnetic(Magnetic &magB)
-{
-   SmartTruncation pTrunc = magB.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
-      magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
-      magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
-   }
-}
-
-void setRTPVelocity(Velocity &velV)
-{
-   SmartTruncation pTrunc = velV.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      velV.rOc().rRTP().rR().rShell(n).setConstant(0.);
-      velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.);
-      velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.);
-   }
-}
 
 /**
  * @brief Velocity diffusion simulation
@@ -78,26 +48,44 @@ int runProgram()
    // Create the genertor object
    ImposedFieldGenerator   generator;
 
-   // Set the codensity field
+   // Set the codensity field on RTP decomposition
    if(GENTRAITS::NeedCodensity)
    {
-      setRTPCodensity(generator.codC());
+      ImposedType::setRTPCodensity(generator.codC());
    }
 
-   // Set the magetic field
+   // Set the magetic field on RTP decomposition
    if(GENTRAITS::NeedMagnetic)
    {
-      setRTPMagnetic(generator.magB());
+      ImposedType::setRTPMagnetic(generator.magB());
    }
 
-   // Set the velocity field
+   // Set the velocity field on RTP decomposition
    if(GENTRAITS::NeedVelocity)
    {
-      setRTPVelocity(generator.velV());
+      ImposedType::setRTPVelocity(generator.velV());
    }
 
    // Transform the fields
    generator.transformRTP();
+
+   // Set the codensity field on Spectral decomposition
+   if(GENTRAITS::NeedCodensity)
+   {
+      ImposedType::setSpecCodensity(generator.codC());
+   }
+
+   // Set the magetic field on Spectral decomposition
+   if(GENTRAITS::NeedMagnetic)
+   {
+      ImposedType::setSpecMagnetic(generator.magB());
+   }
+
+   // Set the velocity field on Spectral decomposition
+   if(GENTRAITS::NeedVelocity)
+   {
+      ImposedType::setSpecVelocity(generator.velV());
+   }
 
    // Initialise the state file
    generator.initOutput("Imposed");
