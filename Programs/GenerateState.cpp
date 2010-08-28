@@ -25,110 +25,22 @@
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
+#include "Utilities/States/RandomState.hpp"
+#include "Utilities/States/SakurabaState.hpp"
+
 namespace epm = EPMDynamo;
 
 #define TGENTRAITS epm::GenCBVTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
+
+//typedef epm::RandomState<GENTRAITS>  StateType;
+typedef epm::SakurabaState<GENTRAITS>  StateType;
 
 typedef  epm::InitialStateGenerator<epm::WSHSimulation, TGENTRAITS>  IStateGenerator;
 typedef  GENTRAITS::CodType  Codensity;
 typedef  GENTRAITS::MagType  Magnetic;
 typedef  GENTRAITS::VelType  Velocity;
 typedef  epm::SmartTruncation  SmartTruncation;
-
-void setRTPCodensity(Codensity &codC)
-{
-   SmartTruncation pTrunc = codC.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      codC.rOc().rRTP().rShell(n).setConstant(0.0);
-   }
-}
-
-void setRTPMagnetic(Magnetic &magB)
-{
-   SmartTruncation pTrunc = magB.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
-      magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
-      magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
-   }
-}
-
-void setRTPVelocity(Velocity &velV)
-{
-   SmartTruncation pTrunc = velV.oc().trunc();
-
-   for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-   {
-      velV.rOc().rRTP().rR().rShell(n).setConstant(0.);
-      velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.);
-      velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.);
-   }
-}
-
-void setSpecCodensity(Codensity &codC)
-{
-   SmartTruncation pTrunc = codC.oc().trunc();
-
-   // Set some perturbation random energy
-   for(int l=0; l < pTrunc->local()->spec()->nL()/2; ++l)
-   {
-      codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-      codC.rOc().rPerturbation().rLShell(l) *= epm::EPMComplex(1.0e-8,0.0);
-
-      // Make sure the m=0 imaginary part is zero!
-      for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
-      {
-         codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag() = 0.0;
-      }
-   }
-
-   // Create basic state
-   codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
-   codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
-}
-
-void setSpecMagnetic(Magnetic &magB)
-{
-   SmartTruncation pTrunc = magB.oc().trunc();
-
-   for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
-   {
-      magB.rOc().rPerturbation().rTor().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
-      magB.rOc().rPerturbation().rPol().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
-
-      // Set some perturbation random energy in Toroidal component
-//      magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-//      magB.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
-
-      // Set some perturbation random energy in Poloidal component
-//      magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-//      magB.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
-   }
-}
-
-void setSpecVelocity(Velocity &velV)
-{
-   SmartTruncation pTrunc = velV.oc().trunc();
-
-   for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
-   {
-      velV.rOc().rPerturbation().rTor().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
-      velV.rOc().rPerturbation().rPol().rLShell(l).setConstant(epm::EPMComplex(0.0,0.0));
-
-      // Set some perturbation random energy in Toroidal component
-//      velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-//      velV.rOc().rPerturbation().rTor().rLShell(l) *= epm::EPMComplex(1.0e-5,0.0);
-
-      // Set some perturbation random energy in Poloidal component
-//      velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
-//      velV.rOc().rPerturbation().rPol().rLShell(l) *= epm::EPMComplex(1.0e-5, 0.0);
-   }
-}
 
 /**
  * @brief Velocity diffusion simulation
@@ -141,19 +53,19 @@ int runProgram()
    // Set the codensity field
    if(GENTRAITS::NeedCodensity)
    {
-      setRTPCodensity(generator.codC());
+      StateType::setRTPCodensity(generator.codC());
    }
 
    // Set the magetic field
    if(GENTRAITS::NeedMagnetic)
    {
-      setRTPMagnetic(generator.magB());
+      StateType::setRTPMagnetic(generator.magB());
    }
 
    // Set the velocity field
    if(GENTRAITS::NeedVelocity)
    {
-      setRTPVelocity(generator.velV());
+      StateType::setRTPVelocity(generator.velV());
    }
 
    // Transform the fields
@@ -162,19 +74,19 @@ int runProgram()
    // Set the codensity field
    if(GENTRAITS::NeedCodensity)
    {
-      setSpecCodensity(generator.codC());
+      StateType::setSpecCodensity(generator.codC());
    }
 
    // Set the magetic field
    if(GENTRAITS::NeedMagnetic)
    {
-      setSpecMagnetic(generator.magB());
+      StateType::setSpecMagnetic(generator.magB());
    }
 
    // Set the velocity field
    if(GENTRAITS::NeedVelocity)
    {
-      setSpecVelocity(generator.velV());
+      StateType::setSpecVelocity(generator.velV());
    }
 
    // Initialise the state file
