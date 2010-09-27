@@ -80,15 +80,18 @@ namespace EPMDynamo {
          nM = rVar.nM(l);
          for(int m=0; m < nM; ++m)
          {
-            // Compute L2 norm            
+            // Compute error norm
             tmp = rVar.lshell(l).col(m).real().dot(rVar.lshell(l).col(m).real()) + rVar.lshell(l).col(m).imag().dot(rVar.lshell(l).col(m).imag());
             tmp = std::sqrt(tmp);
+
+            // Compute vector norm
             refVal = rRef.lshell(l).col(m).real().dot(rRef.lshell(l).col(m).real()) + rRef.lshell(l).col(m).imag().dot(rRef.lshell(l).col(m).imag());
             refVal = std::sqrt(refVal);
-            if(refVal > TimestepConfig::TIMESTEP_RELERROR_THRESHOLD)
-            {
-               tmp /= refVal;
-            }
+
+            // Compute mixed absolute-relative error (|err|/(|v|+eta))
+            tmp /= refVal + TimestepConfig::TIMESTEP_RELERROR_SCALING;
+
+            // Get summed norm
             norm += tmp;
          }
       }

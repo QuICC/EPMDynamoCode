@@ -46,7 +46,8 @@ namespace EPMDynamo {
       // Compute new step with first order controller
       hn1 *= std::pow(epsilon/errn, this->beta1())*std::pow(epsilon/errn_1, this->beta2())*std::pow(hn/hn_1, -this->alpha());
 
-      return hn1;
+      // The 1.602 factor comes for a paper by Soederlind
+      return std::min(1.602*hn_1, hn1);
    }
 
    void TimestepController::setControllerParameters(EPMFloat kb1, EPMFloat kb2, EPMFloat a, int k)

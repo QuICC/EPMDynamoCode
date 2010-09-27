@@ -27,11 +27,12 @@ namespace EPMDynamo {
 
    const EPMFloat TimestepConfig::TIMESTEP_ERROR_THETA = 0.5;
 
-   const EPMFloat TimestepConfig::TIMESTEP_ERROR_TOLERANCE = 1e-7;
+   const EPMFloat TimestepConfig::TIMESTEP_ERROR_TOLERANCE = 1e-8;
 
    const EPMFloat TimestepConfig::TIMESTEP_ERROR_EPSILON = TimestepConfig::TIMESTEP_ERROR_THETA*TimestepConfig::TIMESTEP_ERROR_TOLERANCE;
 
-   const EPMFloat TimestepConfig::TIMESTEP_RELERROR_THRESHOLD = 1e-14;
+   const EPMFloat TimestepConfig::TIMESTEP_RELERROR_SCALING = 1.0;
+   // const EPMFloat TimestepConfig::TIMESTEP_RELERROR_SCALING = 0.0;
 
    void TimestepConfig::overruleMaxTimestep(EPMFloat newMax)
    {
