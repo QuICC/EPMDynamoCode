@@ -3,8 +3,6 @@
  * This is an approximative roadmap for the next version(s).
  *
  * \section epmRoadV1 Version 1.y.z
- *    - Correct CSCS visualisation output (correct pole and origin fields)
- *
  *    - A useful set of precision tests for the most important computations. These will also be very useful as regression tests for further
  *    changes to the code.
  *
