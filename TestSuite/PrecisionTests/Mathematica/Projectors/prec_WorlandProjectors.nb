@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       145,          7]
-NotebookDataLength[     30413,        827]
-NotebookOptionsPosition[     29049,        785]
-NotebookOutlinePosition[     29407,        801]
-CellTagsIndexPosition[     29364,        798]
+NotebookDataLength[     31057,        837]
+NotebookOptionsPosition[     29655,        794]
+NotebookOutlinePosition[     30013,        810]
+CellTagsIndexPosition[     29970,        807]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -26,12 +26,12 @@ Cell["\<\
   3.489472773569173*^9, 3.489472853849657*^9}}],
 
 Cell[BoxData[
- RowBox[{"<<", "Packages/EPMWorland.m"}]], "Input",
+ RowBox[{"<<", "Mathematica/Packages/EPMWorland.m"}]], "Input",
  CellChangeTimes->{{3.491540261328493*^9, 3.4915403118648443`*^9}, 
    3.491540437935598*^9, {3.4915422814360313`*^9, 3.491542303488624*^9}, 
    3.491542511586491*^9, {3.491548496614579*^9, 3.4915484987838078`*^9}, {
    3.4915502182593203`*^9, 3.491550218451676*^9}, {3.49155524451728*^9, 
-   3.491555244833952*^9}}],
+   3.491555244833952*^9}, {3.494667063904065*^9, 3.4946670677035027`*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -50,10 +50,10 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   RowBox[{"wEPMTestBase", "=", 
-   RowBox[{"wEPMDir", "<>", "\"\<wp_\>\""}]}], ";"}]], "Input",
+   RowBox[{"wEPMDir", "<>", "\"\<wCheby_\>\""}]}], ";"}]], "Input",
  CellChangeTimes->{{3.489472940551573*^9, 3.4894729712480783`*^9}, {
   3.489486963838022*^9, 3.489486964302006*^9}, {3.489486999950036*^9, 
-  3.4894870082041683`*^9}}],
+  3.4894870082041683`*^9}, {3.494667072313457*^9, 3.494667073352189*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -75,36 +75,43 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"wMaxN", " ", "=", " ", 
-   RowBox[{"wEPMSetup", "[", 
-    RowBox[{"[", "1", "]"}], "]"}]}], ";"}]], "Input",
+  RowBox[{"wMaxL", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"wEPMSetup", "[", 
+     RowBox[{"[", "1", "]"}], "]"}], "-", "1"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.489472875156928*^9, 3.489472881517263*^9}, {
   3.489473025216091*^9, 3.489473033457939*^9}, {3.4894730748409557`*^9, 
   3.489473093357975*^9}, {3.4894787939674463`*^9, 3.4894787971779413`*^9}, {
   3.489478830981696*^9, 3.489478851866063*^9}, {3.4894869693097563`*^9, 
-  3.489487022975224*^9}}],
+  3.489487022975224*^9}, {3.494667045113007*^9, 3.4946670483156233`*^9}}],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"wMaxL", " ", "=", " ", 
+  RowBox[{"wNr", " ", "=", " ", 
    RowBox[{"wEPMSetup", "[", 
     RowBox[{"[", "2", "]"}], "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.489472875156928*^9, 3.489472881517263*^9}, {
   3.489473025216091*^9, 3.489473033457939*^9}, {3.4894730748409557`*^9, 
-  3.4894731011246843`*^9}, {3.4894869711069937`*^9, 3.489487021123784*^9}}],
+  3.4894731011246843`*^9}, {3.4894869711069937`*^9, 3.489487021123784*^9}, {
+  3.494667051288639*^9, 3.494667052388227*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"wMaxN", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"wEPMSetup", "[", 
+     RowBox[{"[", "3", "]"}], "]"}], "-", "1"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.4946670557396927`*^9, 3.49466706012396*^9}}],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"wEPMFileBase", " ", "=", " ", 
    RowBox[{"wEPMTestBase", "<>", "\"\<N\>\"", "<>", 
-    RowBox[{"ToString", "[", 
-     RowBox[{"EPMWorlandGridSize", "[", 
-      RowBox[{"wMaxN", ",", " ", "wMaxL"}], "]"}], "]"}]}]}], ";"}]], "Input",\
-
+    RowBox[{"ToString", "[", "wNr", "]"}]}]}], ";"}]], "Input",
  CellChangeTimes->{{3.489472999147181*^9, 3.489473018467366*^9}, 
    3.489478885741715*^9, {3.489486974768825*^9, 3.489486980803866*^9}, {
    3.4894870146418753`*^9, 3.489487033716054*^9}, {3.4915402445099897`*^9, 
-   3.4915402555953608`*^9}}],
+   3.4915402555953608`*^9}, {3.494667084173622*^9, 3.4946670846334143`*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -128,13 +135,12 @@ Cell[BoxData[
   RowBox[{"projectorList", " ", "=", " ", 
    RowBox[{"{", 
     RowBox[{
-    "\"\<proj\>\"", ",", " ", "\"\<proj2GradTP\>\"", ",", " ", 
-     "\"\<projPol2Q\>\"", ",", " ", "\"\<projPol2S\>\"", ",", " ", 
-     "\"\<projTor2T\>\"", ",", " ", "\"\<projTor2CurlQ\>\"", ",", " ", 
-     "\"\<projTor2CurlS\>\"", ",", " ", "\"\<projPol2CurlT\>\""}], "}"}]}], 
-  ";"}]], "Input",
+    "\"\<proj2GradTP\>\"", ",", " ", "\"\<projPol2Q\>\"", ",", " ", 
+     "\"\<projPol2S\>\"", ",", " ", "\"\<projTor2T\>\"", ",", " ", 
+     "\"\<projTor2CurlQ\>\"", ",", " ", "\"\<projTor2CurlS\>\"", ",", " ", 
+     "\"\<projPol2CurlT\>\""}], "}"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.4915488494829473`*^9, 3.491548943716123*^9}, 
-   3.491555976187421*^9}],
+   3.491555976187421*^9, 3.494667092249948*^9}],
 
 Cell[BoxData[
  RowBox[{
@@ -157,14 +163,17 @@ Cell[BoxData[
        RowBox[{"l", "++"}], ",", "\[IndentingNewLine]", 
        RowBox[{
         RowBox[{"codeValues", " ", "=", " ", 
-         RowBox[{"SetPrecision", "[", 
-          RowBox[{
-           RowBox[{"Import", "[", 
-            RowBox[{"wEPMFileBase", "<>", "\"\<_\>\"", "<>", 
-             RowBox[{"projectorList", "[", 
-              RowBox[{"[", "id", "]"}], "]"}], "<>", "\"\<_L\>\"", "<>", 
-             RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<.dat\>\""}], 
-            "]"}], ",", " ", "epmPrecision"}], "]"}]}], ";", 
+         RowBox[{"Transpose", "[", 
+          RowBox[{"Partition", "[", 
+           RowBox[{
+            RowBox[{"BinaryReadList", "[", 
+             RowBox[{
+              RowBox[{"wEPMFileBase", "<>", "\"\<_\>\"", "<>", 
+               RowBox[{"projectorList", "[", 
+                RowBox[{"[", "id", "]"}], "]"}], "<>", "\"\<_L\>\"", "<>", 
+               RowBox[{"ToString", "[", "l", "]"}], "<>", "\"\<.proj\>\""}], 
+              ",", " ", "\"\<Real64\>\""}], "]"}], ",", 
+            RowBox[{"wMaxN", "+", "1"}]}], "]"}], "]"}]}], ";", 
         "\[IndentingNewLine]", 
         RowBox[{"mathValues", " ", "=", " ", 
          RowBox[{
@@ -213,7 +222,7 @@ Cell[BoxData[
    "]"}]}]], "Input",
  CellChangeTimes->{{3.4915551383645163`*^9, 3.491555167795416*^9}, {
   3.4915552814277363`*^9, 3.491555282384706*^9}, {3.491624443081933*^9, 
-  3.491624494529592*^9}}],
+  3.491624494529592*^9}, {3.494667098152845*^9, 3.4946671401913233`*^9}}],
 
 Cell[BoxData[
  RowBox[{
@@ -784,7 +793,7 @@ Cell[BoxData[{
   "]"}]}], "Input"]
 },
 WindowSize->{1112, 654},
-WindowMargins->{{60, Automatic}, {Automatic, 0}},
+WindowMargins->{{56, Automatic}, {Automatic, 0}},
 ShowSelection->True,
 FrontEndVersion->"7.0 for Linux x86 (64-bit) (February 25, 2009)",
 StyleDefinitions->"Default.nb"
@@ -801,34 +810,35 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[545, 20, 241, 5, 31, "Text"],
-Cell[789, 27, 382, 6, 32, "Input"],
-Cell[1174, 35, 699, 12, 32, "Input"],
-Cell[1876, 49, 287, 6, 32, "Input"],
-Cell[2166, 57, 307, 6, 32, "Input"],
-Cell[2476, 65, 428, 8, 32, "Input"],
-Cell[2907, 75, 459, 9, 32, "Input"],
-Cell[3369, 86, 359, 7, 32, "Input"],
-Cell[3731, 95, 514, 11, 32, "Input"],
-Cell[4248, 108, 155, 3, 32, "Input"],
-Cell[4406, 113, 484, 10, 31, "Text"],
-Cell[4893, 125, 490, 11, 55, "Input"],
-Cell[5386, 138, 3185, 77, 231, "Input"],
-Cell[8574, 217, 317, 6, 32, "Input"],
-Cell[8894, 225, 2761, 68, 143, "Input"],
-Cell[11658, 295, 371, 7, 32, "Input"],
-Cell[12032, 304, 2110, 59, 143, "Input"],
-Cell[14145, 365, 367, 7, 32, "Input"],
-Cell[14515, 374, 2110, 59, 143, "Input"],
-Cell[16628, 435, 369, 7, 32, "Input"],
-Cell[17000, 444, 2110, 59, 143, "Input"],
-Cell[19113, 505, 371, 7, 32, "Input"],
-Cell[19487, 514, 2110, 59, 143, "Input"],
-Cell[21600, 575, 367, 7, 32, "Input"],
-Cell[21970, 584, 2110, 59, 143, "Input"],
-Cell[24083, 645, 366, 7, 32, "Input"],
-Cell[24452, 654, 2110, 59, 143, "Input"],
-Cell[26565, 715, 367, 7, 32, "Input"],
-Cell[26935, 724, 2110, 59, 143, "Input"]
+Cell[789, 27, 442, 6, 28, "Input"],
+Cell[1234, 35, 699, 12, 28, "Input"],
+Cell[1936, 49, 337, 6, 28, "Input"],
+Cell[2276, 57, 307, 6, 28, "Input"],
+Cell[2586, 65, 428, 8, 28, "Input"],
+Cell[3017, 75, 533, 10, 28, "Input"],
+Cell[3553, 87, 406, 8, 28, "Input"],
+Cell[3962, 97, 236, 6, 28, "Input"],
+Cell[4201, 105, 474, 8, 28, "Input"],
+Cell[4678, 115, 155, 3, 28, "Input"],
+Cell[4836, 120, 484, 10, 31, "Text"],
+Cell[5323, 132, 483, 10, 28, "Input"],
+Cell[5809, 144, 3368, 80, 161, "Input"],
+Cell[9180, 226, 317, 6, 28, "Input"],
+Cell[9500, 234, 2761, 68, 114, "Input"],
+Cell[12264, 304, 371, 7, 28, "Input"],
+Cell[12638, 313, 2110, 59, 114, "Input"],
+Cell[14751, 374, 367, 7, 28, "Input"],
+Cell[15121, 383, 2110, 59, 114, "Input"],
+Cell[17234, 444, 369, 7, 28, "Input"],
+Cell[17606, 453, 2110, 59, 114, "Input"],
+Cell[19719, 514, 371, 7, 28, "Input"],
+Cell[20093, 523, 2110, 59, 114, "Input"],
+Cell[22206, 584, 367, 7, 28, "Input"],
+Cell[22576, 593, 2110, 59, 114, "Input"],
+Cell[24689, 654, 366, 7, 28, "Input"],
+Cell[25058, 663, 2110, 59, 114, "Input"],
+Cell[27171, 724, 367, 7, 28, "Input"],
+Cell[27541, 733, 2110, 59, 114, "Input"]
 }
 ]
 *)

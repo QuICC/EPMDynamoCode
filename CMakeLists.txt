@@ -618,7 +618,10 @@ set(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 set(SrcDir ${CMAKE_SOURCE_DIR}/src)
 set(ExternalDir ${CMAKE_SOURCE_DIR}/External)
 set(TestSuiteDir ${CMAKE_SOURCE_DIR}/TestSuite)
-set(TestSuiteIncludeDir ${TestSuiteDir}/Tools/include)
+set(TestSuiteIncDir ${TestSuiteDir}/Tools/include)
+set(TestSuiteSrcDir ${TestSuiteDir}/Tools/src)
+set(TestSuitePrecIncDir ${TestSuiteDir}/PrecisionTests/Tools/include)
+set(TestSuitePrecSrcDir ${TestSuiteDir}/PrecisionTests/Tools/src)
 set(ProgramDir ${CMAKE_SOURCE_DIR}/Programs)
 set(EigenDir ${ExternalDir}/eigen2)
 set(XMLDir ${ExternalDir}/rapidxml)
@@ -632,7 +635,8 @@ include_directories(${IncludeDir})
 include_directories(${EigenDir})
 include_directories(${XMLDir})
 include_directories(${IFaceDir})
-include_directories(${TestSuiteIncludeDir})
+include_directories(${TestSuiteIncDir})
+include_directories(${TestSuitePrecIncDir})
 
 #
 # Create special rule for doxygen documentation
@@ -698,18 +702,22 @@ foreach(SrcSubDir ${SrcSubDirs})
 endforeach(SrcSubDir)
 
 #
-# Generate tools Source file list
+# Generate general tools Source file list
 #
-set(ToolsSrcDirs
-      src)
+set(ToolsSrcDirPath ${TestSuiteSrcDir})
+include(${ToolsSrcDirPath}/SourcesList.cmake)
+foreach(source ${${ToolsSrcDir}_Srcs})
+   list(APPEND Tools_Srcs ${ToolsSrcDirPath}/${source})
+endforeach(source)
 
-foreach(ToolsSrcDir ${ToolsSrcDirs})
-   set(ToolsSrcDirPath ${TestSuiteDir}/Tools/${ToolsSrcDir})
-   include(${ToolsSrcDirPath}/SourcesList.cmake)
-   foreach(source ${${ToolsSrcDir}_Srcs})
-      list(APPEND Tools_Srcs ${ToolsSrcDirPath}/${source})
-   endforeach(source)
-endforeach(ToolsSrcDir)
+#
+# Generate PrecisionTests tools Source file list
+#
+set(ToolsSrcDirPath ${TestSuitePrecSrcDir})
+include(${ToolsSrcDirPath}/SourcesList.cmake)
+foreach(source ${${ToolsSrcDir}_Srcs})
+   list(APPEND Tools_Srcs ${ToolsSrcDirPath}/${source})
+endforeach(source)
 
 #
 # Add project subdirectories
