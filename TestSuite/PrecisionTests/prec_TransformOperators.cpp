@@ -41,9 +41,9 @@ typedef epm::SmartTruncation  SmartTruncation;
 int runPrecTest()
 {
    // Set test truncation values
-   int maxN = 20;
-   int maxL = 32;
-   int maxM = 32;
+   int maxN = 8;
+   int maxL = 12;
+   int maxM = 12;
    int Mp = 1;
    int nCore = 1;
 

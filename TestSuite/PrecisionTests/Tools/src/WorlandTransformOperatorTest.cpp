@@ -38,7 +38,11 @@ namespace EPMDynamo {
 
    void WorlandTransformOperatorTest::writeProjectors()
    {
-      this->writeOperator("poly", &WorlandOperator::proj, this->mProjExt);
+      this->writeOperator("proj", &WorlandOperator::proj, this->mProjExt);
+
+      this->writeOperator("dProj", &WorlandOperator::dProj, this->mProjExt);
+
+      this->writeOperator("d2Proj", &WorlandOperator::d2Proj, this->mProjExt);
 
       this->writeOperator("proj2GradTP", &WorlandOperator::proj2GradTP, this->mProjExt);
 
@@ -57,7 +61,7 @@ namespace EPMDynamo {
 
    void WorlandTransformOperatorTest::writeIntegrators()
    {
-      this->writeOperator("wPoly", &WorlandOperator::intg, this->mIntgExt);
+      this->writeOperator("intg", &WorlandOperator::intg, this->mIntgExt);
 
       this->writeOperator("intgQ2Pol", &WorlandOperator::intgQ2Pol, this->mIntgExt);
 

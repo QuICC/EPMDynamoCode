@@ -128,6 +128,14 @@ namespace EPMDynamo {
           */
          template<class T, typename TExp> void writeOperator(std::string name, const PolynomialOperator<TExp>& (T::*Tptr)() const, std::string ext);
 
+         /**
+          * @brief Write a complex operator data to file
+          *
+          * @param name Name of the operator
+          * @param ext File extension to use
+          */
+         template<class T, typename TExp> void writeZOperator(std::string name, const PolynomialOperator<TExp>& (T::*Tptr)() const, std::string ext);
+
 
       private:
    };
@@ -258,7 +266,57 @@ namespace EPMDynamo {
          file.open(filename.c_str(), std::ios::binary);
 
          // Write data to file
-         file.write((char*)(this->mBasis.at(i).*Tptr)().productOp().data(), this->mGridSize*this->spectrumSize(i)*sizeof(EPMFloat));
+         file.write((char*)(this->mBasis.at(i).*Tptr)().op().data(), this->mGridSize*this->spectrumSize(i)*sizeof(EPMFloat));
+
+         // close file
+         file.close();
+
+         // empty stringstream
+         converter.str("");
+      }
+   }
+
+   template <typename TBasis> template<class T, typename TExp> void TransformOperatorTest<TBasis>::writeZOperator(std::string name, const PolynomialOperator<TExp>& (T::*Tptr)() const, std::string ext)
+   {
+      // Create file object
+      std::ofstream  file;
+
+      // Filename base string
+      std::string basename;
+
+      // Filename string
+      std::string filename;
+
+      // Stringstream for the conversion
+      std::stringstream converter;
+
+      // Convert grid size
+      converter << this->mGridSize;
+
+      // Create base name
+      basename = this->mPrefix + "N" + converter.str() + "_" + name + this->mOrderString;
+
+      // Empty string stream
+      converter.str("");
+
+      Matrix  matImag;
+
+      // Loop over all harmonic orders
+      for(int i = 0; i < this->mOrderingN; ++i)
+      {
+         // Convert harmonic order
+         converter << i;
+
+         // Build filename
+         filename = basename + converter.str() + ext;
+
+         // Open file
+         file.open(filename.c_str(), std::ios::binary);
+
+         matImag = (this->mBasis.at(i).*Tptr)().productOp()*(this->mBasis.at(i).*Tptr)().c().imag();
+
+         // Write data to file
+         file.write((char*) matImag.data(), this->mGridSize*this->spectrumSize(i)*sizeof(EPMFloat));
 
          // close file
          file.close();

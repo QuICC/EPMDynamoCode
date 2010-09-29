@@ -48,11 +48,19 @@ EPMWorlandIntgT2CurlProj::usage =
 
 
 EPMWorlandProj::usage = 
-"EPMWorlandProj[N,L] Get the intg integrator . EPMWorlandProj[N,L, l] Get the intg integrator for a given l.";
+"EPMWorlandProj[N,L] Get the proj projector . EPMWorlandProj[N,L, l] Get the proj projector for a given l.";
+
+
+EPMWorlandDProj::usage = 
+"EPMWorlandDProj[N,L] Get the dProj projector . EPMWorlandDProj[N,L, l] Get the dProj prjector for a given l.";
+
+
+EPMWorlandD2Proj::usage = 
+"EPMWorlandD2Proj[N,L] Get the d2Proj projector . EPMWorlandD2Proj[N,L, l] Get the d2Proj projector for a given l.";
 
 
 EPMWorlandProj2GradTP::usage = 
-"EPMWorlandProj2GradTP[N,L] Get the intg integrator . EPMWorlandProj2GradTP[N,L, l] Get the intg integrator for a given l.";
+"EPMWorlandProj2GradTP[N,L] Get the proj2GradTP projector . EPMWorlandProj2GradTP[N,L, l] Get the proj2GradTP projector for a given l.";
 
 
 EPMWorlandProjPol2Q::usage = 
@@ -154,6 +162,16 @@ EPMWorlandDDP[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax
 (*****************  Compute EPM precision Worland proj projector *******************)
 EPMWorlandProj[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Table[wPoly[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}], epmPrecision]];
 EPMWorlandProj[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Table[wPoly[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}], epmPrecision]];
+
+
+(*****************  Compute EPM precision Worland proj projector *******************)
+EPMWorlandDProj[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Table[wDPoly[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}], epmPrecision]];
+EPMWorlandDProj[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Table[wDPoly[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}], epmPrecision]];
+
+
+(*****************  Compute EPM precision Worland proj projector *******************)
+EPMWorlandD2Proj[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Table[wDDPoly[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}], epmPrecision]];
+EPMWorlandD2Proj[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Table[wDDPoly[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}], epmPrecision]];
 
 
 (*****************  Compute EPM precision Worland proj projector *******************)

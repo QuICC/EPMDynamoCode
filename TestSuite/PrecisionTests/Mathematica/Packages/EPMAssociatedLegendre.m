@@ -44,6 +44,10 @@ EPMALegendreProj::usage =
 "EPMALegendreProj[L,M] Get the proj projector. EPMALegendreProj[L,M,m] Get the proj projector for a given m.";
 
 
+EPMALegendreDProj::usage = 
+"EPMALegendreDProj[L,M] Get the dProj projector. EPMALegendreDProj[L,M,m] Get the dProj projector for a given m.";
+
+
 EPMALegendreProjS2Th::usage = 
 "EPMALegendreProjS2Th[L,M] Get the projS2Th projector. EPMALegendreProjS2Th[L,M,m] Get the projS2Th projector for a given m.";
 
@@ -85,6 +89,9 @@ EPMALegendreGridSize[l_] := alGridN[l];
 schmidtNorm[l_,m_] = If[l==0 && m ==0, 1,If[m==0, Sqrt[(l-m)!/(l+m)!],Sqrt[2] Sqrt[(l-m)!/(l+m)!]]];
 
 
+weightNorm[l_] = (2 l+1)/4;
+
+
 (*****************  Create private polynomials and derivatives computations *******************)
 alPoly[l_Integer, m_Integer, x_]:= schmidtNorm[l,m]LegendreP[l,m,x];
 alDPoly[l_Integer, m_Integer, x_]:= schmidtNorm[l,m]Evaluate[-Sin[ArcCos[x]] D[LegendreP[l,m,t],t]/.{t->x}];
@@ -95,11 +102,11 @@ alProjS2Ph[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[
 alProjT2Ph[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
 alProj2GradTh[l_Integer, m_Integer, x_]:= alDPoly[l,m,x];
 alProj2GradPh[l_Integer, m_Integer, x_]:= 1/Sin[ArcCos[x]] alDPoly[l,m,x];
-alIntg[l_Integer, m_Integer, x_]:= alPoly[l,m,x];
-alIntgTh2S[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
-alIntgTh2T[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
-alIntgPh2S[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] alPoly[l,m,x];
-alIntgPh2T[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]alDPoly[l,m,x];
+alIntg[l_Integer, m_Integer, x_]:=  weightNorm[l]alPoly[l,m,x];
+alIntgTh2S[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]weightNorm[l]alDPoly[l,m,x];
+alIntgTh2T[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] weightNorm[l]alPoly[l,m,x];
+alIntgPh2S[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0] 1/Sin[ArcCos[x]] weightNorm[l]alPoly[l,m,x];
+alIntgPh2T[l_Integer, m_Integer, x_]:= If[l!= 0,1/Sqrt[l (l+1)],0]weightNorm[l]alDPoly[l,m,x];
 
 
 (*****************  Create high precision grid values *******************)
@@ -126,6 +133,11 @@ EPMALegendreP[l_,mmax_,m_] := Module[{grid =alGrid[l], gridN = alGridN[l]},N[Tab
 (*****************  Compute EPM precision Associated Legendre projector *******************)
 EPMALegendreProj[l_,m_] := Module[{grid =alGrid[l], gridN = alGridN[l]},N[Table[alProj[i,k,grid[[j]]], {k, 0, m},{i, k, l},{j, 1, gridN}], epmPrecision]];
 EPMALegendreProj[l_,mmax_,m_] := Module[{grid =alGrid[l], gridN = alGridN[l]},N[Table[alProj[i,m,grid[[j]]],{i, m, l},{j, 1, gridN}], epmPrecision]];
+
+
+(*****************  Compute EPM precision Associated Legendre projector *******************)
+EPMALegendreDProj[l_,m_] := Module[{grid =alGrid[l], gridN = alGridN[l]},N[Table[alDPoly[i,k,grid[[j]]], {k, 0, m},{i, k, l},{j, 1, gridN}], epmPrecision]];
+EPMALegendreDProj[l_,mmax_,m_] := Module[{grid =alGrid[l], gridN = alGridN[l]},N[Table[alDPoly[i,m,grid[[j]]],{i, m, l},{j, 1, gridN}], epmPrecision]];
 
 
 (*****************  Compute EPM precision Associated Legendre projector *******************)

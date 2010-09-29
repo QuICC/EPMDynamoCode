@@ -39,30 +39,32 @@ namespace EPMDynamo {
 
    void AssocLegendreTransformOperatorTest::writeProjectors()
    {
-      this->writeOperator("poly", &AssociatedLegendreOperator::proj, this->mProjExt);
+      this->writeOperator("proj", &AssociatedLegendreOperator::proj, this->mProjExt);
+
+      this->writeOperator("dProj", &AssociatedLegendreOperator::dProj, this->mProjExt);
 
       this->writeOperator("projS2Th", &AssociatedLegendreOperator::projS2Th, this->mProjExt);
 
-      this->writeOperator("projT2Th", &AssociatedLegendreOperator::projT2Th, this->mProjExt);
+      this->writeZOperator("projT2Th", &AssociatedLegendreOperator::projT2Th, this->mProjExt);
 
-      this->writeOperator("projS2Ph", &AssociatedLegendreOperator::projS2Ph, this->mProjExt);
+      this->writeZOperator("projS2Ph", &AssociatedLegendreOperator::projS2Ph, this->mProjExt);
 
       this->writeOperator("projT2Ph", &AssociatedLegendreOperator::projT2Ph, this->mProjExt);
 
       this->writeOperator("proj2GradTh", &AssociatedLegendreOperator::proj2GradTh, this->mProjExt);
 
-      this->writeOperator("proj2GradPh", &AssociatedLegendreOperator::proj2GradPh, this->mProjExt);
+      this->writeZOperator("proj2GradPh", &AssociatedLegendreOperator::proj2GradPh, this->mProjExt);
    }
 
    void AssocLegendreTransformOperatorTest::writeIntegrators()
    {
-      this->writeOperator("wPoly", &AssociatedLegendreOperator::intg, this->mIntgExt);
+      this->writeOperator("intg", &AssociatedLegendreOperator::intg, this->mIntgExt);
 
       this->writeOperator("intgTh2S", &AssociatedLegendreOperator::intgTh2S, this->mIntgExt);
 
-      this->writeOperator("intgTh2T", &AssociatedLegendreOperator::intgTh2T, this->mIntgExt);
+      this->writeZOperator("intgTh2T", &AssociatedLegendreOperator::intgTh2T, this->mIntgExt);
 
-      this->writeOperator("intgPh2S", &AssociatedLegendreOperator::intgPh2S, this->mIntgExt);
+      this->writeZOperator("intgPh2S", &AssociatedLegendreOperator::intgPh2S, this->mIntgExt);
 
       this->writeOperator("intgPh2T", &AssociatedLegendreOperator::intgPh2T, this->mIntgExt);
    }
