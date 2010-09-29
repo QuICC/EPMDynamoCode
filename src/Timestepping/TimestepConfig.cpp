@@ -33,6 +33,8 @@ namespace EPMDynamo {
 
    const EPMFloat TimestepConfig::TIMESTEP_RELERROR_SCALING = 1.0;
    // const EPMFloat TimestepConfig::TIMESTEP_RELERROR_SCALING = 0.0;
+   
+   const EPMFloat TimestepConfig::TIMESTEP_MAX_RATIO = 1.602;
 
    void TimestepConfig::overruleMaxTimestep(EPMFloat newMax)
    {

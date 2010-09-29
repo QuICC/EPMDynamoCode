@@ -91,6 +91,14 @@ namespace EPMDynamo {
           * grow.
           */
          static const EPMFloat TIMESTEP_RELERROR_SCALING;
+
+         /**
+          * @brief Max scaling factor for the timestep
+          *
+          * the NG_AshCode uses a value of 2.0, while Soederlind's paper uses 1.602.
+          *
+          */
+         static const EPMFloat TIMESTEP_MAX_RATIO;
          
       protected:
 

@@ -197,16 +197,16 @@ namespace EPMDynamo {
          // Set simple starting timestep to mininal timestep
          if(rDt == TimestepConfig::MIN_TIMESTEP)
          {
-            rDt = TimestepConfig::MIN_TIMESTEP*2.0;
+            rDt = TimestepConfig::MIN_TIMESTEP*TimestepConfig::TIMESTEP_MAX_RATIO;
          } else
          {
-            rDt = std::min(rDt/1.0e3, TimestepConfig::MIN_TIMESTEP*2.0);
+            rDt = std::max(rDt/1.0e3, TimestepConfig::MIN_TIMESTEP*TimestepConfig::TIMESTEP_MAX_RATIO);
          }
-
-         std::cout << "Use Initialisation Timestep!" << std::endl;
 
          // Set flag to forbid second entry
          this->mNeedInit = false;
+
+         std::cout << "Use Initialisation Timestep!" << std::endl;
       }
    }
 
