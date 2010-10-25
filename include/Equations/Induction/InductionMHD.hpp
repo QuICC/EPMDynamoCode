@@ -31,6 +31,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
           * @brief Constructor
           *
@@ -39,7 +42,7 @@ namespace EPMDynamo {
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           */
-         InductionMHD(typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps);
+         InductionMHD(typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -75,8 +78,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionMHD<TSimType, TSimTraits>::InductionMHD(typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::VelType &rV, typename InductionMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
-      : InductionBase<TSimType, TSimTraits>(rB, transform, tsteps), mrV(rV)
+   template <typename TSimType, template <typename> class TSimTraits> InductionMHD<TSimType, TSimTraits>::InductionMHD(typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::VelType &rV, typename InductionMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename InductionMHD<TSimType, TSimTraits>::EquationParametersType &params)
+      : InductionBase<TSimType, TSimTraits>(rB, transform, tsteps, params), mrV(rV)
    {
    }
 
@@ -92,7 +95,7 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> void InductionMHD<TSimType, TSimTraits>::updateRHS()
    {
       // Compute cross product \f$\vec{u}\times\vec{B}\f$
-      this->mrV.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().rtp());
+      this->mrV.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().rtp(), this->mrParams.indAdvection());
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void InductionMHD<TSimType, TSimTraits>::transformRHS(const int step)

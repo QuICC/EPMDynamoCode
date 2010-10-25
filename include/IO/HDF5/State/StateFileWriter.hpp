@@ -119,6 +119,11 @@ namespace EPMDynamo {
          ArrayI   mTrunc;
 
          /**
+          * @brief Type of the physical parameters
+          */
+         std::string mPhysType;
+
+         /**
           * @brief Store physical parameters in a array for faster access
           */
          Array   mPhys;
@@ -131,87 +136,69 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+      : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
       this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
       this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
 
-      this->mPhys(0) = eqParams.E();
-      this->mPhys(1) = eqParams.q();
-      this->mPhys(2) = eqParams.Ra();
-      this->mPhys(3) = eqParams.Ro();
+      this->mPhys = eqParams.params();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+      : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
       this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
       this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
 
-      this->mPhys(0) = eqParams.E();
-      this->mPhys(1) = eqParams.q();
-      this->mPhys(2) = eqParams.Ra();
-      this->mPhys(3) = eqParams.Ro();
+      this->mPhys = eqParams.params();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+      : StateFileWriterBase(magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
       this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
       this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
 
-      this->mPhys(0) = eqParams.E();
-      this->mPhys(1) = eqParams.q();
-      this->mPhys(2) = eqParams.Ra();
-      this->mPhys(3) = eqParams.Ro();
+      this->mPhys = eqParams.params();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+      : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
       this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
       this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
 
-      this->mPhys(0) = eqParams.E();
-      this->mPhys(1) = eqParams.q();
-      this->mPhys(2) = eqParams.Ra();
-      this->mPhys(3) = eqParams.Ro();
+      this->mPhys = eqParams.params();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+      : StateFileWriterBase(magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
       this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
       this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
 
-      this->mPhys(0) = eqParams.E();
-      this->mPhys(1) = eqParams.q();
-      this->mPhys(2) = eqParams.Ra();
-      this->mPhys(3) = eqParams.Ro();
+      this->mPhys = eqParams.params();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
-      : StateFileWriterBase(velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhys(4), mrTSParams(tsParams)
+      : StateFileWriterBase(velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
       this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
       this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
 
-      this->mPhys(0) = eqParams.E();
-      this->mPhys(1) = eqParams.q();
-      this->mPhys(2) = eqParams.Ra();
-      this->mPhys(3) = eqParams.Ro();
+      this->mPhys = eqParams.params();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void StateFileWriter<TSimType, TSimTraits>::write()
@@ -223,7 +210,7 @@ namespace EPMDynamo {
       this->createFileInfo();
 
       // Write the Physical parameters
-      this->writePhysical(this->mPhys(0), this->mPhys(1), this->mPhys(2), this->mPhys(3));
+      this->writePhysical(this->mPhysType, this->mPhys);
 
       // Write the truncation information
       this->writeTruncation(this->mTrunc(0), this->mTrunc(1), this->mTrunc(2), this->mTrunc(3));

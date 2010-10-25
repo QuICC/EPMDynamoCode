@@ -17,13 +17,7 @@
 
 namespace EPMDynamo {
 
-   EquationParameters::EquationParameters(EPMFloat E, EPMFloat q, EPMFloat Ra, EPMFloat Ro)
-      : mE(E), mQ(q), mRa(Ra), mRo(Ro)
-   {
-   }
-
-   EquationParameters::EquationParameters(const Array& arr)
-      : mE(arr(0)), mQ(arr(1)), mRa(arr(2)), mRo(arr(3))
+   EquationParameters::EquationParameters()
    {
    }
 

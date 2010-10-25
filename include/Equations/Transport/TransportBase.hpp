@@ -16,7 +16,6 @@
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
-#include "Equations/Parameters/EquationParameters.hpp"
 #include "Equations/ScalarDiffusionEquation.hpp"
 
 namespace EPMDynamo {
@@ -33,6 +32,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
          * @brief Constructor
          *
@@ -41,7 +43,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportBase(typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params);
+         TransportBase(typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
 
          /**
          * @brief Simple empty destructor
@@ -74,6 +76,11 @@ namespace EPMDynamo {
          
       protected:
 
+         /**
+          * @brief Reference to the equation parameters object
+          */
+         EquationParametersType mrParams;
+
       private:
    };
 
@@ -95,8 +102,8 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportBase<TSimType, TSimTraits>::TransportBase(typename TSimTraits<TSimType>::CodType &rC, typename TransportBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const EquationParameters &params)
-      : ScalarDiffusionEquation<TSimType, typename TSimTraits<TSimType>::CodType >(rC, transform, tsteps, 1, 1.0, params.q())
+   template <typename TSimType, template <typename> class TSimTraits> TransportBase<TSimType, TSimTraits>::TransportBase(typename TSimTraits<TSimType>::CodType &rC, typename TransportBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportBase<TSimType, TSimTraits>::EquationParametersType &params)
+      : ScalarDiffusionEquation<TSimType, typename TSimTraits<TSimType>::CodType >(rC, transform, tsteps, 1, params.tptDt(), params.tptDiffusion()), mrParams(params)
    {
    }
 

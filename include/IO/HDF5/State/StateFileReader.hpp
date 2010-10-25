@@ -139,9 +139,10 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> void StateFileReader<TSimType, TSimTraits>::read()
    {
+      // THIS IS NOT GENERAL ENOUGH ANYMORE, BUT ALSO NOT USEFUL IN THE CURRENT STATE
       // Read the Physical parameters
-      EPMFloat E, q, Ra, Ro;
-      this->readPhysical(E, q, Ra, Ro);
+      // EPMFloat E, q, Ra, Ro;
+      // this->readPhysical(E, q, Ra, Ro);
 
       // Read the truncation information
       this->readTruncation();

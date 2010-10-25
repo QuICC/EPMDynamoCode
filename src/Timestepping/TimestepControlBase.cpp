@@ -94,15 +94,7 @@ namespace EPMDynamo {
          }
 
          // Global CFL conditions min(Ro, sqrt(E))
-         if(this->eqParams().Ro() != 0.0)
-         {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, this->eqParams().Ro());
-         }
-
-         if(this->eqParams().E() != 0.0)
-         {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, std::sqrt(this->eqParams().E()));
-         }
+         this->eqParams().testGlobalCFL(this->mCFLTimestep);
       }
    }
 
@@ -141,12 +133,12 @@ namespace EPMDynamo {
             {
                dr = std::min(radii(n_) - radii(n_-1), radii(n_+1) - radii(n_));
             }
-            d = (this->eqParams().E() + this->eqParams().Ro())/(2.0*dr);
+            d = this->eqParams().alfvenDamping(dr);
             d = d*d;
 
             // Radial "Velocity"
             p = magB.r().shell(n).cwise().square();
-            maxVel = (p.cwise()/((p*this->eqParams().Ro()).cwise() + d).cwise().sqrt() + velV.r().shell(n).cwise().abs()).maxCoeff();
+            maxVel = (p.cwise()/((p*this->eqParams().alfvenFactor()).cwise() + d).cwise().sqrt() + velV.r().shell(n).cwise().abs()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -156,10 +148,10 @@ namespace EPMDynamo {
 
             // Angular "Velocity"
             dr = radii(n_)/std::sqrt(llFactor);
-            d = (this->eqParams().E() + this->eqParams().Ro())/(2.0*dr);
+            d = this->eqParams().alfvenDamping(dr);
             d = d*d;
             p = magB.theta().shell(n).cwise().square() + magB.phi().shell(n).cwise().square();
-            maxVel = (p.cwise()/((p*this->eqParams().Ro()).cwise() + d).cwise().sqrt() + (velV.theta().shell(n).cwise().square() + velV.phi().shell(n).cwise().square()).cwise().sqrt()).maxCoeff();
+            maxVel = (p.cwise()/((p*this->eqParams().alfvenFactor()).cwise() + d).cwise().sqrt() + (velV.theta().shell(n).cwise().square() + velV.phi().shell(n).cwise().square()).cwise().sqrt()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -169,15 +161,7 @@ namespace EPMDynamo {
          }
 
          // Global CFL conditions min(Ro, sqrt(E))
-         if(this->eqParams().Ro() != 0.0)
-         {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, this->eqParams().Ro());
-         }
-
-         if(this->eqParams().E() != 0.0)
-         {
-            this->mCFLTimestep = std::min(this->mCFLTimestep, std::sqrt(this->eqParams().E()));
-         }
+         this->eqParams().testGlobalCFL(this->mCFLTimestep);
       }
    }
 

@@ -24,8 +24,8 @@
 
 namespace EPMDynamo {
 
-   ParametersFile::ParametersFile()
-      : XMLReader(ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(4), mTStepArray(2), mRunArrayI(3), mRunArray(1)
+   ParametersFile::ParametersFile(std::string type)
+      : XMLReader(type, ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(1), mTStepArray(2), mRunArrayI(3), mRunArray(1)
    {
    }
 
@@ -147,13 +147,26 @@ namespace EPMDynamo {
 
          if(node)
          {
-            this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+            if(this->mType == "EkQRaRo")
+            {
+               // Resize equation array to correct size
+               this->mEqArray.resize(4);
 
-            this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSROBERTSXML);
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
 
-            this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSRAYLEIGHXML);
+               // Read the Roberts number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSROBERTSXML);
 
-            this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSROSSBYXML);
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSRAYLEIGHXML);
+
+               // Read the Rossby number
+               this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSROSSBYXML);
+            } else
+            {
+               throw EPMException("ParametersFile::readPhysical", "The requested type is not implemented! (yet?)");
+            }
          } else
          {
             throw EPMException("ParametersFile::readPhysical", "Couldn't find tag!");
@@ -228,10 +241,16 @@ namespace EPMDynamo {
          std::cout << "--------------------" << std::endl;
          std::cout << "**** Equations *****" << std::endl;
          std::cout << "--------------------" << std::endl;
-         std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
-         std::cout << "  " << "q: " << this->mEqArray(1) << std::endl;
-         std::cout << "  " << "Ra: " << this->mEqArray(2) << std::endl;
-         std::cout << "  " << "Ro: " << this->mEqArray(3) << std::endl;
+         if(this->mType == "EkQRaRo")
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "q: " << this->mEqArray(1) << std::endl;
+            std::cout << "  " << "Ra: " << this->mEqArray(2) << std::endl;
+            std::cout << "  " << "Ro: " << this->mEqArray(3) << std::endl;
+         } else
+         {
+            std::cout << " !!!! UNKNOWN PHYSICAL PARAMETERS !!!! " << std::endl;
+         }
          std::cout << "********************" << std::endl;
          std::cout << std::endl;
          std::cout << "--------------------" << std::endl;
@@ -275,7 +294,7 @@ namespace EPMDynamo {
       // Create mEqArray part
       MPI_Get_address(this->mEqArray.data(), &element);
       displ[idx] = element;
-      blocks[idx] = 4;
+      blocks[idx] = this->mEqArray.size();
       types[idx] = MPI_DOUBLE;
       idx++;
 

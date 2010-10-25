@@ -14,6 +14,8 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "Equations/Parameters/EquationParameters.hpp"
+#include "Equations/Parameters/EkQRaRoParameters.hpp"
 #include "Timestepping/PredictorCorrector/PCSchemeTraits.hpp"
 #include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Transforms/SpectralSH/TorPolSpectralSHTransform.hpp"
@@ -60,6 +62,9 @@ namespace EPMDynamo {
          /// Typedef for the timestepping scheme traits
          typedef  PCSchemeTraits<TSimType>  TimestepTraits;
          //typedef  ETDSchemeTraits<TSimType>  TimestepTraits;
+         
+         /// Typedef for the equation parameters
+         typedef EkQRaRoParameters  EquationParametersType;
    };
 
 }

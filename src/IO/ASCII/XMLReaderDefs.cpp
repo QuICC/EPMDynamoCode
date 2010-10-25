@@ -23,6 +23,8 @@ namespace EPMDynamo {
 
    const std::string XMLReaderDefs::VERSIONXML = "version";
 
+   const std::string XMLReaderDefs::TYPEXML = "type";
+
    XMLReaderDefs::XMLReaderDefs()
    {
    }

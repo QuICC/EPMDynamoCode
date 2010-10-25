@@ -16,7 +16,6 @@
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
-#include "Equations/Parameters/EquationParameters.hpp"
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "Timestepping/Traits/InfluenceTTraits.hpp"
 
@@ -37,6 +36,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
           * @brief Constructor
           *
@@ -45,7 +47,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesRotating(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesRotating(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -76,7 +78,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesRotating<TSimType, TSimTraits>::NavierStokesRotating(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesRotating<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesRotating<TSimType, TSimTraits>::NavierStokesRotating(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesRotating<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesRotating<TSimType, TSimTraits>::EquationParametersType &params)
       : NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>(rV, transform, tsteps, params)
    {
    }
@@ -93,10 +95,10 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotating<TSimType, TSimTraits>::updateRHS()
    {
       // Compute \f$u\times (\nabla \times u) \f$
-      this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.Ro());
+      this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
 
       // Compute \f$\hat{z}\times\vec{u}\f$
-      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP());
+      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsCoriolis());
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotating<TSimType, TSimTraits>::transformRHS(const int step)

@@ -32,12 +32,13 @@ namespace EPMDynamo {
          /**
          * @brief Constructor 
          *
+         * @param type Type of the file
          * @param name File name
          * @param ext Extension of the file
          * @param header Header of the file
          * @param version Version string of the file
          */
-         XMLReader(std::string name, std::string ext, std::string header, std::string version);
+         XMLReader(std::string type, std::string name, std::string ext, std::string header, std::string version);
 
          /**
          * @brief Destructor
@@ -56,6 +57,11 @@ namespace EPMDynamo {
          virtual void read() = 0;
          
       protected:
+         /**
+          * @brief Type of the file
+          */
+         std::string mType;
+
          /**
           * @brief Content of file converted into a vector
           */

@@ -16,7 +16,6 @@
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
-#include "Equations/Parameters/EquationParameters.hpp"
 
 namespace EPMDynamo {
 
@@ -35,6 +34,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
           * @brief Constructor
           *
@@ -43,7 +45,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -79,7 +81,7 @@ namespace EPMDynamo {
          /**
           * @brief Reference to the equation parameters object
           */
-         EquationParameters mrParams;
+         EquationParametersType mrParams;
 
       private:
    };
@@ -102,8 +104,8 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 2, params.Ro(), params.E()), mrParams(params)
+   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::EquationParametersType &params)
+      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 2, params.nsDt(), params.nsDiffusion()), mrParams(params)
    {
    }
 

@@ -31,6 +31,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
           * @brief Constructor
           *
@@ -38,7 +41,7 @@ namespace EPMDynamo {
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           */
-         InductionBase(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps);
+         InductionBase(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -71,6 +74,11 @@ namespace EPMDynamo {
          
       protected:
 
+         /**
+          * @brief Reference to the equation parameters object
+          */
+         EquationParametersType mrParams;
+
       private:
    };
 
@@ -92,8 +100,8 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionBase<TSimType, TSimTraits>::InductionBase(typename TSimTraits<TSimType>::MagType &rB, typename InductionBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>(rB, transform, tsteps, 1, 1, 1.0, 1.0)
+   template <typename TSimType, template <typename> class TSimTraits> InductionBase<TSimType, TSimTraits>::InductionBase(typename TSimTraits<TSimType>::MagType &rB, typename InductionBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, typename InductionBase<TSimType, TSimTraits>::EquationParametersType &params)
+      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>(rB, transform, tsteps, 1, 1, params.indDt(), params.indDiffusion()), mrParams(params)
    {
    }
 

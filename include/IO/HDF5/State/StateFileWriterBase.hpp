@@ -44,12 +44,10 @@ namespace EPMDynamo {
          /**
           * @brief Write Physical parameters to file
           *
-          * @param E Ekman number
-          * @param q Roberts number
-          * @param Ra Rayleigh number
-          * @param Ro Rossby number
+          * @param type Type of the parameters
+          * @param params All physical parameters
           */
-         void writePhysical(const EPMFloat E, const EPMFloat q, const EPMFloat Ra, const EPMFloat Ro);
+         void writePhysical(const std::string type, const Array& params);
 
          /**
           * @brief Write run information to file

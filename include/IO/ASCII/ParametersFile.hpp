@@ -31,8 +31,10 @@ namespace EPMDynamo {
       public:
          /**
          * @brief Constructor
+         *
+         * @param Type of the parameters file
          */
-         ParametersFile();
+         ParametersFile(std::string type);
 
          /**
          * @brief Destructor

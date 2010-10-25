@@ -21,7 +21,6 @@
 #include "General/EPMTypedefs.hpp"
 #include "General/ExecutionTimer.hpp"
 #include "Domain/Truncation.hpp"
-#include "Equations/Parameters/EquationParameters.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControl.hpp"
 #include "IO/IOSystem.hpp"
@@ -38,6 +37,9 @@ namespace EPMDynamo {
       public:
          /// Typedef for the transform type
          typedef  typename SimulationTraits<TSimType>::TransformType  TransformType;
+
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
 
          /**
           * @brief Simple empty destructor
@@ -73,7 +75,7 @@ namespace EPMDynamo {
          /**
           * @brief Equation parameters
           */
-         EquationParameters   mEqParams;
+         EquationParametersType   mEqParams;
 
          /**
           * @brief SimulationBase control

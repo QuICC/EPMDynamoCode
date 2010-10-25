@@ -16,7 +16,6 @@
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesMagnetic.hpp"
-#include "Equations/Parameters/EquationParameters.hpp"
 
 namespace EPMDynamo {
 
@@ -35,6 +34,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
           * @brief Constructor
           *
@@ -45,7 +47,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -73,7 +75,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesMHD<TSimType, TSimTraits>::NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesMHD<TSimType, TSimTraits>::NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesMHD<TSimType, TSimTraits>::EquationParametersType &params)
       : NavierStokesMagnetic<TSimType, TSimTraits>(rV, rB, transform, tsteps, params), mrC(rC)
    {
    }
@@ -98,17 +100,17 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> void NavierStokesMHD<TSimType, TSimTraits>::updateRHS()
    {
-      // Compute \f$u\times (\nabla \times B) \f$
-      this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.Ro());
+      // Compute \f$u\times (\nabla \times u) \f$
+      this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
 
       // Compute \f$(\nabla \times B)\times B\f$
-      this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp());
+      this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
 
       // Compute \f$C \vec{r}\f$
-      this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.q()*this->mrParams.Ra());
+      this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
 
       // Compute \f$\hat{z}\times\vec{u}\f$
-      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP());
+      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsCoriolis());
    }
 
 }

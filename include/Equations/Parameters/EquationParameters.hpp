@@ -23,29 +23,14 @@ namespace EPMDynamo {
 
    /**
     * @brief This class provides the constant coefficients apparearing in the equations
-    *
-    * It could also later on, provide conversion methods between non-dimensional values and 
-    * real physical values.
     */
    class EquationParameters
    {
       public:
          /**
          * @brief Constructor
-         *
-         * \param E Ekman number
-         * \param q Roberts number
-         * \param Ra Rayleigh number
-         * \param Ro Rossby number
          */
-         EquationParameters(EPMFloat E, EPMFloat q, EPMFloat Ra, EPMFloat Ro);
-
-         /**
-         * @brief Constructor
-         *
-         * \param arr Array of non-dimensional parameters: (0) Ekman, (1) Roberts, (2) Rayleigh, (3) Rossby
-         */
-         EquationParameters(const Array& arr);
+         EquationParameters();
 
          /**
          * @brief Destructor
@@ -53,69 +38,107 @@ namespace EPMDynamo {
          virtual ~EquationParameters() {};
 
          /**
-          * @brief Get the Rossby number
+          * @brief Type of the parameters
           */
-         EPMFloat Ro() const; 
+         virtual std::string type() const = 0;
 
          /**
-          * @brief Get the Ekman number
+          * @brief Get the number of parameters
           */
-         EPMFloat E() const;
+         virtual int nParams() const = 0;
 
          /**
-          * @brief Get the q number
+          * @brief Get the values of all the parameters
           */
-         EPMFloat q() const;
+         virtual Array params() const = 0;
 
          /**
-          * @brief Get the Rayleigh number
+          * @brief Get non dimensionalisation parameter for time derivative in Navier-Stokes equation
           */
-         EPMFloat Ra() const;
+         virtual EPMFloat nsDt() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for diffusion term in Navier-Stokes equation
+          */
+         virtual EPMFloat nsDiffusion() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for Lorentz force term in Navier-Stokes equation
+          */
+         virtual EPMFloat nsLorentz() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for advection term in Navier-Stokes equation
+          */
+         virtual EPMFloat nsAdvection() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for buoyancy term in Navier-Stokes equation
+          */
+         virtual EPMFloat nsBuoyancy() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for Coriolis term in Navier-Stokes equation
+          */
+         virtual EPMFloat nsCoriolis() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for time derivative in induction equation
+          */
+         virtual EPMFloat indDt() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for diffusion tern in induction equation
+          */
+         virtual EPMFloat indDiffusion() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for advection term in induction equation
+          */
+         virtual EPMFloat indAdvection() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for time derivative in transport equation
+          */
+         virtual EPMFloat tptDt() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for diffusion tern in transport equation
+          */
+         virtual EPMFloat tptDiffusion() const = 0;
+
+         /**
+          * @brief Get non dimensionalisation parameter for advection term in transport equation
+          */
+         virtual EPMFloat tptAdvection() const = 0;
+
+         /**
+          * @brief Alfven velocity multiplicative factor. The velocity is written in following form 
+          * \f[
+          *    U_R = B^2/\sqrt{factor*B^2 + damping}
+          * \f]
+          */
+         virtual EPMFloat alfvenFactor() const = 0;
+
+         /**
+          * @brief Damping factor of the Alfven velocity used in CFL condition
+          * \f[
+          *    U_R = B^2/\sqrt{factor*B^2 + damping}
+          * \f]
+          *
+          * @param delta Smallest physical scale
+          */
+         virtual EPMFloat alfvenDamping(const EPMFloat delta) const = 0;
+
+         /**
+          * @brief Test the given timestep value against global CFL conditions
+          */
+         virtual void testGlobalCFL(EPMFloat &rDt) const = 0;
          
       protected:
 
       private:
-
-         /**
-          * @brief The Ekman number
-          */
-         EPMFloat mE;
-
-         /**
-          * @brief The Roberts q number
-          */
-         EPMFloat mQ;
-
-         /**
-          * @brief The Rayleigh number
-          */
-         EPMFloat mRa;
-
-         /**
-          * @brief The Rossby number
-          */
-         EPMFloat mRo;
    };
-
-   inline EPMFloat EquationParameters::Ro() const
-   {
-      return this->mRo;
-   }
-
-   inline EPMFloat EquationParameters::E() const
-   {
-      return this->mE;
-   }
-
-   inline EPMFloat EquationParameters::q() const
-   {
-      return this->mQ;
-   }
-
-   inline EPMFloat EquationParameters::Ra() const
-   {
-      return this->mRa;
-   }
 
    /// Typedef for geting a singleton of the EquationParameters
    typedef EPMSHARED_PTR<EquationParameters>   SmartEqParameters;

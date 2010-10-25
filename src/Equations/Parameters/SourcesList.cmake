@@ -3,4 +3,5 @@
 #
 set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       EquationParameters.cpp
+      EkQRaRoParameters.cpp
       )

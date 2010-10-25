@@ -18,7 +18,7 @@
 namespace EPMDynamo {
 
    IOSystem::IOSystem()
-      : mpCfgFile(new ParametersFile())
+      : mpCfgFile(new ParametersFile("EkQRaRo"))
    {
       // Initialise
       this->init();

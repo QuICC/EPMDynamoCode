@@ -21,8 +21,8 @@
 
 namespace EPMDynamo {
 
-   XMLReader::XMLReader(std::string name, std::string ext, std::string header, std::string version)
-      : ASCIIReader(name, ext, header, version), mContent(), mXML()
+   XMLReader::XMLReader(std::string type, std::string name, std::string ext, std::string header, std::string version)
+      : ASCIIReader(name, ext, header, version), mType(type), mContent(), mXML()
    {
    }
 
@@ -79,6 +79,22 @@ namespace EPMDynamo {
                   // Check version
                   if(fileVers == this->mVersion)
                   {
+                     vnode = node->first_node(XMLReaderDefs::TYPEXML.c_str());
+                     // Read type if present
+                     if(vnode)
+                     {
+                        std::string fileType = vnode->value();
+                        // Check type
+                        if(fileType == this->mType)
+                        {
+                        } else
+                        {
+                           throw EPMException("XMLReader::checkCompatibility", "Wrong file type!");
+                        }
+                     } else
+                     {
+                        throw EPMException("XMLReader::checkCompatibility", "Missing file type!");
+                     }
                   } else
                   {
                      throw EPMException("XMLReader::checkCompatibility", "Wrong file version!");

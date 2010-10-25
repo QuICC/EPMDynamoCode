@@ -31,6 +31,9 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
+         /// Typedef for the EquationParameters type
+         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+
          /**
           * @brief Constructor
           *
@@ -40,7 +43,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesLinThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParameters &params);
+         NavierStokesLinThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -69,7 +72,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesLinThermal<TSimType, TSimTraits>::NavierStokesLinThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesLinThermal<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, EquationParameters &params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesLinThermal<TSimType, TSimTraits>::NavierStokesLinThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesLinThermal<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesLinThermal<TSimType, TSimTraits>::EquationParametersType &params)
       : NavierStokesRotating<TSimType, TSimTraits>(rV, transform, tsteps, params), mrC(rC)
    {
    }
@@ -86,10 +89,10 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinThermal<TSimType, TSimTraits>::updateRHS()
    {
       // Compute \f$C \vec{r}\f$
-      this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.q()*this->mrParams.Ra());
+      this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
 
       // Compute \f$\hat{z}\times\vec{u}\f$
-      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP());
+      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsCoriolis());
    }
 
 }

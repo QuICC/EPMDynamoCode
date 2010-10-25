@@ -37,9 +37,14 @@ namespace EPMDynamo {
          static const std::string   HEADERXML;
 
          /**
-          * @brief BASENAME of parameters file
+          * @brief VERSION of parameters file
           */
          static const std::string   VERSIONXML;
+
+         /**
+          * @brief TYPE of parameters file
+          */
+         static const std::string   TYPEXML;
 
          /**
          * @brief Destructor

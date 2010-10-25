@@ -25,22 +25,25 @@ namespace EPMDynamo {
    {
    }
 
-   void StateFileWriterBase::writePhysical(const EPMFloat E, const EPMFloat q, const EPMFloat Ra, const EPMFloat Ro)
+   void StateFileWriterBase::writePhysical(const std::string type, const Array& params)
    {
       // Create the Physical parameters group
       this->mGroup = H5Gcreate(this->mFile, StateFileDefs::PHYSICALTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
-      // Write Ekman scalar to file
-      this->writeScalar(StateFileDefs::EKMANTAG, E);
+      if(type == "EkQRaRo")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
 
-      // Write q scalar to file
-      this->writeScalar(StateFileDefs::ROBERTSTAG, q);
+         // Write q scalar to file
+         this->writeScalar(StateFileDefs::ROBERTSTAG, params(1));
 
-      // Write Rayleigh scalar to file
-      this->writeScalar(StateFileDefs::RAYLEIGHTAG, Ra);
+         // Write Rayleigh scalar to file
+         this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(2));
 
-      // Write Rossby scalar to file
-      this->writeScalar(StateFileDefs::ROSSBYTAG, Ro);
+         // Write Rossby scalar to file
+         this->writeScalar(StateFileDefs::ROSSBYTAG, params(3));
+      }
       
       // close group
       H5Gclose(this->mGroup);
