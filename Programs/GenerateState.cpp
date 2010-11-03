@@ -30,7 +30,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCVTraits
+#define TGENTRAITS epm::GenCBVTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
 
 typedef epm::RandomState<GENTRAITS>  StateType;
