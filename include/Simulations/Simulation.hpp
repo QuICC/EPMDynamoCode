@@ -25,7 +25,7 @@ namespace EPMDynamo {
    /**
     * @brief High level implementation of a simulation's execution steps.
     *
-    * The setup and actual definition of the different steps are done in by the TSimImpl object.
+    * The setup and actual definition of the different steps are done in the TSimImpl object.
     *
     * \tparam TSimType Type of simulation
     * \tparam TSimImpl Actual implementation of the simulation
