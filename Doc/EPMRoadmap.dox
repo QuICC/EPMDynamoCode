@@ -1,5 +1,10 @@
 /** \page epmRoadmap Roadmap
  *
+ * ***IMPORTANT***
+ * The energy computations are not scaled correctly (magnetic energy misses the 1/Ro factor)
+ *
+ * CSCS output misses possibilty to add other type of fields to output. For example, vorticity, helicity, toroidal, poloidal components etc
+ *
  * This is an approximative roadmap for the next version(s).
  *
  * \section epmRoadV1 Version 1.y.z
