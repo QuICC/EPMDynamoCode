@@ -24,6 +24,9 @@ namespace EPMDynamo {
     */
    template <TimestepCtrlTypes TType> class TimestepControllerTraits;
 
+   /**
+    * \brief Elementary timestep controller
+    */
    template <> class TimestepControllerTraits<ElementaryCtrl>
    {
       public:
@@ -43,6 +46,9 @@ namespace EPMDynamo {
          static const EPMFloat ALPHA;
    };
 
+   /**
+    * \brief PI 4.2 timestep controller
+    */
    template <> class TimestepControllerTraits<PI42Ctrl>
    {
       public:
@@ -62,6 +68,9 @@ namespace EPMDynamo {
          static const EPMFloat ALPHA;
    };
 
+   /**
+    * \brief Filter H211b timestep controller
+    */
    template <> class TimestepControllerTraits<H211BCtrl>
    {
       public:

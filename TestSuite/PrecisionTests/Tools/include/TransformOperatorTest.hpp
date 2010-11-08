@@ -124,6 +124,7 @@ namespace EPMDynamo {
           * @brief Write operator data to file
           *
           * @param name Name of the operator
+          * @param Tptr Polynomial operator pointer
           * @param ext File extension to use
           */
          template<class T, typename TExp> void writeOperator(std::string name, const PolynomialOperator<TExp>& (T::*Tptr)() const, std::string ext);
@@ -132,6 +133,7 @@ namespace EPMDynamo {
           * @brief Write a complex operator data to file
           *
           * @param name Name of the operator
+          * @param Tptr Polynomial operator pointer
           * @param ext File extension to use
           */
          template<class T, typename TExp> void writeZOperator(std::string name, const PolynomialOperator<TExp>& (T::*Tptr)() const, std::string ext);
