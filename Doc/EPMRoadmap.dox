@@ -1,20 +1,16 @@
 /** \page epmRoadmap Roadmap
  *
  * ***IMPORTANT***
- * The energy computations are not scaled correctly (magnetic energy misses the 1/Ro factor)
  *
  * CSCS output misses possibilty to add other type of fields to output. For example, vorticity, helicity, toroidal, poloidal components etc
  *
  * This is an approximative roadmap for the next version(s).
  *
+ * ***************
+ *
  * \section epmRoadV1 Version 1.y.z
  *    - A useful set of precision tests for the most important computations. These will also be very useful as regression tests for further
  *    changes to the code.
- *
- *    - Implement a reader class for NG_AshCode's HDF5 inner core data
- *
- *    - Add documentation until it is more or less usable by someone else than me ;)
- *
  *
  * \section epmRoadV2 Version 2.y.z
  *    - Do compiler tests to see which what is working and what not.
@@ -36,4 +32,6 @@
  *
  *    - Finish and cleanup the implementation of the different radial grids. The Chebyshev is currently used but a Legendre grid version is
  *    possible. A preliminary version is provided but not working yet.dd
+ *
+ *    - Implement a reader class for NG_AshCode's HDF5 inner core data
  */
