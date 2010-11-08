@@ -301,6 +301,9 @@ namespace EPMDynamo {
 
       // Read in source state
       this->mIOSys.useSource(pSource);
+
+      // Set the normalisation for the magnetic field
+      this->mMagB.rOc().rPerturbation().setNormalisation(this->mEqParams.meFactor());
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::addHDF5Output()

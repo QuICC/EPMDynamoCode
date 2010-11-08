@@ -256,6 +256,9 @@ namespace EPMDynamo {
       EPMSHARED_PTR<ImposedFieldReader<TSimType, MagnetoConvectionTraits> > pIField(new ImposedFieldReader<TSimType, MagnetoConvectionTraits>(this->mMagB));
 
       this->mIOSys.useImposedField(pIField);
+
+      // Set the normalisation for the magnetic field
+      this->mMagB.rOc().rPerturbation().setNormalisation(this->mEqParams.meFactor());
    }
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::addHDF5Output()

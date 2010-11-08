@@ -332,6 +332,18 @@ namespace EPMDynamo {
          MPI_Allreduce(MPI_IN_PLACE, this->rT().rSpectrumM().data(), this->t().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
    }
+
+   template <typename TSimType> void QSTField<TSimType>::setNormalisation(const EPMFloat& eFactor)
+   {
+      // Set normalisation for the Q component
+      this->rQ().setNormalisation(eFactor);
+
+      // Set normalisation for the S component
+      this->rS().setNormalisation(eFactor);
+
+      // Set normalisation for the T component
+      this->rT().setNormalisation(eFactor);
+   }
 }
 
 #endif // QSTFIELD_HPP

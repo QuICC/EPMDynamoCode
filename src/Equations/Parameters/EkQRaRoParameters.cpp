@@ -109,6 +109,11 @@ namespace EPMDynamo {
       return (this->E()+this->Ro())/(2.0*delta);
    }
 
+   EPMFloat EkQRaRoParameters::meFactor() const
+   {
+      return 1.0/this->Ro();
+   }
+
    void EkQRaRoParameters::testGlobalCFL(EPMFloat &rDt) const
    {
       if(this->Ro() != 0.0)

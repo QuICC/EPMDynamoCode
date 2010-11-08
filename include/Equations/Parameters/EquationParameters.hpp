@@ -131,6 +131,11 @@ namespace EPMDynamo {
          virtual EPMFloat alfvenDamping(const EPMFloat delta) const = 0;
 
          /**
+          * @brief Get the magnetic energy normalisation factor
+          */
+         virtual EPMFloat meFactor() const = 0;
+
+         /**
           * @brief Test the given timestep value against global CFL conditions
           */
          virtual void testGlobalCFL(EPMFloat &rDt) const = 0;

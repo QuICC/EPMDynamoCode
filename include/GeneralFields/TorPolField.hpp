@@ -112,6 +112,13 @@ namespace EPMDynamo {
           * @brief Get the energy spectrum in the poloidal component
           */
          const Array&  polSpectrumM() const;
+
+         /**
+          * @brief Set the normalisation factors
+          *
+          * @param eFactor Energy normalisation factor
+          */
+         void setNormalisation(const EPMFloat&  eFactor);
          
       protected:
 
@@ -274,6 +281,15 @@ namespace EPMDynamo {
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumL().data(), this->pol().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumM().data(), this->pol().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
+   }
+
+   template <typename TSimType> void TorPolField<TSimType>::setNormalisation(const EPMFloat& eFactor)
+   {
+      // Set normalisation for the toroidal component
+      this->rTor().setNormalisation(eFactor);
+
+      // Set normalisation for the poloidal component
+      this->rPol().setNormalisation(eFactor);
    }
 }
 

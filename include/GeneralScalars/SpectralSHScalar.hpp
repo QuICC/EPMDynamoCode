@@ -86,6 +86,13 @@ namespace EPMDynamo {
           */
          template <typename TPolynomial> void computeSpectra(const RadialBasis<TPolynomial> &radBasis);
 
+         /**
+          * Define the non-dimensionlisation factors
+          *
+          * @param eFactor Energy multiplicative factor
+          */
+         void setNormalisation(const EPMFloat&  eFactor);
+
       protected:
 
       private:
@@ -98,6 +105,11 @@ namespace EPMDynamo {
           * @brief Storage for the energy spectrum in L
           */
          Array mSpectrumL;
+
+         /**
+          * @brief Energy non-dimensionalisation factor
+          */
+         EPMFloat mEFactor;
    };
 
    inline Array& SpectralSHScalar::rSpectrumL()
@@ -145,10 +157,10 @@ namespace EPMDynamo {
 
             if(ms(m) != 0)
             {
-               shFactor = 4.0*shWeight;
+               shFactor = 4.0*shWeight*this->mEFactor;
             } else
             {
-               shFactor = shWeight;
+               shFactor = shWeight*this->mEFactor;
             }
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
