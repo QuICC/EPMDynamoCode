@@ -26,6 +26,11 @@ namespace EPMDynamo {
    {
       public:
          /**
+          * @brief Perturb the magnetic field?
+          */
+         static const bool PERTURB_MAGNETIC = true;
+
+         /**
           * @brief Perturbation amplitude
           */
          static const EPMFloat PERTURBATION_AMPLITUDE;
@@ -124,7 +129,8 @@ namespace EPMDynamo {
       // Set some perturbation random energy
       for(int l=0; l < pTrunc->local()->spec()->nL()/2; ++l)
       {
-         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, pTrunc->local()->spec()->nM(l)/2).setRandom();
+         std::cerr << l << ", " << pTrunc->sim()->rad()->nN()/2 << ", " << pTrunc->local()->spec()->nM(l)/2 << std::endl;
+         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2, 1)).setRandom();
          codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(SakurabaState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
@@ -143,10 +149,25 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
+      if(PERTURB_MAGNETIC)
       {
-         magB.rOc().rPerturbation().rTor().rLShell(l).setConstant(EPMComplex(0.0,0.0));
-         magB.rOc().rPerturbation().rPol().rLShell(l).setConstant(EPMComplex(0.0,0.0));
+         for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
+         {
+            // Set some perturbation random energy in Toroidal component
+            magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2,1)).setRandom();
+            magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+
+            // Set some perturbation random energy in Poloidal component
+            magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2,1)).setRandom();
+            magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         }
+      } else
+      {
+         for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
+         {
+            magB.rOc().rPerturbation().rTor().rLShell(l).setConstant(EPMComplex(0.0,0.0));
+            magB.rOc().rPerturbation().rPol().rLShell(l).setConstant(EPMComplex(0.0,0.0));
+         }
       }
    }
 
