@@ -129,7 +129,6 @@ namespace EPMDynamo {
       // Set some perturbation random energy
       for(int l=0; l < pTrunc->local()->spec()->nL()/2; ++l)
       {
-         std::cerr << l << ", " << pTrunc->sim()->rad()->nN()/2 << ", " << pTrunc->local()->spec()->nM(l)/2 << std::endl;
          codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2, 1)).setRandom();
          codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(SakurabaState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
