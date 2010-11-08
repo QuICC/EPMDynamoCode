@@ -28,6 +28,19 @@ namespace EPMDynamo {
    ParametersFile::ParametersFile(std::string type)
       : XMLReader(type, ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(1), mTStepArray(2), mRunArrayI(3), mRunArray(1)
    {
+      // Resize arrays depending on given file type
+      this->setupStorage();
+   }
+
+   void ParametersFile::setupStorage()
+   {
+      // Resize the array storing the physical parameters
+      if(this->mType == "EkQRaRo")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(4);
+      }
+
    }
 
    void ParametersFile::read()
@@ -150,9 +163,6 @@ namespace EPMDynamo {
          {
             if(this->mType == "EkQRaRo")
             {
-               // Resize equation array to correct size
-               this->mEqArray.resize(4);
-
                // Read the Ekman number
                this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
 

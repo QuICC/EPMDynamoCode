@@ -83,6 +83,11 @@ namespace EPMDynamo {
          
       protected:
          /**
+          * @brief Resize arrays depending on file type
+          */
+         void setupStorage();
+
+         /**
           * @brief Read truncation information from file
           */
          void readTruncation();
