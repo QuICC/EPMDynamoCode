@@ -27,7 +27,7 @@ namespace EPMDynamo {
 
    const EPMFloat TimestepConfig::TIMESTEP_ERROR_THETA = 0.5;
 
-   const EPMFloat TimestepConfig::TIMESTEP_ERROR_TOLERANCE = 1e-8;
+   const EPMFloat TimestepConfig::TIMESTEP_ERROR_TOLERANCE = 1e-3;
 
    const EPMFloat TimestepConfig::TIMESTEP_ERROR_EPSILON = TimestepConfig::TIMESTEP_ERROR_THETA*TimestepConfig::TIMESTEP_ERROR_TOLERANCE;
 

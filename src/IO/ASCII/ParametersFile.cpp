@@ -21,6 +21,7 @@
 //
 #include "General/EPMException.hpp"
 #include "IO/ASCII/ParametersFileDefs.hpp"
+#include "Timestepping/TimestepConfig.hpp"
 
 namespace EPMDynamo {
 
@@ -258,6 +259,7 @@ namespace EPMDynamo {
          std::cout << "--------------------" << std::endl;
          std::cout << "  " << "Time: " << this->mTStepArray(0) << std::endl;
          std::cout << "  " << "Timestep: " << this->mTStepArray(1) << std::endl;
+         std::cout << "  " << "Tolerance: " << TimestepConfig::TIMESTEP_ERROR_TOLERANCE << std::endl;
          std::cout << "********************" << std::endl;
          std::cout << std::endl;
          std::cout << "--------------------" << std::endl;
