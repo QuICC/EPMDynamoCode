@@ -45,7 +45,7 @@ namespace EPMDynamo {
 
       protected:
          /**
-          * @brief Spectral truncatio information
+          * @brief Spectral truncation information
           */
          SmartTruncation mpTrunc;
 

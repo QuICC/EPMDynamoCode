@@ -9,6 +9,11 @@
  * ***************
  *
  * \section epmRoadV11 Version 1.1.z
+ *    - New implementation of the CSCS Visualisation output:
+ *       - Add ONLY toroidal output
+ *       - Add ONLY poloidal output
+ *       - Add vorticity output
+ *       - Add helicity output
  *    - Implementation of more Visualisation outputs (vorticity, helicity, ...)
  *
  * \section epmRoadV12 Version 1.2.z
