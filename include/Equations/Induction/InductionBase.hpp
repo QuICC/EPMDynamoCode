@@ -39,7 +39,8 @@ namespace EPMDynamo {
           *
           * @param rB Magnetic field (stored as reference)
           * @param transform Transform object (stored as reference)
-          * \param tsteps Timestep parameters
+          * @param tsteps Timestep parameters
+          * @param params Equation parameters
           */
          InductionBase(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 

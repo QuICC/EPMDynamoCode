@@ -24,7 +24,7 @@
  *
  * - Flexible and optimized polynomials storage (required for Chebyshev implementation)
  *
- * - Radial Chebyshev implementation with with Gauss-Chebyshev quadrature
+ * - Radial Chebyshev implementation with Gauss-Chebyshev quadrature
  *
  * - Fast Radial Chebyshev implementation with FFT
  *

@@ -32,7 +32,7 @@ namespace EPMDynamo {
          /**
          * @brief Constructor
          *
-         * @param Type of the parameters file
+         * @param type Type of the parameters file
          */
          ParametersFile(std::string type);
 
