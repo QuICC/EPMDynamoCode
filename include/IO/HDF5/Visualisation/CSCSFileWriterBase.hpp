@@ -79,29 +79,22 @@ namespace EPMDynamo {
          void writeGrid(const Array& radial, const Array& theta, const Array& phi);
 
          /**
-          * @brief Create group for Codensity scalar and set mGroup
+          * @brief Create group for scalar field and set mGroup
           *
-          * @param scalar Codensity values
+          * @param name Name of the scalar field
+          * @param scalar Field values
           */
-         void writeCodensity(const std::vector<SphericalShell> &scalar);
+         void writeScalarField(const std::string& name, const std::vector<SphericalShell> &scalar);
 
          /**
-          * @brief Create group for Magnetic field and set mGroup
+          * @brief Create group for a vector field and set mGroup
           *
-          * @param radial Radial component of the magnetic field
-          * @param theta Theta component of the magnetic field
-          * @param phi Phi componenet of the magnetic field
+          * @param name Name of the vector field group
+          * @param radial Radial component of the vector field
+          * @param theta Theta component of the vector field
+          * @param phi Phi componenet of the vector field
           */
-         void writeMagnetic(const std::vector<SphericalShell> &radial, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi);
-
-         /**
-          * @brief Create group for Velocity field and set mGroup
-          *
-          * @param radial Radial component of the velocity field
-          * @param theta Theta component of the velocity field
-          * @param phi Phi componenet of the velocity field
-          */
-         void writeVelocity(const std::vector<SphericalShell> &radial, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi);
+         void writeVectorField(const std::string& name, const std::vector<SphericalShell> &radial, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi);
 
       private:
          /**

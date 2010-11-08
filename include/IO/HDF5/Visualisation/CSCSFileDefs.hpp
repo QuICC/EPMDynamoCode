@@ -24,54 +24,64 @@ namespace EPMDynamo {
    {
       public:
          /**
-          * @brief HEADER part for CSCS file
+          * @brief Grid tag name for CSCS file
           */
          static const std::string   GRIDTAG;
 
          /**
-          * @brief HEADER part for CSCS file
+          * @brief Radial axis tag name for CSCS file
           */
          static const std::string   RADIALAXISTAG;
 
          /**
-          * @brief HEADER part for CSCS file
+          * @brief Theta axis tag name for CSCS file
           */
          static const std::string   THETAAXISTAG;
 
          /**
-          * @brief HEADER part for CSCS file
+          * @brief Phi axis tag name for CSCS file
           */
          static const std::string   PHIAXISTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Radial component tag name for CSCS file
           */
          static const std::string   RADIALTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Theta component tag name for CSCS file
           */
          static const std::string   THETATAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Phi component tag name for CSCS file
           */
          static const std::string   PHITAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Codensity tag name for CSCS file
           */
          static const std::string   CODENSITYTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Magnetic tag name for CSCS file
           */
          static const std::string   MAGNETICTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Velocity tag name for CSCS file
           */
          static const std::string   VELOCITYTAG;
+
+         /**
+          * @brief Vorticity tag name for CSCS file
+          */
+         static const std::string   VORTICITYTAG;
+
+         /**
+          * @brief Helicity tag name for CSCS file
+          */
+         static const std::string   HELICITYTAG;
 
          /**
           * @brief HEADER part for CSCS file

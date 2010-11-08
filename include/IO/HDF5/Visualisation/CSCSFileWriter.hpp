@@ -166,19 +166,19 @@ namespace EPMDynamo {
       // Write the codensity real space values
       if(this->mpCodC != NULL)
       {
-         this->writeCodensity(this->mpCodC->oc().rtp().data());
+         this->writeScalarField(CSCSFileDefs::CODENSITYTAG, this->mpCodC->oc().rtp().data());
       }
 
       // Write the magnetic coefficients
       if(this->mpMagB != NULL)
       {
-         this->writeMagnetic(this->mpMagB->oc().rtp().r().data(), this->mpMagB->oc().rtp().theta().data(), this->mpMagB->oc().rtp().phi().data());
+         this->writeVectorField(CSCSFileDefs::MAGNETICTAG, this->mpMagB->oc().rtp().r().data(), this->mpMagB->oc().rtp().theta().data(), this->mpMagB->oc().rtp().phi().data());
       }
 
       // Write the velocity coefficients
       if(this->mpVelV != NULL)
       {
-         this->writeVelocity(this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
+         this->writeVectorField(CSCSFileDefs::VELOCITYTAG, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
       }
 
       // Close file

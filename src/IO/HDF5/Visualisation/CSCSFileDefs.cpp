@@ -37,6 +37,10 @@ namespace EPMDynamo {
 
    const std::string CSCSFileDefs::VELOCITYTAG = "Velocity";
 
+   const std::string CSCSFileDefs::VORTICITYTAG = "Vorticity";
+
+   const std::string CSCSFileDefs::HELICITYTAG = "Helicity";
+
    const std::string CSCSFileDefs::HEADER = "CSCSFile";
 
    const std::string CSCSFileDefs::VERSION = "1.0";

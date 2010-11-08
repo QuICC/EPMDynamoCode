@@ -36,7 +36,7 @@ namespace EPMDynamo {
    {
       this->mMaxCollIOWrite = 0;
 
-      // Get the minimum number of radial sheels over all CPUs
+      // Get the minimum number of radial shells over all CPUs
       for(int i = 0; i < this->runTrunc()->para().nCore(); ++i)
       {
          if(this->mMaxCollIOWrite < this->runTrunc()->remote(i)->rtp()->nR())
@@ -125,7 +125,7 @@ namespace EPMDynamo {
       H5Gclose(this->mGroup);
    }
 
-   void CSCSFileWriterBase::writeCodensity(const std::vector<SphericalShell> &scalar)
+   void CSCSFileWriterBase::writeScalarField(const std::string& name, const std::vector<SphericalShell> &scalar)
    {
       // Open grid root
       std::string groupPath = this->mGridName + "/";
@@ -136,17 +136,17 @@ namespace EPMDynamo {
       CSCSFileTools::padRTPField(corrected, scalar, this->mpTrunc);
 
       // Write the codensity expansion
-      this->writeMatrixVector3D(CSCSFileDefs::CODENSITYTAG, corrected);
+      this->writeMatrixVector3D(name, corrected);
       corrected.clear();
       
       // close group
       H5Gclose(this->mGroup);
    }
 
-   void CSCSFileWriterBase::writeMagnetic(const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)
+   void CSCSFileWriterBase::writeVectorField(const std::string& name, const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)
    {
       // Create the Magnetic Field group
-      std::string groupPath = this->mGridName + "/" + CSCSFileDefs::MAGNETICTAG;
+      std::string groupPath = this->mGridName + "/" + name;
       this->mGroup = H5Gcreate(this->mFile, groupPath.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
       // data storage for corrected field for file
@@ -159,7 +159,7 @@ namespace EPMDynamo {
       CSCSFileTools::correctRadialPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
-      this->writeMatrixVector3D(CSCSFileDefs::MAGNETICTAG+CSCSFileDefs::RADIALTAG, corrected);
+      this->writeMatrixVector3D(name + CSCSFileDefs::RADIALTAG, corrected);
       corrected.clear();
 
       // Pad the theta component
@@ -169,7 +169,7 @@ namespace EPMDynamo {
       CSCSFileTools::correctThetaPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
-      this->writeMatrixVector3D(CSCSFileDefs::MAGNETICTAG+CSCSFileDefs::THETATAG, corrected);
+      this->writeMatrixVector3D(name + CSCSFileDefs::THETATAG, corrected);
       corrected.clear();
 
       // Pad the theta component
@@ -179,50 +179,7 @@ namespace EPMDynamo {
       CSCSFileTools::correctPhiPole(corrected, r, theta, phi, this->mpTrunc);
 
       // Write the radial component
-      this->writeMatrixVector3D(CSCSFileDefs::MAGNETICTAG+CSCSFileDefs::PHITAG, corrected);
-      corrected.clear();
-      
-      // close group
-      H5Gclose(this->mGroup);
-   }
-
-   void CSCSFileWriterBase::writeVelocity(const std::vector<SphericalShell> &r, const std::vector<SphericalShell> &theta, const std::vector<SphericalShell> &phi)
-   {
-      // Create the Velocity Field group
-      std::string groupPath = this->mGridName + "/" + CSCSFileDefs::VELOCITYTAG;
-      this->mGroup = H5Gcreate(this->mFile, groupPath.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-
-      // data storage for corrected field for file
-      std::vector<SphericalShell>   corrected;
-
-      // Pad the radial component
-      CSCSFileTools::padRTPField(corrected, r, this->mpTrunc);
-
-      // Correct pole values (rotate around z axis)
-      CSCSFileTools::correctRadialPole(corrected, r, theta, phi, this->mpTrunc);
-
-      // Write the radial component
-      this->writeMatrixVector3D(CSCSFileDefs::VELOCITYTAG+CSCSFileDefs::RADIALTAG, corrected);
-      corrected.clear();
-
-      // Pad the theat component
-      CSCSFileTools::padRTPField(corrected, theta, this->mpTrunc);
-
-      // Correct pole values (rotate around z axis)
-      CSCSFileTools::correctThetaPole(corrected, r, theta, phi, this->mpTrunc);
-
-      // Write the theta component
-      this->writeMatrixVector3D(CSCSFileDefs::VELOCITYTAG+CSCSFileDefs::THETATAG, corrected);
-      corrected.clear();
-
-      // Pad the phi component
-      CSCSFileTools::padRTPField(corrected, phi, this->mpTrunc);
-
-      // Correct pole values (rotate around z axis)
-      CSCSFileTools::correctPhiPole(corrected, r, theta, phi, this->mpTrunc);
-
-      // Write the phi component
-      this->writeMatrixVector3D(CSCSFileDefs::VELOCITYTAG+CSCSFileDefs::PHITAG, corrected);
+      this->writeMatrixVector3D(name + CSCSFileDefs::PHITAG, corrected);
       corrected.clear();
       
       // close group
