@@ -114,7 +114,7 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
-      codC.rOcSrc().rLShell(0)(0,0) = 3.0*20.;
+      codC.rOcSrc().rLShell(0)(0,0) = 3.0*10.0;
    }
 
    template <typename TGenTraits> void SakurabaSource<TGenTraits>::setSpecMagnetic(typename SakurabaSource<TGenTraits>::Magnetic &magB)

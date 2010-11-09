@@ -33,7 +33,7 @@ namespace epm = EPMDynamo;
 #define TGENTRAITS epm::GenCTraits
 #define GENTRAITS TGENTRAITS<epm::WSHSimulation>
 
-typedef epm::JonesSource<GENTRAITS>  SourceType;
+typedef epm::SakurabaSource<GENTRAITS>  SourceType;
 
 typedef  epm::SourceGenerator<epm::WSHSimulation, TGENTRAITS>  SourceGenerator;
 typedef  GENTRAITS::CodType  Codensity;
