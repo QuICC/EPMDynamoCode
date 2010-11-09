@@ -18,7 +18,7 @@
 namespace EPMDynamo {
 
    IOSystem::IOSystem()
-      : mpCfgFile(new ParametersFile("EkQRaRo"))
+      : IOSystemBase()
    {
       // Initialise
       this->init();
@@ -26,45 +26,6 @@ namespace EPMDynamo {
 
    void IOSystem::init()
    {
-      // Initialise config file
-      this->mpCfgFile->init();
-      // Read configuration data from config file
-      this->mpCfgFile->read();
-      // Close the config file
-      this->mpCfgFile->finalise();
-
-      // Initialise the StdMessage ouput
-      SmartStdMessage pStd(new StdMessage(mpCfgFile->stdMessageName()));
-      this->mpStdMessage = pStd;
-      this->mpStdMessage->init();
-
-      // Print the run information
-      this->mpCfgFile->printInfo();
-   }
-
-   const ArrayI& IOSystem::aTrunc() const
-   {
-      return this->mpCfgFile->aTrunc();
-   }
-
-   const Array& IOSystem::aTStep() const
-   {
-      return this->mpCfgFile->aTStep();
-   }
-
-   const ArrayI& IOSystem::aRunI() const
-   {
-      return this->mpCfgFile->aRunI();
-   }
-
-   const Array& IOSystem::aRun() const
-   {
-      return this->mpCfgFile->aRun();
-   }
-
-   const Array& IOSystem::aEquation() const
-   {
-      return this->mpCfgFile->aEquation();
    }
 
    void IOSystem::useInitialState(SmartStateFileReaderBase pInState, TimestepParameters& tsParams)
@@ -76,11 +37,11 @@ namespace EPMDynamo {
       pInState->read();
 
       // Handle time and timestep input
-      if(this->aTStep()(0) == -1.0)
+      if(this->cfg()->aTStep()(0) == -1.0)
       {
          tsParams.setTime(pInState->time());
       }
-      if(this->aTStep()(1) == -1.0)
+      if(this->cfg()->aTStep()(1) == -1.0)
       {
          tsParams.updateTimestep(pInState->timestep());
       }
@@ -148,7 +109,7 @@ namespace EPMDynamo {
          this->mHDF5Writers.at(i)->finalise();
       }
 
-      this->mpStdMessage->finalise();
+      this->finaliseBase();
    }
 
    void IOSystem::writeASCII()

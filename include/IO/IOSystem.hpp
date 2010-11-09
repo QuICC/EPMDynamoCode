@@ -13,9 +13,8 @@
 
 // Project includes
 //
-#include "IO/ASCII/StdMessage.hpp"
+#include "IO/IOSystemBase.hpp"
 #include "IO/ASCII/ASCIIWriter.hpp"
-#include "IO/ASCII/ParametersFile.hpp"
 #include "IO/HDF5/HDF5Writer.hpp"
 #include "IO/HDF5/State/StateFileReaderBase.hpp"
 #include "IO/HDF5/Imposed/ImposedFieldReaderBase.hpp"
@@ -27,7 +26,7 @@ namespace EPMDynamo {
    /**
     * @brief Full IO system reponsible for dealing with all the files
     */
-   class IOSystem
+   class IOSystem: public IOSystemBase
    {
       public:
          /**
@@ -39,31 +38,6 @@ namespace EPMDynamo {
          * @brief Destructor
          */
          virtual ~IOSystem() {};
-
-         /**
-          * @brief Get an array of parameters for the spectral truncation object
-          */
-         const ArrayI& aTrunc() const;
-
-         /**
-          * @brief Get an array of parameters for the timestep parameters
-          */
-         const Array& aTStep() const;
-
-         /**
-          * @brief Get an array of parameters for the integer run parameters
-          */
-         const ArrayI& aRunI() const;
-
-         /**
-          * @brief Get an array of parameters for the run parameters
-          */
-         const Array& aRun() const;
-
-         /**
-          * @brief Get an array of parameters for the equation parameters
-          */
-         const Array& aEquation() const;
 
          /**
           * @brief Initialise the writer files
@@ -124,16 +98,6 @@ namespace EPMDynamo {
       protected:
 
       private:
-         /**
-          * @brief Handle to the configuration file
-          */
-         SmartParametersFile    mpCfgFile;
-
-         /**
-          * @brief Handle to StdMessage buffer
-          */
-         SmartStdMessage   mpStdMessage;
-
          /**
           * @brief Initialise the system
           */

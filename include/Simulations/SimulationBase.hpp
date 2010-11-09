@@ -19,9 +19,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "General/ExecutionTimer.hpp"
-#include "Domain/Truncation.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Simulations/ComputationBase.hpp"
 #include "Simulations/SimulationControl.hpp"
 #include "IO/IOSystem.hpp"
 
@@ -32,7 +30,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType General simulation type
     */
-   template <typename TSimType> class SimulationBase
+   template <typename TSimType> class SimulationBase: public ComputationBase<TSimType, IOSystem>
    {
       public:
          /// Typedef for the transform type
@@ -48,44 +46,14 @@ namespace EPMDynamo {
 
       protected:
          /**
-          * @brief General execution timer
-          */
-         ExecutionTimer mExecTimer;
-
-         /**
           * @brief Constructor
           */
          SimulationBase();
 
          /**
-          * @brief IOSystem of the simulation
-          */
-         IOSystem    mIOSys;
-
-         /**
-          * @brief Shared pointer to the truncation
-          */
-         SmartTruncation  mpTrunc;
-
-         /**
-          * @brief Real space <-> spectral space transform object
-          */
-         TransformType  mTransform;
-
-         /**
-          * @brief Equation parameters
-          */
-         EquationParametersType   mEqParams;
-
-         /**
           * @brief SimulationBase control
           */
          SimulationControl<TSimType>   mSimControl;
-
-         /**
-          * @brief Number of steps required for a transform
-          */
-         int mTransformSteps;
 
          /**
           * @brief write data to files
@@ -108,49 +76,6 @@ namespace EPMDynamo {
           * @brief Do operations required just after finishing the time integration
           */
          void postRun();
-
-         /**
-          * @brief Register maximum Forward and maximum packs for SSH transform
-          *
-          * This routine computes the actual maximum packs depending on the different call to this routine. This will most likely simply be call once for each considered equation.
-          */
-         void registerSSHPacks(const int maxFPacks, const int maxBPacks);
-
-         /**
-          * @brief Register maximum Forward and maximum packs for SH transform
-          *
-          * This routine computes the actual maximum packs depending on the different call to this routine. This will most likely simply be call once for each considered equation.
-          */
-         void registerSHPacks(const int maxFPacks, const int maxBPacks);
-
-         /**
-          * @brief Configure the SpectralSH data manipulator
-          */
-         void configureSSHManipulator();
-
-         /**
-          * @brief Configure the SH data manipulator
-          */
-         void configureSHManipulator();
-
-         /**
-          * @brief Configure the nesting of the transforms
-          */
-         void configureTransformNesting();
-
-         /**
-          * @brief Combine Spectral 2 RTP transforms
-          *
-          * \epmTodo The multistep transform approach needs a review and maybe a refactoring
-          */
-         void combineRTPTransforms(const int entry);
-
-         /**
-          * @brief Combine RTP 2 Spectral transforms
-          *
-          * \epmTodo The multistep transform approach needs a review and maybe a refactoring
-          */
-         void combineSpectralTransforms(const int entry);
 
          /**
          * @name Methods that need to be overloaded in implementation
@@ -205,158 +130,20 @@ namespace EPMDynamo {
           * @brief Timestep the equations
           */
          void timestepEquations();
-
-         /**
-          * @brief Configure the transforms
-          */
-         void configureTransforms();
          //@}
 
       private:
-         /**
-          * @brief Storage for the registered number of SSH forward packs
-          */
-         int mSSHFPacks;
-
-         /**
-          * @brief Storage for the registered number of SSH backward packs
-          */
-         int mSSHBPacks;
-
-         /**
-          * @brief Storage for the registered number of SH forward packs
-          */
-         int mSHFPacks;
-
-         /**
-          * @brief Storage for the registered number of SH backward packs
-          */
-         int mSHBPacks;
    };
 
    template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
-      : mExecTimer(true), mIOSys(), mpTrunc(TSimType::createTrunc(mIOSys.aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.aEquation()), mSimControl(mIOSys.aTStep(), mEqParams, mIOSys.aRunI(), mIOSys.aRun()), mTransformSteps(0), mSSHFPacks(0), mSSHBPacks(0), mSHFPacks(0), mSHBPacks(0)
+      : ComputationBase<TSimType, IOSystem>(), mSimControl(this->mIOSys.cfg()->aTStep(), this->mEqParams, this->mIOSys.cfg()->aRunI(), this->mIOSys.cfg()->aRun())
    {
-      // Finish initialisation of the truncation object by setting the physical grid values
-      this->mTransform.initRTPDomains(this->mpTrunc);
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::initOutput()
    {
       // Initialise all the create writers
       this->mIOSys.initWriters();
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::combineRTPTransforms(const int entry)
-   {
-      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mTransform.sshManipulator().initiateGroupedBSend(entry);
-      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-
-      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         #ifndef EPMDYNAMO_RADIAL_GROUPEDCOMM
-            this->mTransform.sshManipulator().initiateGroupedBSend(entry);
-         #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mTransform.shManipulator().initiateGroupedBSend(entry);
-      #endif // EPMDYNAMO_SH_GROUPEDCOMM
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::combineSpectralTransforms(const int entry)
-   {
-      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         #ifndef EPMDYNAMO_RADIAL_GROUPEDCOMM
-            this->mTransform.sshManipulator().initiateGroupedFSend(entry);
-         #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mTransform.shManipulator().initiateGroupedFSend(entry);
-      #endif // EPMDYNAMO_SHGROUPEDCOMM
-
-      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mTransform.sshManipulator().initiateGroupedFSend(entry);
-      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::registerSSHPacks(const int maxFPacks, const int maxBPacks)
-   {
-      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         this->mSSHFPacks += maxFPacks; 
-         this->mSSHBPacks += maxBPacks; 
-      #else
-         this->mSSHFPacks = std::max(this->mSSHFPacks, maxFPacks); 
-         this->mSSHBPacks = std::max(this->mSSHBPacks, maxBPacks); 
-      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::registerSHPacks(const int maxFPacks, const int maxBPacks)
-   {
-      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         this->mSHFPacks += maxFPacks; 
-         this->mSHBPacks += maxBPacks; 
-      #else
-         this->mSHFPacks = std::max(this->mSHFPacks, maxFPacks); 
-         this->mSHBPacks = std::max(this->mSHBPacks, maxBPacks); 
-      #endif // EPMDYNAMO_SH_GROUPEDCOMM
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::configureSSHManipulator()
-   {
-      bool state;
-
-      #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         state = false;
-         this->mTransformSteps = 2;
-      #else
-         state = true;
-         this->mTransformSteps = 1;
-      #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-
-      // Set the number of packs
-      this->mTransform.sshManipulator().setMaxPacks(this->mSSHFPacks, this->mSSHBPacks);
-
-      // Desactivate automatic send/recv control
-      this->mTransform.sshManipulator().setDynamicPacks(state);
-
-      // Activate or desactivate the special communcation entries
-      this->mTransform.sshManipulator().setDesactivator(state);
-
-      // Finish initialisation of manipulator
-      this->mTransform.sshManipulator().setup();
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::configureSHManipulator()
-   {
-      bool state;
-
-      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         state = false;
-         this->mTransformSteps++;
-      #else
-         state = true;
-         this->mTransformSteps = std::max(this->mTransformSteps, 1);
-      #endif // EPMDYNAMO_SH_GROUPEDCOMM
-
-      // Set the number of packs
-      this->mTransform.shManipulator().setMaxPacks(this->mSHFPacks, this->mSHBPacks);
-
-      // Desactivate automatic send/recv control
-      this->mTransform.shManipulator().setDynamicPacks(state);
-
-      // Activate or desactivate the special communcation entries
-      this->mTransform.shManipulator().setDesactivator(state);
-
-      // Finish initialisation of manipulator
-      this->mTransform.shManipulator().setup();
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::configureTransformNesting()
-   {
-      #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         // Set the SpectralSH manipulator to be aware of nested grouped communication
-         this->mTransform.sshManipulator().setInterStageIDs(0, this->mTransformSteps-1);
-         #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-            // If its a full massive grouped communication introduce index shift
-            this->mTransform.shManipulator().setEntryShift(1);
-         #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
-      #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::writeFiles()
@@ -441,11 +228,6 @@ namespace EPMDynamo {
    }
 
    template <typename TSimType> void SimulationBase<TSimType>::timestepEquations()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::configureTransforms()
    {
       BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
    }
