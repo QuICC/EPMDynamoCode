@@ -1,4 +1,4 @@
-/** \file IOSystemBase.cpp
+/** \file IOBaseSystem.cpp
  *  \brief Source of the base properties of the IO control system
  */
 
@@ -10,21 +10,21 @@
 
 // Class include
 //
-#include "IO/IOSystemBase.hpp"
+#include "IO/IOBaseSystem.hpp"
 
 // Project includes
 //
 
 namespace EPMDynamo {
 
-   IOSystemBase::IOSystemBase()
+   IOBaseSystem::IOBaseSystem()
       : mpCfgFile(new ParametersFile("EkQRaRo"))
    {
       // Initialise
-      this->init();
+      this->initBase();
    }
 
-   void IOSystemBase::init()
+   void IOBaseSystem::initBase()
    {
       // Initialise config file
       this->mpCfgFile->init();
@@ -42,7 +42,7 @@ namespace EPMDynamo {
       this->mpCfgFile->printInfo();
    }
 
-   void IOSystemBase::finaliseBase()
+   void IOBaseSystem::finaliseBase()
    {
       this->mpStdMessage->finalise();
    }

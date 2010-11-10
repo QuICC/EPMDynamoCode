@@ -18,13 +18,7 @@
 namespace EPMDynamo {
 
    IOSystem::IOSystem()
-      : IOSystemBase()
-   {
-      // Initialise
-      this->init();
-   }
-
-   void IOSystem::init()
+      : IOBaseSystem()
    {
    }
 

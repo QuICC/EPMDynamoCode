@@ -15,6 +15,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
+#include "Simulations/Traits/DynamoTraits.hpp"
 #include "Utilities/Traits/GenCBVTraits.hpp"
 #include "Utilities/Traits/GenCVTraits.hpp"
 #include "Utilities/Traits/GenBVTraits.hpp"
@@ -27,14 +28,94 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCBVTraits
-#define GENTRAITS TGENTRAITS<epm::WSHSimulation>
+#define TSIMTRAITS epm::DynamoTraits
+#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
-typedef  epm::CSCSParaviewGenerator<epm::WSHSimulation, TGENTRAITS>  CSCSGenerator;
-typedef  GENTRAITS::CodType  Codensity;
-typedef  GENTRAITS::MagType  Magnetic;
-typedef  GENTRAITS::VelType  Velocity;
-typedef  epm::SmartTruncation  SmartTruncation;
+typedef  epm::CSCSParaviewGenerator<epm::WSHSimulation, TSIMTRAITS>  CSCSGenerator;
+
+/**
+ * @brief Output traits for full field values
+ */
+class FullFieldTraits
+{
+   public:
+      /// Output Codensity visualisation
+      static const bool VisCodensity = true;
+
+      /// Output Codensity gradient visualisation
+      static const bool VisCodensityGrad = true;
+
+      /// Output Velocity visualisation
+      static const bool VisVelocity = true;
+
+      /// Output Vorticity visualisation
+      static const bool VisVorticity = true;
+
+      /// Output Helicity visualisation
+      static const bool VisHelicity = true;
+
+      /// Output Magnetic visualisation
+      static const bool VisMagnetic = true;
+
+      /// Output Lorentz visualisation
+      static const bool VisLorentz = true;
+};
+
+/**
+ * @brief Output traits for toroidal component values
+ */
+class ToroidalTraits
+{
+   public:
+      /// Output Codensity visualisation (doesn't make sense to be true)
+      static const bool VisCodensity = false;
+
+      /// Output Codensity gradient visualisation (doesn't make sense to be true)
+      static const bool VisCodensityGrad = false;
+
+      /// Output Velocity visualisation of toroidal component only
+      static const bool VisVelocity = true;
+
+      /// Output Vorticity visualisation of toroidal component only
+      static const bool VisVorticity = false;
+
+      /// Output Helicity visualisation of toroidal component only
+      static const bool VisHelicity = false;
+
+      /// Output Magnetic visualisation of toroidal component only
+      static const bool VisMagnetic = true;
+
+      /// Output Lorentz visualisation of toroidal component only
+      static const bool VisLorentz = false;
+};
+
+/**
+ * @brief Output traits for poloidal component values
+ */
+class PoloidalTraits
+{
+   public:
+      /// Output Codensity visualisation (doesn't make sense to be true)
+      static const bool VisCodensity = false;
+
+      /// Output Codensity gradient visualisation (doesn't make sense to be true)
+      static const bool VisCodensityGrad = false;
+
+      /// Output Velocity visualisation of poloidal component only
+      static const bool VisVelocity = true;
+
+      /// Output Vorticity visualisation of poloidal component only
+      static const bool VisVorticity = false;
+
+      /// Output Helicity visualisation of poloidal component only
+      static const bool VisHelicity = false;
+
+      /// Output Magnetic visualisation of poloidal component only
+      static const bool VisMagnetic = true;
+
+      /// Output Lorentz visualisation of poloidal component only
+      static const bool VisLorentz = false;
+};
 
 /**
  * @brief Velocity diffusion simulation
@@ -48,13 +129,16 @@ int runProgram()
    CSCSGenerator   generator;
 
    // Initialise the state file
-   generator.initOutput("CSCSParaview");
+   generator.setupOutput("CSCSParaview");
 
-   // Transform the fields
-   generator.transformSpectral();
+   // Create visualisation output from total field
+   generator.writeTotal<FullFieldTraits>();
 
-   // Write the state file
-   generator.writeFile();
+   // Create visualisation output from toroidal component
+   generator.writeToroidal<ToroidalTraits>();
+
+   // Create visualisation output from poloidal component
+   generator.writePoloidal<PoloidalTraits>();
 
    // Finalise the state file
    generator.finalise();

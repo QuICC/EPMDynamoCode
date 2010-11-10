@@ -31,9 +31,17 @@ namespace EPMDynamo {
 
    const std::string CSCSFileDefs::PHITAG = "p";
 
+   const std::string CSCSFileDefs::TOROIDALTAG = "Tor";
+
+   const std::string CSCSFileDefs::POLOIDALTAG = "Pol";
+
    const std::string CSCSFileDefs::CODENSITYTAG = "Codensity";
 
+   const std::string CSCSFileDefs::CODENSITYGRADTAG = "CodensityGradient";
+
    const std::string CSCSFileDefs::MAGNETICTAG = "Magnetic";
+
+   const std::string CSCSFileDefs::LORENTZTAG = "Lorentz";
 
    const std::string CSCSFileDefs::VELOCITYTAG = "Velocity";
 

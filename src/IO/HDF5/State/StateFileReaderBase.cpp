@@ -61,45 +61,64 @@ namespace EPMDynamo {
       H5Gclose(this->mGroup);
    }
 
-   void StateFileReaderBase::readCodensity(std::vector<SpectralSHLShell> &scalar)
+   void StateFileReaderBase::readScalarField(const std::string& name, std::vector<SpectralSHLShell> &scalar)
    {
       // Open the codensity scalar group
-      this->mGroup = H5Gopen(this->mFile, StateFileDefs::CODENSITYTAG.c_str(), H5P_DEFAULT);
+      this->mGroup = H5Gopen(this->mFile, name.c_str(), H5P_DEFAULT);
 
       // Read the codensity expansion
-      this->readMatrixVector(StateFileDefs::CODENSITYTAG, scalar);
+      this->readMatrixVector(name, scalar);
       
       // close group
       H5Gclose(this->mGroup);
    }
 
-   void StateFileReaderBase::readMagnetic(std::vector<SpectralSHLShell> &tor, std::vector<SpectralSHLShell> &pol)
+   void StateFileReaderBase::readTorPolField(const std::string& name, std::vector<SpectralSHLShell> &tor, std::vector<SpectralSHLShell> &pol)
    {
       // Open the magnetic field group
-      this->mGroup = H5Gopen(this->mFile, StateFileDefs::MAGNETICTAG.c_str(), H5P_DEFAULT);
+      this->mGroup = H5Gopen(this->mFile, name.c_str(), H5P_DEFAULT);
 
       // Read the Toroidal Magnetic expansion
-      this->readMatrixVector(StateFileDefs::MAGNETICTAG+StateFileDefs::TOROIDALTAG, tor);
+      this->readMatrixVector(name+StateFileDefs::TOROIDALTAG, tor);
 
       // Read the Poloidal Magnetic expansion
-      this->readMatrixVector(StateFileDefs::MAGNETICTAG+StateFileDefs::POLOIDALTAG, pol);
+      this->readMatrixVector(name+StateFileDefs::POLOIDALTAG, pol);
       
       // close group
       H5Gclose(this->mGroup);
    }
 
-   void StateFileReaderBase::readVelocity(std::vector<SpectralSHLShell> &tor, std::vector<SpectralSHLShell> &pol)
+   void StateFileReaderBase::readTorField(const std::string& name, std::vector<SpectralSHLShell> &tor)
    {
-      // Open the velocity field group
-      this->mGroup = H5Gopen(this->mFile, StateFileDefs::VELOCITYTAG.c_str(), H5P_DEFAULT);
+      // Open the magnetic field group
+      this->mGroup = H5Gopen(this->mFile, name.c_str(), H5P_DEFAULT);
 
-      // Read the Toroidal Velocity expansion
-      this->readMatrixVector(StateFileDefs::VELOCITYTAG + StateFileDefs::TOROIDALTAG, tor);
-
-      // Read the Poloidal Velocity expansion
-      this->readMatrixVector(StateFileDefs::VELOCITYTAG + StateFileDefs::POLOIDALTAG, pol);
+      // Read the Toroidal Magnetic expansion
+      this->readMatrixVector(name+StateFileDefs::TOROIDALTAG, tor);
       
       // close group
       H5Gclose(this->mGroup);
+   }
+
+   void StateFileReaderBase::readPolField(const std::string& name, std::vector<SpectralSHLShell> &pol)
+   {
+      // Open the magnetic field group
+      this->mGroup = H5Gopen(this->mFile, name.c_str(), H5P_DEFAULT);
+
+      // Read the Poloidal Magnetic expansion
+      this->readMatrixVector(name+StateFileDefs::POLOIDALTAG, pol);
+      
+      // close group
+      H5Gclose(this->mGroup);
+   }
+
+   void StateFileReaderBase::setZero(std::vector<SpectralSHLShell> &comp)
+   {
+      // Loop over the shells
+      for(unsigned int i=0; i < comp.size(); ++i)
+      {
+         // Set values to zero
+         comp.at(i).setConstant(0.0);
+      }
    }
 }

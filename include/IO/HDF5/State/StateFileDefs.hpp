@@ -114,6 +114,26 @@ namespace EPMDynamo {
          */
          virtual ~StateFileDefs() {};
 
+         /**
+          * @brief Filter id for not using field
+          */
+         static const int  DontUse = 0;
+
+         /**
+          * @brief Filter id for using full field
+          */
+         static const int  FullField = 1;
+
+         /**
+          * @brief Filter id for using only toroidal component of field
+          */
+         static const int  ToroidalOnly = 2;
+
+         /**
+          * @brief Filter id for using only poloidal component of field
+          */
+         static const int  PoloidalOnly = 3;
+
       private:
          /**
          * @brief Empty destructor

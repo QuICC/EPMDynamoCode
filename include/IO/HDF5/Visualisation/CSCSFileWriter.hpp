@@ -13,6 +13,7 @@
 
 // Project includes
 //
+#include "IO/HDF5/Visualisation/CSCSFileDefs.hpp"
 #include "IO/HDF5/Visualisation/CSCSFileWriterBase.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 
@@ -91,9 +92,26 @@ namespace EPMDynamo {
          virtual ~CSCSFileWriter() {};
 
          /**
-          * @brief Write State to file
+          * @brief Write basic data to file
           */
          virtual void write();
+
+         /**
+          * @brief Write general information to file
+          */
+         void writeStart();
+
+         /**
+          * @brief Finish writting to file
+          */
+         void writeEnd();
+
+         /**
+          * @brief Write visualisation data to file
+          *
+          * @param filter Filter tag name
+          */
+         template <typename TVisTraits> void writeVisualisation(const std::string& filter);
          
       protected:
          /**
@@ -163,26 +181,78 @@ namespace EPMDynamo {
       // Write real space grid to file
       this->writeGrid(this->mpTrunc->sim()->rad()->radGrid(), this->mpTrunc->sim()->hoz()->thGrid(), this->mpTrunc->sim()->hoz()->phGrid());
 
-      // Write the codensity real space values
-      if(this->mpCodC != NULL)
-      {
-         this->writeScalarField(CSCSFileDefs::CODENSITYTAG, this->mpCodC->oc().rtp().data());
-      }
-
-      // Write the magnetic coefficients
-      if(this->mpMagB != NULL)
-      {
-         this->writeVectorField(CSCSFileDefs::MAGNETICTAG, this->mpMagB->oc().rtp().r().data(), this->mpMagB->oc().rtp().theta().data(), this->mpMagB->oc().rtp().phi().data());
-      }
-
-      // Write the velocity coefficients
-      if(this->mpVelV != NULL)
-      {
-         this->writeVectorField(CSCSFileDefs::VELOCITYTAG, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
-      }
-
       // Close file
       this->postWrite();
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void CSCSFileWriter<TSimType, TSimTraits>::writeStart()
+   {
+      // Create file
+      this->preWrite();
+
+      // Create the header and version information
+      this->createFileInfo();
+
+      // Create the base group
+      this->createBaseGroup();
+
+      // Write real space grid to file
+      this->writeGrid(this->mpTrunc->sim()->rad()->radGrid(), this->mpTrunc->sim()->hoz()->thGrid(), this->mpTrunc->sim()->hoz()->phGrid());
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void CSCSFileWriter<TSimType, TSimTraits>::writeEnd()
+   {
+      // Close file
+      this->postWrite();
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimType, TSimTraits>::writeVisualisation(const std::string&  filter = "")
+   {
+      // Write the codensity values
+      if(this->mpCodC != NULL && TVisTraits::VisCodensity)
+      {
+         this->writeScalarField(CSCSFileDefs::CODENSITYTAG+filter, this->mpCodC->oc().rtp().data());
+      }
+
+      // Write the codensity gradient values
+      if(this->mpCodC != NULL && TVisTraits::VisCodensityGrad)
+      {
+         this->writeVectorField(CSCSFileDefs::CODENSITYGRADTAG+filter, this->mpCodC->oc().grad().r().data(), this->mpCodC->oc().grad().theta().data(), this->mpCodC->oc().grad().phi().data());
+      }
+
+      // Write the magnetic field values
+      if(this->mpMagB != NULL && TVisTraits::VisMagnetic)
+      {
+         this->writeVectorField(CSCSFileDefs::MAGNETICTAG+filter, this->mpMagB->oc().rtp().r().data(), this->mpMagB->oc().rtp().theta().data(), this->mpMagB->oc().rtp().phi().data());
+      }
+
+      // Write the Lorentz force values
+      if(this->mpMagB != NULL && TVisTraits::VisLorentz)
+      {
+         RTPField tmp(this->mpVelV->oc().rtp().trunc());
+         this->mpMagB->oc().rtp().template cross<0>(tmp, this->mpMagB->oc().curl());
+         this->writeVectorField(CSCSFileDefs::LORENTZTAG+filter, tmp.r().data(), tmp.theta().data(), tmp.phi().data());
+      }
+
+      // Write the velocity field values
+      if(this->mpVelV != NULL && TVisTraits::VisVelocity)
+      {
+         this->writeVectorField(CSCSFileDefs::VELOCITYTAG+filter, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
+      }
+
+      // Write the vorticity values
+      if(this->mpVelV != NULL && TVisTraits::VisVorticity)
+      {
+         this->writeVectorField(CSCSFileDefs::VORTICITYTAG+filter, this->mpVelV->oc().curl().r().data(), this->mpVelV->oc().curl().theta().data(), this->mpVelV->oc().curl().phi().data());
+      }
+
+      // Write the vorticity values
+      if(this->mpVelV != NULL && TVisTraits::VisHelicity)
+      {
+         RTPScalar tmp(this->mpVelV->oc().rtp().trunc());
+         this->mpVelV->oc().rtp().template dot<0>(tmp, this->mpVelV->oc().curl(), 1.0);
+         this->writeScalarField(CSCSFileDefs::HELICITYTAG+filter, tmp.data());
+      }
    }
 
 }

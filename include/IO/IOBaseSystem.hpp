@@ -1,9 +1,9 @@
-/** \file IOSystemBase.hpp
+/** \file IOBaseSystem.hpp
  *  \brief Implementation of the base properties of the IO control
  */
 
-#ifndef IOSYSTEMBASE_HPP
-#define IOSYSTEMBASE_HPP
+#ifndef IOBASESYSTEM_HPP
+#define IOBASESYSTEM_HPP
 
 // System includes
 //
@@ -27,36 +27,36 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the base properties of the IO control
     */
-   class IOSystemBase
+   class IOBaseSystem
    {
       public:
          /**
          * @brief Constructor
          */
-         IOSystemBase();
+         IOBaseSystem();
 
          /**
          * @brief Destructor
          */
-         virtual ~IOSystemBase() {};
+         virtual ~IOBaseSystem() {};
 
          /**
           * @brief Get the configuration file data
           */
          const SmartParametersFile cfg() const;
 
-      protected:
-
          /**
           * @brief Initialise the base system
           */
          void finaliseBase();
 
+      protected:
+
       private:
          /**
           * @brief Initialise the base system
           */
-         void init();
+         void initBase();
 
          /**
           * @brief Handle to the configuration file
@@ -69,11 +69,11 @@ namespace EPMDynamo {
          SmartStdMessage   mpStdMessage;
    };
 
-   inline const SmartParametersFile IOSystemBase::cfg() const
+   inline const SmartParametersFile IOBaseSystem::cfg() const
    {
       return this->mpCfgFile;
    }
 
 }
 
-#endif // IOSYSTEMBASE_HPP
+#endif // IOBASESYSTEM_HPP

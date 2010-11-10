@@ -64,43 +64,28 @@ namespace EPMDynamo {
       H5Gclose(this->mGroup);
    }
 
-   void StateFileWriterBase::writeCodensity(const std::vector<SpectralSHLShell> &scalar)
+   void StateFileWriterBase::writeScalarField(const std::string& name, const std::vector<SpectralSHLShell> &scalar)
    {
       // Create the Codensity scalar group
-      this->mGroup = H5Gcreate(this->mFile, StateFileDefs::CODENSITYTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+      this->mGroup = H5Gcreate(this->mFile, name.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
       // Write the codensity expansion
-      this->writeMatrixVector(StateFileDefs::CODENSITYTAG, scalar);
+      this->writeMatrixVector(name, scalar);
       
       // close group
       H5Gclose(this->mGroup);
    }
 
-   void StateFileWriterBase::writeMagnetic(const std::vector<SpectralSHLShell> &tor, const std::vector<SpectralSHLShell> &pol)
+   void StateFileWriterBase::writeTorPolField(const std::string& name, const std::vector<SpectralSHLShell> &tor, const std::vector<SpectralSHLShell> &pol)
    {
       // Create the Magnetic Field group
-      this->mGroup = H5Gcreate(this->mFile, StateFileDefs::MAGNETICTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+      this->mGroup = H5Gcreate(this->mFile, name.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
       // Write the Toroidal Magnetic expansion
-      this->writeMatrixVector(StateFileDefs::MAGNETICTAG+StateFileDefs::TOROIDALTAG, tor);
+      this->writeMatrixVector(name+StateFileDefs::TOROIDALTAG, tor);
 
       // Write the Poloidal Magnetic expansion
-      this->writeMatrixVector(StateFileDefs::MAGNETICTAG+StateFileDefs::POLOIDALTAG, pol);
-      
-      // close group
-      H5Gclose(this->mGroup);
-   }
-
-   void StateFileWriterBase::writeVelocity(const std::vector<SpectralSHLShell> &tor, const std::vector<SpectralSHLShell> &pol)
-   {
-      // Create the Velocity Field group
-      this->mGroup = H5Gcreate(this->mFile, StateFileDefs::VELOCITYTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
-
-      // Write the Toroidal Velocity expansion
-      this->writeMatrixVector(StateFileDefs::VELOCITYTAG + StateFileDefs::TOROIDALTAG, tor);
-
-      // Write the Poloidal Velocity expansion
-      this->writeMatrixVector(StateFileDefs::VELOCITYTAG + StateFileDefs::POLOIDALTAG, pol);
+      this->writeMatrixVector(name+StateFileDefs::POLOIDALTAG, pol);
       
       // close group
       H5Gclose(this->mGroup);

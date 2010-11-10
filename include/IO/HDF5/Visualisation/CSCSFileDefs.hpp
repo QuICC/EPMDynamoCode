@@ -59,14 +59,34 @@ namespace EPMDynamo {
          static const std::string   PHITAG;
 
          /**
+          * @brief Toroidal component tag name for CSCS file
+          */
+         static const std::string   TOROIDALTAG;
+
+         /**
+          * @brief Poloidal component tag name for CSCS file
+          */
+         static const std::string   POLOIDALTAG;
+
+         /**
           * @brief Codensity tag name for CSCS file
           */
          static const std::string   CODENSITYTAG;
 
          /**
+          * @brief Codensity gradient tag name for CSCS file
+          */
+         static const std::string   CODENSITYGRADTAG;
+
+         /**
           * @brief Magnetic tag name for CSCS file
           */
          static const std::string   MAGNETICTAG;
+
+         /**
+          * @brief Lorentz tag name for CSCS file
+          */
+         static const std::string   LORENTZTAG;
 
          /**
           * @brief Velocity tag name for CSCS file

@@ -13,6 +13,7 @@
 
 // Project includes
 //
+#include "IO/HDF5/State/StateFileDefs.hpp"
 #include "IO/HDF5/State/StateFileWriterBase.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
@@ -133,65 +134,56 @@ namespace EPMDynamo {
           */
          const TimestepParameters&  mrTSParams;
 
+         /**
+          * @brief Initialise
+          */
+         void init(const EquationParameters &eqParams);
+
    };
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
       : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
-      this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
-      this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
-      this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
-      this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
-
-      this->mPhys = eqParams.params();
+      // initialise general settings
+      this->init(eqParams);
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
       : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
-      this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
-      this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
-      this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
-      this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
-
-      this->mPhys = eqParams.params();
+      // initialise general settings
+      this->init(eqParams);
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
       : StateFileWriterBase(magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
-      this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
-      this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
-      this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
-      this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
-
-      this->mPhys = eqParams.params();
+      // initialise general settings
+      this->init(eqParams);
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const EquationParameters &eqParams, const TimestepParameters &tsParams)
       : StateFileWriterBase(codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
-      this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
-      this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
-      this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
-      this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
-
-      this->mPhys = eqParams.params();
+      // initialise general settings
+      this->init(eqParams);
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const EquationParameters &eqParams, const TimestepParameters &tsParams)
       : StateFileWriterBase(magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
    {
-      this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
-      this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
-      this->mTrunc(2) = this->mpTrunc->sim()->hoz()->maxM();
-      this->mTrunc(3) = this->mpTrunc->sim()->hoz()->mp();
-
-      this->mPhys = eqParams.params();
+      // initialise general settings
+      this->init(eqParams);
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileWriter<TSimType, TSimTraits>::StateFileWriter(const typename TSimTraits<TSimType>::VelType &velV, const EquationParameters &eqParams, const TimestepParameters &tsParams)
       : StateFileWriterBase(velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV), mTrunc(4), mPhysType(eqParams.type()), mPhys(eqParams.nParams()), mrTSParams(tsParams)
+   {
+      // initialise general settings
+      this->init(eqParams);
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void StateFileWriter<TSimType, TSimTraits>::init(const EquationParameters &eqParams)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -221,19 +213,19 @@ namespace EPMDynamo {
       // Write the codensity coefficients
       if(TSimTraits<TSimType>::NeedCodensity)
       {
-         this->writeCodensity(this->mpCodC->oc().perturbation().data());
+         this->writeScalarField(StateFileDefs::CODENSITYTAG, this->mpCodC->oc().perturbation().data());
       }
 
       // Write the magnetic coefficients
       if(TSimTraits<TSimType>::NeedMagnetic)
       {
-         this->writeMagnetic(this->mpMagB->oc().perturbation().tor().data(), this->mpMagB->oc().perturbation().pol().data());
+         this->writeTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->oc().perturbation().tor().data(), this->mpMagB->oc().perturbation().pol().data());
       }
 
       // Write the velocity coefficients
       if(TSimTraits<TSimType>::NeedVelocity)
       {
-         this->writeVelocity(this->mpVelV->oc().perturbation().tor().data(), this->mpVelV->oc().perturbation().pol().data());
+         this->writeTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->oc().perturbation().tor().data(), this->mpVelV->oc().perturbation().pol().data());
       }
 
       // Close file

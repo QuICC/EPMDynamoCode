@@ -58,27 +58,19 @@ namespace EPMDynamo {
          void writeRun(const EPMFloat time, const EPMFloat step);
 
          /**
-          * @brief Create group for Codensity scalar and set mGroup
+          * @brief Create group for scalar field
           *
-          * @param scalar Codensity values
+          * @param scalar field values
           */
-         void writeCodensity(const std::vector<SpectralSHLShell> &scalar);
+         void writeScalarField(const std::string& name, const std::vector<SpectralSHLShell> &scalar);
 
          /**
-          * @brief Create group for Magnetic field and set mGroup
+          * @brief Create group for toroidal/poloidal field
           *
-          * @param tor Toroidal magnetic values
-          * @param pol Poloidal magnetic values
+          * @param tor Toroidal component values
+          * @param pol Poloidal component values
           */
-         void writeMagnetic(const std::vector<SpectralSHLShell> &tor, const std::vector<SpectralSHLShell> &pol);
-
-         /**
-          * @brief Create group for Velocity field and set mGroup
-          *
-          * @param tor Toroidal velocity values
-          * @param pol Poloidal velocity values
-          */
-         void writeVelocity(const std::vector<SpectralSHLShell> &tor, const std::vector<SpectralSHLShell> &pol);
+         void writeTorPolField(const std::string& name, const std::vector<SpectralSHLShell> &tor, const std::vector<SpectralSHLShell> &pol);
 
       private:
    };

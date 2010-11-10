@@ -20,11 +20,48 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Initial state definition function for Sakuraba's paper
+    * @brief Traits of Sakuraba state generator
     */
-   template <typename TGenTraits> class SakurabaState
+   class SakurabaTraits
    {
       public:
+         /// Requires RTP Codensity computations
+         static const bool UseRTPCodensity = false;
+
+         /// Requires spectral Codensity computations
+         static const bool UseSpecCodensity = true;
+
+         /// Requires Codensity gradient computations
+         static const bool UseCodensityGrad = false;
+
+         /// Requires RTP Magnetic computations
+         static const bool UseRTPMagnetic = false;
+
+         /// Requires spectral Magnetic computations
+         static const bool UseSpecMagnetic = true;
+
+         /// Requires Magnetic curl computations
+         static const bool UseMagneticCurl = false;
+
+         /// Requires RTP Velocity computations
+         static const bool UseRTPVelocity = false;
+
+         /// Requires Velocity computations
+         static const bool UseSpecVelocity = true;
+
+         /// Requires Velocity curl computations
+         static const bool UseVelocityCurl = false;
+   };
+
+   /**
+    * \brief Initial state definition function for Sakuraba's paper
+    */
+   template <typename TSimTraits> class SakurabaState
+   {
+      public:
+         /// Typdef for the StateTraits type
+         typedef SakurabaTraits  StateTraits;
+
          /**
           * @brief Perturb the magnetic field?
           */
@@ -36,13 +73,13 @@ namespace EPMDynamo {
          static const EPMFloat PERTURBATION_AMPLITUDE;
 
          /// Typedef for the codensity type
-         typedef typename TGenTraits::CodType  Codensity;
+         typedef typename TSimTraits::CodType  Codensity;
 
          /// Typedef for the magnetic type
-         typedef typename TGenTraits::MagType  Magnetic;
+         typedef typename TSimTraits::MagType  Magnetic;
 
          /// Typedef for the velocity type
-         typedef typename TGenTraits::VelType  Velocity;
+         typedef typename TSimTraits::VelType  Velocity;
 
          /**
           * @brief Set RTP value for the codensity scalar
@@ -86,9 +123,9 @@ namespace EPMDynamo {
          virtual ~SakurabaState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat SakurabaState<TGenTraits>::PERTURBATION_AMPLITUDE = 1e-9;
+   template <typename TSimTraits> const EPMFloat SakurabaState<TSimTraits>::PERTURBATION_AMPLITUDE = 1e-9;
 
-   template <typename TGenTraits> void SakurabaState<TGenTraits>::setRTPCodensity(typename SakurabaState<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void SakurabaState<TSimTraits>::setRTPCodensity(typename SakurabaState<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -98,7 +135,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaState<TGenTraits>::setRTPMagnetic(typename SakurabaState<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void SakurabaState<TSimTraits>::setRTPMagnetic(typename SakurabaState<TSimTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
@@ -110,7 +147,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaState<TGenTraits>::setRTPVelocity(typename SakurabaState<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void SakurabaState<TSimTraits>::setRTPVelocity(typename SakurabaState<TSimTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
@@ -122,7 +159,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaState<TGenTraits>::setSpecCodensity(typename SakurabaState<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void SakurabaState<TSimTraits>::setSpecCodensity(typename SakurabaState<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -130,7 +167,7 @@ namespace EPMDynamo {
       for(int l=0; l < pTrunc->local()->spec()->nL()/2; ++l)
       {
          codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2, 1)).setRandom();
-         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(SakurabaState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(SakurabaState<TSimTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -144,7 +181,7 @@ namespace EPMDynamo {
       codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
    }
 
-   template <typename TGenTraits> void SakurabaState<TGenTraits>::setSpecMagnetic(typename SakurabaState<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void SakurabaState<TSimTraits>::setSpecMagnetic(typename SakurabaState<TSimTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
@@ -154,11 +191,11 @@ namespace EPMDynamo {
          {
             // Set some perturbation random energy in Toroidal component
             magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2,1)).setRandom();
-            magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+            magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TSimTraits>::PERTURBATION_AMPLITUDE,0.0);
 
             // Set some perturbation random energy in Poloidal component
             magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l)/2,1)).setRandom();
-            magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+            magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TSimTraits>::PERTURBATION_AMPLITUDE,0.0);
          }
       } else
       {
@@ -170,7 +207,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaState<TGenTraits>::setSpecVelocity(typename SakurabaState<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void SakurabaState<TSimTraits>::setSpecVelocity(typename SakurabaState<TSimTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
@@ -181,7 +218,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> SakurabaState<TGenTraits>::SakurabaState()
+   template <typename TSimTraits> SakurabaState<TSimTraits>::SakurabaState()
    {
    }
 

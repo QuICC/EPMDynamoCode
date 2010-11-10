@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "IO/IOSystemBase.hpp"
+#include "IO/IOBaseSystem.hpp"
 #include "IO/ASCII/ASCIIWriter.hpp"
 #include "IO/HDF5/HDF5Writer.hpp"
 #include "IO/HDF5/State/StateFileReaderBase.hpp"
@@ -26,7 +26,7 @@ namespace EPMDynamo {
    /**
     * @brief Full IO system reponsible for dealing with all the files
     */
-   class IOSystem: public IOSystemBase
+   class IOSystem: public IOBaseSystem
    {
       public:
          /**
@@ -98,11 +98,6 @@ namespace EPMDynamo {
       protected:
 
       private:
-         /**
-          * @brief Initialise the system
-          */
-         void init();
-
          /**
           * @brief Vector of ASCII output files
           */

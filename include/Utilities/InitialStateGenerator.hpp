@@ -27,11 +27,14 @@ namespace EPMDynamo {
     * @brief This class implements a few methods for easier implementation of an initial state generator
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TGenTraits Traits for the generator
+    * \tparam TSimTraits Traits for the generator
     */
-   template <typename TSimType, template <typename> class TGenTraits> class InitialStateGenerator: public GeneratorBase<TSimType, TGenTraits>
+   template <typename TSimType, template <typename> class TSimTraits> class InitialStateGenerator: public GeneratorBase<TSimType, TSimTraits>
    {
       public:
+         /// Typedef for a smart state file
+         typedef EPMSHARED_PTR<StateFileWriter<TSimType, TSimTraits> > SmartStateWriter; 
+
          /**
           * @brief Constructor
           */
@@ -45,58 +48,100 @@ namespace EPMDynamo {
          /**
           * @brief Initialise the output file
           */
-         virtual void initOutput(std::string name = "Initial");
+         void setupOutput(std::string name = "Initial");
+
+         /**
+          * @brief Write the state file
+          */
+         void writeStateFile();
+
+         /**
+          * @brief Finalise the output state file
+          *
+          * @param pFile Output file smart pointer
+          */
+         void finalise();
 
       protected:
+         /**
+          * @brief Smart pointer for HDF5 output
+          */
+         SmartStateWriter   mpOutFile;
+
+         /**
+          * @brief Initialise the output state file
+          *
+          * @param pFile Output file smart pointer
+          */
+         void initStateFile(SmartStateWriter pFile);
+
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TGenTraits> InitialStateGenerator<TSimType, TGenTraits>::InitialStateGenerator()
-      : GeneratorBase<TSimType, TGenTraits>()
+   template <typename TSimType, template <typename> class TSimTraits> InitialStateGenerator<TSimType, TSimTraits>::InitialStateGenerator()
+      : GeneratorBase<TSimType, TSimTraits>()
    {
    }
 
-   template <typename TSimType, template <typename> class TGenTraits> void InitialStateGenerator<TSimType, TGenTraits>::initOutput(std::string name)
+   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::setupOutput(std::string name)
    {
-      EPMSHARED_PTR<StateFileWriter<TSimType, TGenTraits> >  pOutFile;
+      SmartStateWriter  pOutFile;
 
       // Create state with all fields
-      if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
+      if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV(), this->mEqParams, this->mSimControl.tsParams()));
+         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->codC(), this->magB(), this->velV(), this->mEqParams, this->mTSParams));
 
       // Create state with Codensity and Velocity fields
-      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TGenTraits>(this->codC(), this->velV(), this->mEqParams, this->mSimControl.tsParams()));
+         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->codC(), this->velV(), this->mEqParams, this->mTSParams));
 
       // Create state with Magnetic and Velocity fields
-      } else if(TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TGenTraits>(this->magB(), this->velV(), this->mEqParams, this->mSimControl.tsParams()));
+         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->magB(), this->velV(), this->mEqParams, this->mTSParams));
 
       // Create state with only codensity field
-      } else if(TGenTraits<TSimType>::NeedCodensity)
+      } else if(TSimTraits<TSimType>::NeedCodensity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TGenTraits>(this->codC(), this->mEqParams, this->mSimControl.tsParams()));
+         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->codC(), this->mEqParams, this->mTSParams));
 
       // Create state with only magnetic field
-      } else if(TGenTraits<TSimType>::NeedMagnetic)
+      } else if(TSimTraits<TSimType>::NeedMagnetic)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TGenTraits>(this->magB(), this->mEqParams, this->mSimControl.tsParams()));
+         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->magB(), this->mEqParams, this->mTSParams));
 
       // Create state with only velocity field
-      } else if(TGenTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TGenTraits>(this->velV(), this->mEqParams, this->mSimControl.tsParams()));
+         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->velV(), this->mEqParams, this->mTSParams));
       }
 
       // Change the base name
       pOutFile->changeBasename(name);
 
       // Set state file as output file and initialise system
-      this->initOutputFile(pOutFile);
+      this->initStateFile(pOutFile);
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::initStateFile(typename InitialStateGenerator<TSimType, TSimTraits>::SmartStateWriter pFile)
+   {
+      // Set output file
+      this->mpOutFile = pFile;
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::writeStateFile()
+   {
+      this->mpOutFile->write();
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::finalise()
+   {
+      this->mpOutFile->finalise();
+
+      GeneratorBase<TSimType, TSimTraits>::finalise();
    }
 
 }

@@ -13,6 +13,7 @@
 
 // Project includes
 //
+#include "IO/HDF5/State/StateFileDefs.hpp"
 #include "IO/HDF5/State/StateFileReaderBase.hpp"
 
 namespace EPMDynamo {
@@ -84,9 +85,19 @@ namespace EPMDynamo {
          virtual ~StateFileReader() {};
 
          /**
-          * @brief Read State to file
+          * @brief Read State from file
           */
          virtual void read();
+
+         /**
+          * @brief Read resolution and data information from state file
+          */
+         void readSetup();
+
+         /**
+          * @brief Read Partial data from state file
+          */
+         template <typename TFilter> void readPartial();
          
       protected:
          /**
@@ -159,20 +170,91 @@ namespace EPMDynamo {
       // Read codensity coefficients
       if(TSimTraits<TSimType>::NeedCodensity)
       {
-         this->readCodensity(this->mpCodC->rOc().rPerturbation().data());
+         this->readScalarField(StateFileDefs::CODENSITYTAG, this->mpCodC->rOc().rPerturbation().data());
       }
 
       // Read magnetic coefficients
       if(TSimTraits<TSimType>::NeedMagnetic)
       {
-         this->readMagnetic(this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
+         this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
       }
       
       // Read velocity coefficients
       if(TSimTraits<TSimType>::NeedVelocity)
       {
-         this->readVelocity(this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
+         this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
       }
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void StateFileReader<TSimType, TSimTraits>::readSetup()
+   {
+      // THIS IS NOT GENERAL ENOUGH ANYMORE, BUT ALSO NOT USEFUL IN THE CURRENT STATE
+      // Read the Physical parameters
+      // EPMFloat E, q, Ra, Ro;
+      // this->readPhysical(E, q, Ra, Ro);
+
+      // Read the truncation information
+      this->readTruncation();
+
+      // Check file compatibility with data truncation
+      this->checkTruncation();
+
+      // Set Read arguments
+      this->setReadArguments();
+
+      // Read the run information
+      this->readRun();
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> template <typename TFilter> void StateFileReader<TSimType, TSimTraits>::readPartial()
+   {
+      // Read requested codensity coefficients
+      if(TSimTraits<TSimType>::NeedCodensity && TFilter::ReadCodensity == StateFileDefs::FullField)
+      {
+         this->readScalarField(StateFileDefs::CODENSITYTAG, this->mpCodC->rOc().rPerturbation().data());
+      }
+
+      // Read requested magnetic coefficients
+      if(TSimTraits<TSimType>::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::FullField)
+      {
+         this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
+      } else if(TSimTraits<TSimType>::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::ToroidalOnly)
+      {
+         // Read Toroidal component
+         this->readTorField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data());
+
+         // Set poloidal component to zero
+         this->setZero(this->mpMagB->rOc().rPerturbation().rPol().data());
+
+      } else if(TSimTraits<TSimType>::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::PoloidalOnly)
+      {
+         // Read poloidal component
+         this->readPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rPol().data());
+
+         // Set toroidal component to zero
+         this->setZero(this->mpMagB->rOc().rPerturbation().rTor().data());
+      }
+      
+      // Read requested velocity coefficients
+      if(TSimTraits<TSimType>::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::FullField)
+      {
+         this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
+      } else if(TSimTraits<TSimType>::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::ToroidalOnly)
+      {
+         // Read toroidal component
+         this->readTorField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data());
+
+         // Set poloidal component to zero
+         this->setZero(this->mpVelV->rOc().rPerturbation().rPol().data());
+      } else if(TSimTraits<TSimType>::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::PoloidalOnly)
+      {
+         // Read poloidal component
+         this->readPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rPol().data());
+
+         // Set toroidal component to zero
+         this->setZero(this->mpVelV->rOc().rPerturbation().rTor().data());
+      }
+
    }
 
 }

@@ -15,6 +15,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
+#include "Simulations/Traits/DynamoTraits.hpp"
 #include "Utilities/Traits/GenCBVTraits.hpp"
 #include "Utilities/Traits/GenCVTraits.hpp"
 #include "Utilities/Traits/GenBVTraits.hpp"
@@ -30,17 +31,15 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCBVTraits
-#define GENTRAITS TGENTRAITS<epm::WSHSimulation>
+#define TSIMTRAITS epm::DynamoTraits
+#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
-//typedef epm::RandomState<GENTRAITS>  StateType;
-typedef epm::SakurabaState<GENTRAITS>  StateType;
+//typedef epm::RandomState<SIMTRAITS>  StateType;
+typedef epm::SakurabaState<SIMTRAITS>  StateType;
 
-typedef  epm::InitialStateGenerator<epm::WSHSimulation, TGENTRAITS>  IStateGenerator;
-typedef  GENTRAITS::CodType  Codensity;
-typedef  GENTRAITS::MagType  Magnetic;
-typedef  GENTRAITS::VelType  Velocity;
-typedef  epm::SmartTruncation  SmartTruncation;
+typedef StateType::StateTraits  StateTraits;
+
+typedef  epm::InitialStateGenerator<epm::WSHSimulation, TSIMTRAITS>  IStateGenerator;
 
 /**
  * @brief Velocity diffusion simulation
@@ -51,49 +50,52 @@ int runProgram()
    IStateGenerator   generator;
 
    // Set the codensity field on RTP decomposition
-   if(GENTRAITS::NeedCodensity)
+   if(SIMTRAITS::NeedCodensity && StateTraits::UseRTPCodensity)
    {
       StateType::setRTPCodensity(generator.codC());
    }
 
    // Set the magetic field on RTP decomposition
-   if(GENTRAITS::NeedMagnetic)
+   if(SIMTRAITS::NeedMagnetic && StateTraits::UseRTPMagnetic)
    {
       StateType::setRTPMagnetic(generator.magB());
    }
 
    // Set the velocity field on RTP decomposition
-   if(GENTRAITS::NeedVelocity)
+   if(SIMTRAITS::NeedVelocity && StateTraits::UseRTPVelocity)
    {
       StateType::setRTPVelocity(generator.velV());
    }
 
+   // Configure transform
+   generator.configureTransform<StateTraits>();
+
    // Transform the fields
-   generator.transformRTP();
+   generator.transformRTP<StateTraits>();
 
    // Set the codensity field on Spectral decomposition
-   if(GENTRAITS::NeedCodensity)
+   if(SIMTRAITS::NeedCodensity && StateTraits::UseSpecCodensity)
    {
       StateType::setSpecCodensity(generator.codC());
    }
 
    // Set the magetic field on Spectral decomposition
-   if(GENTRAITS::NeedMagnetic)
+   if(SIMTRAITS::NeedMagnetic && StateTraits::UseSpecMagnetic)
    {
       StateType::setSpecMagnetic(generator.magB());
    }
 
    // Set the velocity field on Spectral decomposition
-   if(GENTRAITS::NeedVelocity)
+   if(SIMTRAITS::NeedVelocity && StateTraits::UseSpecVelocity)
    {
       StateType::setSpecVelocity(generator.velV());
    }
 
    // Initialise the state file
-   generator.initOutput("Initial");
+   generator.setupOutput("Initial");
 
    // Write the state file
-   generator.writeFile();
+   generator.writeStateFile();
 
    // Finalise the state file
    generator.finalise();

@@ -20,11 +20,48 @@
 namespace EPMDynamo {
 
    /**
+    * @brief Traits of random perturbation state generator
+    */
+   class RandomTraits
+   {
+      public:
+         /// Requires RTP Codensity computations
+         static const bool UseRTPCodensity = false;
+
+         /// Requires spectral Codensity computations
+         static const bool UseSpecCodensity = true;
+
+         /// Requires Codensity gradient computations
+         static const bool UseCodensityGrad = false;
+
+         /// Requires RTP Magnetic computations
+         static const bool UseRTPMagnetic = false;
+
+         /// Requires spectral Magnetic computations
+         static const bool UseSpecMagnetic = true;
+
+         /// Requires Magnetic curl computations
+         static const bool UseMagneticCurl = false;
+
+         /// Requires RTP Velocity computations
+         static const bool UseRTPVelocity = false;
+
+         /// Requires Velocity computations
+         static const bool UseSpecVelocity = true;
+
+         /// Requires Velocity curl computations
+         static const bool UseVelocityCurl = false;
+   };
+
+   /**
     * \brief Initial state definition function for a random perturbation state
     */
    template <typename TGenTraits> class RandomState
    {
       public:
+         /// Typdef for the StateTraits type
+         typedef RandomTraits  StateTraits;
+
          /**
           * @brief Perturbation amplitude
           */

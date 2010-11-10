@@ -84,27 +84,44 @@ namespace EPMDynamo {
          void readRun();
 
          /**
-          * @brief Read group for Codensity scalar and set mGroup
+          * @brief Read group for scalar field
           *
+          * @param name Name of the scalar field
           * @param scalar Storage for the codensity values
           */
-         void readCodensity(std::vector<SpectralSHLShell> &scalar);
+         void readScalarField(const std::string& name, std::vector<SpectralSHLShell> &scalar);
 
          /**
-          * @brief Read group for Magnetic field and set mGroup
+          * @brief Read group for toroidal/poloidal field
           *
-          * @param tor Storage for the magnetic values: toroidal component
-          * @param pol Storage for the magnetic values: poloidal component
+          * @param name Name of the Toroidal/Poloidal field
+          * @param tor Storage for the toroidal values
+          * @param pol Storage for the poloidal values
           */
-         void readMagnetic(std::vector<SpectralSHLShell> &tor, std::vector<SpectralSHLShell> &pol);
+         void readTorPolField(const std::string& name, std::vector<SpectralSHLShell> &tor, std::vector<SpectralSHLShell> &pol);
 
          /**
-          * @brief Read group for Velocity field and set mGroup
+          * @brief Read group for toroidal component of toroidal/poloidal field
           *
-          * @param tor Storage for the velocity values: toroidal component
-          * @param pol Storage for the velocity values: poloidal component
+          * @param name Name of the Toroidal/Poloidal field
+          * @param tor Storage for the toroidal values
           */
-         void readVelocity(std::vector<SpectralSHLShell> &tor, std::vector<SpectralSHLShell> &pol);
+         void readTorField(const std::string& name, std::vector<SpectralSHLShell> &tor);
+
+         /**
+          * @brief Read group for poloidal component of toroidal/poloidal field
+          *
+          * @param name Name of the Toroidal/Poloidal field
+          * @param pol Storage for the poloidal values
+          */
+         void readPolField(const std::string& name, std::vector<SpectralSHLShell> &pol);
+
+         /**
+          * @brief Set the given component to zero
+          *
+          * @param comp Component to zeroify
+          */
+         void setZero(std::vector<SpectralSHLShell> &pol);
 
       private:
    };
