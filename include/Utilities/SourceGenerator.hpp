@@ -47,6 +47,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Initialise the output file
+          *
+          * @param name Basename of the output file
           */
          virtual void setupOutput(std::string name = "Source");
 
@@ -57,8 +59,6 @@ namespace EPMDynamo {
 
          /**
           * @brief Finalise the output source file
-          *
-          * @param pFile Output file smart pointer
           */
          void finalise();
 

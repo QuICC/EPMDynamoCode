@@ -92,14 +92,14 @@ namespace EPMDynamo {
          SmartCSCSWriter  mpOutFile;
 
          /**
-          * @bref Initialise the input file
+          * @brief Initialise the input file
           *
           * @param pFile Smart pointer to file
           */
          void initInputFile(SmartStateReader  pFile);
 
          /**
-          * @bref Initialise the cscs output file
+          * @brief Initialise the cscs output file
           *
           * @param pFile Smart pointer to file
           */

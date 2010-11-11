@@ -121,7 +121,7 @@ namespace EPMDynamo {
           *
           * @param comp Component to zeroify
           */
-         void setZero(std::vector<SpectralSHLShell> &pol);
+         void setZero(std::vector<SpectralSHLShell> &comp);
 
       private:
    };

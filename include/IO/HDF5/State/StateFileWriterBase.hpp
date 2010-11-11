@@ -60,13 +60,15 @@ namespace EPMDynamo {
          /**
           * @brief Create group for scalar field
           *
-          * @param scalar field values
+          * @param name Name of the field
+          * @param scalar Scalar field values
           */
          void writeScalarField(const std::string& name, const std::vector<SpectralSHLShell> &scalar);
 
          /**
           * @brief Create group for toroidal/poloidal field
           *
+          * @param name Name of the field
           * @param tor Toroidal component values
           * @param pol Poloidal component values
           */
