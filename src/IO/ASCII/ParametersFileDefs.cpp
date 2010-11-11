@@ -41,6 +41,14 @@ namespace EPMDynamo {
 
    const std::string ParametersFileDefs::PHYSEKMANXML = "ekman";
 
+   const std::string ParametersFileDefs::PHYSTHERMALEKMANXML = "thermal_ekman";
+
+   const std::string ParametersFileDefs::PHYSMAGNETICEKMANXML = "magnetic_ekman";
+
+   const std::string ParametersFileDefs::PHYSMAGNETICPRANDTLXML = "magnetic_prandtl";
+
+   const std::string ParametersFileDefs::PHYSPRANDTLXML = "prandtl";
+
    const std::string ParametersFileDefs::PHYSROBERTSXML = "roberts";
 
    const std::string ParametersFileDefs::PHYSRAYLEIGHXML = "rayleigh";

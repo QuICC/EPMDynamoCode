@@ -25,67 +25,87 @@ namespace EPMDynamo {
       public:
 
          /**
-          * @brief HEADER part for State file
+          * @brief Physical parameters part for State file
           */
          static const std::string   PHYSICALTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Ekman number tag for state file
           */
          static const std::string   EKMANTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Thermal Ekman number tag for state file
+          */
+         static const std::string   THERMALEKMANTAG;
+
+         /**
+          * @brief Magnetic Ekman number tag for state file
+          */
+         static const std::string   MAGNETICEKMANTAG;
+
+         /**
+          * @brief Magnetic Prandtl number tag for State file
+          */
+         static const std::string   MAGNETICPRANDTLTAG;
+
+         /**
+          * @brief Prandtl number tag for State file
+          */
+         static const std::string   PRANDTLTAG;
+
+         /**
+          * @brief Roberts number tag for State file
           */
          static const std::string   ROBERTSTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Rayleigh number tag for State file
           */
          static const std::string   RAYLEIGHTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Magnetic Rossby number tag for State file
           */
          static const std::string   ROSSBYTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Run parameters part for State file
           */
          static const std::string   RUNTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Time tag for State file
           */
          static const std::string   RUNTIMETAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Timestep tag for State file
           */
          static const std::string   RUNSTEPTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Toroidal component tag for State file
           */
          static const std::string   TOROIDALTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Poloidal component tag for State file
           */
          static const std::string   POLOIDALTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Codensity field tag for State file
           */
          static const std::string   CODENSITYTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Magnetic field tag for State file
           */
          static const std::string   MAGNETICTAG;
 
          /**
-          * @brief HEADER part for State file
+          * @brief Velocity field tag for State file
           */
          static const std::string   VELOCITYTAG;
 

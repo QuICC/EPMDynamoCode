@@ -17,8 +17,8 @@
 
 namespace EPMDynamo {
 
-   IOSystem::IOSystem()
-      : IOBaseSystem()
+   IOSystem::IOSystem(const std::string& type)
+      : IOBaseSystem(type)
    {
    }
 

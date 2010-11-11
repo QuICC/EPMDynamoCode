@@ -45,97 +45,117 @@ namespace EPMDynamo {
          static const std::string   EXTENSION;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Truncation part of parameters file
           */
          static const std::string   TRUNCXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Radial truncation node of parameters file
           */
          static const std::string   TRUNCNXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Harmonic degree truncation node of parameters file
           */
          static const std::string   TRUNCLXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Harmonic order truncation node of parameters file
           */
          static const std::string   TRUNCMXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Assumed symmetry node of parameters file
           */
          static const std::string   TRUNCMPXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Number of cpu node of parameters file
           */
          static const std::string   TRUNCNCOREXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Physical parameters node of parameters file
           */
          static const std::string   PHYSICALXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Ekman number node of parameters file
           */
          static const std::string   PHYSEKMANXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Thermal Ekman number node of parameters file
+          */
+         static const std::string   PHYSTHERMALEKMANXML;
+
+         /**
+          * @brief Magnetic Ekman number node of parameters file
+          */
+         static const std::string   PHYSMAGNETICEKMANXML;
+
+         /**
+          * @brief Magnetic Prandtl number node of parameters file
+          */
+         static const std::string   PHYSMAGNETICPRANDTLXML;
+
+         /**
+          * @brief Prandtl number node of parameters file
+          */
+         static const std::string   PHYSPRANDTLXML;
+
+         /**
+          * @brief Roberts number node of parameters file
           */
          static const std::string   PHYSROBERTSXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Rayleigh number node of parameters file
           */
          static const std::string   PHYSRAYLEIGHXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Rossby number node of parameters file
           */
          static const std::string   PHYSROSSBYXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Timestepping node of parameters file
           */
          static const std::string   TIMEXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Starting time node of parameters file
           */
          static const std::string   TIMETIMEXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Timestep node of parameters file
           */
          static const std::string   TIMETSTEPXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Runtime node of parameters file
           */
          static const std::string   RUNXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Maximum number of timesteps node of parameters file
           */
          static const std::string   RUNMAXTSTEPXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief ASCII diagnostics save rate node of parameters file
           */
          static const std::string   RUNARATEXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief State file save rate node of parameters file
           */
          static const std::string   RUNSRATEXML;
 
          /**
-          * @brief EXTENSION of parameters file
+          * @brief Wall time node of parameters file
           */
          static const std::string   RUNWALLXML;
 

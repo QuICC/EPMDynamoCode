@@ -1,4 +1,4 @@
-/** \file EkQRaRoParameters.cpp
+/** \file EQRaRoParameters.cpp
  *  \brief Source of the implementation of the equation non dimensional parameters
  */
 
@@ -10,24 +10,26 @@
 
 // Class include
 //
-#include "Equations/Parameters/EkQRaRoParameters.hpp"
+#include "Equations/Parameters/EQRaRoParameters.hpp"
 
 // Project includes
 //
 
 namespace EPMDynamo {
 
-   EkQRaRoParameters::EkQRaRoParameters(EPMFloat E, EPMFloat q, EPMFloat Ra, EPMFloat Ro)
+   const std::string EQRaRoParameters::id = "EQRaRo";
+
+   EQRaRoParameters::EQRaRoParameters(EPMFloat E, EPMFloat q, EPMFloat Ra, EPMFloat Ro)
       : EquationParameters(), mE(E), mQ(q), mRa(Ra), mRo(Ro)
    {
    }
 
-   EkQRaRoParameters::EkQRaRoParameters(const Array& arr)
+   EQRaRoParameters::EQRaRoParameters(const Array& arr)
       : EquationParameters(), mE(arr(0)), mQ(arr(1)), mRa(arr(2)), mRo(arr(3))
    {
    }
 
-   Array EkQRaRoParameters::params() const
+   Array EQRaRoParameters::params() const
    {
       Array values(this->nParams());
 
@@ -39,82 +41,82 @@ namespace EPMDynamo {
       return values;
    }
 
-   EPMFloat EkQRaRoParameters::nsDt() const
+   EPMFloat EQRaRoParameters::nsDt() const
    {
       return this->Ro();
    }
 
-   EPMFloat EkQRaRoParameters::nsDiffusion() const
+   EPMFloat EQRaRoParameters::nsDiffusion() const
    {
       return this->E();
    }
 
-   EPMFloat EkQRaRoParameters::nsLorentz() const
+   EPMFloat EQRaRoParameters::nsLorentz() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::nsAdvection() const
+   EPMFloat EQRaRoParameters::nsAdvection() const
    {
       return this->Ro();
    }
 
-   EPMFloat EkQRaRoParameters::nsBuoyancy() const
+   EPMFloat EQRaRoParameters::nsBuoyancy() const
    {
       return this->q()*this->Ra();
    }
 
-   EPMFloat EkQRaRoParameters::nsCoriolis() const
+   EPMFloat EQRaRoParameters::nsCoriolis() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::indDt() const
+   EPMFloat EQRaRoParameters::indDt() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::indDiffusion() const
+   EPMFloat EQRaRoParameters::indDiffusion() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::indAdvection() const
+   EPMFloat EQRaRoParameters::indAdvection() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::tptDt() const
+   EPMFloat EQRaRoParameters::tptDt() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::tptDiffusion() const
+   EPMFloat EQRaRoParameters::tptDiffusion() const
    {
       return this->q();
    }
 
-   EPMFloat EkQRaRoParameters::tptAdvection() const
+   EPMFloat EQRaRoParameters::tptAdvection() const
    {
       return 1.0;
    }
 
-   EPMFloat EkQRaRoParameters::alfvenFactor() const
+   EPMFloat EQRaRoParameters::alfvenFactor() const
    {
       return this->Ro();
    }
 
-   EPMFloat EkQRaRoParameters::alfvenDamping(const EPMFloat delta) const
+   EPMFloat EQRaRoParameters::alfvenDamping(const EPMFloat delta) const
    {
       return (this->E()+this->Ro())/(2.0*delta);
    }
 
-   EPMFloat EkQRaRoParameters::meFactor() const
+   EPMFloat EQRaRoParameters::meFactor() const
    {
       return 1.0/this->Ro();
    }
 
-   void EkQRaRoParameters::testGlobalCFL(EPMFloat &rDt) const
+   void EQRaRoParameters::testGlobalCFL(EPMFloat &rDt) const
    {
       if(this->Ro() != 0.0)
       {

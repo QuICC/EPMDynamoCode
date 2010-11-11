@@ -17,8 +17,8 @@
 
 namespace EPMDynamo {
 
-   IOBaseSystem::IOBaseSystem()
-      : mpCfgFile(new ParametersFile("EkQRaRo"))
+   IOBaseSystem::IOBaseSystem(const std::string& type)
+      : mpCfgFile(new ParametersFile(type))
    {
       // Initialise
       this->initBase();

@@ -30,12 +30,12 @@ namespace EPMDynamo {
       // Create the Physical parameters group
       this->mGroup = H5Gcreate(this->mFile, StateFileDefs::PHYSICALTAG.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
-      if(type == "EkQRaRo")
+      if(type == "EQRaRo")
       {
          // Write Ekman scalar to file
          this->writeScalar(StateFileDefs::EKMANTAG, params(0));
 
-         // Write q scalar to file
+         // Write Roberts scalar to file
          this->writeScalar(StateFileDefs::ROBERTSTAG, params(1));
 
          // Write Rayleigh scalar to file
@@ -43,6 +43,45 @@ namespace EPMDynamo {
 
          // Write Rossby scalar to file
          this->writeScalar(StateFileDefs::ROSSBYTAG, params(3));
+      } else if(type == "EPmPrRa")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
+
+         // Write magnetic Prandtl scalar to file
+         this->writeScalar(StateFileDefs::MAGNETICPRANDTLTAG, params(1));
+
+         // Write Prandtl scalar to file
+         this->writeScalar(StateFileDefs::PRANDTLTAG, params(2));
+
+         // Write Rayleigh scalar to file
+         this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(3));
+      } else if(type == "EPmQRa")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
+
+         // Write magnetic Prandtl scalar to file
+         this->writeScalar(StateFileDefs::MAGNETICPRANDTLTAG, params(1));
+
+         // Write Roberts scalar to file
+         this->writeScalar(StateFileDefs::ROBERTSTAG, params(2));
+
+         // Write Rayleigh scalar to file
+         this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(3));
+      } else if(type == "EEkEmRa")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
+
+         // Write thermal Ekman scalar to file
+         this->writeScalar(StateFileDefs::THERMALEKMANTAG, params(1));
+
+         // Write magnetic Ekman scalar to file
+         this->writeScalar(StateFileDefs::MAGNETICEKMANTAG, params(2));
+
+         // Write Rayleigh scalar to file
+         this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(3));
       }
       
       // close group

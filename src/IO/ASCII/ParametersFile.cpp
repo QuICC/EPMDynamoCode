@@ -35,7 +35,19 @@ namespace EPMDynamo {
    void ParametersFile::setupStorage()
    {
       // Resize the array storing the physical parameters
-      if(this->mType == "EkQRaRo")
+      if(this->mType == "EQRaRo")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(4);
+      } else if(this->mType == "EPrPmRa")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(4);
+      } else if(this->mType == "EPmQRa")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(4);
+      } else if(this->mType == "EEkEmRa")
       {
          // Resize equation array to correct size
          this->mEqArray.resize(4);
@@ -161,7 +173,7 @@ namespace EPMDynamo {
 
          if(node)
          {
-            if(this->mType == "EkQRaRo")
+            if(this->mType == "EQRaRo")
             {
                // Read the Ekman number
                this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
@@ -174,6 +186,45 @@ namespace EPMDynamo {
 
                // Read the Rossby number
                this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSROSSBYXML);
+            } else if(this->mType == "EPmPrRa")
+            {
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+               // Read the magnetic Prandtl number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSMAGNETICPRANDTLXML);
+
+               // Read the Prandtl number
+               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSPRANDTLXML);
+
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSRAYLEIGHXML);
+            } else if(this->mType == "EPmQRa")
+            {
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+               // Read the magnetic Prandtl number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSMAGNETICPRANDTLXML);
+
+               // Read the Roberts number
+               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSROBERTSXML);
+
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSRAYLEIGHXML);
+            } else if(this->mType == "EEkEmRa")
+            {
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+               // Read the thermal Ekman number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSTHERMALEKMANXML);
+
+               // Read the magnetic Ekman number
+               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSMAGNETICEKMANXML);
+
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSRAYLEIGHXML);
             } else
             {
                throw EPMException("ParametersFile::readPhysical", "The requested type is not implemented! (yet?)");
@@ -252,12 +303,30 @@ namespace EPMDynamo {
          std::cout << "--------------------" << std::endl;
          std::cout << "**** Equations *****" << std::endl;
          std::cout << "--------------------" << std::endl;
-         if(this->mType == "EkQRaRo")
+         if(this->mType == "EQRaRo")
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
             std::cout << "  " << "q: " << this->mEqArray(1) << std::endl;
             std::cout << "  " << "Ra: " << this->mEqArray(2) << std::endl;
             std::cout << "  " << "Ro: " << this->mEqArray(3) << std::endl;
+         } else if(this->mType == "EPmPrRa")
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "Pm: " << this->mEqArray(1) << std::endl;
+            std::cout << "  " << "Pr: " << this->mEqArray(2) << std::endl;
+            std::cout << "  " << "Ra: " << this->mEqArray(3) << std::endl;
+         } else if(this->mType == "EPmQRa")
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "Pm: " << this->mEqArray(1) << std::endl;
+            std::cout << "  " << "q: " << this->mEqArray(2) << std::endl;
+            std::cout << "  " << "Ra: " << this->mEqArray(3) << std::endl;
+         } else if(this->mType == "EEkEmRa")
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "Ek: " << this->mEqArray(1) << std::endl;
+            std::cout << "  " << "Em: " << this->mEqArray(2) << std::endl;
+            std::cout << "  " << "Ra: " << this->mEqArray(3) << std::endl;
          } else
          {
             std::cout << " !!!! UNKNOWN PHYSICAL PARAMETERS !!!! " << std::endl;

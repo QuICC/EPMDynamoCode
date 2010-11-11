@@ -1,9 +1,9 @@
-/** \file EkQRaRoParameters.hpp
- *  \brief Definition of the non-dimensionalisation based on the Ekman, Roberts, Rayleigh and magnetic Rossby numbers
+/** \file EPmQRaParameters.hpp
+ *  \brief Definition of the non-dimensionalisation based on the Ekman, magnetic Prandtl, Roberts and Rayleigh numbers
  */
 
-#ifndef EKQRAROPARAMETERS_HPP
-#define EKQRAROPARAMETERS_HPP
+#ifndef EPMQRAPARAMETERS_HPP
+#define EPMQRAPARAMETERS_HPP
 
 // Configuration includes
 //
@@ -23,35 +23,35 @@
 namespace EPMDynamo {
 
    /**
-    * @brief This class provides the constant coefficients apparearing in the equations
-    *
-    * It could also later on, provide conversion methods between non-dimensional values and 
-    * real physical values.
+    * \brief Definition of the non-dimensionalisation based on the Ekman, magnetic Prandtl, Roberts and Rayleigh numbers
     */
-   class EkQRaRoParameters: public EquationParameters
+   class EPmQRaParameters: public EquationParameters
    {
       public:
+         /// Name (ID) of the equation parameters
+         static const std::string  id;
+
          /**
          * @brief Constructor
          *
          * \param E Ekman number
+         * \param Pm magnetic Prandtl number
          * \param q Roberts number
          * \param Ra Rayleigh number
-         * \param Ro Rossby number
          */
-         EkQRaRoParameters(EPMFloat E, EPMFloat q, EPMFloat Ra, EPMFloat Ro);
+         EPmQRaParameters(EPMFloat E, EPMFloat Pm, EPMFloat q, EPMFloat Ra);
 
          /**
          * @brief Constructor
          *
-         * \param arr Array of non-dimensional parameters: (0) Ekman, (1) Roberts, (2) Rayleigh, (3) Rossby
+         * \param arr Array of non-dimensional parameters: (0) Ekman, (1) magnetic Prandtl, (2) Roberts, (3) Rayleigh
          */
-         EkQRaRoParameters(const Array& arr);
+         EPmQRaParameters(const Array& arr);
 
          /**
          * @brief Destructor
          */
-         virtual ~EkQRaRoParameters() {};
+         virtual ~EPmQRaParameters() {};
 
          /**
           * @brief Type of the parameters
@@ -69,17 +69,17 @@ namespace EPMDynamo {
          Array params() const;
 
          /**
-          * @brief Get the Rossby number
-          */
-         EPMFloat Ro() const; 
-
-         /**
           * @brief Get the Ekman number
           */
          EPMFloat E() const;
 
          /**
-          * @brief Get the q number
+          * @brief Get the magnetic Prandtl number
+          */
+         EPMFloat Pm() const; 
+
+         /**
+          * @brief Get the Roberts number
           */
          EPMFloat q() const;
 
@@ -186,7 +186,12 @@ namespace EPMDynamo {
          EPMFloat mE;
 
          /**
-          * @brief The Roberts q number
+          * @brief The magnetic Prandtl number
+          */
+         EPMFloat mPm;
+
+         /**
+          * @brief The Roberts number
           */
          EPMFloat mQ;
 
@@ -194,42 +199,37 @@ namespace EPMDynamo {
           * @brief The Rayleigh number
           */
          EPMFloat mRa;
-
-         /**
-          * @brief The Rossby number
-          */
-         EPMFloat mRo;
    };
 
-   inline std::string EkQRaRoParameters::type() const
+   inline std::string EPmQRaParameters::type() const
    {
-      return "EkQRaRo";
+      return EPmQRaParameters::id;
    }
 
-   inline int EkQRaRoParameters::nParams() const
+   inline int EPmQRaParameters::nParams() const
    {
       return 4;
    }
 
-   inline EPMFloat EkQRaRoParameters::Ro() const
-   {
-      return this->mRo;
-   }
-
-   inline EPMFloat EkQRaRoParameters::E() const
+   inline EPMFloat EPmQRaParameters::E() const
    {
       return this->mE;
    }
 
-   inline EPMFloat EkQRaRoParameters::q() const
+   inline EPMFloat EPmQRaParameters::Pm() const
+   {
+      return this->mPm;
+   }
+
+   inline EPMFloat EPmQRaParameters::q() const
    {
       return this->mQ;
    }
 
-   inline EPMFloat EkQRaRoParameters::Ra() const
+   inline EPMFloat EPmQRaParameters::Ra() const
    {
       return this->mRa;
    }
 }
 
-#endif // EKQRAROPARAMETERS_HPP
+#endif // EPMQRAPARAMETERS_HPP

@@ -21,6 +21,14 @@ namespace EPMDynamo {
 
    const std::string StateFileDefs::EKMANTAG = "E";
 
+   const std::string StateFileDefs::THERMALEKMANTAG = "Ek";
+
+   const std::string StateFileDefs::MAGNETICEKMANTAG = "Em";
+
+   const std::string StateFileDefs::MAGNETICPRANDTLTAG = "Pm";
+
+   const std::string StateFileDefs::PRANDTLTAG = "Pr";
+
    const std::string StateFileDefs::ROBERTSTAG = "q";
 
    const std::string StateFileDefs::RAYLEIGHTAG = "Ra";

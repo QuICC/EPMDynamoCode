@@ -32,7 +32,7 @@ namespace EPMDynamo {
          /**
          * @brief Constructor
          */
-         IOSystem();
+         IOSystem(const std::string& type);
 
          /**
          * @brief Destructor

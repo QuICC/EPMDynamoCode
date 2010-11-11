@@ -3,5 +3,8 @@
 #
 set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       EquationParameters.cpp
-      EkQRaRoParameters.cpp
+      EQRaRoParameters.cpp
+      EPmPrRaParameters.cpp
+      EPmQRaParameters.cpp
+      EEkEmRaParameters.cpp
       )
