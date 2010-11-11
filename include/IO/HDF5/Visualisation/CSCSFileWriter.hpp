@@ -230,7 +230,7 @@ namespace EPMDynamo {
       if(this->mpMagB != NULL && TVisTraits::VisLorentz)
       {
          RTPField tmp(this->mpVelV->oc().rtp().trunc());
-         this->mpMagB->oc().rtp().template cross<0>(tmp, this->mpMagB->oc().curl());
+         this->mpMagB->oc().curl().template cross<0>(tmp, this->mpMagB->oc().rtp());
          this->writeVectorField(CSCSFileDefs::LORENTZTAG+filter, tmp.r().data(), tmp.theta().data(), tmp.phi().data());
       }
 

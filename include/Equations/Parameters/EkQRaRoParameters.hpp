@@ -1,5 +1,5 @@
 /** \file EkQRaRoParameters.hpp
- *  \brief Definition of the non-dimensionalisation based on the Ekman, Roberts, Rayleigh and Rossby numbers
+ *  \brief Definition of the non-dimensionalisation based on the Ekman, Roberts, Rayleigh and magnetic Rossby numbers
  */
 
 #ifndef EKQRAROPARAMETERS_HPP
