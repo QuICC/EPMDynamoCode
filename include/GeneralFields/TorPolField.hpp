@@ -214,6 +214,9 @@ namespace EPMDynamo {
          }
       }
 
+      // Use energy factor to scale energy correctly
+      this->rTor().scaleSpectra();
+
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
          MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumL().data(), this->tor().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -275,6 +278,9 @@ namespace EPMDynamo {
             this->rPol().rSpectrumL()(l_) += tmpSpectrum(ms(i));
          }
       }
+
+      // Use energy factor to scale energy correctly
+      this->rPol().scaleSpectra();
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI

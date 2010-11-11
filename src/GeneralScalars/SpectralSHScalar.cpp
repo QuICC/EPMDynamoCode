@@ -115,4 +115,17 @@ namespace EPMDynamo {
       this->mEFactor = eFactor;
    }
 
+   void SpectralSHScalar::scaleSpectra()
+   {
+      // Check if scaling is required
+      if(this->mEFactor != 1.0)
+      {
+         // Rescale the M spectrum
+         this->mSpectrumM *= this->mEFactor;
+
+         // Rescale the L spectrum
+         this->mSpectrumL *= this->mEFactor;
+      }
+   }
+
 }
