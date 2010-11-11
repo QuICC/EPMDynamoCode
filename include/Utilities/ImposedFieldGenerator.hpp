@@ -27,11 +27,14 @@ namespace EPMDynamo {
     * @brief This class implements a few methods for easier implementation of an initial state generator
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TGenTraits Traits for the generator
+    * \tparam TSimTraits Traits for the generator
     */
-   template <typename TSimType, template <typename> class TGenTraits> class ImposedFieldGenerator: public GeneratorBase<TSimType, TGenTraits>
+   template <typename TSimType, template <typename> class TSimTraits> class ImposedFieldGenerator: public GeneratorBase<TSimType, TSimTraits>
    {
       public:
+         /// Typedef for a smart state file
+         typedef  EPMSHARED_PTR<ImposedFieldWriter<TSimType, TSimTraits> >   SmartImposedWriter; 
+
          /**
           * @brief Constructor
           */
@@ -45,58 +48,101 @@ namespace EPMDynamo {
          /**
           * @brief Initialise the output file
           */
-         virtual void initOutput(std::string name = "Imposed");
+         virtual void setupOutput(std::string name = "Imposed");
+
+         /**
+          * @brief Write the imposed file
+          */
+         void writeImposedFile();
+
+         /**
+          * @brief Finalise the output imposed file
+          *
+          * @param pFile Output file smart pointer
+          */
+         void finalise();
 
       protected:
+         /**
+          * @brief Smart pointer for the imposed field file
+          */
+         SmartImposedWriter   mpOutFile;
+
+         /**
+          * @brief Initialise the output imposed field file
+          *
+          * @param pFile Output file smart pointer
+          */
+         void initImposedFile(SmartImposedWriter pFile);
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TGenTraits> ImposedFieldGenerator<TSimType, TGenTraits>::ImposedFieldGenerator()
-      : GeneratorBase<TSimType, TGenTraits>()
+   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldGenerator<TSimType, TSimTraits>::ImposedFieldGenerator()
+      : GeneratorBase<TSimType, TSimTraits>()
    {
    }
 
-   template <typename TSimType, template <typename> class TGenTraits> void ImposedFieldGenerator<TSimType, TGenTraits>::initOutput(std::string name)
+   template <typename TSimType, template <typename> class TSimTraits> void ImposedFieldGenerator<TSimType, TSimTraits>::setupOutput(std::string name)
    {
-      EPMSHARED_PTR<ImposedFieldWriter<TSimType, TGenTraits> >  pOutFile;
+      SmartImposedWriter  pOutFile;
 
       // Create state with all fields
-      if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
+      if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new ImposedFieldWriter<TSimType, TGenTraits>(this->codC(), this->magB(), this->velV()));
+         pOutFile.reset(new ImposedFieldWriter<TSimType, TSimTraits>(this->codC(), this->magB(), this->velV()));
 
       // Create state with Codensity and Velocity fields
-      } else if(TGenTraits<TSimType>::NeedCodensity && TGenTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new ImposedFieldWriter<TSimType, TGenTraits>(this->codC(), this->velV()));
+         pOutFile.reset(new ImposedFieldWriter<TSimType, TSimTraits>(this->codC(), this->velV()));
 
       // Create state with Magnetic and Velocity fields
-      } else if(TGenTraits<TSimType>::NeedMagnetic && TGenTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new ImposedFieldWriter<TSimType, TGenTraits>(this->magB(), this->velV()));
+         pOutFile.reset(new ImposedFieldWriter<TSimType, TSimTraits>(this->magB(), this->velV()));
 
       // Create state with only codensity field
-      } else if(TGenTraits<TSimType>::NeedCodensity)
+      } else if(TSimTraits<TSimType>::NeedCodensity)
       {
-         pOutFile.reset(new ImposedFieldWriter<TSimType, TGenTraits>(this->codC()));
+         pOutFile.reset(new ImposedFieldWriter<TSimType, TSimTraits>(this->codC()));
 
       // Create state with only magnetic field
-      } else if(TGenTraits<TSimType>::NeedMagnetic)
+      } else if(TSimTraits<TSimType>::NeedMagnetic)
       {
-         pOutFile.reset(new ImposedFieldWriter<TSimType, TGenTraits>(this->magB()));
+         pOutFile.reset(new ImposedFieldWriter<TSimType, TSimTraits>(this->magB()));
 
       // Create state with only velocity field
-      } else if(TGenTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits<TSimType>::NeedVelocity)
       {
-         pOutFile.reset(new ImposedFieldWriter<TSimType, TGenTraits>(this->velV()));
+         pOutFile.reset(new ImposedFieldWriter<TSimType, TSimTraits>(this->velV()));
       }
 
       // Change the base name
       pOutFile->changeBasename(name);
 
       // Set state file as output file and initialise system
-      this->initOutputFile(pOutFile);
+      this->initImposedFile(pOutFile);
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void ImposedFieldGenerator<TSimType, TSimTraits>::initImposedFile(typename ImposedFieldGenerator<TSimType, TSimTraits>::SmartImposedWriter pFile)
+   {
+      // Set output file
+      this->mpOutFile = pFile;
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void ImposedFieldGenerator<TSimType, TSimTraits>::writeImposedFile()
+   {
+      this->mpOutFile->write();
+   }
+
+   template <typename TSimType, template <typename> class TSimTraits> void ImposedFieldGenerator<TSimType, TSimTraits>::finalise()
+   {
+      // Finalise output file
+      this->mpOutFile->finalise();
+
+      // Finalise generator
+      GeneratorBase<TSimType, TSimTraits>::finalise();
    }
 
 }

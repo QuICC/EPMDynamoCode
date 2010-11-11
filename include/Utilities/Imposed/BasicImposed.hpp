@@ -20,19 +20,56 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Sources definition function for Sakuraba's paper
+    * @brief Traits of basic imposed generator
     */
-   template <typename TGenTraits> class BasicImposed
+   class BasicImposedTraits
    {
       public:
+         /// Requires RTP Codensity computations
+         static const bool UseRTPCodensity = false;
+
+         /// Requires spectral Codensity computations
+         static const bool UseSpecCodensity = false;
+
+         /// Requires Codensity gradient computations
+         static const bool UseCodensityGrad = false;
+
+         /// Requires RTP Magnetic computations
+         static const bool UseRTPMagnetic = false;
+
+         /// Requires spectral Magnetic computations
+         static const bool UseSpecMagnetic = true;
+
+         /// Requires Magnetic curl computations
+         static const bool UseMagneticCurl = false;
+
+         /// Requires RTP Velocity computations
+         static const bool UseRTPVelocity = false;
+
+         /// Requires Velocity computations
+         static const bool UseSpecVelocity = false;
+
+         /// Requires Velocity curl computations
+         static const bool UseVelocityCurl = false;
+   };
+
+   /**
+    * \brief Imposed field definition function
+    */
+   template <typename TSimTraits> class BasicImposed
+   {
+      public:
+         /// Typdef for the basic imposed traits type
+         typedef BasicImposedTraits  ImposedTraits;
+
          /// Typedef for the codensity type
-         typedef typename TGenTraits::CodType  Codensity;
+         typedef typename TSimTraits::CodType  Codensity;
 
          /// Typedef for the magnetic type
-         typedef typename TGenTraits::MagType  Magnetic;
+         typedef typename TSimTraits::MagType  Magnetic;
 
          /// Typedef for the velocity type
-         typedef typename TGenTraits::VelType  Velocity;
+         typedef typename TSimTraits::VelType  Velocity;
 
          /**
           * @brief Set RTP value for the codensity scalar
@@ -76,7 +113,7 @@ namespace EPMDynamo {
          virtual ~BasicImposed() {};
    };
 
-   template <typename TGenTraits> void BasicImposed<TGenTraits>::setRTPCodensity(typename BasicImposed<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void BasicImposed<TSimTraits>::setRTPCodensity(typename BasicImposed<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -86,7 +123,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void BasicImposed<TGenTraits>::setRTPMagnetic(typename BasicImposed<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void BasicImposed<TSimTraits>::setRTPMagnetic(typename BasicImposed<TSimTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
@@ -98,7 +135,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void BasicImposed<TGenTraits>::setRTPVelocity(typename BasicImposed<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void BasicImposed<TSimTraits>::setRTPVelocity(typename BasicImposed<TSimTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
@@ -110,19 +147,19 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void BasicImposed<TGenTraits>::setSpecCodensity(typename BasicImposed<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void BasicImposed<TSimTraits>::setSpecCodensity(typename BasicImposed<TSimTraits>::Codensity &codC)
    {
    }
 
-   template <typename TGenTraits> void BasicImposed<TGenTraits>::setSpecMagnetic(typename BasicImposed<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void BasicImposed<TSimTraits>::setSpecMagnetic(typename BasicImposed<TSimTraits>::Magnetic &magB)
    {
    }
 
-   template <typename TGenTraits> void BasicImposed<TGenTraits>::setSpecVelocity(typename BasicImposed<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void BasicImposed<TSimTraits>::setSpecVelocity(typename BasicImposed<TSimTraits>::Velocity &velV)
    {
    }
 
-   template <typename TGenTraits> BasicImposed<TGenTraits>::BasicImposed()
+   template <typename TSimTraits> BasicImposed<TSimTraits>::BasicImposed()
    {
    }
 

@@ -20,19 +20,56 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Sources definition function for Sakuraba's paper
+    * @brief Traits of Sakuraba source generator
     */
-   template <typename TGenTraits> class SakurabaSource
+   class SakurabaSourceTraits
    {
       public:
+         /// Requires RTP Codensity computations
+         static const bool UseRTPCodensity = false;
+
+         /// Requires spectral Codensity computations
+         static const bool UseSpecCodensity = true;
+
+         /// Requires Codensity gradient computations
+         static const bool UseCodensityGrad = false;
+
+         /// Requires RTP Magnetic computations
+         static const bool UseRTPMagnetic = false;
+
+         /// Requires spectral Magnetic computations
+         static const bool UseSpecMagnetic = true;
+
+         /// Requires Magnetic curl computations
+         static const bool UseMagneticCurl = false;
+
+         /// Requires RTP Velocity computations
+         static const bool UseRTPVelocity = false;
+
+         /// Requires Velocity computations
+         static const bool UseSpecVelocity = false;
+
+         /// Requires Velocity curl computations
+         static const bool UseVelocityCurl = false;
+   };
+
+   /**
+    * \brief Sources definition function for Sakuraba's paper
+    */
+   template <typename TSimTraits> class SakurabaSource
+   {
+      public:
+         /// Typdef for the Sakuraba's paper source traits type
+         typedef SakurabaSourceTraits  SourceTraits;
+
          /// Typedef for the codensity type
-         typedef typename TGenTraits::CodType  Codensity;
+         typedef typename TSimTraits::CodType  Codensity;
 
          /// Typedef for the magnetic type
-         typedef typename TGenTraits::MagType  Magnetic;
+         typedef typename TSimTraits::MagType  Magnetic;
 
          /// Typedef for the velocity type
-         typedef typename TGenTraits::VelType  Velocity;
+         typedef typename TSimTraits::VelType  Velocity;
 
          /**
           * @brief Set RTP value for the codensity scalar
@@ -76,7 +113,7 @@ namespace EPMDynamo {
          virtual ~SakurabaSource() {};
    };
 
-   template <typename TGenTraits> void SakurabaSource<TGenTraits>::setRTPCodensity(typename SakurabaSource<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void SakurabaSource<TSimTraits>::setRTPCodensity(typename SakurabaSource<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -86,7 +123,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaSource<TGenTraits>::setRTPMagnetic(typename SakurabaSource<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void SakurabaSource<TSimTraits>::setRTPMagnetic(typename SakurabaSource<TSimTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
@@ -98,7 +135,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaSource<TGenTraits>::setRTPVelocity(typename SakurabaSource<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void SakurabaSource<TSimTraits>::setRTPVelocity(typename SakurabaSource<TSimTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
@@ -110,22 +147,22 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void SakurabaSource<TGenTraits>::setSpecCodensity(typename SakurabaSource<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void SakurabaSource<TSimTraits>::setSpecCodensity(typename SakurabaSource<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
       codC.rOcSrc().rLShell(0)(0,0) = 3.0*10.0;
    }
 
-   template <typename TGenTraits> void SakurabaSource<TGenTraits>::setSpecMagnetic(typename SakurabaSource<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void SakurabaSource<TSimTraits>::setSpecMagnetic(typename SakurabaSource<TSimTraits>::Magnetic &magB)
    {
    }
 
-   template <typename TGenTraits> void SakurabaSource<TGenTraits>::setSpecVelocity(typename SakurabaSource<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void SakurabaSource<TSimTraits>::setSpecVelocity(typename SakurabaSource<TSimTraits>::Velocity &velV)
    {
    }
 
-   template <typename TGenTraits> SakurabaSource<TGenTraits>::SakurabaSource()
+   template <typename TSimTraits> SakurabaSource<TSimTraits>::SakurabaSource()
    {
    }
 

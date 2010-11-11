@@ -20,19 +20,56 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Sources definition function for Jones's paper
+    * @brief Traits of Jones source generator
     */
-   template <typename TGenTraits> class JonesSource
+   class JonesSourceTraits
    {
       public:
+         /// Requires RTP Codensity computations
+         static const bool UseRTPCodensity = false;
+
+         /// Requires spectral Codensity computations
+         static const bool UseSpecCodensity = true;
+
+         /// Requires Codensity gradient computations
+         static const bool UseCodensityGrad = false;
+
+         /// Requires RTP Magnetic computations
+         static const bool UseRTPMagnetic = false;
+
+         /// Requires spectral Magnetic computations
+         static const bool UseSpecMagnetic = false;
+
+         /// Requires Magnetic curl computations
+         static const bool UseMagneticCurl = false;
+
+         /// Requires RTP Velocity computations
+         static const bool UseRTPVelocity = false;
+
+         /// Requires Velocity computations
+         static const bool UseSpecVelocity = false;
+
+         /// Requires Velocity curl computations
+         static const bool UseVelocityCurl = false;
+   };
+
+   /**
+    * \brief Sources definition function for Jones's paper
+    */
+   template <typename TSimTraits> class JonesSource
+   {
+      public:
+         /// Typdef for the Jones's paper source traits type
+         typedef JonesSourceTraits  SourceTraits;
+
          /// Typedef for the codensity type
-         typedef typename TGenTraits::CodType  Codensity;
+         typedef typename TSimTraits::CodType  Codensity;
 
          /// Typedef for the magnetic type
-         typedef typename TGenTraits::MagType  Magnetic;
+         typedef typename TSimTraits::MagType  Magnetic;
 
          /// Typedef for the velocity type
-         typedef typename TGenTraits::VelType  Velocity;
+         typedef typename TSimTraits::VelType  Velocity;
 
          /**
           * @brief Set RTP value for the codensity scalar
@@ -76,7 +113,7 @@ namespace EPMDynamo {
          virtual ~JonesSource() {};
    };
 
-   template <typename TGenTraits> void JonesSource<TGenTraits>::setRTPCodensity(typename JonesSource<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void JonesSource<TSimTraits>::setRTPCodensity(typename JonesSource<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -86,7 +123,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void JonesSource<TGenTraits>::setRTPMagnetic(typename JonesSource<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void JonesSource<TSimTraits>::setRTPMagnetic(typename JonesSource<TSimTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
@@ -98,7 +135,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void JonesSource<TGenTraits>::setRTPVelocity(typename JonesSource<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void JonesSource<TSimTraits>::setRTPVelocity(typename JonesSource<TSimTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
@@ -110,22 +147,22 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void JonesSource<TGenTraits>::setSpecCodensity(typename JonesSource<TGenTraits>::Codensity &codC)
+   template <typename TSimTraits> void JonesSource<TSimTraits>::setSpecCodensity(typename JonesSource<TSimTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
       codC.rOcSrc().rLShell(0)(0,0) = 3.0;
    }
 
-   template <typename TGenTraits> void JonesSource<TGenTraits>::setSpecMagnetic(typename JonesSource<TGenTraits>::Magnetic &magB)
+   template <typename TSimTraits> void JonesSource<TSimTraits>::setSpecMagnetic(typename JonesSource<TSimTraits>::Magnetic &magB)
    {
    }
 
-   template <typename TGenTraits> void JonesSource<TGenTraits>::setSpecVelocity(typename JonesSource<TGenTraits>::Velocity &velV)
+   template <typename TSimTraits> void JonesSource<TSimTraits>::setSpecVelocity(typename JonesSource<TSimTraits>::Velocity &velV)
    {
    }
 
-   template <typename TGenTraits> JonesSource<TGenTraits>::JonesSource()
+   template <typename TSimTraits> JonesSource<TSimTraits>::JonesSource()
    {
    }
 

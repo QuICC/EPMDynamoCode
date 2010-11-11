@@ -15,12 +15,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Utilities/Traits/GenCBVTraits.hpp"
-#include "Utilities/Traits/GenCVTraits.hpp"
-#include "Utilities/Traits/GenBVTraits.hpp"
-#include "Utilities/Traits/GenCTraits.hpp"
-#include "Utilities/Traits/GenBTraits.hpp"
-#include "Utilities/Traits/GenVTraits.hpp"
+#include "Simulations/Traits/DynamoTraits.hpp"
 #include "Utilities/SourceGenerator.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
@@ -30,16 +25,13 @@
 
 namespace epm = EPMDynamo;
 
-#define TGENTRAITS epm::GenCTraits
-#define GENTRAITS TGENTRAITS<epm::WSHSimulation>
+#define TSIMTRAITS epm::DynamoTraits
+#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
-typedef epm::SakurabaSource<GENTRAITS>  SourceType;
+typedef epm::SakurabaSource<SIMTRAITS>  SourceType;
+typedef SourceType::SourceTraits  SourceTraits;
 
-typedef  epm::SourceGenerator<epm::WSHSimulation, TGENTRAITS>  SourceGenerator;
-typedef  GENTRAITS::CodType  Codensity;
-typedef  GENTRAITS::MagType  Magnetic;
-typedef  GENTRAITS::VelType  Velocity;
-typedef  epm::SmartTruncation  SmartTruncation;
+typedef  epm::SourceGenerator<epm::WSHSimulation, TSIMTRAITS>  SourceGenerator;
 
 /**
  * @brief Velocity diffusion simulation
@@ -50,51 +42,54 @@ int runProgram()
    SourceGenerator   generator;
 
    // Set the codensity field on RTP decomposition
-   if(GENTRAITS::NeedCodensity)
+   if(SIMTRAITS::NeedCodensity && SourceTraits::UseRTPCodensity)
    {
       SourceType::setRTPCodensity(generator.codC());
    }
 
    // Set the magetic field on RTP decomposition
-   if(GENTRAITS::NeedMagnetic)
+   if(SIMTRAITS::NeedMagnetic && SourceTraits::UseRTPMagnetic)
    {
       SourceType::setRTPMagnetic(generator.magB());
    }
 
    // Set the velocity field on RTP decomposition
-   if(GENTRAITS::NeedVelocity)
+   if(SIMTRAITS::NeedVelocity && SourceTraits::UseRTPVelocity)
    {
       SourceType::setRTPVelocity(generator.velV());
    }
 
+   // Configure transform
+   generator.configureTransform<SourceTraits>();
+
    // Transform the fields
-   generator.transformRTP();
+   generator.transformRTP<SourceTraits>();
 
    // Set the codensity field on Spectral decomposition
-   if(GENTRAITS::NeedCodensity)
+   if(SIMTRAITS::NeedCodensity && SourceTraits::UseSpecCodensity)
    {
       SourceType::setSpecCodensity(generator.codC());
    }
 
    // Set the magetic field on Spectral decomposition
-   if(GENTRAITS::NeedMagnetic)
+   if(SIMTRAITS::NeedMagnetic && SourceTraits::UseSpecMagnetic)
    {
       SourceType::setSpecMagnetic(generator.magB());
    }
 
    // Set the velocity field on Spectral decomposition
-   if(GENTRAITS::NeedVelocity)
+   if(SIMTRAITS::NeedVelocity && SourceTraits::UseSpecVelocity)
    {
       SourceType::setSpecVelocity(generator.velV());
    }
 
-   // Initialise the state file
-   generator.initOutput("Source");
+   // Initialise the source file
+   generator.setupOutput("Source");
 
-   // Write the state file
-   generator.writeFile();
+   // Write the source file
+   generator.writeSourceFile();
 
-   // Finalise the state file
+   // Finalise the source file
    generator.finalise();
 
    return 0;

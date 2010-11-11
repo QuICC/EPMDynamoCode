@@ -100,6 +100,11 @@ namespace EPMDynamo {
           */
          virtual void writeVel(){};
 
+         /**
+          * @brief Pointer to the velocity variable
+          */
+         const typename TSimTraits<TSimType>::VelType*  mpVelV;
+
       private:
    };
 

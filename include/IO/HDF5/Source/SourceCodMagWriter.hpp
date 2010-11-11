@@ -100,6 +100,11 @@ namespace EPMDynamo {
           */
          virtual void writeMag(){};
 
+         /**
+          * @brief Pointer to the magnetic variable
+          */
+         const typename TSimTraits<TSimType>::MagType*  mpMagB;
+
       private:
    };
 

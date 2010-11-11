@@ -100,6 +100,11 @@ namespace EPMDynamo {
           */
          virtual void writeCod(){};
 
+         /**
+          * @brief Pointer to the condensity variable
+          */
+         const typename TSimTraits<TSimType>::CodType*  mpCodC;
+
       private:
    };
 

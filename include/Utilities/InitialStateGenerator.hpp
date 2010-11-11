@@ -139,8 +139,10 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::finalise()
    {
+      // Finalise output file
       this->mpOutFile->finalise();
 
+      // Finalise generator
       GeneratorBase<TSimType, TSimTraits>::finalise();
    }
 

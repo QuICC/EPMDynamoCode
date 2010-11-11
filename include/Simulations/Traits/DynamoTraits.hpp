@@ -20,6 +20,39 @@
 
 namespace EPMDynamo {
 
+   template <typename TSimType> class DynamoCodTraits
+   {
+      public:
+         /// Typedef for the simulation type
+         typedef TSimType  SimulationType;
+
+         /// Does the codensity field have an IC imposed field ? 
+         static const bool HasICImposed = false; 
+
+         /// Does the codensity field have an OC imposed field ? 
+         static const bool HasOCImposed = false; 
+   };
+
+   class DynamoMagTraits
+   {
+      public:
+         /// Does the codensity field have an IC imposed field ? 
+         static const bool HasICImposed = false; 
+
+         /// Does the codensity field have an OC imposed field ? 
+         static const bool HasOCImposed = false; 
+   };
+
+   class DynamoVelTraits
+   {
+      public:
+         /// Does the codensity field have an IC imposed field ? 
+         static const bool HasICImposed = false; 
+
+         /// Does the codensity field have an OC imposed field ? 
+         static const bool HasOCImposed = false; 
+   };
+
    /**
     * @brief Dynamo traits class
     *
