@@ -1,9 +1,5 @@
 /** \page epmRoadmap Roadmap
  *
- * ***IMPORTANT***
- *
- * CSCS output misses possibilty to add other type of fields to output. For example, vorticity, helicity, toroidal, poloidal components etc
- *
  * This is an approximative roadmap for the next version(s).
  *
  * ***************
