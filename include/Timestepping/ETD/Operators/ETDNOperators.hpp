@@ -312,7 +312,7 @@ namespace EPMDynamo {
          assert(wr.maxCoeff() <= 0.0);
 
          // Set the maximum eigenvalue
-         this->mMaxEig(i) = wr.cwise().abs().maxCoeff();
+         this->mMaxEig(i) = wr.array().abs().maxCoeff();
       }
    }
 
@@ -395,7 +395,7 @@ namespace EPMDynamo {
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeExponential(Matrix& rMat)
    {
       // Add identity
-      rMat.diagonal().cwise() += 1.0;
+      rMat.diagonal().array() += 1.0;
 
       // Storage for the factorial factor
       EPMFloat factor = 1.0;
@@ -483,9 +483,9 @@ namespace EPMDynamo {
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::squareF3(const int l)
    {
       // Define homogeneous operator
-      this->rEtdF(3).rHarmOp(l).rOp().cwise() *= 2.0;
+      this->rEtdF(3).rHarmOp(l).rOp().array() *= 2.0;
       this->rEtdF(3).rHarmOp(l).rOp() += this->etdF(1).harmOp(l).op()*this->etdF(2).harmOp(l).op() + this->etdF(2).harmOp(l).op();
-      this->rEtdF(3).rHarmOp(l).rOp().cwise() *= 0.125;
+      this->rEtdF(3).rHarmOp(l).rOp().array() *= 0.125;
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF3()

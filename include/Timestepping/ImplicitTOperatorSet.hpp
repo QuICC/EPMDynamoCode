@@ -77,7 +77,7 @@ namespace EPMDynamo {
          this->rHarmOp(i).constructBOperator(factor, basis.at(l).specLaplacian());
 
          // Add time derivative to diagonal
-         this->rHarmOp(i).rOp().diagonal().cwise() += timeDiff;
+         this->rHarmOp(i).rOp().diagonal().array() += timeDiff;
 
          // Do finalisation step (for example factorisation)
          this->rHarmOp(i).finaliseOp();

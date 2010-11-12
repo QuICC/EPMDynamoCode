@@ -172,7 +172,7 @@ namespace EPMDynamo {
 
    template<typename T, int R, int C> double ErrorComputer::maxError(const Eigen::Matrix<T, R, C>  &val1, const Eigen::Matrix<T, R, C> &val2)
    {
-      double errMax = (val1-val2).cwise().abs().maxCoeff();
+      double errMax = (val1-val2).array().abs().maxCoeff();
 
       return errMax;
    }
@@ -183,8 +183,8 @@ namespace EPMDynamo {
 
       tmp = val1 - val2;
 
-      double errRe = tmp.real().cwise().abs().maxCoeff();
-      double errIm = tmp.imag().cwise().abs().maxCoeff();
+      double errRe = tmp.real().array().abs().maxCoeff();
+      double errIm = tmp.imag().array().abs().maxCoeff();
 
       double errMax = std::max(errRe, errIm);
 
@@ -211,7 +211,7 @@ namespace EPMDynamo {
          }
       }
 
-      double errMax =  tmp.cwise().abs().maxCoeff();
+      double errMax =  tmp.array().abs().maxCoeff();
 
       return errMax;
    }
@@ -241,8 +241,8 @@ namespace EPMDynamo {
          }
       }
 
-      double errRe = tmp.real().cwise().abs().maxCoeff();
-      double errIm = tmp.imag().cwise().abs().maxCoeff();
+      double errRe = tmp.real().array().abs().maxCoeff();
+      double errIm = tmp.imag().array().abs().maxCoeff();
 
       double errMax = std::max(errRe, errIm);
 

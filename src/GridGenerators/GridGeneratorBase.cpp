@@ -28,13 +28,13 @@ namespace EPMDynamo {
    void GridGeneratorBase::convertToRadial()
    {
       // compute x + 1
-      this->mGrid.cwise() += 1.0;
+      this->mGrid.array() += 1.0;
 
       // compute (x+1)/2
       this->mGrid /= 2.0;
 
       // compute ((x+1)/2)^(1/2)
-      this->mGrid = this->mGrid.cwise().sqrt();
+      this->mGrid = this->mGrid.array().sqrt();
    }
 
    void GridGeneratorBase::sortGrid()

@@ -109,7 +109,7 @@ namespace EPMDynamo {
          this->rEtdF(1).rHarmOp(i).rOp() = this->etdF(0).harmOp(i).op();
 
          // Remove identity
-         this->rEtdF(1).rHarmOp(i).rOp().diagonal().cwise() -= 1.0;
+         this->rEtdF(1).rHarmOp(i).rOp().diagonal().array() -= 1.0;
 
          // initialise F2 numerator part of operator
          this->rEtdF(2).rHarmOp(i).rOp() = this->etdF(1).harmOp(i).op();
@@ -122,7 +122,7 @@ namespace EPMDynamo {
 
          // Remove c^2 L^2/2
          tmpM *= tmpM;
-         this->rEtdF(3).rHarmOp(i).rOp() -= tmpM.cwise()/2.0;
+         this->rEtdF(3).rHarmOp(i).rOp() -= tmpM.array()/2.0;
 
          // Multiply F1 by 1/c L^-1
          this->rEtdF(1).rHarmOp(i).rOp() *= tmpMInv;

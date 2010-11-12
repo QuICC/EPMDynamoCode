@@ -74,7 +74,7 @@ namespace EPMDynamo {
             }
 
             // Radial Velocity
-            maxVel = velV.r().shell(n).cwise().abs().maxCoeff();
+            maxVel = velV.r().shell(n).array().abs().maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -84,7 +84,7 @@ namespace EPMDynamo {
 
             // Angular "Velocity"
             dr = radii(n_)/std::sqrt(llFactor);
-            maxVel = (velV.theta().shell(n).cwise().square() + velV.phi().shell(n).cwise().square()).cwise().sqrt().maxCoeff();
+            maxVel = (velV.theta().shell(n).array().square() + velV.phi().shell(n).array().square()).array().sqrt().maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -137,8 +137,8 @@ namespace EPMDynamo {
             d = d*d;
 
             // Radial "Velocity"
-            p = magB.r().shell(n).cwise().square();
-            maxVel = (p.cwise()/((p*this->eqParams().alfvenFactor()).cwise() + d).cwise().sqrt() + velV.r().shell(n).cwise().abs()).maxCoeff();
+            p = magB.r().shell(n).array().square();
+            maxVel = (p.array()/((p*this->eqParams().alfvenFactor()).array() + d).array().sqrt() + velV.r().shell(n).array().abs()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -150,8 +150,8 @@ namespace EPMDynamo {
             dr = radii(n_)/std::sqrt(llFactor);
             d = this->eqParams().alfvenDamping(dr);
             d = d*d;
-            p = magB.theta().shell(n).cwise().square() + magB.phi().shell(n).cwise().square();
-            maxVel = (p.cwise()/((p*this->eqParams().alfvenFactor()).cwise() + d).cwise().sqrt() + (velV.theta().shell(n).cwise().square() + velV.phi().shell(n).cwise().square()).cwise().sqrt()).maxCoeff();
+            p = magB.theta().shell(n).array().square() + magB.phi().shell(n).array().square();
+            maxVel = (p.array()/((p*this->eqParams().alfvenFactor()).array() + d).array().sqrt() + (velV.theta().shell(n).array().square() + velV.phi().shell(n).array().square()).array().sqrt()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)

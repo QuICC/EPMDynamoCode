@@ -13,7 +13,6 @@
 // System includes
 //
 #include <iostream>
-#include <Eigen/Array>
 
 // TestSuite includes
 //
@@ -63,7 +62,7 @@ void initLoopTest(epm::FDSHOrderScalar &rFDSHValues, SmartTruncation pTrunc)
       rFDSHValues.rMShell(m).setRandom();
 
       // Rescale values to (-1 ,1) interval
-      rFDSHValues.rMShell(m).cwise() -= 1.0;
+      rFDSHValues.rMShell(m).array() -= 1.0;
       rFDSHValues.rMShell(m) *= 2.0;
    }
 

@@ -14,12 +14,12 @@
 #include <algorithm>
 #include <complex>
 #include <assert.h>
+#include <iostream>
 
 // External includes
 //
 #include <Eigen/Core>
 #include <Eigen/Sparse>
-#include <Eigen/Array>
 
 // Project includes
 //

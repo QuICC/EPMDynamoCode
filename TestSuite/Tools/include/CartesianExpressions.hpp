@@ -7,7 +7,6 @@
 
 // System includes
 //
-#include <Eigen/Array>
 
 // Project includes
 //
@@ -216,24 +215,24 @@ namespace EPMDynamo {
    }
 
    inline Matrix  CartesianExpressions::x(const int n, const int power){
-      Matrix tmp = std::pow(this->mRad(n), power)*this->xMat(n).cwise().pow(power);
+      Matrix tmp = std::pow(this->mRad(n), power)*this->xMat(n).array().pow(power);
       return tmp;
    };
 
    inline Matrix  CartesianExpressions::y(const int n, const int power){
-      Matrix tmp = std::pow(this->mRad(n), power)*this->yMat(n).cwise().pow(power);
+      Matrix tmp = std::pow(this->mRad(n), power)*this->yMat(n).array().pow(power);
       return tmp;
    };
 
    inline Matrix  CartesianExpressions::z(const int n, const int power){
-      Matrix tmp = std::pow(this->mRad(n), power)*this->zMat(n).cwise().pow(power);
+      Matrix tmp = std::pow(this->mRad(n), power)*this->zMat(n).array().pow(power);
       return tmp;
    };
 
    inline Matrix CartesianExpressions::xyzToR(const Matrix& xComp, const Matrix& yComp, const Matrix& zComp, const int rIdx)
    {
       Matrix tmp;
-      tmp = xComp.cwise()*this->xToRMat(rIdx) + yComp.cwise()*this->yToRMat(rIdx) + zComp.cwise()*this->zToRMat(rIdx);
+      tmp = xComp.array()*this->xToRMat(rIdx).array() + yComp.array()*this->yToRMat(rIdx).array() + zComp.array()*this->zToRMat(rIdx).array();
 
       return tmp;
    };
@@ -241,7 +240,7 @@ namespace EPMDynamo {
    inline Matrix CartesianExpressions::xyzToTh(const Matrix& xComp, const Matrix& yComp, const Matrix& zComp, const int rIdx)
    {
       Matrix tmp;
-      tmp = xComp.cwise()*this->xToThMat(rIdx) + yComp.cwise()*this->yToThMat(rIdx) + zComp.cwise()*this->zToThMat(rIdx);
+      tmp = xComp.array()*this->xToThMat(rIdx).array() + yComp.array()*this->yToThMat(rIdx).array() + zComp.array()*this->zToThMat(rIdx).array();
 
       return tmp;
    };
@@ -249,7 +248,7 @@ namespace EPMDynamo {
    inline Matrix CartesianExpressions::xyzToPh(const Matrix& xComp, const Matrix& yComp, const Matrix& zComp, const int rIdx)
    {
       Matrix tmp;
-      tmp = xComp.cwise()*this->xToPhMat(rIdx) + yComp.cwise()*this->yToPhMat(rIdx) + zComp.cwise()*this->zToPhMat(rIdx);
+      tmp = xComp.array()*this->xToPhMat(rIdx).array() + yComp.array()*this->yToPhMat(rIdx).array() + zComp.array()*this->zToPhMat(rIdx).array();
 
       return tmp;
    };

@@ -14,7 +14,6 @@
 //
 #include <fstream>
 #include <iostream>
-#include <Eigen/Array>
 
 // TestSuite includes
 //

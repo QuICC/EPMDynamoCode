@@ -30,22 +30,22 @@ namespace EPMDynamo {
          for(int n=0; n < nR; ++n)
          {
             // Compute R component
-            rCrossVal.rR().rShell(n) = left.theta().shell(n).cwise()*right.phi().shell(n) - left.phi().shell(n).cwise()*right.theta().shell(n);
+            rCrossVal.rR().rShell(n) = (left.theta().shell(n).array()*right.phi().shell(n).array() - left.phi().shell(n).array()*right.theta().shell(n).array()).matrix();
             // Compute Theta component
-            rCrossVal.rTheta().rShell(n) = left.phi().shell(n).cwise()*right.r().shell(n) - left.r().shell(n).cwise()*right.phi().shell(n);
+            rCrossVal.rTheta().rShell(n) = (left.phi().shell(n).array()*right.r().shell(n).array() - left.r().shell(n).array()*right.phi().shell(n).array()).matrix();
             // Compute Phi component
-            rCrossVal.rPhi().rShell(n) = left.r().shell(n).cwise()*right.theta().shell(n) - left.theta().shell(n).cwise()*right.r().shell(n);
+            rCrossVal.rPhi().rShell(n) = (left.r().shell(n).array()*right.theta().shell(n).array() - left.theta().shell(n).array()*right.r().shell(n).array()).matrix();
          }
       } else
       {
          for(int n=0; n < nR; ++n)
          {
             // Compute R component
-            rCrossVal.rR().rShell(n) = coeff*(left.theta().shell(n).cwise()*right.phi().shell(n) - left.phi().shell(n).cwise()*right.theta().shell(n));
+            rCrossVal.rR().rShell(n) = coeff*(left.theta().shell(n).array()*right.phi().shell(n).array() - left.phi().shell(n).array()*right.theta().shell(n).array()).matrix();
             // Compute Theta component
-            rCrossVal.rTheta().rShell(n) = coeff*(left.phi().shell(n).cwise()*right.r().shell(n) - left.r().shell(n).cwise()*right.phi().shell(n));
+            rCrossVal.rTheta().rShell(n) = coeff*(left.phi().shell(n).array()*right.r().shell(n).array() - left.r().shell(n).array()*right.phi().shell(n).array()).matrix();
             // Compute Phi component
-            rCrossVal.rPhi().rShell(n) = coeff*(left.r().shell(n).cwise()*right.theta().shell(n) - left.theta().shell(n).cwise()*right.r().shell(n));
+            rCrossVal.rPhi().rShell(n) = coeff*(left.r().shell(n).array()*right.theta().shell(n).array() - left.theta().shell(n).array()*right.r().shell(n).array()).matrix();
          }
       }
    }
@@ -58,22 +58,22 @@ namespace EPMDynamo {
          for(int n=0; n < nR; ++n)
          {
             // Add to R component
-            rCrossVal.rR().rShell(n) += left.theta().shell(n).cwise()*right.phi().shell(n) - left.phi().shell(n).cwise()*right.theta().shell(n);
+            rCrossVal.rR().rShell(n) += (left.theta().shell(n).array()*right.phi().shell(n).array() - left.phi().shell(n).array()*right.theta().shell(n).array()).matrix();
             // Add to Theta component
-            rCrossVal.rTheta().rShell(n) += left.phi().shell(n).cwise()*right.r().shell(n) - left.r().shell(n).cwise()*right.phi().shell(n);
+            rCrossVal.rTheta().rShell(n) += (left.phi().shell(n).array()*right.r().shell(n).array() - left.r().shell(n).array()*right.phi().shell(n).array()).matrix();
             // Add to Phi component
-            rCrossVal.rPhi().rShell(n) += left.r().shell(n).cwise()*right.theta().shell(n) - left.theta().shell(n).cwise()*right.r().shell(n);
+            rCrossVal.rPhi().rShell(n) += (left.r().shell(n).array()*right.theta().shell(n).array() - left.theta().shell(n).array()*right.r().shell(n).array()).matrix();
          }
       } else
       {
          for(int n=0; n < nR; ++n)
          {
             // Add to R component
-            rCrossVal.rR().rShell(n) += coeff*(left.theta().shell(n).cwise()*right.phi().shell(n) - left.phi().shell(n).cwise()*right.theta().shell(n));
+            rCrossVal.rR().rShell(n) += coeff*(left.theta().shell(n).array()*right.phi().shell(n).array() - left.phi().shell(n).array()*right.theta().shell(n).array()).matrix();
             // Add to Theta component
-            rCrossVal.rTheta().rShell(n) += coeff*(left.phi().shell(n).cwise()*right.r().shell(n) - left.r().shell(n).cwise()*right.phi().shell(n));
+            rCrossVal.rTheta().rShell(n) += coeff*(left.phi().shell(n).array()*right.r().shell(n).array() - left.r().shell(n).array()*right.phi().shell(n).array()).matrix();
             // Add to Phi component
-            rCrossVal.rPhi().rShell(n) += coeff*(left.r().shell(n).cwise()*right.theta().shell(n) - left.theta().shell(n).cwise()*right.r().shell(n));
+            rCrossVal.rPhi().rShell(n) += coeff*(left.r().shell(n).array()*right.theta().shell(n).array() - left.theta().shell(n).array()*right.r().shell(n).array()).matrix();
          }
       }
    }
@@ -86,22 +86,22 @@ namespace EPMDynamo {
          for(int n=0; n < nR; ++n)
          {
             // Substract from R component
-            rCrossVal.rR().rShell(n) -= left.theta().shell(n).cwise()*right.phi().shell(n) - left.phi().shell(n).cwise()*right.theta().shell(n);
+            rCrossVal.rR().rShell(n) -= (left.theta().shell(n).array()*right.phi().shell(n).array() - left.phi().shell(n).array()*right.theta().shell(n).array()).matrix();
             // Substract from Theta component
-            rCrossVal.rTheta().rShell(n) -= left.phi().shell(n).cwise()*right.r().shell(n) - left.r().shell(n).cwise()*right.phi().shell(n);
+            rCrossVal.rTheta().rShell(n) -= (left.phi().shell(n).array()*right.r().shell(n).array() - left.r().shell(n).array()*right.phi().shell(n).array()).matrix();
             // Substract from Phi component
-            rCrossVal.rPhi().rShell(n) -= left.r().shell(n).cwise()*right.theta().shell(n) - left.theta().shell(n).cwise()*right.r().shell(n);
+            rCrossVal.rPhi().rShell(n) -= (left.r().shell(n).array()*right.theta().shell(n).array() - left.theta().shell(n).array()*right.r().shell(n).array()).matrix();
          }
       } else
       {
          for(int n=0; n < nR; ++n)
          {
             // Substract from R component
-            rCrossVal.rR().rShell(n) -= coeff*(left.theta().shell(n).cwise()*right.phi().shell(n) - left.phi().shell(n).cwise()*right.theta().shell(n));
+            rCrossVal.rR().rShell(n) -= coeff*(left.theta().shell(n).array()*right.phi().shell(n).array() - left.phi().shell(n).array()*right.theta().shell(n).array()).matrix();
             // Substract from Theta component
-            rCrossVal.rTheta().rShell(n) -= coeff*(left.phi().shell(n).cwise()*right.r().shell(n) - left.r().shell(n).cwise()*right.phi().shell(n));
+            rCrossVal.rTheta().rShell(n) -= coeff*(left.phi().shell(n).array()*right.r().shell(n).array() - left.r().shell(n).array()*right.phi().shell(n).array()).matrix();
             // Substract from Phi component
-            rCrossVal.rPhi().rShell(n) -= coeff*(left.r().shell(n).cwise()*right.theta().shell(n) - left.theta().shell(n).cwise()*right.r().shell(n));
+            rCrossVal.rPhi().rShell(n) -= coeff*(left.r().shell(n).array()*right.theta().shell(n).array() - left.theta().shell(n).array()*right.r().shell(n).array()).matrix();
          }
       }
    }
@@ -113,13 +113,13 @@ namespace EPMDynamo {
       {
          for(int n=0; n < nR; ++n)
          {
-            rDot.rShell(n) = left.r().shell(n).cwise()*right.r().shell(n) + left.theta().shell(n).cwise()*right.theta().shell(n) + left.phi().shell(n).cwise()*right.phi().shell(n);
+            rDot.rShell(n) = (left.r().shell(n).array()*right.r().shell(n).array() + left.theta().shell(n).array()*right.theta().shell(n).array() + left.phi().shell(n).array()*right.phi().shell(n).array()).matrix();
          }
       } else
       {
          for(int n=0; n < nR; ++n)
          {
-            rDot.rShell(n) = coeff*(left.r().shell(n).cwise()*right.r().shell(n) + left.theta().shell(n).cwise()*right.theta().shell(n) + left.phi().shell(n).cwise()*right.phi().shell(n));
+            rDot.rShell(n) = coeff*(left.r().shell(n).array()*right.r().shell(n).array() + left.theta().shell(n).array()*right.theta().shell(n).array() + left.phi().shell(n).array()*right.phi().shell(n).array()).matrix();
          }
       }
    }
@@ -131,13 +131,13 @@ namespace EPMDynamo {
       {
          for(int n=0; n < nR; ++n)
          {
-            rDot.rShell(n) += left.r().shell(n).cwise()*right.r().shell(n) + left.theta().shell(n).cwise()*right.theta().shell(n) + left.phi().shell(n).cwise()*right.phi().shell(n);
+            rDot.rShell(n) += (left.r().shell(n).array()*right.r().shell(n).array() + left.theta().shell(n).array()*right.theta().shell(n).array() + left.phi().shell(n).array()*right.phi().shell(n).array()).matrix();
          }
       } else
       {
          for(int n=0; n < nR; ++n)
          {
-            rDot.rShell(n) += coeff*(left.r().shell(n).cwise()*right.r().shell(n) + left.theta().shell(n).cwise()*right.theta().shell(n) + left.phi().shell(n).cwise()*right.phi().shell(n));
+            rDot.rShell(n) += coeff*(left.r().shell(n).array()*right.r().shell(n).array() + left.theta().shell(n).array()*right.theta().shell(n).array() + left.phi().shell(n).array()*right.phi().shell(n).array()).matrix();
          }
       }
    }
@@ -149,13 +149,13 @@ namespace EPMDynamo {
       {
          for(int n=0; n < nR; ++n)
          {
-            rDot.rShell(n) -= left.r().shell(n).cwise()*right.r().shell(n) + left.theta().shell(n).cwise()*right.theta().shell(n) + left.phi().shell(n).cwise()*right.phi().shell(n);
+            rDot.rShell(n) -= (left.r().shell(n).array()*right.r().shell(n).array() + left.theta().shell(n).array()*right.theta().shell(n).array() + left.phi().shell(n).array()*right.phi().shell(n).array()).matrix();
          }
       } else
       {
          for(int n=0; n < nR; ++n)
          {
-            rDot.rShell(n) -= coeff*(left.r().shell(n).cwise()*right.r().shell(n) + left.theta().shell(n).cwise()*right.theta().shell(n) + left.phi().shell(n).cwise()*right.phi().shell(n));
+            rDot.rShell(n) -= coeff*(left.r().shell(n).array()*right.r().shell(n).array() + left.theta().shell(n).array()*right.theta().shell(n).array() + left.phi().shell(n).array()*right.phi().shell(n).array()).matrix();
          }
       }
    }

@@ -79,7 +79,7 @@ namespace EPMDynamo {
       this->splitM(tmpMs, id);
 
       // Set the harmonic degrees truncation information (full truncation)
-      rLs = this->sim()->hoz()->lArray().end(this->sim()->hoz()->nL()- tmpMs(0));
+      rLs = this->sim()->hoz()->lArray().tail(this->sim()->hoz()->nL()- tmpMs(0));
 
       // Set the harmonic orders truncation information
       rMs.clear();

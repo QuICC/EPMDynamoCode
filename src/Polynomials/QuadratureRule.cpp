@@ -67,7 +67,7 @@ namespace EPMDynamo {
          grid = w;
       } else
       {
-         grid = w.start(grid.size());
+         grid = w.head(grid.size());
       }
    }
 
@@ -109,11 +109,11 @@ namespace EPMDynamo {
       if(grid.size() == w.size())
       {
          grid = w;
-         weights = z.row(0).cwise() * z.row(0) * mIntWeight;
+         weights = z.row(0).array() * z.row(0).array() * this->mIntWeight;
       } else
       {
-         grid = w.start(grid.size());
-         weights = z.row(0).start(grid.size()).cwise() * z.row(0).start(grid.size()) * mIntWeight;
+         grid = w.head(grid.size());
+         weights = z.row(0).head(grid.size()).array() * z.row(0).head(grid.size()).array() * this->mIntWeight;
       }
    }
 

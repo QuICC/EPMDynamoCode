@@ -120,7 +120,7 @@ namespace EPMDynamo {
 
    template <typename TPolynomial> void TorPolRadialOperatorBase<TPolynomial>::computeNTermsIntegrators()
    {
-      this->mS2CurlCurlIntegrator = -this->sll_1()*this->grid().asDiagonal()*this->wPoly()*this->diff(1)*this->mR_1.asDiagonal()*this->wPoly();
+      this->mS2CurlCurlIntegrator = -this->sll_1()*(this->grid().asDiagonal()*this->wPoly()*this->diff(1)*this->mR_1.asDiagonal()*this->wPoly());
    }
 
    template <typename TPolynomial> void TorPolRadialOperatorBase<TPolynomial>::computeEnergyIntegrals()
@@ -144,7 +144,7 @@ namespace EPMDynamo {
       *eWeights = (*eWeights)/2.0;
 
       // Strech grid points to 0, 1 interval
-      eGrid->cwise() += 1.0;
+      eGrid->array() += 1.0;
       *eGrid = (*eGrid)/2.0;
 
       TPolynomial    tmpPoly(this->l(), eGrid, this->polyN(), eWeights); 
@@ -156,9 +156,9 @@ namespace EPMDynamo {
       {
          for(int i=0; i < this->polyN(); ++i)
          {
-            this->mPolEWeights(i,n) = (lfactor*(lfactor+1.0))*(tmpPoly.poly().row(n).cwise()*tmpPoly.poly().row(i)).dot (*eWeights);
-            this->mPolEWeights(i,n) += lfactor*2.0*(tmpPoly.poly().row(n).cwise()*tmpPoly.diff(1).row(i)).dot (eGrid->cwise()*(*eWeights));
-            this->mPolEWeights(i,n) += lfactor*(tmpPoly.diff(1).row(n).cwise()*tmpPoly.diff(1).row(i)).dot (eGrid->cwise().pow(2).cwise()*(*eWeights));
+            this->mPolEWeights(i,n) = (lfactor*(lfactor+1.0))*(tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).matrix().dot (*eWeights);
+            this->mPolEWeights(i,n) += lfactor*2.0*(tmpPoly.poly().row(n).array()*tmpPoly.diff(1).row(i).array()).matrix().dot ((eGrid->array()*eWeights->array()).matrix());
+            this->mPolEWeights(i,n) += lfactor*(tmpPoly.diff(1).row(n).array()*tmpPoly.diff(1).row(i).array()).matrix().dot ((eGrid->array().pow(2)*eWeights->array()).matrix());
          }  
       }
    }
