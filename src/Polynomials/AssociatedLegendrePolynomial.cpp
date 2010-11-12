@@ -234,7 +234,7 @@ namespace EPMDynamo {
       }
       this->rPoly().row(idx) = this->grid().transpose();
       this->rPoly().row(idx) *= std::sqrt(2.0*static_cast<EPMFloat>(m) + 1.0);
-      this->rPoly().row(idx).array() *= this->poly().row(idx-1);
+      this->rPoly().row(idx).array() *= this->poly().row(idx-1).array();
    }
 
    void AssociatedLegendrePolynomial::computePlm(int l, const int m, int idx)
@@ -262,7 +262,7 @@ namespace EPMDynamo {
       for (; l < maxL; ++l, ++idx)
       {
          this->rPoly().row(idx) = (2.0*rl - 1.0)*this->grid();
-         this->rPoly().row(idx).array() *= this->poly().row(idx-1);
+         this->rPoly().row(idx).array() *= this->poly().row(idx-1).array();
 
          this->rPoly().row(idx) -= this->poly().row(idx-2)*std::sqrt((rl + rm - 1.0)*(rl - rm - 1.0));
 
@@ -292,7 +292,7 @@ namespace EPMDynamo {
          }
 
          this->rDiff(1).row(idx) = this->sinTheta().transpose().array().pow(m-1);
-         this->rDiff(1).row(idx).array() *= this->grid().transpose();
+         this->rDiff(1).row(idx).array() *= this->grid().transpose().array();
          this->rDiff(1).row(idx) *= factor;
       
       }

@@ -37,10 +37,10 @@ namespace EPMDynamo {
       this->mHMatrix.resize(this->mNBCs, this->mNBCs);
 
       // Fill in the values for H
-      this->mHMatrix = bcRows.corner(Eigen::BottomRight, this->mNBCs, this->mNBCs);
+      this->mHMatrix = bcRows.bottomRightCorner(this->mNBCs, this->mNBCs);
 
       // Fill in the values for G
-      this->mGMatrix = bcRows.corner(Eigen::TopLeft, this->mNBCs, this->mNBOp);
+      this->mGMatrix = bcRows.topLeftCorner(this->mNBCs, this->mNBOp);
 
       // Invert the content of H to get the real H matrix
       this->invertHMatrix();
@@ -103,12 +103,12 @@ namespace EPMDynamo {
 
    void ExtensionMatrix::restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
    {
-      rOp = factor*(fullOp.corner(Eigen::TopLeft, this->mNBOp, this->mNBOp) + fullOp.corner(Eigen::TopRight, this->mNBOp, this->mNBCs) * this->G());
+      rOp = factor*(fullOp.topLeftCorner(this->mNBOp, this->mNBOp) + fullOp.topRightCorner(this->mNBOp, this->mNBCs) * this->G());
    }
 
    void ExtensionMatrix::buildNHMatrix(const EPMFloat factor, const Matrix &fullOp)
    {
-      this->mNHMatrix = factor*(fullOp.corner(Eigen::TopRight, this->mNBOp, this->mNBCs) * this->H());
+      this->mNHMatrix = factor*(fullOp.topRightCorner(this->mNBOp, this->mNBCs) * this->H());
    }
 
 }

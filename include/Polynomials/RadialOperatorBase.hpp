@@ -277,11 +277,12 @@ namespace EPMDynamo {
 
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->mLaplacianProj.row(n).arrray() *= rfactor1.transpose().array();
+         this->mLaplacianProj.row(n).array() *= rfactor1.transpose().array();
          this->mLaplacianProj.row(n) += rfactor2.transpose().array()*tmp1.row(n).array();
       }
 
-      this->mLaplacianSpec = (this->mLaplacianProj*this->wPoly()).template part<Eigen::StrictlyLowerTriangular>().transpose();
+      //this->mLaplacianSpec.template triangularView<Eigen::StrictlyUpper>() = (this->mLaplacianProj*this->wPoly()).template triangularView<Eigen::StrictlyLower>().transpose();
+      this->mLaplacianSpec = (this->mLaplacianProj*this->wPoly()).transpose().template triangularView<Eigen::StrictlyUpper>();
    }
 
    template <typename TPolynomial> void RadialOperatorBase<TPolynomial>::computeEnergyIntegrals()
@@ -316,7 +317,7 @@ namespace EPMDynamo {
       {
          for(int i=0; i < this->polyN(); ++i)
          {
-            this->mEWeights(i,n) = (tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).dot (eGrid->array().pow(2)*(*eWeights));
+            this->mEWeights(i,n) = (tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).matrix().dot ((eGrid->array().pow(2)*eWeights->array()).matrix());
          }  
       }
    }

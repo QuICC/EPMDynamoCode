@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <complex>
 #include <assert.h>
+#include <iostream>
 
 // External includes
 //

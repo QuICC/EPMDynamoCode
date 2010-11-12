@@ -95,7 +95,7 @@ namespace EPMDynamo {
    {
       Array x(this->gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().array().pow(2);
+      x.array() += 2.0*this->grid().array().pow(2);
 
       for(int i = 0; i < x.size(); ++i)
       {
@@ -164,7 +164,7 @@ namespace EPMDynamo {
    {
       Array x(this->gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().array().pow(2);
+      x.array() += 2.0*this->grid().array().pow(2);
 
       for(int i = 0; i < x.size(); ++i)
       {
@@ -204,7 +204,7 @@ namespace EPMDynamo {
    {
       Array x(this->gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().array().pow(2);
+      x.array() += 2.0*this->grid().array().pow(2);
 
       for(int i = 0; i < x.size(); ++i)
       {
@@ -268,6 +268,6 @@ namespace EPMDynamo {
 
    EPMFloat ChebyshevPolynomial::normaliseW(const int n)
    {
-      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2));
+      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2).matrix());
    }
 }

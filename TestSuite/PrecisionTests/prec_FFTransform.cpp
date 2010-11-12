@@ -54,11 +54,11 @@ void initLoopTest(epm::FFTFlatScalar &rFFTValues, SmartTruncation pTrunc)
    rFFTValues.rFlat().setZero();
 
    // Fill used part with random values between (-1, 1)
-   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).setRandom();
+   rFFTValues.rFlat().topLeftCorner(pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).setRandom();
 
    // Rescale values to (-1, 1)
-   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).array() -= 1.0;
-   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()) *= 2.0;
+   rFFTValues.rFlat().topLeftCorner(pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).array() -= 1.0;
+   rFFTValues.rFlat().topLeftCorner(pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()) *= 2.0;
 
    // Set m = 0 imaginary part to zero
    for(int c = 0; c < rFFTValues.nCols(); ++c)

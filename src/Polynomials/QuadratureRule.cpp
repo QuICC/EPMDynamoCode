@@ -109,11 +109,11 @@ namespace EPMDynamo {
       if(grid.size() == w.size())
       {
          grid = w;
-         weights = z.row(0).array() * z.row(0).array() * mIntWeight;
+         weights = z.row(0).array() * z.row(0).array() * this->mIntWeight;
       } else
       {
          grid = w.head(grid.size());
-         weights = z.row(0).head(grid.size()).array() * z.row(0).head(grid.size().array()) * mIntWeight;
+         weights = z.row(0).head(grid.size()).array() * z.row(0).head(grid.size()).array() * this->mIntWeight;
       }
    }
 
