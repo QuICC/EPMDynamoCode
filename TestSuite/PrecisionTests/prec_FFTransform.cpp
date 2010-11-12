@@ -13,7 +13,6 @@
 // System includes
 //
 #include <iostream>
-#include <Eigen/Array>
 
 // TestSuite includes
 //
@@ -58,7 +57,7 @@ void initLoopTest(epm::FFTFlatScalar &rFFTValues, SmartTruncation pTrunc)
    rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).setRandom();
 
    // Rescale values to (-1, 1)
-   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).cwise() -= 1.0;
+   rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()).array() -= 1.0;
    rFFTValues.rFlat().corner(Eigen::TopLeft, pTrunc->sim()->hoz()->nM(), rFFTValues.nCols()) *= 2.0;
 
    // Set m = 0 imaginary part to zero

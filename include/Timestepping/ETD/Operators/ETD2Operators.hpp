@@ -104,7 +104,7 @@ namespace EPMDynamo {
          this->rEtdF(1).rHarmOp(i).rOp() = this->etdF(0).harmOp(i).op();
 
          // Remove identity
-         this->rEtdF(1).rHarmOp(i).rOp().diagonal().cwise() -= 1.0;
+         this->rEtdF(1).rHarmOp(i).rOp().diagonal().array() -= 1.0;
 
          // initialise F2 numerator part of operator
          this->rEtdF(2).rHarmOp(i).rOp() = this->etdF(1).harmOp(i).op();

@@ -336,7 +336,7 @@ namespace EPMDynamo {
       for(int m = 0; m < nM; ++m)
       {
          // Put real values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).real();
+         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).real();
 
          // Copy tmp into real part of rhs
          for(int j=0; j < rows; ++j)
@@ -345,7 +345,7 @@ namespace EPMDynamo {
          }
 
          // Put imaginary values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).imag();
+         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).imag();
 
          // Copy tmp into imaginary part of rhs
          for(int j=0; j < rows; ++j)
@@ -365,7 +365,7 @@ namespace EPMDynamo {
       for(int m = 0; m < nM; ++m)
       {
          // Put real values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).real() + cTerms.col(m).start(rows).real();
+         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).real() + cTerms.col(m).head(rows).real();
 
          // Copy tmp into real part of rhs
          for(int j=0; j < rows; ++j)
@@ -374,7 +374,7 @@ namespace EPMDynamo {
          }
 
          // Put imaginary values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).start(rows).imag() + cTerms.col(m).start(rows).imag();
+         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).imag() + cTerms.col(m).head(rows).imag();
 
          // Copy tmp into imaginary part of rhs
          for(int j=0; j < rows; ++j)

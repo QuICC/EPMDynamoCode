@@ -86,17 +86,17 @@ namespace EPMDynamo {
 
    EPMFloat WorlandPolynomial::normaliseW(const int n)
    {
-      return 1.0/this->weights().dot(this->poly().row(n).cwise().pow(2));
+      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2));
    }
 
    void WorlandPolynomial::computePolynomials()
    {
       if(this->l() != 0)
       {
-         Array   rfactor = this->grid().cwise().pow(l()); 
+         Array   rfactor = this->grid().array().pow(l()); 
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rPoly().row(n).cwise() *= rfactor.transpose();
+            this->rPoly().row(n).array() *= rfactor.transpose();
          }
       }
    }
@@ -127,13 +127,13 @@ namespace EPMDynamo {
 
    void WorlandPolynomial::computeFirstDerivative()
    {
-      Array rfactor = static_cast<EPMFloat>(l())*this->grid().cwise().pow(l()-1);
-      Array drfactor = this->grid().cwise().pow(l());
+      Array rfactor = static_cast<EPMFloat>(l())*this->grid().array().pow(l()-1);
+      Array drfactor = this->grid().array().pow(l());
 
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rDiff(1).row(n) = drfactor.transpose().cwise()*this->diff(1).row(n);
-         this->rDiff(1).row(n) += rfactor.transpose().cwise()*this->poly().row(n);
+         this->rDiff(1).row(n) = drfactor.transpose().array()*this->diff(1).row(n).array();
+         this->rDiff(1).row(n) += rfactor.transpose().array()*this->poly().row(n);
       }
    
    }
@@ -152,15 +152,15 @@ namespace EPMDynamo {
 
    void WorlandPolynomial::computeSecondDerivative()
    {
-      Array rfactor = static_cast<EPMFloat>(l()*(l()-1))*this->grid().cwise().pow(l()-2);
-      Array drfactor = static_cast<EPMFloat>(2*l())*this->grid().cwise().pow(l()-1);
-      Array ddrfactor = this->grid().cwise().pow(l());
+      Array rfactor = static_cast<EPMFloat>(l()*(l()-1))*this->grid().array().pow(l()-2);
+      Array drfactor = static_cast<EPMFloat>(2*l())*this->grid().array().pow(l()-1);
+      Array ddrfactor = this->grid().array().pow(l());
 
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rDiff(2).row(n) = ddrfactor.transpose().cwise()*this->diff(2).row(n);
-         this->rDiff(2).row(n) += drfactor.transpose().cwise()*this->diff(1).row(n);
-         this->rDiff(2).row(n) += rfactor.transpose().cwise()*this->poly().row(n);
+         this->rDiff(2).row(n) = ddrfactor.transpose().array()*this->diff(2).row(n).array();
+         this->rDiff(2).row(n) += drfactor.transpose().array()*this->diff(1).row(n).array();
+         this->rDiff(2).row(n) += rfactor.transpose().array()*this->poly().row(n).array();
       }
    
    }
@@ -183,7 +183,7 @@ namespace EPMDynamo {
    {
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rWPoly().col(n) = this->poly().row(n).transpose().cwise() * this->weights() * this->normaliseW(n);
+         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array() * this->normaliseW(n);
       }
    }
 
@@ -193,7 +193,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().cwise() * this->weights() * this->normaliseW(n);
+            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights().array() * this->normaliseW(n);
          }
       }
    }

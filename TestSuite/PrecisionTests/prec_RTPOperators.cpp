@@ -13,7 +13,6 @@
 // System includes
 //
 #include <iostream>
-#include <Eigen/Array>
 
 // TestSuite includes
 //

@@ -19,7 +19,6 @@
 //
 #include <Eigen/Core>
 #include <Eigen/Sparse>
-#include <Eigen/Array>
 
 // Project includes
 //

@@ -95,7 +95,7 @@ namespace EPMDynamo {
    {
       Array x(this->gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().cwise().pow(2);
+      x += 2.0*this->grid().array().pow(2);
 
       for(int i = 0; i < x.size(); ++i)
       {
@@ -106,7 +106,7 @@ namespace EPMDynamo {
 
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->rPoly().row(n) = (static_cast<EPMFloat>(n)*x).transpose().cwise().cos();
+         this->rPoly().row(n) = (static_cast<EPMFloat>(n)*x).transpose().array().cos();
       }
    }
 
@@ -127,7 +127,7 @@ namespace EPMDynamo {
    {
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rWPoly().col(n) = this->poly().row(n).transpose().cwise() * this->weights() * this->normaliseW(n);
+         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array() * this->normaliseW(n);
       }
    }
 
@@ -164,7 +164,7 @@ namespace EPMDynamo {
    {
       Array x(this->gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().cwise().pow(2);
+      x += 2.0*this->grid().array().pow(2);
 
       for(int i = 0; i < x.size(); ++i)
       {
@@ -180,10 +180,10 @@ namespace EPMDynamo {
          rn = static_cast<EPMFloat>(n);
 
          // Compute dr part
-         this->rDiff(1).row(n) = 4.0*(0.5*x).cwise().cos().transpose();
+         this->rDiff(1).row(n) = 4.0*(0.5*x).array().cos().transpose();
 
          // Compute the trigonometric derivative part
-         this->rDiff(1).row(n).cwise() *= (rn*((rn*x).cwise().sin().cwise()/x.cwise().sin())).transpose();
+         this->rDiff(1).row(n).array() *= (rn*((rn*x).array().sin()/x.array().sin())).transpose();
       }
    }
 
@@ -204,7 +204,7 @@ namespace EPMDynamo {
    {
       Array x(this->gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().cwise().pow(2);
+      x += 2.0*this->grid().array().pow(2);
 
       for(int i = 0; i < x.size(); ++i)
       {
@@ -219,11 +219,11 @@ namespace EPMDynamo {
       {
          rn = static_cast<EPMFloat>(n);
 
-         this->rDiff(2).row(n) = (-2.0*rn*(rn*x).cwise().cos()).transpose();
+         this->rDiff(2).row(n) = (-2.0*rn*(rn*x).array().cos()).transpose();
 
-         this->rDiff(2).row(n) += (((0.5*x).cwise().sin().cwise()/(0.5*x).cwise().cos()).cwise()*(rn*x).cwise().sin()).transpose();
+         this->rDiff(2).row(n) += (((0.5*x).array().sin()/(0.5*x).array().cos())*(rn*x).array().sin()).transpose();
 
-         this->rDiff(2).row(n).cwise() *= (4.0*rn*(((0.5*x).cwise().sin().cwise()/(0.5*x).cwise().cos()).cwise()/x.cwise().sin())).transpose();
+         this->rDiff(2).row(n).array() *= (4.0*rn*(((0.5*x).array().sin()/(0.5*x).array().cos())/x.array().sin())).transpose();
       }
    }
 
@@ -246,7 +246,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().cwise() * this->weights()* this->normaliseW(n);
+            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights().array()* this->normaliseW(n);
          }
       }
    }
@@ -268,6 +268,6 @@ namespace EPMDynamo {
 
    EPMFloat ChebyshevPolynomial::normaliseW(const int n)
    {
-      return 1.0/this->weights().dot(this->poly().row(n).cwise().pow(2));
+      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2));
    }
 }

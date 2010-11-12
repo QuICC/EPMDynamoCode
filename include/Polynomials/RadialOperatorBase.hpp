@@ -268,8 +268,8 @@ namespace EPMDynamo {
    template <typename TPolynomial> void RadialOperatorBase<TPolynomial>::computeLaplacians()
    {
       Matrix   tmp1(this->polyN(), this->gridN());
-      Array rfactor1 = static_cast<EPMFloat>(4*this->l()+6)*this->grid().cwise().pow(this->l());
-      Array rfactor2 = 4.0*this->grid().cwise().pow(this->l()+2);
+      Array rfactor1 = static_cast<EPMFloat>(4*this->l()+6)*this->grid().array().pow(this->l());
+      Array rfactor2 = 4.0*this->grid().array().pow(this->l()+2);
 
       this->computeDerivativeBase(this->mLaplacianProj, 1);
 
@@ -277,8 +277,8 @@ namespace EPMDynamo {
 
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->mLaplacianProj.row(n).cwise() *= rfactor1.transpose();
-         this->mLaplacianProj.row(n) += rfactor2.transpose().cwise()*tmp1.row(n);
+         this->mLaplacianProj.row(n).arrray() *= rfactor1.transpose().array();
+         this->mLaplacianProj.row(n) += rfactor2.transpose().array()*tmp1.row(n).array();
       }
 
       this->mLaplacianSpec = (this->mLaplacianProj*this->wPoly()).template part<Eigen::StrictlyLowerTriangular>().transpose();
@@ -305,7 +305,7 @@ namespace EPMDynamo {
       *eWeights = (*eWeights)/2.0;
 
       // Strech grid points to 0, 1 interval
-      eGrid->cwise() += 1.0;
+      eGrid->array() += 1.0;
       *eGrid = (*eGrid)/2.0;
 
       TPolynomial  tmpPoly(this->l(), eGrid, this->polyN(), eWeights); 
@@ -316,7 +316,7 @@ namespace EPMDynamo {
       {
          for(int i=0; i < this->polyN(); ++i)
          {
-            this->mEWeights(i,n) = (tmpPoly.poly().row(n).cwise()*tmpPoly.poly().row(i)).dot (eGrid->cwise().pow(2).cwise()*(*eWeights));
+            this->mEWeights(i,n) = (tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).dot (eGrid->array().pow(2)*(*eWeights));
          }  
       }
    }

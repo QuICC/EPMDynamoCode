@@ -140,7 +140,7 @@ namespace EPMDynamo {
       // Initialise the weighted polynomials including normalisation factor
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rWPoly().col(n) = this->poly().row(n).transpose().cwise() * this->weights() * this->normaliseW(n+m());
+         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array() * this->normaliseW(n+m());
       }
    }
 
@@ -157,7 +157,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().cwise() * this->weights() * this->normaliseW(n+m());
+            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights().array() * this->normaliseW(n+m());
          }
       }
    }
@@ -221,7 +221,7 @@ namespace EPMDynamo {
             r2i = static_cast<EPMFloat>(2*i);
             factor *= -std::sqrt((r2i - 1.0)/r2i);
          }
-         this->rPoly().row(idx) = this->sinTheta().transpose().cwise().pow(m);
+         this->rPoly().row(idx) = this->sinTheta().transpose().array().pow(m);
          this->rPoly().row(idx) *= factor;
       }
    }
@@ -234,7 +234,7 @@ namespace EPMDynamo {
       }
       this->rPoly().row(idx) = this->grid().transpose();
       this->rPoly().row(idx) *= std::sqrt(2.0*static_cast<EPMFloat>(m) + 1.0);
-      this->rPoly().row(idx).cwise() *= this->poly().row(idx-1);
+      this->rPoly().row(idx).array() *= this->poly().row(idx-1);
    }
 
    void AssociatedLegendrePolynomial::computePlm(int l, const int m, int idx)
@@ -262,7 +262,7 @@ namespace EPMDynamo {
       for (; l < maxL; ++l, ++idx)
       {
          this->rPoly().row(idx) = (2.0*rl - 1.0)*this->grid();
-         this->rPoly().row(idx).cwise() *= this->poly().row(idx-1);
+         this->rPoly().row(idx).array() *= this->poly().row(idx-1);
 
          this->rPoly().row(idx) -= this->poly().row(idx-2)*std::sqrt((rl + rm - 1.0)*(rl - rm - 1.0));
 
@@ -291,8 +291,8 @@ namespace EPMDynamo {
             factor *= -std::sqrt((r2i-1.0)/r2i);
          }
 
-         this->rDiff(1).row(idx) = this->sinTheta().transpose().cwise().pow(m-1);
-         this->rDiff(1).row(idx).cwise() *= this->grid().transpose();
+         this->rDiff(1).row(idx) = this->sinTheta().transpose().array().pow(m-1);
+         this->rDiff(1).row(idx).array() *= this->grid().transpose();
          this->rDiff(1).row(idx) *= factor;
       
       }
@@ -308,7 +308,7 @@ namespace EPMDynamo {
 
       EPMFloat rm = static_cast<EPMFloat>(m);
 
-      this->rDiff(1).row(idx) = (this->diff(1).row(idx-1).cwise()*this->grid().transpose() - this->poly().row(idx-1).cwise()*this->sinTheta().transpose());
+      this->rDiff(1).row(idx) = (this->diff(1).row(idx-1).array()*this->grid().transpose().array() - this->poly().row(idx-1).array()*this->sinTheta().transpose().array());
       this->rDiff(1).row(idx) *= std::sqrt(2.0*rm + 1.0);
 
    }
@@ -337,8 +337,8 @@ namespace EPMDynamo {
 
       for (; l < maxL; ++l, ++idx)
       {
-         this->rDiff(1).row(idx) = this->diff(1).row(idx-1).cwise()*this->grid().transpose();
-         this->rDiff(1).row(idx) -= this->poly().row(idx-1).cwise()*this->sinTheta().transpose();
+         this->rDiff(1).row(idx) = this->diff(1).row(idx-1).array()*this->grid().transpose().array();
+         this->rDiff(1).row(idx) -= this->poly().row(idx-1).array()*this->sinTheta().transpose().array();
          this->rDiff(1).row(idx) *= (2.0*rl - 1.0);
 
          this->rDiff(1).row(idx) -= this->diff(1).row(idx-2)*std::sqrt((rl + rm - 1.0)*(rl - rm - 1.0));

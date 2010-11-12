@@ -106,7 +106,7 @@ namespace EPMDynamo {
          this->rEtdF(1).rHarmOp(i).rOp() = this->etdF(0).op(i).op();
 
          // Remove identity
-         this->rEtdF(1).rHarmOp(i).rOp().diagonal().cwise() -= 1.0;
+         this->rEtdF(1).rHarmOp(i).rOp().diagonal().array() -= 1.0;
 
          // Multiply F1 by 1/c L^-1
          this->rEtdF(1).rHarmOp(i).rOp() *= tmpM;

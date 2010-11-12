@@ -94,15 +94,15 @@ namespace EPMDynamo {
    {
       Array x(gridN());
       x.setConstant(-1.0);
-      x += 2.0*this->grid().cwise().pow(2);
+      x += 2.0*this->grid().array().pow(2);
 
       this->rPoly().row(0).setConstant(1.0);
-      this->rPoly().row(1) = (this->recurrenceB(1)*x.transpose()).cwise() + this->recurrenceA(1);
+      this->rPoly().row(1) = (this->recurrenceB(1)*x.transpose()).array() + this->recurrenceA(1);
 
       for(int n = 2; n < this->polyN(); ++n)
       {
-         this->rPoly().row(n) = ((this->recurrenceB(n)*x.transpose()).cwise() + this->recurrenceA(n));
-         this->rPoly().row(n).cwise() *= this->poly().row(n-1);
+         this->rPoly().row(n) = ((this->recurrenceB(n)*x.transpose()).array() + this->recurrenceA(n));
+         this->rPoly().row(n).array() *= this->poly().row(n-1);
          this->rPoly().row(n) -= (this->recurrenceC(n)*this->poly().row(n-2));
       }
    }
@@ -124,7 +124,7 @@ namespace EPMDynamo {
    {
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rWPoly().col(n) = this->poly().row(n).transpose().cwise() * this->weights();
+         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array();
       }
    }
 
@@ -160,7 +160,7 @@ namespace EPMDynamo {
    {
       Array x(gridN());
       x.setConstant(-1.0);
-      x += 2.0*grid().cwise().pow(2);
+      x += 2.0*grid().array()().pow(2);
 
       EPMFloat dalpha = this->alpha() + static_cast<EPMFloat>(k);
       EPMFloat dbeta = this->beta() + static_cast<EPMFloat>(k);
@@ -170,12 +170,12 @@ namespace EPMDynamo {
          rMat.row(n).setConstant(0.0);
       }
       rMat.row(k).setConstant(1.0);
-      rMat.row(k+1) = (this->recurrenceB(1, dalpha, dbeta)*x.transpose()).cwise() + this->recurrenceA(1,dalpha,dbeta);
+      rMat.row(k+1) = (this->recurrenceB(1, dalpha, dbeta)*x.transpose()).array() + this->recurrenceA(1,dalpha,dbeta);
 
       for(int n = k+2; n < this->polyN(); ++n)
       {
-         rMat.row(n) = ((this->recurrenceB(n-k, dalpha, dbeta)*x.transpose()).cwise() + this->recurrenceA(n-k,dalpha,dbeta));
-         rMat.row(n).cwise() *= rMat.row(n-1);
+         rMat.row(n) = ((this->recurrenceB(n-k, dalpha, dbeta)*x.transpose()).array() + this->recurrenceA(n-k,dalpha,dbeta));
+         rMat.row(n).array() *= rMat.row(n-1);
          rMat.row(n) -= (this->recurrenceC(n-k,dalpha,dbeta)*rMat.row(n-2));
       }
 
@@ -229,7 +229,7 @@ namespace EPMDynamo {
       // This supposes that the second derivative already intialised it
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->rDiff(1).row(n).cwise() *= 2.0*this->grid().transpose();
+         this->rDiff(1).row(n).array() *= 2.0*this->grid().transpose();
       }
    }
 
@@ -252,7 +252,7 @@ namespace EPMDynamo {
 
       for(int n = 1; n < polyN(); ++n)
       {
-         this->rDiff(2).row(n).cwise() *= 4.0*this->grid().cwise().pow(2).transpose();
+         this->rDiff(2).row(n).array() *= 4.0*this->grid().array().pow(2).transpose();
          this->rDiff(2).row(n) += 2.0*this->diff(1).row(n);
       }
    }
@@ -278,7 +278,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().cwise() * this->weights();
+            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights();
          }
       }
    }

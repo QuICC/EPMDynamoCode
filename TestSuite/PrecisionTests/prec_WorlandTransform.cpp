@@ -13,7 +13,6 @@
 // System includes
 //
 #include <iostream>
-#include <Eigen/Array>
 
 // TestSuite includes
 //
@@ -61,7 +60,7 @@ void initLoopTest(epm::SpectralSHScalar &rSSHValues, SmartTruncation pTrunc)
       rSSHValues.rLShell(l).setRandom();
 
       // Rescale values to (-1 ,1) interval
-      rSSHValues.rLShell(l).cwise() -= 1.0;
+      rSSHValues.rLShell(l).array() -= 1.0;
       rSSHValues.rLShell(l) *= 2.0;
    }
 

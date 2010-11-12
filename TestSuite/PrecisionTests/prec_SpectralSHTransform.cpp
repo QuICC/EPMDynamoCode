@@ -13,7 +13,6 @@
 // System includes
 //
 #include <iostream>
-#include <Eigen/Array>
 
 // TestSuite includes
 //
@@ -78,7 +77,7 @@ void initRTPGradientScalar(epm::RTPScalar &rRTPValues, SmartTruncation pTrunc)
    for(int n = 0; n < rRTPValues.nR(); n++)
    {
       rRTPValues.rShell(n).setConstant(0.0);
-      rRTPValues.rShell(n) = 1.4242*helper.z(n,1) + helper.x(n,3).cwise()*helper.y(n,1);
+      rRTPValues.rShell(n) = 1.4242*helper.z(n,1) + helper.x(n,3).array()*helper.y(n,1).array();
    }
 }
 
@@ -107,7 +106,7 @@ void initRTPGradientField(epm::RTPField &rRTPField, SmartTruncation pTrunc)
       rRTPField.rTheta().rShell(n).setConstant(0.0);
       rRTPField.rPhi().rShell(n).setConstant(0.0);
 
-      xComp = 3.0*(helper.x(n, 2).cwise()*helper.y(n,1));
+      xComp = 3.0*(helper.x(n, 2).array()*helper.y(n,1)).array();
       yComp = helper.x(n, 3);
       zComp.setConstant(1.4242);
 
@@ -165,7 +164,7 @@ void initRTPField(epm::RTPField &rRTPField, SmartTruncation pTrunc)
       rRTPField.rPhi().rShell(n).setConstant(0.0);
 
       xComp = helper.x(n, 2) + helper.y(n,1) + helper.z(n,3);
-      yComp = helper.x(n, 2).cwise()* helper.y(n,1);
+      yComp = helper.x(n, 2).array()* helper.y(n,1).array();
       zComp = helper.z(n,3);
 
       rRTPField.rR().rShell(n) = helper.xyzToR(xComp, yComp, zComp, n);
@@ -201,7 +200,7 @@ void initDiv0RTPField(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 
       xComp = helper.x(n, 1) + helper.y(n,1);
       yComp = -helper.y(n, 1) + helper.z(n,1);
-      zComp = helper.x(n,3).cwise()*helper.y(n,3);
+      zComp = helper.x(n,3).array()*helper.y(n,3).array();
 
       rRTPField.rR().rShell(n) = helper.xyzToR(xComp, yComp, zComp, n);
       rRTPField.rTheta().rShell(n) = helper.xyzToTh(xComp, yComp, zComp, n);
@@ -236,7 +235,7 @@ void initRTPCurlTorPol(epm::RTPField &rRTPField, SmartTruncation pTrunc)
 
       xComp = helper.x(n, 1) + helper.y(n,1);
       yComp = -helper.y(n, 1) + helper.z(n,1);
-      zComp = helper.x(n,3).cwise()*helper.y(n,3);
+      zComp = helper.x(n,3).array()*helper.y(n,3).array();
 
       rRTPField.rR().rShell(n) = helper.xyzToR(xComp, yComp, zComp, n);
       rRTPField.rTheta().rShell(n) = helper.xyzToTh(xComp, yComp, zComp, n);
@@ -270,8 +269,8 @@ void initRTPCurlResult(epm::RTPField &rRTPField, SmartTruncation pTrunc)
       rRTPField.rPhi().rShell(n).setConstant(0.0);
 
       xComp.setConstant(-1);
-      xComp += 3.0*(helper.x(n, 3).cwise()*helper.y(n,2));
-      yComp = -3.0*(helper.x(n, 2).cwise()*helper.y(n,3));
+      xComp += 3.0*(helper.x(n, 3).array()*helper.y(n,2).array());
+      yComp = -3.0*(helper.x(n, 2).array()*helper.y(n,3).array());
       zComp.setConstant(-1);
 
       rRTPField.rR().rShell(n) = helper.xyzToR(xComp, yComp, zComp, n);
@@ -305,8 +304,8 @@ void initRTPNTerms(epm::RTPField &rRTPField, SmartTruncation pTrunc)
       rRTPField.rTheta().rShell(n).setConstant(0.0);
       rRTPField.rPhi().rShell(n).setConstant(0.0);
 
-      xComp = helper.x(n, 1) + helper.y(n, 3) + helper.z(n, 1) + (helper.x(n, 1).cwise()* helper.y(n, 1)).cwise()* helper.z(n, 1);
-      yComp = helper.z(n, 4) + helper.x(n, 1).cwise() * helper.y(n, 2);
+      xComp = helper.x(n, 1) + helper.y(n, 3) + helper.z(n, 1) + (helper.x(n, 1).array()* helper.y(n, 1).array()*helper.z(n, 1).array();
+      yComp = helper.z(n, 4) + helper.x(n, 1).array() * helper.y(n, 2).array();
       zComp = helper.x(n, 1);
 
       rRTPField.rR().rShell(n) = helper.xyzToR(xComp, yComp, zComp, n);
@@ -341,8 +340,8 @@ void initRTPNTermsCurlResult(epm::RTPField &rRTPField, SmartTruncation pTrunc)
       rRTPField.rPhi().rShell(n).setConstant(0.0);
 
       xComp = -4.0*helper.z(n, 3);
-      yComp = helper.x(n, 1).cwise() * helper.y(n, 1);
-      zComp = -2.0*helper.y(n, 2) - helper.x(n, 1).cwise() * helper.z(n, 1);
+      yComp = helper.x(n, 1).array() * helper.y(n, 1).array();
+      zComp = -2.0*helper.y(n, 2) - helper.x(n, 1).array() * helper.z(n, 1).array();
 
       rRTPField.rR().rShell(n) = helper.xyzToR(xComp, yComp, zComp, n);
       rRTPField.rTheta().rShell(n) = helper.xyzToTh(xComp, yComp, zComp, n);

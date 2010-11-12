@@ -88,17 +88,17 @@ namespace EPMDynamo {
 
    void ExtensionMatrix::prepareRHS(Array &rVector)
    {
-      rVector.start(this->mNBOp) -= this->NH() * rVector.end(this->mNBCs);
+      rVector.head(this->mNBOp) -= this->NH() * rVector.tail(this->mNBCs);
    }
 
    void ExtensionMatrix::extendZero(Array &rVector)
    {
-      rVector.end(this->mNBCs) = this->G() * rVector.start(this->mNBOp);
+      rVector.tail(this->mNBCs) = this->G() * rVector.head(this->mNBOp);
    }
 
    void ExtensionMatrix::extend(Array &rVector)
    {
-      rVector.end(this->mNBCs) = this->G() * rVector.start(this->mNBOp) + this->H() * rVector.end(this->mNBCs);
+      rVector.tail(this->mNBCs) = this->G() * rVector.head(this->mNBOp) + this->H() * rVector.tail(this->mNBCs);
    }
 
    void ExtensionMatrix::restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
