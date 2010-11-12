@@ -278,7 +278,7 @@ namespace EPMDynamo {
       for(int n = 1; n < this->polyN(); ++n)
       {
          this->mLaplacianProj.row(n).array() *= rfactor1.transpose().array();
-         this->mLaplacianProj.row(n) += rfactor2.transpose().array()*tmp1.row(n).array();
+         this->mLaplacianProj.row(n).array() += rfactor2.transpose().array()*tmp1.row(n).array();
       }
 
       //this->mLaplacianSpec.template triangularView<Eigen::StrictlyUpper>() = (this->mLaplacianProj*this->wPoly()).template triangularView<Eigen::StrictlyLower>().transpose();

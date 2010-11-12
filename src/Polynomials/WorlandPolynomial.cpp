@@ -86,7 +86,7 @@ namespace EPMDynamo {
 
    EPMFloat WorlandPolynomial::normaliseW(const int n)
    {
-      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2));
+      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2).matrix());
    }
 
    void WorlandPolynomial::computePolynomials()
@@ -96,7 +96,7 @@ namespace EPMDynamo {
          Array   rfactor = this->grid().array().pow(l()); 
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rPoly().row(n).array() *= rfactor.transpose();
+            this->rPoly().row(n).array() *= rfactor.transpose().array();
          }
       }
    }
@@ -132,8 +132,8 @@ namespace EPMDynamo {
 
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rDiff(1).row(n) = drfactor.transpose().array()*this->diff(1).row(n).array();
-         this->rDiff(1).row(n) += rfactor.transpose().array()*this->poly().row(n);
+         this->rDiff(1).row(n).array() = drfactor.transpose().array()*this->diff(1).row(n).array();
+         this->rDiff(1).row(n).array() += rfactor.transpose().array()*this->poly().row(n).array();
       }
    
    }
@@ -159,8 +159,8 @@ namespace EPMDynamo {
       for(int n = 0; n < this->polyN(); ++n)
       {
          this->rDiff(2).row(n) = ddrfactor.transpose().array()*this->diff(2).row(n).array();
-         this->rDiff(2).row(n) += drfactor.transpose().array()*this->diff(1).row(n).array();
-         this->rDiff(2).row(n) += rfactor.transpose().array()*this->poly().row(n).array();
+         this->rDiff(2).row(n).array() += drfactor.transpose().array()*this->diff(1).row(n).array();
+         this->rDiff(2).row(n).array() += rfactor.transpose().array()*this->poly().row(n).array();
       }
    
    }

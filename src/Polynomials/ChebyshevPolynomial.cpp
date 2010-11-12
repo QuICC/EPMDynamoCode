@@ -106,7 +106,7 @@ namespace EPMDynamo {
 
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->rPoly().row(n) = (static_cast<EPMFloat>(n)*x).transpose().array().cos();
+         this->rPoly().row(n).array() = (static_cast<EPMFloat>(n)*x).transpose().array().cos();
       }
    }
 
@@ -127,7 +127,7 @@ namespace EPMDynamo {
    {
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array() * this->normaliseW(n);
+         this->rWPoly().col(n) = (this->poly().row(n).transpose().array() * this->weights().array() * this->normaliseW(n)).matrix();
       }
    }
 
@@ -180,7 +180,7 @@ namespace EPMDynamo {
          rn = static_cast<EPMFloat>(n);
 
          // Compute dr part
-         this->rDiff(1).row(n) = 4.0*(0.5*x).array().cos().transpose();
+         this->rDiff(1).row(n).array() = 4.0*(0.5*x).array().cos().transpose();
 
          // Compute the trigonometric derivative part
          this->rDiff(1).row(n).array() *= (rn*((rn*x).array().sin()/x.array().sin())).transpose();
@@ -219,9 +219,9 @@ namespace EPMDynamo {
       {
          rn = static_cast<EPMFloat>(n);
 
-         this->rDiff(2).row(n) = (-2.0*rn*(rn*x).array().cos()).transpose();
+         this->rDiff(2).row(n).array() = (-2.0*rn*(rn*x).array().cos()).transpose();
 
-         this->rDiff(2).row(n) += (((0.5*x).array().sin()/(0.5*x).array().cos())*(rn*x).array().sin()).transpose();
+         this->rDiff(2).row(n).array() += (((0.5*x).array().sin()/(0.5*x).array().cos())*(rn*x).array().sin()).transpose();
 
          this->rDiff(2).row(n).array() *= (4.0*rn*(((0.5*x).array().sin()/(0.5*x).array().cos())/x.array().sin())).transpose();
       }
@@ -246,7 +246,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights().array()* this->normaliseW(n);
+            this->rWDiff(i).col(n).array() = this->diff(i).row(n).transpose().array() * this->weights().array()* this->normaliseW(n);
          }
       }
    }

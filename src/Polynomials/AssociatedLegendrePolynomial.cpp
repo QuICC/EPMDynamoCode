@@ -338,7 +338,7 @@ namespace EPMDynamo {
       for (; l < maxL; ++l, ++idx)
       {
          this->rDiff(1).row(idx) = this->diff(1).row(idx-1).array()*this->grid().transpose().array();
-         this->rDiff(1).row(idx) -= this->poly().row(idx-1).array()*this->sinTheta().transpose().array();
+         this->rDiff(1).row(idx) -= (this->poly().row(idx-1).array()*this->sinTheta().transpose().array()).matrix();
          this->rDiff(1).row(idx) *= (2.0*rl - 1.0);
 
          this->rDiff(1).row(idx) -= this->diff(1).row(idx-2)*std::sqrt((rl + rm - 1.0)*(rl - rm - 1.0));

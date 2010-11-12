@@ -120,7 +120,7 @@ namespace EPMDynamo {
 
    template <typename TPolynomial> void TorPolRadialOperatorBase<TPolynomial>::computeNTermsIntegrators()
    {
-      this->mS2CurlCurlIntegrator = -this->sll_1()*(this->grid().asDiagonal()*this->wPoly()*this->diff(1)*this->mR_1.asDiagonal()*this->wPoly()).array();
+      this->mS2CurlCurlIntegrator = -this->sll_1()*(this->grid().asDiagonal()*this->wPoly()*this->diff(1)*this->mR_1.asDiagonal()*this->wPoly());
    }
 
    template <typename TPolynomial> void TorPolRadialOperatorBase<TPolynomial>::computeEnergyIntegrals()
