@@ -43,32 +43,32 @@ namespace EPMDynamo {
 
    EPMFloat EPmPrRaParameters::nsDt() const
    {
-      return 1.0;
+      return this->E();
    }
 
    EPMFloat EPmPrRaParameters::nsDiffusion() const
    {
-      return 1.0;
+      return this->E();
    }
 
    EPMFloat EPmPrRaParameters::nsLorentz() const
    {
-      return 1.0;
+      return 1.0/this->Pm();
    }
 
    EPMFloat EPmPrRaParameters::nsAdvection() const
    {
-      return 1.0;
+      return this->E();
    }
 
    EPMFloat EPmPrRaParameters::nsBuoyancy() const
    {
-      return 1.0;
+      return this->Ra();
    }
 
    EPMFloat EPmPrRaParameters::nsCoriolis() const
    {
-      return 1.0;
+      return 2.0;
    }
 
    EPMFloat EPmPrRaParameters::indDt() const
@@ -78,7 +78,7 @@ namespace EPMDynamo {
 
    EPMFloat EPmPrRaParameters::indDiffusion() const
    {
-      return 1.0;
+      return 1.0/this->Pm();
    }
 
    EPMFloat EPmPrRaParameters::indAdvection() const
@@ -93,7 +93,7 @@ namespace EPMDynamo {
 
    EPMFloat EPmPrRaParameters::tptDiffusion() const
    {
-      return 1.0;
+      return 1.0/this->Pr();
    }
 
    EPMFloat EPmPrRaParameters::tptAdvection() const
