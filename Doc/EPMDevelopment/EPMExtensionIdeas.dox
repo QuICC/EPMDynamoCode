@@ -2,53 +2,7 @@
  *
  * - Extend and clarifiy documentation
  *
- * - General migration to Eigen3, i.e. use new features like Complex * Real multiplication vectorisation
- *
- * - Use Eigen3 for the linear solvers
- *
- * - Multiple precision implementation for matrix precomputations (requires Eigen3)
- *
- * - Multiple precision implementation for full simulation (requires Eigen3 and ALGLIB?)
- *
- * - Multi-domain computation, i.e. spherical shell simulation
- *
- * - Worland polynomials expansion on a Legendre grid
- *
- * - Radial finite differences implementation for comparison
- *
- * - Exponential Time Differentiation (ETD) timestep scheme
- *
- * - Runge-Kutta timestep scheme
- *
- * - Flexible and optimized polynomial operators (Stored/Computed, etc)
- *
- * - Flexible and optimized polynomials storage (required for Chebyshev implementation)
- *
- * - Radial Chebyshev implementation with Gauss-Chebyshev quadrature
- *
- * - Fast Radial Chebyshev implementation with FFT
- *
- * - Magneto-Convection computations
- *
- * - Inviscid Navier-Stokes equation solver
- *
- * - Implemetation of full test suite
- *
- * - Fast radial transform
- *
- * - Fast spherical harmonics transform
- *
- * - Implementation of ALGLIB's FFT (required for multiple precision computations)
- *
- * - Improvements to MPI splitting algorithm
- *
- * - Improvement of MPI splitting (field splitting over CPUs, better load evaluation)
- *
- * - Test possibility of several non-dimensionalisation in equations
- *
  * - Profiling and general speed improvements
- *
- * - NG_AshCode IO reader/writer (more efficient replacement?)
  *
  * - ...
  *

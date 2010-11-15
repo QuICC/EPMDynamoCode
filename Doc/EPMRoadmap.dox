@@ -5,9 +5,57 @@
  * ***************
  *
  * \section epmRoadV12 Version 1.2.z
+ *    - Improvements due to integration of Eigen3
+ *
+ * \section epmRoadV13 Version 1.3.z
  *    - Implement Worland polynomials on Legendre grid
  *
+ * \section epmRoadV14 Version 1.4.z
+ *    - Implement a correct magnetoconvection computation
+ *
+ * \section epmRoadV15 Version 1.5.z
+ *    - Implement Multiple precision precomputations for the polynomials
+ *
+ * \section epmRoadV16 Version 1.6.z
+ *    - Implement solvers/factorisations replacement with Eigen3 (but keep LAPACK version!)
+ *
+ * \section epmRoadV17 Version 1.7.z
+ *    - Implement new polynomial operators, including more flexibility and better storage reduction operations
+ *
+ * \section epmRoadV18 Version 1.8.z
+ *    - Implement radial finite differences approximation
+ *
+ * \section epmRoadV19 Version 1.9.z
+ *    - Implement radial Chebyshev expansion
+ *
+ * \section epmRoadV110 Version 1.10.z
+ *    - Implement ETD timestep scheme
+ *
+ * \section epmRoadV111 Version 1.11.z
+ *    - Implement basic Runge-Kutta scheme
+ *
+ * \section epmRoadV112 Version 1.12.z
+ *    - Improved inviscid solver
+ *
+ * \section epmRoadV113 Version 1.13.z
+ *    - Implement ALGLIB FFT
+ *
+ * \section epmRoadV114 Version 1.14.z
+ *    - Implement full multiple precision simulation
+ *
+ * \section epmRoadV115 Version 1.15.z
+ *    - Implement fast FFT Chebyshev radial expansion
+ *
  * \section epmRoadV2 Version 2.y.z
- *    - A useful set of precision tests for the most important computations. These will also be very useful as regression tests for further
- *    changes to the code.
+ *    - Fast radial transform
+ *
+ *    - Fast spherical harmonics transform
+ *
+ *    - Improved MPI splitting algorithms (field splitting?)
+ *
+ *    - Comprehensive TestSuite
+ *
+ *    - Implementation of shell computation
+ *
+ *    - Readers for NG_AshCode data
  */
