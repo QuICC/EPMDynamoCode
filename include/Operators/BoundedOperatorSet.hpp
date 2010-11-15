@@ -332,27 +332,7 @@ namespace EPMDynamo {
       int rows = this->harmOp(l).nTau();
       int nM = this->trunc()->local()->spec()->nM(l);
 
-      // Loop over the orders
-      for(int m = 0; m < nM; ++m)
-      {
-         // Put real values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).real();
-
-         // Copy tmp into real part of rhs
-         for(int j=0; j < rows; ++j)
-         {
-            rhs(j,m).real() = this->mTmp(j);
-         }
-
-         // Put imaginary values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).imag();
-
-         // Copy tmp into imaginary part of rhs
-         for(int j=0; j < rows; ++j)
-         {
-            rhs(j,m).imag() = this->mTmp(j);
-         }
-      }
+      rhs.topLeftCorner(rows, nM) = this->harmOp(l).op()*old.topLeftCorner(rows,nM);
    }
 
    template <typename TOpType> void BoundedOperatorSet<TOpType>::affineOrders(MatrixZ& rhs, const MatrixZ& old, const MatrixZ& cTerms, const int l)
@@ -361,27 +341,7 @@ namespace EPMDynamo {
       int rows = this->harmOp(l).nTau();
       int nM = this->trunc()->local()->spec()->nM(l);
 
-      // Loop over the orders
-      for(int m = 0; m < nM; ++m)
-      {
-         // Put real values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).real() + cTerms.col(m).head(rows).real();
-
-         // Copy tmp into real part of rhs
-         for(int j=0; j < rows; ++j)
-         {
-            rhs(j,m).real() = this->mTmp(j);
-         }
-
-         // Put imaginary values in tmp
-         this->mTmp = this->harmOp(l).op() * old.col(m).head(rows).imag() + cTerms.col(m).head(rows).imag();
-
-         // Copy tmp into imaginary part of rhs
-         for(int j=0; j < rows; ++j)
-         {
-            rhs(j,m).imag() = mTmp(j);
-         }
-      }
+      rhs.topLeftCorner(rows, nM) = this->harmOp(l).op()*old.topLeftCorner(rows,nM) + cTerms.topLeftCorner(rows, nM);
    }
 
    template <typename TOpType> void BoundedOperatorSet<TOpType>::solveOrders(MatrixZ& rhs, const int l)
