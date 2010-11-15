@@ -278,7 +278,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n).array() = this->diff(i).row(n).array() * this->weights().transpose().array();
+            this->rWDiff(i).col(n).array() = this->diff(i).row(n).transpose().array() * this->weights().array();
          }
       }
    }
