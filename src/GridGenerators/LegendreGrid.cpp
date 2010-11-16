@@ -34,7 +34,7 @@ namespace EPMDynamo {
       if(this->mType == GridGeneratorBase::RADIAL_GRID)
       {
          // Convert to radial grid
-         this->convertToRadial();
+         this->mGrid = this->grid().array().abs();
 
          // Sort the grid in increasing ordering
          this->sortGrid();
@@ -63,6 +63,12 @@ namespace EPMDynamo {
 
       // Allow for only a partial grid computation using the left and right offsets
       int ptsN = this->gridN() - left - right;
+
+      // In the case of the radial grid the negative part of the double domain is used
+      if(this->mType == GridGeneratorBase::RADIAL_GRID)
+      {
+         ptsN *= 2;
+      }
 
       // Storage for the diagonal and subdiagonal values
       Array    diag(ptsN);
@@ -115,6 +121,11 @@ namespace EPMDynamo {
    {
       // modify grid shift factors
       left++;
+      right++;
+
+      // Set additional r = 0 point
+      this->mGrid(0) = 0.0;
+      this->mWeights(0) = 0.0;
 
       // Set additional r = 1 point
       this->mGrid(this->gridN() - 1) = 1.0;

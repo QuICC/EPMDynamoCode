@@ -32,8 +32,9 @@ namespace EPMDynamo {
    class OnesidedJacobi: public WeightedPolynomial
    {
       public:
-         /// Typedef for the radial worland polynomials traits to generate
+         /// Typedef for the radial worland polynomials traits to generate (either Chebyshev grid or Legendre grid)
          typedef WorlandChebyshevTraits PolynomialTraits;
+         //typedef WorlandLegendreTraits PolynomialTraits;
 
          /**
           * @brief Constructs the polynomial from scratch

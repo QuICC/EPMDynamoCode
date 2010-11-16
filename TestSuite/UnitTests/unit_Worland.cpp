@@ -38,8 +38,8 @@ int runUnitTest()
 {
    // Set some truncation values
    int maxN = 12;
-   int maxL = 32;
-   int maxM = 10;
+   int maxL = 11;
+   int maxM = 11;
    int Mp = 1;
    int nCore = 1;
 
