@@ -193,7 +193,7 @@ namespace EPMDynamo {
       // Start timer
       this->mExecTimer.start();
 
-      // Execute last initialisation before end
+      // Execute last operations before end
       this->postRun();
 
       // Synchronize simulation
