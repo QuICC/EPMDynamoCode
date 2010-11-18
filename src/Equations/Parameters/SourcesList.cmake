@@ -5,6 +5,7 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       EquationParameters.cpp
       EQRaRoParameters.cpp
       EPmPrRaParameters.cpp
+      ELPmPrRaParameters.cpp
       EPmQRaParameters.cpp
       EEkEmRaParameters.cpp
       )

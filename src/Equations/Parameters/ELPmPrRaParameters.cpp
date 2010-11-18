@@ -25,7 +25,7 @@ namespace EPMDynamo {
    }
 
    ELPmPrRaParameters::ELPmPrRaParameters(const Array& arr)
-      : EquationParameters(), mE(arr(0)), mL(arra(1)), mPm(arr(2)), mPr(arr(3)), mRa(arr(4))
+      : EquationParameters(), mE(arr(0)), mL(arr(1)), mPm(arr(2)), mPr(arr(3)), mRa(arr(4))
    {
    }
 
