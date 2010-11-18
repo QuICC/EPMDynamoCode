@@ -48,4 +48,16 @@ namespace EPMDynamo {
       }
    }
 
+   void SpectralSHScalarBase::rescale(const EPMFloat scale)
+   {
+      // Get total number of ls
+      int nL = this->nL();
+
+      // Rescale the used modes by scale
+      for(int l = this->mMinL; l < nL; ++l)
+      {
+         this->rLShell(l) *= scale;
+      }
+   }
+
 }

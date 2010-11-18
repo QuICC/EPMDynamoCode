@@ -119,6 +119,13 @@ namespace EPMDynamo {
           * @param eFactor Energy normalisation factor
           */
          void setNormalisation(const EPMFloat&  eFactor);
+
+         /**
+          * @brief Rescale the Toroidal/Poloidal components by a constant
+          *
+          * @param scale Scaling factor
+          */
+         void rescale(const EPMFloat scale);
          
       protected:
 
@@ -157,6 +164,15 @@ namespace EPMDynamo {
    template <typename TSimType> inline  typename TorPolField<TSimType>::ScalarType& TorPolField<TSimType>::rPol()
    {
       return this->mPol;
+   }
+
+   template <typename TSimType> void TorPolField<TSimType>::rescale(const EPMFloat scale)
+   {
+      // Rescale toroidal component
+      this->mTor.rescale(scale);
+
+      // Rescale poloidal component
+      this->mPol.rescale(scale);
    }
 
    template <typename TSimType> void TorPolField<TSimType>::computeTorSpectra(const typename TorPolField<TSimType>::RadialBasisType &radBasis)

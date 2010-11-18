@@ -79,6 +79,13 @@ namespace EPMDynamo {
          ScalarType&  rT();
 
          /**
+          * @brief Rescale the QST components by a constant
+          *
+          * @param scale Scaling factor
+          */
+         void rescale(const EPMFloat scale);
+
+         /**
           * @brief Compute the energy spectra of the Q QST Component
           *
           * \param radBasis Radial basis
@@ -151,6 +158,18 @@ namespace EPMDynamo {
    template <typename TSimType> inline  typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::rT()
    {
       return this->mT;
+   }
+
+   template <typename TSimType> void QSTField<TSimType>::rescale(const EPMFloat scale)
+   {
+      // Rescale Q component
+      this->mQ.rescale(scale);
+
+      // Rescale S component
+      this->mS.rescale(scale);
+
+      // Rescale T component
+      this->mT.rescale(scale);
    }
 
    template <typename TSimType> void QSTField<TSimType>::computeQSpectra(const typename QSTField<TSimType>::RadialBasisType &radBasis)

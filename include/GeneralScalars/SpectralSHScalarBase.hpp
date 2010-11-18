@@ -66,6 +66,13 @@ namespace EPMDynamo {
          SpectralSHLShell&  rLShell(const int l);
 
          /**
+          * @brief Rescale the coefficients by a constant
+          *
+          * @param scale Scaling factor
+          */
+         void rescale(const EPMFloat scale);
+
+         /**
           * @brief Lowest harmonic degree l
           */
          int minL() const;
