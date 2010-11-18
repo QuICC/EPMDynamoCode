@@ -45,10 +45,10 @@ namespace EPMDynamo {
          static const bool HasCodOCImposed = false; 
 
          /// Does simulation required a codensity field
-         static const bool NeedCodensity = false;
+         static const bool NeedCodensity = true;
 
          /// Does simulation required a codensity gradient field
-         static const bool NeedCodensityGrad = false;
+         static const bool NeedCodensityGrad = true;
 
 
 
