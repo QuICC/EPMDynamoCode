@@ -121,4 +121,14 @@ namespace EPMDynamo {
    {
    }
 
+   EPMFloat ELPmPrRaParameters::codSourceScale() const
+   {
+      return 1.0;
+   }
+
+   EPMFloat ELPmPrRaParameters::imposedMagScale() const
+   {
+      return 1.0/this->Pm();
+   }
+
 }

@@ -22,13 +22,14 @@
 
 #include "Utilities/Sources/JonesSource.hpp"
 #include "Utilities/Sources/SakurabaSource.hpp"
+#include "Utilities/Sources/HomogeneousSource.hpp"
 
 namespace epm = EPMDynamo;
 
 #define TSIMTRAITS epm::DynamoTraits
 #define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
-typedef epm::SakurabaSource<SIMTRAITS>  SourceType;
+typedef epm::HomogeneousSource<SIMTRAITS>  SourceType;
 typedef SourceType::SourceTraits  SourceTraits;
 
 typedef  epm::SourceGenerator<epm::WSHSimulation, TSIMTRAITS>  SourceGenerator;

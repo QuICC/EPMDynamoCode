@@ -304,6 +304,9 @@ namespace EPMDynamo {
       // Read in source state
       this->mIOSys.useSource(pSource);
 
+      // Rescale source term to correct values for given parameters
+      this->mCodC.rOcSrc().rescale(this->mEqParams.codSourceScale());
+
       // Set the normalisation for the magnetic field
       this->mMagB.rOc().rPerturbation().setNormalisation(this->mEqParams.meFactor());
    }

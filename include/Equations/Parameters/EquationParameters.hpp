@@ -139,6 +139,16 @@ namespace EPMDynamo {
           * @brief Test the given timestep value against global CFL conditions
           */
          virtual void testGlobalCFL(EPMFloat &rDt) const = 0;
+
+         /**
+          * @brief Scaling factor for the codensity source field
+          */
+         virtual EPMFloat codSourceScale() const = 0;
+
+         /**
+          * @brief Scaling factor for the imposed magnetic field
+          */
+         virtual EPMFloat imposedMagScale() const = 0;
          
       protected:
 

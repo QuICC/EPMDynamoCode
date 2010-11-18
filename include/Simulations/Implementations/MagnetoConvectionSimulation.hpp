@@ -303,10 +303,16 @@ namespace EPMDynamo {
       // Read in source state
       this->mIOSys.useSource(pSource);
 
+      // Rescale codensity source
+      this->mCodC.rOcSrc().rescale(this->mEqParams.codSourceScale());
+
       // Read in imposed magnetic field
       EPMSHARED_PTR<ImposedFieldReader<TSimType, MagnetoConvectionTraits> > pIField(new ImposedFieldReader<TSimType, MagnetoConvectionTraits>(this->mMagB));
 
       this->mIOSys.useImposedField(pIField);
+
+      // Scale imposed field to correct values
+      this->mMagB.rOc().rImposed().rescale(this->mEqParams.imposedMagScale());
 
       // Set the normalisation for the magnetic field
       this->mMagB.rOc().rPerturbation().setNormalisation(this->mEqParams.meFactor());

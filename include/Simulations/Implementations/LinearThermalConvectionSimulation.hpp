@@ -262,6 +262,9 @@ namespace EPMDynamo {
 
       // Read in source state
       this->mIOSys.useSource(pSource);
+
+      // Rescale codensity source to real value from parameters
+      this->mCodC.rOcSrc().rescale(this->mEqParams.codSourceScale());
    }
 
    template <typename TSimType> void LinearThermalConvectionSimulation<TSimType>::addHDF5Output()
