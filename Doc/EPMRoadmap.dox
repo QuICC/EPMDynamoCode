@@ -2,13 +2,11 @@
  *
  * This is an approximative roadmap for the next version(s).
  *
- * ***************
- * \section epmRoadV13 Version 1.3.5
+ * \section epmRoadGeneral General roadmap
  *    - Clean implementation of worland quadrature grid selection
+ *    - Finish differnt parameters implementations
  *
- * \section epmRoadV14 Version 1.4.z
- *    - Implement a correct magnetoconvection computation
- *
+ * ***************
  * \section epmRoadV15 Version 1.5.z
  *    - Implement Multiple precision precomputations for the polynomials
  *
