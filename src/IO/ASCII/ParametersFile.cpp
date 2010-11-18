@@ -186,6 +186,22 @@ namespace EPMDynamo {
 
                // Read the Rossby number
                this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSROSSBYXML);
+            } else if(this->mType == "ELPmPrRa")
+            {
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+               // Read the Ekman number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSELSASSERXML);
+
+               // Read the magnetic Prandtl number
+               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSMAGNETICPRANDTLXML);
+
+               // Read the Prandtl number
+               this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSPRANDTLXML);
+
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(4), node, ParametersFileDefs::PHYSRAYLEIGHXML);
             } else if(this->mType == "EPmPrRa")
             {
                // Read the Ekman number
@@ -309,6 +325,13 @@ namespace EPMDynamo {
             std::cout << "  " << "q: " << this->mEqArray(1) << std::endl;
             std::cout << "  " << "Ra: " << this->mEqArray(2) << std::endl;
             std::cout << "  " << "Ro: " << this->mEqArray(3) << std::endl;
+         } else if(this->mType == "ELPmPrRa")
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "L: " << this->mEqArray(1) << std::endl;
+            std::cout << "  " << "Pm: " << this->mEqArray(2) << std::endl;
+            std::cout << "  " << "Pr: " << this->mEqArray(3) << std::endl;
+            std::cout << "  " << "Ra: " << this->mEqArray(4) << std::endl;
          } else if(this->mType == "EPmPrRa")
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;

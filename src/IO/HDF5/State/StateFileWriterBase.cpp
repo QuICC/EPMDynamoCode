@@ -43,6 +43,22 @@ namespace EPMDynamo {
 
          // Write Rossby scalar to file
          this->writeScalar(StateFileDefs::ROSSBYTAG, params(3));
+      } else if(type == "ELPmPrRa")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
+
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::ELSASSERTAG, params(1));
+
+         // Write magnetic Prandtl scalar to file
+         this->writeScalar(StateFileDefs::MAGNETICPRANDTLTAG, params(2));
+
+         // Write Prandtl scalar to file
+         this->writeScalar(StateFileDefs::PRANDTLTAG, params(3));
+
+         // Write Rayleigh scalar to file
+         this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(4));
       } else if(type == "EPmPrRa")
       {
          // Write Ekman scalar to file

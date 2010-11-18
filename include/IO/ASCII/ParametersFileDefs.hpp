@@ -85,6 +85,11 @@ namespace EPMDynamo {
          static const std::string   PHYSEKMANXML;
 
          /**
+          * @brief Elsasser number node of parameters file
+          */
+         static const std::string   PHYSELSASSERXML;
+
+         /**
           * @brief Thermal Ekman number node of parameters file
           */
          static const std::string   PHYSTHERMALEKMANXML;

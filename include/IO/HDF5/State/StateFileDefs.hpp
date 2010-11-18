@@ -35,6 +35,11 @@ namespace EPMDynamo {
          static const std::string   EKMANTAG;
 
          /**
+          * @brief Elsasser number tag for state file
+          */
+         static const std::string   ELSASSERTAG;
+
+         /**
           * @brief Thermal Ekman number tag for state file
           */
          static const std::string   THERMALEKMANTAG;
