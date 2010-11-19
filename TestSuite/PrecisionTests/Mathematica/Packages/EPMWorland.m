@@ -96,7 +96,7 @@ epmPrecision=16;
 
 
 (*****************  Compute grid size *******************)
-wGridN[n_, l_] = n + Floor[l/2] + 1;
+wGridN[n_, l_] = Ceiling[3/2 n] + Ceiling[3/4 l] + 1;
 EPMWorlandGridSize[n_,l_] = n + Floor[l/2] + 1;
 
 
