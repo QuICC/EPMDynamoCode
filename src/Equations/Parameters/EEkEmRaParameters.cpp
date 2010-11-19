@@ -103,12 +103,12 @@ namespace EPMDynamo {
 
    EPMFloat EEkEmRaParameters::alfvenFactor() const
    {
-      return 1.0;
+      return 1.0/(this->Em()*this->Em());
    }
 
    EPMFloat EEkEmRaParameters::alfvenDamping(const EPMFloat delta) const
    {
-      return 1.0;
+      return std::pow((this->E()+this->Em())/(2.0*delta*this->Em()),2);
    }
 
    EPMFloat EEkEmRaParameters::meFactor() const

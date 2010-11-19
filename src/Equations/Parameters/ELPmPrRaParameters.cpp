@@ -104,12 +104,12 @@ namespace EPMDynamo {
 
    EPMFloat ELPmPrRaParameters::alfvenFactor() const
    {
-      return 1.0;
+      return this->L()*this->Pm()/this->E();
    }
 
    EPMFloat ELPmPrRaParameters::alfvenDamping(const EPMFloat delta) const
    {
-      return 1.0;
+      return std::pow((1.0+1.0/this->Pm())/(2.0*delta),2);
    }
 
    EPMFloat ELPmPrRaParameters::meFactor() const

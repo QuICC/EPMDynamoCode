@@ -134,11 +134,10 @@ namespace EPMDynamo {
                dr = std::min(radii(n_) - radii(n_-1), radii(n_+1) - radii(n_));
             }
             d = this->eqParams().alfvenDamping(dr);
-            d = d*d;
 
             // Radial "Velocity"
-            p = magB.r().shell(n).array().square();
-            maxVel = (p.array()/((p*this->eqParams().alfvenFactor()).array() + d).array().sqrt() + velV.r().shell(n).array().abs()).maxCoeff();
+            p = magB.r().shell(n).array().square()*this->eqParams().alfvenFactor();
+            maxVel = (p.array()/(p.array() + d).array().sqrt() + velV.r().shell(n).array().abs()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)
@@ -149,9 +148,8 @@ namespace EPMDynamo {
             // Angular "Velocity"
             dr = radii(n_)/std::sqrt(llFactor);
             d = this->eqParams().alfvenDamping(dr);
-            d = d*d;
-            p = magB.theta().shell(n).array().square() + magB.phi().shell(n).array().square();
-            maxVel = (p.array()/((p*this->eqParams().alfvenFactor()).array() + d).array().sqrt() + (velV.theta().shell(n).array().square() + velV.phi().shell(n).array().square()).array().sqrt()).maxCoeff();
+            p = (magB.theta().shell(n).array().square() + magB.phi().shell(n).array().square())*this->eqParams().alfvenFactor();
+            maxVel = (p.array()/(p.array() + d).array().sqrt() + (velV.theta().shell(n).array().square() + velV.phi().shell(n).array().square()).array().sqrt()).maxCoeff();
 
             // Update timestep
             if(maxVel != 0.0)

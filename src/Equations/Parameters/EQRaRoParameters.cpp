@@ -103,12 +103,12 @@ namespace EPMDynamo {
 
    EPMFloat EQRaRoParameters::alfvenFactor() const
    {
-      return this->Ro();
+      return 1.0/this->Ro();
    }
 
    EPMFloat EQRaRoParameters::alfvenDamping(const EPMFloat delta) const
    {
-      return (this->E()+this->Ro())/(2.0*delta);
+      return std::pow((this->E()+this->Ro())/(2.0*delta*this->Ro()),2);
    }
 
    EPMFloat EQRaRoParameters::meFactor() const
