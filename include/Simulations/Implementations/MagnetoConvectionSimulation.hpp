@@ -314,8 +314,11 @@ namespace EPMDynamo {
       // Scale imposed field to correct values
       this->mMagB.rOc().rImposed().rescale(this->mEqParams.imposedMagScale());
 
-      // Set the normalisation for the magnetic field
-      this->mMagB.rOc().rPerturbation().setNormalisation(this->mEqParams.meFactor());
+      // Set the energy scale for the magnetic field
+      this->mMagB.rOc().rPerturbation().setEnergyScale(this->mEqParams.meFactor());
+
+      // Set the energy scale for the velocity field
+      this->mVelV.rOc().rPerturbation().setEnergyScale(this->mEqParams.keFactor());
    }
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::addHDF5Output()

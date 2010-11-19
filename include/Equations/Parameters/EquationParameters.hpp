@@ -131,6 +131,11 @@ namespace EPMDynamo {
          virtual EPMFloat alfvenDamping(const EPMFloat delta) const = 0;
 
          /**
+          * @brief Get the kinetic energy normalisation factor
+          */
+         virtual EPMFloat keFactor() const = 0;
+
+         /**
           * @brief Get the magnetic energy normalisation factor
           */
          virtual EPMFloat meFactor() const = 0;

@@ -307,8 +307,11 @@ namespace EPMDynamo {
       // Rescale source term to correct values for given parameters
       this->mCodC.rOcSrc().rescale(this->mEqParams.codSourceScale());
 
-      // Set the normalisation for the magnetic field
-      this->mMagB.rOc().rPerturbation().setNormalisation(this->mEqParams.meFactor());
+      // Set the energy scale for the magnetic field
+      this->mMagB.rOc().rPerturbation().setEnergyScale(this->mEqParams.meFactor());
+
+      // Set the energy scale for the magnetic field
+      this->mVelV.rOc().rPerturbation().setEnergyScale(this->mEqParams.keFactor());
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::addHDF5Output()

@@ -86,6 +86,13 @@ namespace EPMDynamo {
          void rescale(const EPMFloat scale);
 
          /**
+          * @brief Define the energy non-dimensionlisation scales
+          *
+          * @param eFactor Energy multiplicative factor
+          */
+         void setEnergyScale(const EPMFloat&  eFactor);
+
+         /**
           * @brief Compute the energy spectra of the Q QST Component
           *
           * \param radBasis Radial basis
@@ -352,16 +359,16 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
    }
 
-   template <typename TSimType> void QSTField<TSimType>::setNormalisation(const EPMFloat& eFactor)
+   template <typename TSimType> void QSTField<TSimType>::setEnergyScale(const EPMFloat& eFactor)
    {
       // Set normalisation for the Q component
-      this->rQ().setNormalisation(eFactor);
+      this->rQ().setEnergyScale(eFactor);
 
       // Set normalisation for the S component
-      this->rS().setNormalisation(eFactor);
+      this->rS().setEnergyScale(eFactor);
 
       // Set normalisation for the T component
-      this->rT().setNormalisation(eFactor);
+      this->rT().setEnergyScale(eFactor);
    }
 }
 

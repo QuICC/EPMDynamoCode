@@ -111,9 +111,14 @@ namespace EPMDynamo {
       return std::pow((this->Pm()+1)/(2.0*delta),2);
    }
 
+   EPMFloat EPmPrRaParameters::keFactor() const
+   {
+      return this->Pm()*this->Pm();
+   }
+
    EPMFloat EPmPrRaParameters::meFactor() const
    {
-      return 1.0;
+      return this->Pm()/this->E();
    }
 
    void EPmPrRaParameters::testGlobalCFL(EPMFloat &rDt) const

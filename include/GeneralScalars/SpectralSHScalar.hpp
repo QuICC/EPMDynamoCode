@@ -91,7 +91,7 @@ namespace EPMDynamo {
           *
           * @param eFactor Energy multiplicative factor
           */
-         void setNormalisation(const EPMFloat&  eFactor);
+         void setEnergyScale(const EPMFloat&  eFactor);
 
          /**
           * @brief Scale energy spectra

@@ -111,6 +111,11 @@ namespace EPMDynamo {
       return std::pow((this->E()+this->Em())/(2.0*delta*this->Em()),2);
    }
 
+   EPMFloat EEkEmRaParameters::keFactor() const
+   {
+      return 1.0;
+   }
+
    EPMFloat EEkEmRaParameters::meFactor() const
    {
       return 1.0;

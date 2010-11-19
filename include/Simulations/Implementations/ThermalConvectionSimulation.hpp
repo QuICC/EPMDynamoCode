@@ -263,6 +263,10 @@ namespace EPMDynamo {
 
       // Rescale the source term to correct parameter related value
       this->mCodC.rOcSrc().rescale(this->mEqParams.codSourceScale());
+
+      // Set the kinetic energy scale
+      this->mVelV.rOc().rPerturbation().setEnergyScale(this->mEqParams.keFactor());
+
    }
 
    template <typename TSimType> void ThermalConvectionSimulation<TSimType>::addHDF5Output()

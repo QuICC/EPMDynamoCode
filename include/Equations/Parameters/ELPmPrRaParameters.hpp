@@ -173,6 +173,11 @@ namespace EPMDynamo {
          EPMFloat alfvenFactor() const;
 
          /**
+          * @brief Get the kinetic energy normalisation factor
+          */
+         EPMFloat keFactor() const;
+
+         /**
           * @brief Get the magnetic energy normalisation factor
           */
          EPMFloat meFactor() const;

@@ -109,7 +109,7 @@ namespace EPMDynamo {
       return this->mSpectrumM;
    }
 
-   void SpectralSHScalar::setNormalisation(const EPMFloat& eFactor)
+   void SpectralSHScalar::setEnergyScale(const EPMFloat& eFactor)
    {
       // Se the energy normalisation
       this->mEFactor = eFactor;
