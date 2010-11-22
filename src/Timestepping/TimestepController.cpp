@@ -53,10 +53,10 @@ namespace EPMDynamo {
    void TimestepController::setControllerParameters(EPMFloat kb1, EPMFloat kb2, EPMFloat a, int k)
    {
       // Set beta_1 parameter
-      this->mControllerBeta1 = kb1/static_cast<double>(k);
+      this->mControllerBeta1 = kb1/static_cast<EPMFloat>(k);
 
       // Set beta_2 parameter
-      this->mControllerBeta2 = kb2/static_cast<double>(k);
+      this->mControllerBeta2 = kb2/static_cast<EPMFloat>(k);
 
       // Set alpha parameter
       this->mControllerAlpha = a;

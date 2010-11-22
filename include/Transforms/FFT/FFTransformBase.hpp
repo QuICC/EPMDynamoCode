@@ -68,7 +68,7 @@ namespace EPMDynamo {
           *
           * FFTW performs unscale transforms and have thus to be rescaled.
           */
-         double mScale;
+         EPMFloat mScale;
 
       private:
          /**

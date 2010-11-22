@@ -27,7 +27,7 @@ namespace EPMDynamo {
       this->initSizes();
 
       // Initialiation of the scaling factor (FFTW does unnormalised transforms)
-      this->mScale = 1.0/static_cast<double>(this->mSize);
+      this->mScale = 1.0/static_cast<EPMFloat>(this->mSize);
    }
 
    void FFTransformBase::initSizes()

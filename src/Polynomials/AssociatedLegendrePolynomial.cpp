@@ -330,8 +330,8 @@ namespace EPMDynamo {
          throw EPMException("AssociatedLegendrePolynomial::computeDPlm", "l = 0");
       }
 
-      EPMFloat rm = static_cast<double>(m);
-      EPMFloat rl = static_cast<double>(l);
+      EPMFloat rm = static_cast<EPMFloat>(m);
+      EPMFloat rl = static_cast<EPMFloat>(l);
 
       int maxL = l + polyN() - 2;
 

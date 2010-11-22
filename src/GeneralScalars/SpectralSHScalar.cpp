@@ -67,7 +67,7 @@ namespace EPMDynamo {
       int nL = this->nL();
       int nM;
 
-    double tmpMax = 0.0;
+      EPMFloat tmpMax = 0.0;
 
       // Loop over harmonic modes
       for(int l = l0; l < nL; ++l)

@@ -82,7 +82,7 @@ namespace EPMDynamo {
    void FFTransform::backward(RTPScalar &rRTPVal, const FFTFlatScalar &fftVal)
    {
       // Do transform
-      fftw_execute_dft_c2r(this->mC2RPlan, reinterpret_cast<fftw_complex* >(const_cast<std::complex<double> *>(fftVal.flat().data())), this->mTmpRTP.data());
+      fftw_execute_dft_c2r(this->mC2RPlan, reinterpret_cast<fftw_complex* >(const_cast<std::complex<EPMFloat> *>(fftVal.flat().data())), this->mTmpRTP.data());
 
       this->unflattenRTP(rRTPVal);
    }
