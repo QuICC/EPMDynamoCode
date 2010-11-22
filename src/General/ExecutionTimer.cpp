@@ -21,6 +21,10 @@ namespace EPMDynamo {
    ExecutionTimer::ExecutionTimer(const bool autostart)
       : TimerType(autostart), mMeanTimes(6), mMaxTimes(6), mMinTimes(6)
    {
+      // initialise the times
+      this->mMeanTimes.setConstant(-1.0);
+      this->mMaxTimes.setConstant(-1.0);
+      this->mMinTimes.setConstant(-1.0);
    }
 
    void ExecutionTimer::update(const int id)
