@@ -5,6 +5,7 @@
  * \section epmRoadGeneral General roadmap
  *    - Clean implementation of worland quadrature grid selection
  *    - Implement global timestep conditions for different equation parametrisation
+ *    - Correct NTerms projection integrals
  *
  * ***************
  * \section epmRoadV15 Version 1.5.z
