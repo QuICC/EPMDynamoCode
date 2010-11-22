@@ -63,8 +63,12 @@ namespace EPMDynamo {
 
    void FFTransform::cleanupFFT()
    {
+      // Detroy plans
       fftw_destroy_plan(this->mR2CPlan);
       fftw_destroy_plan(this->mC2RPlan);
+
+      // cleanup fftw
+      fftw_cleanup();
    }
 
    void FFTransform::forward(FFTFlatScalar &rFFTVal, const RTPScalar &rtpVal)
