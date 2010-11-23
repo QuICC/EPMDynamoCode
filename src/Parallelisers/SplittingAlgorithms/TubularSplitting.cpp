@@ -458,7 +458,7 @@ namespace EPMDynamo {
          // Add the 'down-up' mode to queue
          for(int i = 0; i < tmpMs.size(); ++i)
          {
-            // Check if harmoni degree and order are compatible
+            // Check if harmonic degree and order are compatible
             if(tmpMs(i) <= l)
             {
                modeQueue.push(std::make_pair(l, tmpMs(i)));
@@ -468,7 +468,7 @@ namespace EPMDynamo {
          // Add the 'up-down' mode to queue
          for(int i = 0; i < tmpMs.size(); ++i)
          {
-            // Check if harmoni degree and order are compatible
+            // Check if harmonic degree and order are compatible
             if(tmpMs(i) <= l_)
             {
                modeQueue.push(std::make_pair(l_, tmpMs(i)));

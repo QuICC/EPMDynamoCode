@@ -135,7 +135,7 @@ namespace EPMDynamo {
 
          rRemote.push_back(pCore);
 
-         // Create local truncation information (Might contain some domain specific information
+         // Create local truncation information (Might contain some domain specific information)
          if(i == this->id())
          {
             rpLocal = SmartLocalTrunc(new LocalTruncation(rR0, rNr, rTh0, rNth, fR0, fNr, fM, sL, sMs));
