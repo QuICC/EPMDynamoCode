@@ -21,7 +21,7 @@
 namespace epm = EPMDynamo;
 
 /**
- * @brief Thermal convection simulation
+ * @brief Rotating diffusion simulation
  */
 int runProgram()
 {

@@ -1,4 +1,11 @@
 #
+# Create CodensityDiffusionRun 
+#
+set(RunName CodensityDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
 # Create DynamoRun 
 #
 set(RunName DynamoRun)
@@ -6,16 +13,16 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
-# Create MagnetoConvectionRun 
+# Create LinearMagnetoConvectionRun 
 #
-set(RunName MagnetoConvectionRun)
+set(RunName LinearMagnetoConvectionRun)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
-# Create RotatingDiffusionRun 
+# Create LinearRotatingConvectionRun 
 #
-set(RunName RotatingDiffusionRun)
+set(RunName LinearRotatingConvectionRun)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
@@ -27,9 +34,44 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
+# Create MagneticDiffusionRun 
+#
+set(RunName MagneticDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create MagnetoConvectionRun 
+#
+set(RunName MagnetoConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create RotatingConvectionRun 
+#
+set(RunName RotatingConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create RotatingDiffusionRun 
+#
+set(RunName RotatingDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
 # Create ThermalConvectionRun 
 #
 set(RunName ThermalConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create VelocityDiffusionRun 
+#
+set(RunName VelocityDiffusionRun)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 

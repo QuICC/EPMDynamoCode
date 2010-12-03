@@ -1,9 +1,9 @@
-/** \file RotatingDiffusionTraits.hpp
- *  \brief Traits for the rotating velocity diffusion simulation implementation
+/** \file RotatingConvectionTraits.hpp
+ *  \brief Traits for the rotating convection simulation implementation
  */
 
-#ifndef ROTATINGDIFFUSIONTRAITS_HPP
-#define ROTATINGDIFFUSIONTRAITS_HPP
+#ifndef ROTATINGCONVECTIONTRAITS_HPP
+#define ROTATINGCONVECTIONTRAITS_HPP
 
 // System includes
 //
@@ -21,11 +21,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the rotating velocity diffusion simulation implementation
+    * \brief Traits for the rotating convection simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class RotatingDiffusionTraits
+   template <typename TSimType> class RotatingConvectionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -44,10 +44,10 @@ namespace EPMDynamo {
          static const bool HasCodOCImposed = false; 
 
          /// Does simulation required a codensity field
-         static const bool NeedCodensity = false;
+         static const bool NeedCodensity = true;
 
          /// Does simulation required a codensity gradient field
-         static const bool NeedCodensityGrad = false;
+         static const bool NeedCodensityGrad = true;
 
 
 
@@ -98,4 +98,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ROTATINGDIFFUSIONTRAITS_HPP
+#endif // ROTATINGCONVECTIONTRAITS_HPP

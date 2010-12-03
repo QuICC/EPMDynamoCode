@@ -1,5 +1,5 @@
 /** \file CodensityDiffusionTraits.hpp
- *  \brief Traits for the dynamo simulation implementation
+ *  \brief Traits for the codensity diffusion simulation implementation
  */
 
 #ifndef CODENSITYDIFFUSIONTRAITS_HPP
@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    /**
-    * @brief Dynamo traits class
+    * \brief Traits for the codensity diffusion simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */

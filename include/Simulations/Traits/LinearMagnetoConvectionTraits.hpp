@@ -1,9 +1,9 @@
-/** \file RotatingDiffusionTraits.hpp
- *  \brief Traits for the rotating velocity diffusion simulation implementation
+/** \file LinearMagnetoConvectionTraits.hpp
+ *  \brief Traits for the linear magneto-convection simulation implementation
  */
 
-#ifndef ROTATINGDIFFUSIONTRAITS_HPP
-#define ROTATINGDIFFUSIONTRAITS_HPP
+#ifndef LINEARMAGNETOONVECTIONTRAITS_HPP
+#define LINEARMAGNETOONVECTIONTRAITS_HPP
 
 // System includes
 //
@@ -17,15 +17,16 @@
 #include "PhysicalFields/CodensityScalar.hpp"
 #include "PhysicalFields/MagneticField.hpp"
 #include "PhysicalFields/VelocityField.hpp"
+#include "PhysicalFields/Traits/ImposedMagTraits.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the rotating velocity diffusion simulation implementation
+    * \brief Traits for the linear magneto-convection simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class RotatingDiffusionTraits
+   template <typename TSimType> class LinearMagnetoConvectionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -44,15 +45,15 @@ namespace EPMDynamo {
          static const bool HasCodOCImposed = false; 
 
          /// Does simulation required a codensity field
-         static const bool NeedCodensity = false;
+         static const bool NeedCodensity = true;
 
          /// Does simulation required a codensity gradient field
-         static const bool NeedCodensityGrad = false;
+         static const bool NeedCodensityGrad = true;
 
 
 
          /// Typedef for the magnetic field type
-         typedef MagneticField<TSimType>  MagType;
+         typedef MagneticField<TSimType, ImposedMagTraits>  MagType;
 
          /// Does the magnetic field have an IC source ?
          static const bool HasMagICSource = false;
@@ -64,13 +65,13 @@ namespace EPMDynamo {
          static const bool HasMagICImposed = false; 
 
          /// Does the magnetic field have an OC imposed field ? 
-         static const bool HasMagOCImposed = false; 
+         static const bool HasMagOCImposed = true; 
 
          /// Does simulation required a magnetic field
-         static const bool NeedMagnetic = false;
+         static const bool NeedMagnetic = true;
 
          /// Does simulation required a magnetic curl field
-         static const bool NeedMagneticCurl = false;
+         static const bool NeedMagneticCurl = true;
 
 
 
@@ -98,4 +99,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ROTATINGDIFFUSIONTRAITS_HPP
+#endif // LINEARMAGNETOONVECTIONTRAITS_HPP

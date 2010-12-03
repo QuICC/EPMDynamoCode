@@ -1,7 +1,5 @@
 /** \file ThermalConvectionRun.cpp
- *  \brief Themal convection simulation executable
- *
- * Main program for the Thermally driven convection simulation
+ *  \brief Thermal convection simulation executable
  */
 
 // Configuration includes

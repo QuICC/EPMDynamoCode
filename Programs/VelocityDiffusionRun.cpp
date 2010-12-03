@@ -1,5 +1,5 @@
-/** \file LinearThermalConvectionRun.cpp
- *  \brief Linear thermal convection simulation executable
+/** \file VelocityDiffusionRun.cpp
+ *  \brief Velocity diffusion simulation executable
  */
 
 // Configuration includes
@@ -14,19 +14,19 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Implementations/LinearThermalConvectionSimulation.hpp"
+#include "Simulations/Implementations/VelocityDiffusionSimulation.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
 namespace epm = EPMDynamo;
 
 /**
- * @brief Linear thermal convection simulation
+ * @brief Velocity diffusion simulation
  */
 int runProgram()
 {
    // Create the simulation object
-   epm::Simulation<epm::WSHSimulation, epm::LinearThermalConvectionSimulation>   sim;
+   epm::Simulation<epm::WSHSimulation, epm::VelocityDiffusionSimulation>   sim;
 
    // Exception handling during the initialisation part
    try

@@ -1,7 +1,5 @@
 /** \file MagnetoConvectionRun.cpp
- *  \brief Themal convection simulation executable
- *
- * Main program for the magneto-convection simulation
+ *  \brief Magneto-convection simulation executable
  */
 
 // Configuration includes
@@ -23,7 +21,7 @@
 namespace epm = EPMDynamo;
 
 /**
- * @brief Magneto convection simulation
+ * @brief Magneto-convection simulation
  */
 int runProgram()
 {

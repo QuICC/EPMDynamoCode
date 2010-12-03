@@ -1,5 +1,5 @@
 /** \file MagnetoConvectionTraits.hpp
- *  \brief Traits for the dynamo simulation implementation
+ *  \brief Traits for the magneto-convection simulation implementation
  */
 
 #ifndef MAGNETOCONVECTIONTRAITS_HPP
@@ -22,7 +22,7 @@
 namespace EPMDynamo {
 
    /**
-    * @brief Dynamo traits class
+    * \brief Traits for the magneto-convection simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */

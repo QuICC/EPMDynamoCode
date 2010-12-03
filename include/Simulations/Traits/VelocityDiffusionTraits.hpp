@@ -1,5 +1,5 @@
 /** \file VelocityDiffusionTraits.hpp
- *  \brief Traits for the dynamo simulation implementation
+ *  \brief Traits for the velocity diffusion simulation implementation
  */
 
 #ifndef VELOCITYDIFFUSIONTRAITS_HPP
@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    /**
-    * @brief Dynamo traits class
+    * \brief Traits for the velocity diffusion simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
@@ -35,7 +35,7 @@ namespace EPMDynamo {
          static const bool HasCodICSource = false;
 
          /// Does the codensity field have an OC source ?
-         static const bool HasCodOCSource = true;
+         static const bool HasCodOCSource = false;
 
          /// Does the codensity field have an IC imposed field ? 
          static const bool HasCodICImposed = false; 
