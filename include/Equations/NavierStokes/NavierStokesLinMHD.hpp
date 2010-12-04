@@ -15,7 +15,7 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
-#include "Equations/NavierStokes/NavierStokesMagnetic.hpp"
+#include "Equations/NavierStokes/NavierStokesRotating.hpp"
 
 namespace EPMDynamo {
 
@@ -25,7 +25,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesLinMHD : public NavierStokesMagnetic<TSimType, TSimTraits>
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesLinMHD : public NavierStokesRotating<TSimType, TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -67,16 +67,17 @@ namespace EPMDynamo {
          void updateRHS();
          
       protected:
+
          /**
-          * @brief Const Reference variable to the codensity scalar
+          * @brief Const Reference variable to the magnetic field
           */
-         typename TSimTraits<TSimType>::CodType&  mrC;
+         typename TSimTraits<TSimType>::MagType&  mrB;
 
       private:
    };
 
    template <typename TSimType, template <typename> class TSimTraits> NavierStokesLinMHD<TSimType, TSimTraits>::NavierStokesLinMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesLinMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesLinMHD<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesMagnetic<TSimType, TSimTraits>(rV, rB, transform, tsteps, params), mrC(rC)
+      : NavierStokesRotating<TSimType, TSimTraits>(rV, rC, transform, tsteps, params), mrB(rB)
    {
    }
 

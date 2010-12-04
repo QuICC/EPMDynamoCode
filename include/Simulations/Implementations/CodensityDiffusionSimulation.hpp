@@ -192,8 +192,6 @@ namespace EPMDynamo {
 
    template <typename TSimType> void CodensityDiffusionSimulation<TSimType>::addExternalInfluence()
    {
-      // Add Thermal source term
-      this->mTransport.addSourceTerm();
    }
 
    template <typename TSimType> void CodensityDiffusionSimulation<TSimType>::timestepEquations()
