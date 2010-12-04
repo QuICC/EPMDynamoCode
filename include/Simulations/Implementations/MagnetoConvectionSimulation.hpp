@@ -29,7 +29,7 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 
 #include "Equations/Induction/InductionMHD.hpp"
-#include "Equations/NavierStokes/NavierStokesMagnetic.hpp"
+#include "Equations/NavierStokes/NavierStokesMHD.hpp"
 #include "Equations/Transport/TransportMHD.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
@@ -147,7 +147,7 @@ namespace EPMDynamo {
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesMagnetic<TSimType, MagnetoConvectionTraits>    mNavierStokes;
+         NavierStokesMHD<TSimType, MagnetoConvectionTraits>    mNavierStokes;
    };
 
    template <typename TSimType> MagnetoConvectionSimulation<TSimType>::MagnetoConvectionSimulation()
