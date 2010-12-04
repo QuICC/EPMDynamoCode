@@ -1,9 +1,9 @@
-/** \file NavierStokesLinThermal.hpp
- *  \brief Implementation of the Navier-Stokes equation for thermal convection
+/** \file NavierStokesLinRotating.hpp
+ *  \brief Implementation of the Navier-Stokes equation for rotating convection
  */
 
-#ifndef NAVIERSTOKESLINTHERMAL_HPP
-#define NAVIERSTOKESLINTHERMAL_HPP
+#ifndef NAVIERSTOKESLINROTATING_HPP
+#define NAVIERSTOKESLINROTATING_HPP
 
 // System includes
 //
@@ -21,9 +21,9 @@
 namespace EPMDynamo {
 
    /**
-    * @brief General representation of the Navier-Stokes equation for thermal convection
+    * @brief General representation of the Navier-Stokes equation with rotating convection
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesLinThermal : public NavierStokesThermal<TSimType, TSimTraits>  {
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesLinRotating : public NavierStokesThermal<TSimType, TSimTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
@@ -43,12 +43,12 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesLinThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesLinRotating(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~NavierStokesLinThermal() {};
+         virtual ~NavierStokesLinRotating() {};
 
          /**
           * @brief Update RTP values of the equation
@@ -67,12 +67,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesLinThermal<TSimType, TSimTraits>::NavierStokesLinThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesLinThermal<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesLinThermal<TSimType, TSimTraits>::EquationParametersType &params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesLinRotating<TSimType, TSimTraits>::NavierStokesLinRotating(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesLinRotating<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesLinRotating<TSimType, TSimTraits>::EquationParametersType &params)
       : NavierStokesThermal<TSimType, TSimTraits>(rV, rC, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinThermal<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinRotating<TSimType, TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
@@ -81,12 +81,15 @@ namespace EPMDynamo {
       this->mrC.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinThermal<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinRotating<TSimType, TSimTraits>::updateRHS()
    {
       // Compute \f$C \vec{r}\f$
       this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
+
+      // Compute \f$\hat{z}\times\vec{u}\f$
+      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsCoriolis());
    }
 
 }
 
-#endif // NAVIERSTOKESLINTHERMAL_HPP
+#endif // NAVIERSTOKESLINROTATING_HPP

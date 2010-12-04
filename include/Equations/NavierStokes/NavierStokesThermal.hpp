@@ -16,14 +16,15 @@
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
-#include "Equations/NavierStokes/NavierStokesRotating.hpp"
+#include "Equations/NavierStokes/NavierStokesBase.hpp"
+#include "Timestepping/Traits/InfluenceTTraits.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief General representation of the Navier-Stokes equation with rotation and thermal convection
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesThermal : public NavierStokesRotating<TSimType, TSimTraits>  {
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesThermal : public NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
@@ -61,6 +62,13 @@ namespace EPMDynamo {
           * @brief Update RHS of the equation
           */
          void updateRHS();
+
+         /**
+          * @brief Transform RHS of the equation
+          *
+          * \param step Current step in a multistep transform
+          */
+         void transformRHS(const int step);
          
       protected:
 
@@ -73,7 +81,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> NavierStokesThermal<TSimType, TSimTraits>::NavierStokesThermal(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesThermal<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesThermal<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesRotating<TSimType, TSimTraits>(rV, transform, tsteps, params), mrC(rC)
+      : NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>(rV, transform, tsteps, params), mrC(rC)
    {
    }
 
@@ -96,9 +104,12 @@ namespace EPMDynamo {
 
       // Compute \f$C \vec{r}\f$
       this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
+   }
 
-      // Compute \f$\hat{z}\times\vec{u}\f$
-      this->mrX.oc().rtp().template crossZVect<-1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsCoriolis());
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesThermal<TSimType, TSimTraits>::transformRHS(const int step)
+   {
+      // Transform non linear terms to spectral space from mNTerms values
+      this->transformNTerms(this->mNTerms.rOc().rPerturbation().rTor(), this->mNTerms.rOc().rPerturbation().rPol());
    }
 
 }

@@ -29,7 +29,7 @@
 #include "IO/ASCII/TimeFile.hpp"
 
 #include "Equations/Transport/TransportMHD.hpp"
-#include "Equations/NavierStokes/NavierStokesThermal.hpp"
+#include "Equations/NavierStokes/NavierStokesRotating.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
@@ -134,7 +134,7 @@ namespace EPMDynamo {
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesThermal<TSimType, RotatingConvectionTraits>    mNavierStokes;
+         NavierStokesRotating<TSimType, RotatingConvectionTraits>    mNavierStokes;
    };
 
    template <typename TSimType> RotatingConvectionSimulation<TSimType>::RotatingConvectionSimulation()

@@ -28,9 +28,9 @@
 #include "IO/ASCII/EnergyFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
 
-#include "Equations/Induction/InductionMHD.hpp"
+#include "Equations/Induction/InductionLinear.hpp"
 #include "Equations/NavierStokes/NavierStokesMagnetic.hpp"
-#include "Equations/Transport/TransportMHD.hpp"
+#include "Equations/Transport/TransportLinear.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
@@ -137,12 +137,12 @@ namespace EPMDynamo {
          /**
           * @brief Induction equation
           */
-         InductionMHD<TSimType, LinearMagnetoConvectionTraits>    mInduction;
+         InductionLinear<TSimType, LinearMagnetoConvectionTraits>    mInduction;
 
          /**
           * @brief Transport equation
           */
-         TransportMHD<TSimType, LinearMagnetoConvectionTraits>    mTransport;
+         TransportLinear<TSimType, LinearMagnetoConvectionTraits>    mTransport;
 
          /**
           * @brief Navier Stokes equation

@@ -28,8 +28,8 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/Transport/TransportMHD.hpp"
-#include "Equations/NavierStokes/NavierStokesLinThermal.hpp"
+#include "Equations/Transport/TransportLinear.hpp"
+#include "Equations/NavierStokes/NavierStokesLinRotating.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
@@ -129,12 +129,12 @@ namespace EPMDynamo {
          /**
           * @brief Transport equation
           */
-         TransportMHD<TSimType, LinearRotatingConvectionTraits>    mTransport;
+         TransportLinear<TSimType, LinearRotatingConvectionTraits>    mTransport;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesLinThermal<TSimType, LinearRotatingConvectionTraits>    mNavierStokes;
+         NavierStokesLinRotating<TSimType, LinearRotatingConvectionTraits>    mNavierStokes;
    };
 
    template <typename TSimType> LinearRotatingConvectionSimulation<TSimType>::LinearRotatingConvectionSimulation()
