@@ -1,5 +1,5 @@
 /** \file NavierStokesMagnetic.hpp
- *  \brief Implementation of the Magneto-convection Navier-Stokes equation
+ *  \brief Implementation of the magnetically driven Navier-Stokes equation
  */
 
 #ifndef NAVIERSTOKESMAGNETIC_HPP
@@ -20,7 +20,7 @@
 namespace EPMDynamo {
 
    /**
-    * @brief This class implements the Navier-Stokes equation including the magnetic effects
+    * \brief Implementation of the magnetically driven Navier-Stokes equation
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
