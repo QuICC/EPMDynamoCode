@@ -190,6 +190,14 @@ namespace EPMDynamo {
 
             // Increment corrector step counter
             ++this->mCorrectorIts;
+
+            // Output some information
+            if(this->mCorrectorIts == 2)
+            {
+               std::cout << "---> Requires multiple correctors:" << std::endl;
+            }
+            std::cout << "------> Corrector: " << this->mCorrectorIts << std::endl;
+
          }
          // Timestepping converged next timestep will be a predictor one
          else

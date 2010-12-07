@@ -228,19 +228,25 @@ namespace EPMDynamo {
       // Don't make adaptative scheme to reactive. Allow a range of timestep values
       if(dt < this->rTSParams().dt()*(1.0-TimestepConfig::TIMESTEP_MARGIN) ||  dt > this->rTSParams().dt()*(1.0 + TimestepConfig::TIMESTEP_MARGIN))
       {
-         // Store new timestep
-         this->rTSParams().updateTimestep(dt);
+         // Store new timestep if different from old step
+         if(dt != this->rTSParams().dt())
+         {
+            this->rTSParams().updateTimestep(dt);
 
-         std::cout << "Updating Timestep! Now using dt=" << this->rTSParams().dt() << " at time t=" << this->rTSParams().time()<< std::endl;
+            std::cout << "Updating Timestep! Now using dt=" << this->rTSParams().dt() << " at time t=" << this->rTSParams().time()<< std::endl;
+         }
       }
    }
 
    void TimestepControlBase::useTimestep(EPMFloat dt)
    {
-      // Store new timestep
-      this->rTSParams().updateTimestep(dt);
+      // Store new timestep if different from old step
+      if(dt != this->rTSParams().dt())
+      {
+         this->rTSParams().updateTimestep(dt);
 
-      std::cout << "Updating Timestep! Now using dt=" << this->rTSParams().dt() << " at time t=" << this->rTSParams().time()<< std::endl;
+         std::cout << "Updating Timestep! Now using dt=" << this->rTSParams().dt() << " at time t=" << this->rTSParams().time()<< std::endl;
+      }
    }
 
 }
