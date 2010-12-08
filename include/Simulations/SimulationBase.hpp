@@ -21,6 +21,9 @@
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/ComputationBase.hpp"
 #include "Simulations/SimulationControl.hpp"
+#include "IO/ASCII/FDSHSplittingFile.hpp"
+#include "IO/ASCII/PhysicalSplittingFile.hpp"
+#include "IO/ASCII/SpectralSplittingFile.hpp"
 #include "IO/IOSystem.hpp"
 
 namespace EPMDynamo {
@@ -131,6 +134,11 @@ namespace EPMDynamo {
           */
          void timestepEquations();
          //@}
+         
+         /**
+          * @brief Create Splitting visualisation files
+          */
+         void describeSplitting();
 
       private:
    };
@@ -142,6 +150,9 @@ namespace EPMDynamo {
 
    template <typename TSimType> void SimulationBase<TSimType>::initOutput()
    {
+      // Write the splitting descriptions
+      this->describeSplitting();
+
       // Initialise all the create writers
       this->mIOSys.initWriters();
    }
@@ -230,6 +241,47 @@ namespace EPMDynamo {
    template <typename TSimType> void SimulationBase<TSimType>::timestepEquations()
    {
       BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+   }
+
+   template <typename TSimType> void SimulationBase<TSimType>::describeSplitting()
+   {
+      // Create the Physical splitting description file
+      PhysicalSplittingFile   physFile(this->mpTrunc);
+
+      // Initialise physical description file
+      physFile.init();
+
+      // Write physical description file
+      physFile.write();
+
+      // Finalise physical description file
+      physFile.finalise();
+
+
+      // Create the Physical splitting description file
+      FDSHSplittingFile   fdshFile(this->mpTrunc);
+
+      // Initialise physical description file
+      fdshFile.init();
+
+      // Write physical description file
+      fdshFile.write();
+
+      // Finalise physical description file
+      fdshFile.finalise();
+
+
+      // Create the Physical splitting description file
+      SpectralSplittingFile   specFile(this->mpTrunc);
+
+      // Initialise physical description file
+      specFile.init();
+
+      // Write physical description file
+      specFile.write();
+
+      // Finalise physical description file
+      specFile.finalise();
    }
 
 }

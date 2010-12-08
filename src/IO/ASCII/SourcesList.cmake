@@ -11,9 +11,14 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       ControlInterface.cpp
       ControlInterfaceDefs.cpp
       EnergyFileDefs.cpp
+      FDSHSplittingFile.cpp
       ParametersFileDefs.cpp
       ParametersFile.cpp
+      PhysicalSplittingFile.cpp
       SpectrumFileDefs.cpp
+      SpectralSplittingFile.cpp
+      SplittingFile.cpp
+      SplittingFileDefs.cpp
       StdMessageDefs.cpp
       StdMessage.cpp 
       TimeFile.cpp
