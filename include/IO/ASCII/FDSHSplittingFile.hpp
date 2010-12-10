@@ -29,7 +29,6 @@ namespace EPMDynamo {
          * @brief Constructor
          *
          * @param pTrunc Smart truncation information
-         * @param name File name
          */
          FDSHSplittingFile(const SmartTruncation pTrunc);
 

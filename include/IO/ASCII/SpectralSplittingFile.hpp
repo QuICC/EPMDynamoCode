@@ -29,7 +29,6 @@ namespace EPMDynamo {
          * @brief Constructor
          *
          * @param pTrunc Smart truncation information
-         * @param name File name
          */
          SpectralSplittingFile(const SmartTruncation pTrunc);
 

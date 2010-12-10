@@ -7,6 +7,8 @@
  *    - Implement global timestep conditions for different equation parametrisation
  *    - Correct NTerms projection integrals
  *    - Improve memory usage for NTerms (ie remove curl and grad components!)
+ *    - Correct race condition appearing in RotatingConvection computations
+ *    - Cleanup implementation of splitting structure output
  *
  * ***************
  * \section epmRoadV15 Version 1.5.z

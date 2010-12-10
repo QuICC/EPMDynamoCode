@@ -42,6 +42,7 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param rV Magnetic field (stored as reference)
+          * @param rC Codensity scalar (stored as reference)
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
