@@ -1,9 +1,10 @@
-/** \file PhysicalTorPolBase.hpp
+/** \file PhysicalTorPolCurlBase.hpp
  *  \brief Base of the implementation of Toroidal/Poloidal expanded field field
+ *  with curl
  */
 
-#ifndef PHYSICALTORPOLBASE_HPP
-#define PHYSICALTORPOLBASE_HPP
+#ifndef PHYSICALTORPOLCURlBASE_HPP
+#define PHYSICALTORPOLCURlBASE_HPP
 
 // System includes
 //
@@ -14,7 +15,7 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/Fields/PhysicalRTPField.hpp"
+#include "PhysicalFields/Fields/PhysicalRTPFieldCurl.hpp"
 #include "GeneralFields/TorPolField.hpp"
 
 namespace EPMDynamo {
@@ -27,7 +28,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalTorPolBase : public PhysicalRTPField<TSimType>
+   template <typename TSimType> class PhysicalTorPolCurlBase : public PhysicalRTPFieldCurl<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -45,12 +46,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param transform Reference to the transform object
           */
-         PhysicalTorPolBase(SmartTruncation pTrunc, TransformType &transform);
+         PhysicalTorPolCurlBase(SmartTruncation pTrunc, TransformType &transform);
 
          /**
          * @brief Destructor
          */
-         virtual ~PhysicalTorPolBase() {};
+         virtual ~PhysicalTorPolCurlBase() {};
 
          /**
           * @brief Get Toroidal/Poloidal decomposition of the field (perturbation part)
@@ -76,6 +77,11 @@ namespace EPMDynamo {
          bool needAnyTransform() const;
 
          /**
+          * @brief Flag to check if curl transform has already been computed
+          */
+         int  mNeedCurlTransform;
+
+         /**
           * @brief Spectral toroidal/poloidal decomposition of the field
           */
          TorPolField<TSimType>    mPerturbation;
@@ -83,33 +89,35 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType> PhysicalTorPolBase<TSimType>::PhysicalTorPolBase(SmartTruncation pTrunc, typename PhysicalTorPolBase<TSimType>::TransformType &transform)
-      : PhysicalRTPField<TSimType>(pTrunc, transform), mPerturbation(pTrunc)
+   template<typename TSimType> PhysicalTorPolCurlBase<TSimType>::PhysicalTorPolCurlBase(SmartTruncation pTrunc, typename PhysicalTorPolCurlBase<TSimType>::TransformType &transform)
+      : PhysicalRTPFieldCurl<TSimType>(pTrunc, transform), mNeedCurlTransform(0), mPerturbation(pTrunc)
    {
    }
 
-   template<typename TSimType> inline bool PhysicalTorPolBase<TSimType>::needAnyTrnsform() const
+   template<typename TSimType> inline bool PhysicalTorPolCurlBase<TSimType>::needAnyTransform() const
    {
-      return (this->mNeedTransform == 0);
+      return ((this->mNeedTransform == 0) && (this->mNeedGradTransform == 0));
    }
 
-   template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolBase<TSimType>::perturbation() const
-   {
-      return this->mPerturbation;
-   }
-
-   template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolBase<TSimType>::totalField() const
+   template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolCurlBase<TSimType>::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   template<typename TSimType> inline TorPolField<TSimType>& PhysicalTorPolBase<TSimType>::rPerturbation()
+   template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolCurlBase<TSimType>::totalField() const
+   {
+      return this->mPerturbation;
+   }
+
+   template<typename TSimType> inline TorPolField<TSimType>& PhysicalTorPolCurlBase<TSimType>::rPerturbation()
    {
       this->mNeedTransform = 0;
+
+      this->mNeedCurlTransform = 0;
 
       return this->mPerturbation;
    }
 
 }
 
-#endif // PHYSICALTORPOLBASE_HPP
+#endif // PHYSICALTORPOLCURlBASE_HPP

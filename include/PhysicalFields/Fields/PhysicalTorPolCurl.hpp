@@ -1,9 +1,9 @@
 /** \file PhysicalTorPolField.hpp
- *  \brief Implementation of Toroidal/Poloidal expanded field
+ *  \brief Implementation of Toroidal/Poloidal expanded field with curl
  */
 
-#ifndef PHYSICALTORPOLFIELD_HPP
-#define PHYSICALTORPOLFIELD_HPP
+#ifndef PHYSICALTORPOLCURl_HPP
+#define PHYSICALTORPOLCURl_HPP
 
 // System includes
 //
@@ -60,6 +60,13 @@ namespace EPMDynamo {
          virtual void transform(const int step);
 
          /**
+          * @brief Compute RTP values of the curl of the field
+          *
+          * @param step Current step in a multistep transform
+          */
+         virtual void curlTransform(const int step);
+
+         /**
           * @brief Generic method to get the energies
           */
          virtual void updateSpectra();
@@ -98,6 +105,18 @@ namespace EPMDynamo {
          this->mrTransform.transformTorPol2RTP(this->rRTP(), this->totalField());
 
          this->mNeedTransform++;
+      }
+   }
+
+   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolField<TSimType, TBase>::curlTransform(const int step)
+   {
+      if(step == this->mNeedCurlTransform)
+      {
+         this->updateTotalField();
+
+         this->mrTransform.transformTorPol2Curl(this->rCurl(), this->totalField());
+
+         this->mNeedCurlTransform++;
       }
    }
 
@@ -165,4 +184,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // PHYSICALTORPOLFIELD_HPP
+#endif // PHYSICALTORPOLCURl_HPP

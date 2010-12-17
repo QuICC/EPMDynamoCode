@@ -101,7 +101,7 @@ namespace EPMDynamo {
 
    template<typename TSimType> inline void ImposedTorPol<TSimType>::updateTotalField()
    {
-      if((this->mNeedTransform == 0) && (this->mNeedCurlTransform == 0))
+      if(this->needAnyTransform())
       {
          // Set toroidal part
          int nL = this->perturbation().tor().nL();

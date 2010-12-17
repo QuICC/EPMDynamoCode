@@ -1,9 +1,9 @@
-/** \file PhysicalQSTBase.hpp
+/** \file PhysicalQSTCurlBase.hpp
  *  \brief Implementation of the base of the QST expanded physical field
  */
 
-#ifndef PHYSICALQSTBASE_HPP
-#define PHYSICALQSTBASE_HPP
+#ifndef PHYSICALQSTCURLBASE_HPP
+#define PHYSICALQSTCURLBASE_HPP
 
 // System includes
 //
@@ -15,7 +15,7 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
-#include "PhysicalFields/Fields/PhysicalRTPField.hpp"
+#include "PhysicalFields/Fields/PhysicalRTPFieldCurl.hpp"
 #include "GeneralFields/QSTField.hpp"
 
 namespace EPMDynamo {
@@ -28,7 +28,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalQSTBase : public PhysicalRTPField<TSimType>
+   template <typename TSimType> class PhysicalQSTCurlBase : public PhysicalRTPFieldCurl<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -46,12 +46,12 @@ namespace EPMDynamo {
          * @param pTrunc Truncation information
          * @param transform Transform object
          */
-         PhysicalQSTBase(SmartTruncation pTrunc, TransformType &transform);
+         PhysicalQSTCurlBase(SmartTruncation pTrunc, TransformType &transform);
 
          /**
          * @brief Simple empty destructor
          */
-         virtual ~PhysicalQSTBase() {};
+         virtual ~PhysicalQSTCurlBase() {};
 
          /**
           * @brief Get QST decomposition of the perturbation part
@@ -70,6 +70,12 @@ namespace EPMDynamo {
 
       protected:
          /**
+          * @brief Flag to check if curl transform has already been
+          *          computed
+          */
+         int  mNeedCurlTransform;
+
+         /**
           * @brief Spectral QST decomposition of the field
           */
          QSTField<TSimType>    mPerturbation;
@@ -77,28 +83,30 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType> PhysicalQSTBase<TSimType>::PhysicalQSTBase(SmartTruncation pTrunc, typename PhysicalQSTBase<TSimType>::TransformType &transform)
-      : PhysicalRTPField<TSimType>(pTrunc, transform), mPerturbation(pTrunc)
+   template<typename TSimType> PhysicalQSTCurlBase<TSimType>::PhysicalQSTCurlBase(SmartTruncation pTrunc, typename PhysicalQSTCurlBase<TSimType>::TransformType &transform)
+      : PhysicalRTPFieldCurl<TSimType>(pTrunc, transform), mNeedCurlTransform(0), mPerturbation(pTrunc)
    {
    }
 
-   template<typename TSimType> inline const QSTField<TSimType>& PhysicalQSTBase<TSimType>::perturbation() const
-   {
-      return this->mPerturbation;
-   }
-
-   template<typename TSimType> inline const QSTField<TSimType>& PhysicalQSTBase<TSimType>::totalField() const
+   template<typename TSimType> inline const QSTField<TSimType>& PhysicalQSTCurlBase<TSimType>::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   template<typename TSimType> inline QSTField<TSimType>& PhysicalQSTBase<TSimType>::rPerturbation()
+   template<typename TSimType> inline const QSTField<TSimType>& PhysicalQSTCurlBase<TSimType>::totalField() const
+   {
+      return this->mPerturbation;
+   }
+
+   template<typename TSimType> inline QSTField<TSimType>& PhysicalQSTCurlBase<TSimType>::rPerturbation()
    {
       this->mNeedTransform = 0;
 
+      this->mNeedCurlTransform = 0;
+      
       return this->mPerturbation;
    }
 
 }
 
-#endif // PHYSICALQSTBASE_HPP
+#endif // PHYSICALQSTCURLBASE_HPP

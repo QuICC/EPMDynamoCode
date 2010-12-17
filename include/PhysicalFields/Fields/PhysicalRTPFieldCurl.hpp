@@ -1,9 +1,10 @@
-/** \file PhysicalFieldBase.hpp
- *  \brief Base of the implementation of any physical field
+/** \file PhysicalRTPFieldCurl.hpp
+ *  \brief Base of the implementation of the RTP components of any physical field
+ *  with curl
  */
 
-#ifndef PHYSICALFIELDBASE_HPP
-#define PHYSICALFIELDBASE_HPP
+#ifndef PHYSICALRTPFIELDCURL_HPP
+#define PHYSICALRTPFIELDCURL_HPP
 
 // System includes
 //
@@ -14,21 +15,21 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/Fields/PhysicalBase.hpp"
+#include "PhysicalFields/Fields/PhysicalRTPField.hpp"
 #include "Domain/Truncation.hpp"
-#include "GeneralFields/RTPField.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Base of the implementation of any physical field
+    * \brief Base of the implementation of the RTP components of any physical field
+    * with curl
     *
     * This class contains the different element and representation that are required
     * for a generic physical field.
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalFieldBase : public PhysicalBase<TSimType>
+   template <typename TSimType> class PhysicalRTPFieldCurl : public PhysicalRTPField<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -41,22 +42,12 @@ namespace EPMDynamo {
          * @param pTrunc Smart pointer to truncation information
          * @param transform Transform object
          */
-         PhysicalFieldBase(SmartTruncation pTrunc, TransformType &transform);
+         PhysicalRTPFieldCurl(SmartTruncation pTrunc, TransformType &transform);
 
          /**
          * @brief Simple empty destructor
          */
-         virtual ~PhysicalFieldBase() {};
-
-         /**
-          * @brief Get the RTP field values
-          */
-         const RTPField&   rtp() const;
-
-         /**
-          * @brief Set the RTP field values
-          */
-         RTPField&   rRTP();
+         virtual ~PhysicalRTPFieldCurl() {};
 
          /**
           * @brief Get values of the curl of the RTP field
@@ -80,41 +71,26 @@ namespace EPMDynamo {
       private:
 
          /**
-          * @brief Real space field values
-          */
-         RTPField mRTP;
-
-         /**
           * @brief Real space curl of the field
           */
          RTPField mCurl;
    };
 
-   template<typename TSimType> inline PhysicalFieldBase<TSimType>::PhysicalFieldBase(SmartTruncation pTrunc, typename PhysicalFieldBase<TSimType>::TransformType &transform)
-      : PhysicalBase<TSimType>(pTrunc, transform), mRTP(pTrunc), mCurl(pTrunc)
+   template<typename TSimType> inline PhysicalRTPFieldCurl<TSimType>::PhysicalRTPFieldCurl(SmartTruncation pTrunc, typename PhysicalRTPFieldCurl<TSimType>::TransformType &transform)
+      : PhysicalRTPField<TSimType>(pTrunc, transform), mCurl(pTrunc)
    {
    }
 
-   template<typename TSimType> inline const RTPField&  PhysicalFieldBase<TSimType>::rtp() const
-   {
-      return this->mRTP;
-   }
-
-   template<typename TSimType> inline RTPField&  PhysicalFieldBase<TSimType>::rRTP()
-   {
-      return this->mRTP;
-   }
-
-   template<typename TSimType> inline const RTPField&  PhysicalFieldBase<TSimType>::curl() const
+   template<typename TSimType> inline const RTPField&  PhysicalRTPFieldCurl<TSimType>::curl() const
    {
       return this->mCurl;
    }
 
-   template<typename TSimType> inline RTPField&  PhysicalFieldBase<TSimType>::rCurl()
+   template<typename TSimType> inline RTPField&  PhysicalRTPFieldCurl<TSimType>::rCurl()
    {
       return this->mCurl;
    }
 
 }
 
-#endif // PHYSICALFIELDBASE_HPP
+#endif // PHYSICALRTPFIELDCURL_HPP

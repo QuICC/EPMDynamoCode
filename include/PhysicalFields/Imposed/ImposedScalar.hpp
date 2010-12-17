@@ -101,7 +101,7 @@ namespace EPMDynamo {
 
    template<typename TSimType> inline void ImposedScalar<TSimType>::updateTotalField()
    {
-      if((this->mNeedTransform == 0) && (this->mNeedGradTransform == 0))
+      if(this->needAnyTransform())
       {
          // Set total scalar
          int nL = this->perturbation().nL();

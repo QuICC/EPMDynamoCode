@@ -14,7 +14,7 @@
 // Project includes
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
-#include "PhysicalFields/Fields/PhysicalScalarFieldBase.hpp"
+#include "PhysicalFields/Fields/PhysicalRTPScalar.hpp"
 #include "General/EPMTypedefs.hpp"
 
 namespace EPMDynamo {
@@ -24,7 +24,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalScalarBase: public PhysicalScalarFieldBase<TSimType>
+   template <typename TSimType> class PhysicalScalarBase: public PhysicalRTPScalar<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -66,9 +66,9 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Flag to check if grad transform has already been computed
+          * @brief Need any transform?
           */
-         int  mNeedGradTransform;
+         bool needAnyTransforms() const;
 
          /**
           * @brief Spectral expansion scalar
@@ -79,8 +79,13 @@ namespace EPMDynamo {
    };
    
    template <typename TSimType> PhysicalScalarBase<TSimType>::PhysicalScalarBase(SmartTruncation pTrunc, typename PhysicalScalarBase<TSimType>::TransformType &transform)
-      : PhysicalScalarFieldBase<TSimType>(pTrunc, transform), mNeedGradTransform(0), mPerturbation(pTrunc, true)
+      : PhysicalRTPScalar<TSimType>(pTrunc, transform), mPerturbation(pTrunc, true)
    {
+   }
+
+   template <typename TSimType> inline bool PhysicalScalarBase<TSimType>::needAnyTransform() const
+   {
+      return (this->mNeedTransform == 0);
    }
 
    template <typename TSimType> inline const typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::perturbation() const
@@ -96,8 +101,6 @@ namespace EPMDynamo {
    template <typename TSimType> inline typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::rPerturbation()
    {
       this->mNeedTransform = 0;
-
-      this->mNeedGradTransform = 0;
 
       return this->mPerturbation;
    }
