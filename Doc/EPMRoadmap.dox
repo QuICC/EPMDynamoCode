@@ -9,6 +9,11 @@
  *    - Improve memory usage for NTerms (ie remove curl and grad components!)
  *    - Correct race condition appearing in RotatingConvection computations
  *    - Cleanup implementation of splitting structure output
+ *    - Compute angular momentum, check conservation, and if required IMPOSE it!
+ *    - Alfven wave generation going through the origin
+ *    - Worland polynomials CFL condition constrains???
+ *    - Implement axial vorticty CSCS output
+ *    - State/CSCS/Source/Imposed files generation parallel support
  *
  * ***************
  * \section epmRoadV15 Version 1.5.z
