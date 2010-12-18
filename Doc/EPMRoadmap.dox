@@ -6,7 +6,7 @@
  *    - Clean implementation of worland quadrature grid selection
  *    - Implement global timestep conditions for different equation parametrisation
  *    - Correct NTerms projection integrals
- *    - Improve memory usage for NTerms (ie remove curl and grad components!)
+ *    - Implement a clean Physical field traits system, the current one is too messy
  *    - Correct race condition appearing in RotatingConvection computations
  *    - Cleanup implementation of splitting structure output
  *    - Compute angular momentum, check conservation, and if required IMPOSE it!
