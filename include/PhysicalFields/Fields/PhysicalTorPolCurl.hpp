@@ -1,9 +1,9 @@
-/** \file PhysicalTorPolField.hpp
+/** \file PhysicalTorPolCurl.hpp
  *  \brief Implementation of Toroidal/Poloidal expanded field with curl
  */
 
-#ifndef PHYSICALTORPOLCURl_HPP
-#define PHYSICALTORPOLCURl_HPP
+#ifndef PHYSICALTORPOLCURL_HPP
+#define PHYSICALTORPOLCURL_HPP
 
 // System includes
 //
@@ -27,7 +27,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> class TBase> class PhysicalTorPolField: public TBase<TSimType> 
+   template <typename TSimType, template <typename> class TBase> class PhysicalTorPolCurl: public TBase<TSimType> 
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -45,12 +45,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param transform Reference to the transform object
           */
-         PhysicalTorPolField(SmartTruncation pTrunc, TransformType &transform);
+         PhysicalTorPolCurl(SmartTruncation pTrunc, TransformType &transform);
 
          /**
          * @brief Destructor
          */
-         virtual ~PhysicalTorPolField() {};
+         virtual ~PhysicalTorPolCurl() {};
 
          /**
           * @brief Compute RTP values of the field
@@ -91,12 +91,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType, template <typename> class TBase> PhysicalTorPolField<TSimType, TBase>::PhysicalTorPolField(SmartTruncation pTrunc, typename PhysicalTorPolField<TSimType, TBase>::TransformType &transform)
+   template<typename TSimType, template <typename> class TBase> PhysicalTorPolCurl<TSimType, TBase>::PhysicalTorPolCurl(SmartTruncation pTrunc, typename PhysicalTorPolCurl<TSimType, TBase>::TransformType &transform)
       : TBase<TSimType>(pTrunc, transform)
    {
    }
 
-   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolField<TSimType, TBase>::transform(const int step)
+   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolCurl<TSimType, TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -108,7 +108,7 @@ namespace EPMDynamo {
       }
    }
 
-   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolField<TSimType, TBase>::curlTransform(const int step)
+   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolCurl<TSimType, TBase>::curlTransform(const int step)
    {
       if(step == this->mNeedCurlTransform)
       {
@@ -120,14 +120,14 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> void PhysicalTorPolField<TSimType, TBase>::updateSpectra()
+   template <typename TSimType, template <typename> class TBase> void PhysicalTorPolCurl<TSimType, TBase>::updateSpectra()
    {
       this->rPerturbation().computeTorSpectra(this->mrTransform.radBasis());
 
       this->rPerturbation().computePolSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType, template <typename> class TBase> Array PhysicalTorPolField<TSimType, TBase>::energy() const
+   template <typename TSimType, template <typename> class TBase> Array PhysicalTorPolCurl<TSimType, TBase>::energy() const
    {
       // Toroidal Energy
       Array torE = this->perturbation().tor().energy();
@@ -144,7 +144,7 @@ namespace EPMDynamo {
       return energy;
    }
 
-   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolField<TSimType, TBase>::spectrumL() const
+   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolCurl<TSimType, TBase>::spectrumL() const
    {
       // Toroidal Energy spectrum
       Array torE = this->perturbation().tor().spectrumL();
@@ -163,7 +163,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolField<TSimType, TBase>::spectrumM() const
+   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolCurl<TSimType, TBase>::spectrumM() const
    {
       // Toroidal Energy spectrum
       Array torE = this->perturbation().tor().spectrumM();
@@ -184,4 +184,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // PHYSICALTORPOLCURl_HPP
+#endif // PHYSICALTORPOLCURL_HPP

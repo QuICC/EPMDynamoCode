@@ -87,7 +87,7 @@ namespace EPMDynamo {
          /**
           * @brief Variable for non linear computations
           */
-         TFieldType    mNTerms;
+         typename TFieldType::NTermsType    mNTerms;
 
          /**
           * @brief Reference to the transform object

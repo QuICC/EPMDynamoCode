@@ -68,7 +68,7 @@ namespace EPMDynamo {
          /**
           * @brief Need any transform?
           */
-         bool needAnyTransforms() const;
+         bool needAnyTransform() const;
 
          /**
           * @brief Spectral expansion scalar

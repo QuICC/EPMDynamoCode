@@ -13,8 +13,8 @@
 
 // Project includes
 //
-#include "PhysicalFields/Fields/PhysicalTorPolBase.hpp"
-#include "PhysicalFields/Fields/PhysicalTorPolField.hpp"
+#include "PhysicalFields/Fields/PhysicalTorPolCurlBase.hpp"
+#include "PhysicalFields/Fields/PhysicalTorPolCurl.hpp"
 #include "PhysicalFields/Imposed/ImposedTorPol.hpp"
 
 namespace EPMDynamo {
@@ -28,13 +28,13 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalTorPolField<TSimType, PhysicalTorPolBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalTorPolCurlField<TSimType, PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the type of an inner core field
-         typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> ICFieldType;
+         typedef PhysicalTorPolCurl<TSimType, PhysicalTorPolCurlBase> ICFieldType;
 
          /// Typedef for the type of an outer core field
-         typedef PhysicalTorPolField<TSimType, ImposedTorPol> OCFieldType;
+         typedef PhysicalTorPolCurl<TSimType, ImposedTorPol> OCFieldType;
    };
 
 }

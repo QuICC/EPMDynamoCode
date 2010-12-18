@@ -13,8 +13,8 @@
 
 // Project includes
 //
-#include "PhysicalFields/Fields/PhysicalScalarBase.hpp"
-#include "PhysicalFields/Fields/PhysicalScalar.hpp"
+#include "PhysicalFields/Fields/PhysicalScalarGradientBase.hpp"
+#include "PhysicalFields/Fields/PhysicalScalarGradient.hpp"
 #include "PhysicalFields/Imposed/ImposedScalar.hpp"
 
 namespace EPMDynamo {
@@ -28,13 +28,13 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalScalar<TSimType, PhysicalScalarBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalScalarGradient<TSimType, PhysicalScalarGradientBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the inner core field
-         typedef PhysicalScalar<TSimType, PhysicalScalarBase> ICFieldType;
+         typedef PhysicalScalarGradient<TSimType, PhysicalScalarGradientBase> ICFieldType;
 
          /// Typedef for the outer core field
-         typedef PhysicalScalar<TSimType, ImposedScalar> OCFieldType;
+         typedef PhysicalScalarGradient<TSimType, ImposedScalar> OCFieldType;
    };
 
 }

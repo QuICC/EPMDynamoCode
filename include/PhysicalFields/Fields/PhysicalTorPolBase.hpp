@@ -88,7 +88,7 @@ namespace EPMDynamo {
    {
    }
 
-   template<typename TSimType> inline bool PhysicalTorPolBase<TSimType>::needAnyTrnsform() const
+   template<typename TSimType> inline bool PhysicalTorPolBase<TSimType>::needAnyTransform() const
    {
       return (this->mNeedTransform == 0);
    }
