@@ -5,7 +5,7 @@
  * \section epmRoadGeneral General roadmap
  *    - Clean implementation of worland quadrature grid selection
  *    - Implement global timestep conditions for different equation parametrisation
- *    - Correct NTerms projection integrals
+ *    - Correct NTerms projection integrals: In current version the last polynomial is probably under resolved
  *    - Implement a clean Physical field traits system, the current one is too messy
  *    - Correct race condition appearing in RotatingConvection computations
  *    - Cleanup implementation of splitting structure output
@@ -15,7 +15,7 @@
  *    - Implement axial vorticty CSCS output
  *    - State/CSCS/Source/Imposed files generation parallel support
  *
- * ***************
+ * ****************************************************************************************************************
  * \section epmRoadV15 Version 1.5.z
  *    - Implement Multiple precision precomputations for the polynomials
  *
@@ -61,4 +61,7 @@
  *    - Implementation of shell computation
  *
  *    - Readers for NG_AshCode data
+ *
+ * \section epmRoadV3 Version 3.y.z
+ *    - Possible implementation of anelastic solver?
  */
