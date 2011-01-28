@@ -22,7 +22,7 @@
 namespace EPMDynamo {
 
    /**
-    * @brief General representation of the Navier-Stokes equation with rotation and thermal convection
+    * @brief General representation of the Navier-Stokes equation thermal convection
     */
    template <typename TSimType, template <typename> class TSimTraits> class NavierStokesThermal : public NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>  {
       public:
