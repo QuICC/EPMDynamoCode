@@ -85,7 +85,7 @@ namespace EPMDynamo {
 
    void AssociatedLegendreOperatorBase::computeSpecialOperators()
    {
-      // Treat the CSCS grid differently (it has 2 addition nodes)
+      // Treat the CSCS grid differently (it has 2 additional nodes)
       if(SimulationConstants::isCSCSGrid())
       {
          // Set the special array for 1/Sin(theta)
@@ -95,6 +95,10 @@ namespace EPMDynamo {
 
          // Set the special Poly/Sin matrix
          this->mSin_1Poly = this->poly();
+
+         // Put in the special values for the poles
+         this->mSin_1Poly.col(0) = this->diff(1).col(0);
+         this->mSin_1Poly.col(this->mSin_1Poly.cols() - 1) = this->diff(1).col(this->mSin_1Poly.cols() - 1);
       }
    }
 }

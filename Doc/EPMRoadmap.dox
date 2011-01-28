@@ -3,6 +3,7 @@
  * This is an approximative roadmap for the next version(s).
  *
  * \section epmRoadGeneral General roadmap
+ *    - CLEANUP THE VISULATION OUTPUT (CSCSFileTools mostly)
  *    - Clean implementation of worland quadrature grid selection
  *    - Implement global timestep conditions for different equation parametrisation
  *    - Correct NTerms projection integrals: In current version the last polynomial is probably under resolved

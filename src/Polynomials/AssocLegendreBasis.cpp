@@ -36,6 +36,10 @@ namespace EPMDynamo {
       // The actual size of the polynomial depends on its fixed parameter (nL = maxNL - m)
       int size = 0;
       size = this->polyN() - this->parameters()(0);
+
+      // Reserve the space in the vector to avoid multiple reallocations
+      this->mBasis.reserve(this->basisN());
+
       // Full initiliasation of the first polynomial (including grid and weights computation)
       this->mBasis.push_back(AssociatedLegendreOperator(this->parameters()(0), this->gridN(), size));
       
@@ -51,6 +55,7 @@ namespace EPMDynamo {
       {
          // The actual size of the polynomial depends on its fixed parameter (nL = maxNL - m)
          size = this->polyN() - this->parameters()(i);
+
          this->mBasis.push_back(AssociatedLegendreOperator(this->parameters()(i), grid, size, weights));
       }
    }

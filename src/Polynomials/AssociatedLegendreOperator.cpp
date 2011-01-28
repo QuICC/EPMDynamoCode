@@ -94,7 +94,7 @@ namespace EPMDynamo {
          this->mpProjS2Ph = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->sll_1(), this->mSin_1Theta, this->poly()));
       }
 
-      // Projection operator from Spectral S compoent to theta component
+      // Projection operator from Spectral S component to theta component
       this->mpProjS2Th = SmartLPOp(new PolynomialOperator<LPOperator>(this->sll_1(), this->diff(1)));
 
       // Projection operator from Spectral to first derivative
@@ -106,10 +106,10 @@ namespace EPMDynamo {
       // Integration operator from real space phi component to spectral T component
       this->mpIntgPh2T = SmartRPOp(new PolynomialOperator<RPOperator>(this->sll_1(), this->wDiff(1)));
 
-//      // Integration operator from real space theta component to spectral T component
+      // Integration operator from real space theta component to spectral T component
       this->mpIntgTh2T =  SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, this->m()), this->mSin_1Theta, this->sll_1(), this->wPoly()));
 
-//      // Integration operator from real space phi component to spectral S component
+      // Integration operator from real space phi component to spectral S component
       this->mpIntgPh2S = SmartZLRPOp(new PolynomialOperator<CLRPOperator<EPMComplex> >(EPMComplex(0.0, -this->m()), this->mSin_1Theta, this->sll_1(), this->wPoly()));
 
       // Integration operator from real space theta component to spectral S component

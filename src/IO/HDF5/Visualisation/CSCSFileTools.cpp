@@ -82,13 +82,13 @@ namespace EPMDynamo {
          // Correct north pole values: Set everything but phi = 0 to 0
          if(pTrunc->local()->rtp()->th0(n) == 0)
          {
-            corrected.at(n).col(0).segment(1, nPh).setZero();
+ //           corrected.at(n).col(0).segment(1, nPh).setZero();
          }
 
          // Correct south pole values: Set everything but phi = 0 to 0
          if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
          {
-            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
+//            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
          }
       }
 
@@ -98,10 +98,10 @@ namespace EPMDynamo {
          cols = corrected.at(0).cols();
          if(pTrunc->local()->rtp()->th0(0) == 0)
          {
-            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
+//            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
          } else
          {
-            corrected.at(0).setZero();
+//            corrected.at(0).setZero();
          }
       }
    }
@@ -122,13 +122,13 @@ namespace EPMDynamo {
          // Correct north pole values: Set everything but phi = 0 to 0
          if(pTrunc->local()->rtp()->th0(n) == 0)
          {
-            corrected.at(n).col(0).segment(1, nPh).setZero();
+//            corrected.at(n).col(0).segment(1, nPh).setZero();
          }
 
          // Correct south pole values: Set everything but phi = 0 to 0
          if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
          {
-            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
+//            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
          }
       }
 
@@ -138,10 +138,10 @@ namespace EPMDynamo {
          cols = corrected.at(0).cols();
          if(pTrunc->local()->rtp()->th0(0) == 0)
          {
-            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
+//            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
          } else
          {
-            corrected.at(0).setZero();
+//            corrected.at(0).setZero();
          }
       }
    }
@@ -162,13 +162,13 @@ namespace EPMDynamo {
          // Correct north pole values: Set everything but phi = 0 to 0
          if(pTrunc->local()->rtp()->th0(n) == 0)
          {
-            corrected.at(n).col(0).segment(1, nPh).setZero();
+//            corrected.at(n).col(0).segment(1, nPh).setZero();
          }
 
          // Correct south pole values: Set everything but phi = 0 to 0
          if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
          {
-            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
+//            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
          }
       }
 
@@ -178,10 +178,10 @@ namespace EPMDynamo {
          cols = corrected.at(0).cols();
          if(pTrunc->local()->rtp()->th0(0) == 0)
          {
-            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
+//            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
          } else
          {
-            corrected.at(0).setZero();
+//            corrected.at(0).setZero();
          }
       }
    }

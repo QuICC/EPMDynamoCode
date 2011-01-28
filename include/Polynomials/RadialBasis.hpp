@@ -82,6 +82,9 @@ namespace EPMDynamo {
 
    template <typename TPolynomial, template <typename> class TOperatorType> void RadialBasis<TPolynomial, TOperatorType>::initBasis()
    {
+      // Reserve the space in the vector to avoid multiple reallocations
+      this->mBasis.reserve(this->basisN());
+
       // Full initialisation of the first polynomial (including grid and weights computation)
       this->mBasis.push_back(TOperatorType<TPolynomial>(this->parameters()(0), this->gridN(), this->polyN()));
 
