@@ -68,122 +68,122 @@ namespace EPMDynamo {
 
    void CSCSFileTools::correctRadialPole(std::vector<Matrix> &corrected, const std::vector<Matrix> &r, const std::vector<Matrix> &theta, const std::vector<Matrix> &phi, SmartTruncation pTrunc)
    {
-      // Get number of phi points
-      int nPh = r.at(0).rows();
-
-      int cols;
-
-      // Loop over all radial shells
-      for(unsigned int n = 0; n < corrected.size(); ++n)
-      {
-         // Get the number of columns
-         cols = corrected.at(n).cols();
-
-         // Correct north pole values: Set everything but phi = 0 to 0
-         if(pTrunc->local()->rtp()->th0(n) == 0)
-         {
- //           corrected.at(n).col(0).segment(1, nPh).setZero();
-         }
-
-         // Correct south pole values: Set everything but phi = 0 to 0
-         if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
-         {
+//      // Get number of phi points
+//      int nPh = r.at(0).rows();
+//
+//      int cols;
+//
+//      // Loop over all radial shells
+//      for(unsigned int n = 0; n < corrected.size(); ++n)
+//      {
+//         // Get the number of columns
+//         cols = corrected.at(n).cols();
+//
+//         // Correct north pole values: Set everything but phi = 0 to 0
+//         if(pTrunc->local()->rtp()->th0(n) == 0)
+//         {
+//            corrected.at(n).col(0).segment(1, nPh).setZero();
+//         }
+//
+//         // Correct south pole values: Set everything but phi = 0 to 0
+//         if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
+//         {
 //            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
-         }
-      }
-
-      // Correct orgin value if applicable
-      if(pTrunc->local()->rtp()->r0() == 0)
-      {
-         cols = corrected.at(0).cols();
-         if(pTrunc->local()->rtp()->th0(0) == 0)
-         {
+//         }
+//      }
+//
+//      // Correct orgin value if applicable
+//      if(pTrunc->local()->rtp()->r0() == 0)
+//      {
+//         cols = corrected.at(0).cols();
+//         if(pTrunc->local()->rtp()->th0(0) == 0)
+//         {
 //            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
-         } else
-         {
+//         } else
+//         {
 //            corrected.at(0).setZero();
-         }
-      }
+//         }
+//      }
    }
 
    void CSCSFileTools::correctThetaPole(std::vector<Matrix> &corrected, const std::vector<Matrix> &r, const std::vector<Matrix> &theta, const std::vector<Matrix> &phi, SmartTruncation pTrunc)
    {
-      // Get number of phi points
-      int nPh = r.at(0).rows();
-
-      int cols; 
-
-      // Loop over all radial shells
-      for(unsigned int n = 0; n < corrected.size(); ++n)
-      {
-         // Get the number of columns
-         cols = corrected.at(n).cols();
-
-         // Correct north pole values: Set everything but phi = 0 to 0
-         if(pTrunc->local()->rtp()->th0(n) == 0)
-         {
+//      // Get number of phi points
+//      int nPh = r.at(0).rows();
+//
+//      int cols; 
+//
+//      // Loop over all radial shells
+//      for(unsigned int n = 0; n < corrected.size(); ++n)
+//      {
+//         // Get the number of columns
+//         cols = corrected.at(n).cols();
+//
+//         // Correct north pole values: Set everything but phi = 0 to 0
+//         if(pTrunc->local()->rtp()->th0(n) == 0)
+//         {
 //            corrected.at(n).col(0).segment(1, nPh).setZero();
-         }
-
-         // Correct south pole values: Set everything but phi = 0 to 0
-         if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
-         {
+//         }
+//
+//         // Correct south pole values: Set everything but phi = 0 to 0
+//         if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
+//         {
 //            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
-         }
-      }
-
-      // Correct orgin value if applicable
-      if(pTrunc->local()->rtp()->r0() == 0)
-      {
-         cols = corrected.at(0).cols();
-         if(pTrunc->local()->rtp()->th0(0) == 0)
-         {
+//         }
+//      }
+//
+//      // Correct orgin value if applicable
+//      if(pTrunc->local()->rtp()->r0() == 0)
+//      {
+//         cols = corrected.at(0).cols();
+//         if(pTrunc->local()->rtp()->th0(0) == 0)
+//         {
 //            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
-         } else
-         {
+//         } else
+//         {
 //            corrected.at(0).setZero();
-         }
-      }
+//         }
+//      }
    }
 
    void CSCSFileTools::correctPhiPole(std::vector<Matrix> &corrected, const std::vector<Matrix> &r, const std::vector<Matrix> &theta, const std::vector<Matrix> &phi, SmartTruncation pTrunc)
    {
-      // Get number of phi points
-      int nPh = r.at(0).rows();
-
-      int cols; 
-
-      // Loop over all radial shells
-      for(unsigned int n = 0; n < corrected.size(); ++n)
-      {
-         // Get the number of columns
-         cols = corrected.at(n).cols();
-
-         // Correct north pole values: Set everything but phi = 0 to 0
-         if(pTrunc->local()->rtp()->th0(n) == 0)
-         {
+//      // Get number of phi points
+//      int nPh = r.at(0).rows();
+//
+//      int cols; 
+//
+//      // Loop over all radial shells
+//      for(unsigned int n = 0; n < corrected.size(); ++n)
+//      {
+//         // Get the number of columns
+//         cols = corrected.at(n).cols();
+//
+//         // Correct north pole values: Set everything but phi = 0 to 0
+//         if(pTrunc->local()->rtp()->th0(n) == 0)
+//         {
 //            corrected.at(n).col(0).segment(1, nPh).setZero();
-         }
-
-         // Correct south pole values: Set everything but phi = 0 to 0
-         if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
-         {
+//         }
+//
+//         // Correct south pole values: Set everything but phi = 0 to 0
+//         if(pTrunc->local()->rtp()->th0(n) + pTrunc->local()->rtp()->nTh(n) == pTrunc->sim()->hoz()->nTh())
+//         {
 //            corrected.at(n).col(cols-1).segment(1, nPh).setZero();
-         }
-      }
-
-      // Correct orgin value if applicable
-      if(pTrunc->local()->rtp()->r0() == 0)
-      {
-         cols = corrected.at(0).cols();
-         if(pTrunc->local()->rtp()->th0(0) == 0)
-         {
+//         }
+//      }
+//
+//      // Correct orgin value if applicable
+//      if(pTrunc->local()->rtp()->r0() == 0)
+//      {
+//         cols = corrected.at(0).cols();
+//         if(pTrunc->local()->rtp()->th0(0) == 0)
+//         {
 //            corrected.at(0).block(0,1, nPh+1, cols-1).setZero();
-         } else
-         {
+//         } else
+//         {
 //            corrected.at(0).setZero();
-         }
-      }
+//         }
+//      }
    }
 
    void CSCSFileTools::reverseOrder(Array& reverse, const Array &data)

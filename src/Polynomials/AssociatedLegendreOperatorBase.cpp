@@ -97,7 +97,7 @@ namespace EPMDynamo {
          this->mSin_1Poly = this->poly();
 
          // Put in the special values for the poles
-         this->mSin_1Poly.col(0) = this->diff(1).col(0);
+         this->mSin_1Poly.col(0) = -this->diff(1).col(0);
          this->mSin_1Poly.col(this->mSin_1Poly.cols() - 1) = this->diff(1).col(this->mSin_1Poly.cols() - 1);
       }
    }
