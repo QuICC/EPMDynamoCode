@@ -118,7 +118,7 @@ namespace EPMDynamo {
 
       // Get the "global" norm for MPI code
       #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, &norm, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, &norm, nL, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
 
       return norm;

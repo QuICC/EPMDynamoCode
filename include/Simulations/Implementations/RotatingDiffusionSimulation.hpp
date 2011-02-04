@@ -28,7 +28,7 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/NavierStokes/NavierStokesRotating.hpp"
+#include "Equations/NavierStokes/NavierStokesDiffusion.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
@@ -118,7 +118,7 @@ namespace EPMDynamo {
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesRotating<TSimType, RotatingDiffusionTraits>    mNavierStokes;
+         NavierStokesDiffusion<TSimType, RotatingDiffusionTraits>    mNavierStokes;
    };
 
    template <typename TSimType> RotatingDiffusionSimulation<TSimType>::RotatingDiffusionSimulation()
