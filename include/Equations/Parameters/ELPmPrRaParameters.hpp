@@ -183,9 +183,14 @@ namespace EPMDynamo {
          EPMFloat meFactor() const;
 
          /**
-          * @brief Test the given timestep value against global CFL conditions
+          * @brief Get the global inertial wave CFL condition
           */
-         void testGlobalCFL(EPMFloat &rDt) const;
+         EPMFloat inertialCFL() const;
+
+         /**
+          * @brief Get the global torsional osciallations CFL condition
+          */
+         EPMFloat torsionalCFL() const;
 
          /**
           * @brief Scaling factor for the codensity source field

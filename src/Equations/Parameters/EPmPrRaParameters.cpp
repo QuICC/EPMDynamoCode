@@ -121,8 +121,14 @@ namespace EPMDynamo {
       return this->Pm()/this->E();
    }
 
-   void EPmPrRaParameters::testGlobalCFL(EPMFloat &rDt) const
+   EPMFloat EPmPrRaParameters::inertialCFL() const
    {
+      return 1.0;
+   }
+
+   EPMFloat EPmPrRaParameters::torsionalCFL() const
+   {
+      return 1.0;
    }
 
    EPMFloat EPmPrRaParameters::codSourceScale() const

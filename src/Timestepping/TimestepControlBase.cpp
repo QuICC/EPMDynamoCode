@@ -25,8 +25,11 @@
 namespace EPMDynamo {
 
    TimestepControlBase::TimestepControlBase(TimestepParameters &tsParams, const EquationParameters &eqParams, TimestepCtrlTypes ctrlType, int order)
-      : mKeepRunning(true), mNeedInit(true), mError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mCFLTimestep(0.0), mrTSParams(tsParams), mrEqParams(eqParams), mController(ctrlType, order, tsParams), mCtrlA(ElementaryCtrl, order, tsParams), mCtrlB(PI42Ctrl, order, tsParams), mCtrlC(H211BCtrl, order, tsParams)
+      : mKeepRunning(true), mNeedInit(true), mError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mrTSParams(tsParams), mrEqParams(eqParams), mController(ctrlType, order, tsParams), mCtrlPI42(PI42Ctrl, order, tsParams), mCtrlH211B(H211BCtrl, order, tsParams)
    {
+      // Set the two global CFL conditions
+      this->rTSParams().setInertialCFL(this->eqParams().inertialCFL());
+      this->rTSParams().setTorsionalCFL(this->eqParams().torsionalCFL());
    }
 
    void TimestepControlBase::resetError()
@@ -44,9 +47,7 @@ namespace EPMDynamo {
       {
          /////////////////////////////////////////////////////
          // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
-         EPMFloat minVRad = 1e10;
          EPMFloat radVPos;
-         EPMFloat minVHoz = 1e10;
          EPMFloat hozVPos;
          /////////////////////////////////////////////////////
 
@@ -62,8 +63,8 @@ namespace EPMDynamo {
          Array radSll = velV.trunc()->sim()->rad()->radSll();
 
          // Initialise to highest representable value
-// COMMENTED OUT FOR TESTING PURPOSE
-//         this->mCFLTimestep = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVRad = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVHoz = std::numeric_limits<EPMFloat>::max();
 
          // Local CFL Condition
          EPMFloat dr;
@@ -96,8 +97,6 @@ namespace EPMDynamo {
                   minVRad = dr/maxVel;
                   radVPos = radii(n_);
                }
-// COMMENTED OUT FOR TESTING PURPOSE
-//               this->mCFLTimestep = std::min(this->mCFLTimestep, dr/maxVel);
             }
 
             // Angular "Velocity"
@@ -112,23 +111,12 @@ namespace EPMDynamo {
                   minVHoz = dr/maxVel;
                   hozVPos = radii(n_);
                }
-// COMMENTED OUT FOR TESTING PURPOSE
-//               this->mCFLTimestep = std::min(this->mCFLTimestep, dr/maxVel);
             }
          }
 
-         // Global CFL conditions min(Ro, sqrt(E))
-         this->eqParams().testGlobalCFL(this->mCFLTimestep);
-
-         /////////////////////////////////////////////////////
-         // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
-         // Store the local V CFL conditions 
+         // Set the local CFL conditions from the velocity field
          this->rTSParams().setRadRTPVCFL(minVRad, radVPos);
          this->rTSParams().setHozRTPVCFL(minVHoz, hozVPos);
-         // Store the global CFL conditions
-         this->rTSParams().setInertialCFL(this->eqParams().nsDt());
-         this->rTSParams().setTorsionalCFL(std::sqrt(this->eqParams().nsDiffusion()));
-         /////////////////////////////////////////////////////
       }
    }
 
@@ -138,9 +126,7 @@ namespace EPMDynamo {
       {
          /////////////////////////////////////////////////////
          // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
-         EPMFloat minVBRad = 1e10;
          EPMFloat radVBPos;
-         EPMFloat minVBHoz = 1e10;
          EPMFloat hozVBPos;
          ////////////////////////////////////////////////////
 
@@ -156,7 +142,8 @@ namespace EPMDynamo {
          Array radSll = magB.trunc()->sim()->rad()->radSll();
 
          // Initialise to highest representable value
-         this->mCFLTimestep = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVBRad = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVBHoz = std::numeric_limits<EPMFloat>::max();
 
          // Local CFL Condition
          EPMFloat d;
@@ -192,7 +179,6 @@ namespace EPMDynamo {
                   minVBRad = dr/maxVel;
                   radVBPos = radii(n_);
                }
-               this->mCFLTimestep = std::min(this->mCFLTimestep, dr/maxVel);
             }
 
             // Angular "Velocity"
@@ -209,18 +195,15 @@ namespace EPMDynamo {
                   minVBHoz = dr/maxVel;
                   hozVBPos = radii(n_);
                }
-               this->mCFLTimestep = std::min(this->mCFLTimestep, dr/maxVel);
             }
          }
 
-         // Global CFL conditions min(Ro, sqrt(E))
-         this->eqParams().testGlobalCFL(this->mCFLTimestep);
-
+         // Store the resulting CFL conditions
+         this->rTSParams().setRadRTPVBCFL(minVBRad, radVBPos);
+         this->rTSParams().setHozRTPVBCFL(minVBHoz, hozVBPos);
 
          /////////////////////////////////////////////////////
          // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         this->rTSParams().setRadRTPVBCFL(minVBRad, radVBPos);
-         this->rTSParams().setHozRTPVBCFL(minVBHoz, hozVBPos);
          this->updateRTPCFLTimestep(velV);
          ///////////////////////////////////////////////////
       }
@@ -232,13 +215,10 @@ namespace EPMDynamo {
       {
          /////////////////////////////////////////////////////
          // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         EPMFloat minVPolRad = 1e10;
          EPMFloat polRadVPos;
          int polRadVDeg;
-         EPMFloat minVTorHoz = 1e10;
          EPMFloat torHozVPos;
          int torHozVDeg;
-         EPMFloat minVPolHoz = 1e10;
          EPMFloat polHozVPos;
          int polHozVDeg;
          /////////////////////////////////////////////////////
@@ -250,6 +230,11 @@ namespace EPMDynamo {
          ArrayI ls = velT.trunc()->local()->spec()->lArray();
          int nL = ls.size();
 
+         /////////////////////////////////////////////////////
+         Array startIdx(nL);
+         startIdx << 0,1,2,2,3,4,4,5,5,6,6,7,7,7,8,8,8,9,9,10,10,10,10,11,11,11,12,12,12,12,13,13;
+         /////////////////////////////////////////////////////
+
          // Get radii
          Array radii = velT.trunc()->sim()->rad()->radGrid();
 
@@ -257,8 +242,10 @@ namespace EPMDynamo {
          Array velTNorm = velT.l2NormByL();
          Array velPNorm = velP.l2NormByL();
 
-         Array startIdx(nL);
-         startIdx << 0,1,2,2,3,4,4,5,5,6,6,7,7,7,8,8,8,9,9,10,10,10,10,11,11,11,12,12,12,12,13,13;
+         // Initialise to highest representable value
+         EPMFloat minVPolRad = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVTorHoz = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVPolHoz = std::numeric_limits<EPMFloat>::max();
 
          // Local CFL Condition
          EPMFloat dr;
@@ -311,14 +298,10 @@ namespace EPMDynamo {
             }
          }
 
-
-         /////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
          // Store local spectral CFL conditions
          this->rTSParams().setPolRadSpecVCFL(minVPolRad, polRadVPos, polRadVDeg);
          this->rTSParams().setTorHozSpecVCFL(minVTorHoz, torHozVPos, torHozVDeg);
          this->rTSParams().setPolHozSpecVCFL(minVPolHoz, polHozVPos, polHozVDeg);
-         /////////////////////////////////////////////////////
       }
    }
 
@@ -328,13 +311,10 @@ namespace EPMDynamo {
       {
          /////////////////////////////////////////////////////
          // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         EPMFloat minVBPolRad = 1e10;
          EPMFloat polRadVBPos;
          int polRadVBDeg;
-         EPMFloat minVBTorHoz = 1e10;
          EPMFloat torHozVBPos;
          int torHozVBDeg;
-         EPMFloat minVBPolHoz = 1e10;
          EPMFloat polHozVBPos;
          int polHozVBDeg;
          /////////////////////////////////////////////////////
@@ -343,6 +323,11 @@ namespace EPMDynamo {
          int nR = velT.trunc()->sim()->rad()->nR();
          ArrayI ls = velT.trunc()->local()->spec()->lArray();
          int nL = ls.size();
+
+         // Initialise to highest representable value
+         EPMFloat minVBPolRad = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVBTorHoz = std::numeric_limits<EPMFloat>::max();
+         EPMFloat minVBPolHoz = std::numeric_limits<EPMFloat>::max();
 
          // Get radii
          Array radii = velT.trunc()->sim()->rad()->radGrid();
@@ -406,7 +391,6 @@ namespace EPMDynamo {
                   minVBTorHoz = dr/maxVel;
                   torHozVBPos = radii(n_);
                   torHozVBDeg = l;
-                  this->mCFLTimestep = std::min(this->mCFLTimestep, dr/maxVel);
                }
 
                p = magPNorm(l)*magPNorm(l)*this->eqParams().alfvenFactor();
@@ -417,27 +401,29 @@ namespace EPMDynamo {
                   minVBPolHoz = dr/maxVel;
                   polHozVBPos = radii(n_);
                   polHozVBDeg = l;
-                  this->mCFLTimestep = std::min(this->mCFLTimestep, dr/maxVel);
                }
             }
          }
 
-         /////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
          // Store local CFL conditions
          this->rTSParams().setPolRadSpecVBCFL(minVBPolRad, polRadVBPos, polRadVBDeg);
          this->rTSParams().setTorHozSpecVBCFL(minVBTorHoz, torHozVBPos, torHozVBDeg);
          this->rTSParams().setPolHozSpecVBCFL(minVBPolHoz, polHozVBPos, polHozVBDeg);
+
+         /////////////////////////////////////////////////////
+         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
          this->updateSpecCFLTimestep(velT, velP);
          /////////////////////////////////////////////////////
       }
    }
 
-   void TimestepControlBase::getSimulationCFLCondition()
+   EPMFloat TimestepControlBase::getSimulationCFLCondition()
    {
+      EPMFloat cfl = this->rTSParams().getCFL();
+
       // Get the "global" local minimum for MPI code
       #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, &this->mCFLTimestep, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, &cfl, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          // STORE TEMPORARY SOME ADDITIONAL INFORMATION
@@ -461,6 +447,8 @@ namespace EPMDynamo {
          MPI_Allreduce(MPI_IN_PLACE, this->rTSParams().rErrCFLs().data(), this->rTSParams().errCFLs().size(), MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       #endif // EPMDYNAMO_MPI
+
+      return cfl;
    }
 
    void TimestepControlBase::testInitialisation(EPMFloat& rDt)
@@ -496,25 +484,22 @@ namespace EPMDynamo {
 
    void TimestepControlBase::testCFLCondition(EPMFloat& rDt)
    {
-      // Set timestep according to CFL condition
-      this->getSimulationCFLCondition();
-      if(this->mCFLTimestep > 0.0)
+      // Get the simulation wide CFL condition
+      EPMFloat cfl = this->getSimulationCFLCondition();
+
+      // Get timestep according to CFL condition
+      if(cfl > 0.0)
       {
-         rDt = std::min(this->mCFLTimestep, rDt);
+         rDt = std::min(cfl, rDt);
       }
    }
 
-   void TimestepControlBase::useAdaptiveTimestep(EPMFloat& rDt)
+   void TimestepControlBase::useErrorCtrlTimestep()
    {
-      rDt = this->mController.nextTimestep(this->mError, this->mOldError);
-
-      /////////////////////////////////////////////////////
-      // STORE TEMPORARY SOME ADDITIONAL INFORMATION
       // Store the values for three different controllers
-      this->rTSParams().setErrorCFL(this->mCtrlA.nextTimestep(this->mError, this->mOldError), 0);
-      this->rTSParams().setErrorCFL(this->mCtrlB.nextTimestep(this->mError, this->mOldError), 1);
-      this->rTSParams().setErrorCFL(this->mCtrlC.nextTimestep(this->mError, this->mOldError), 2);
-      /////////////////////////////////////////////////////
+      this->rTSParams().setErrorCFL(this->mController.nextTimestep(this->mError, this->mOldError), 0);
+      this->rTSParams().setErrorCFL(this->mCtrlPI42.nextTimestep(this->mError, this->mOldError), 1);
+      this->rTSParams().setErrorCFL(this->mCtrlH211B.nextTimestep(this->mError, this->mOldError), 2);
    }
 
    void TimestepControlBase::useCourantTimestep(EPMFloat& rDt)

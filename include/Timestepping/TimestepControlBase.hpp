@@ -69,21 +69,29 @@ namespace EPMDynamo {
          void updateRTPCFLTimestep(const RTPField &velV);
 
          /**
-          * @brief Update value of the spectral CFL conditions timestep for 
-          *          non-magnetic case
-          *
-          * @param velV Velocity spectral space field
-          */
-         void updateSpecCFLTimestep(const SpectralSHScalar& velT, const SpectralSHScalar& velP);
-         void updateSpecCFLTimestep(const SpectralSHScalar& magT, const SpectralSHScalar& magP, const SpectralSHScalar& velT, const SpectralSHScalar& velP);
-
-         /**
           * @brief Update value of the RTP CFL condition timestep
           *
           * @param magB Magnetic rtp space field
           * @param velV Velocity rtp space field
           */
          void updateRTPCFLTimestep(const RTPField &magB, const RTPField &velV);
+
+         /**
+          * @brief Update value of the spectral CFL conditions timestep for 
+          *          non-magnetic case
+          *
+          * @param velV Velocity spectral space field
+          */
+         void updateSpecCFLTimestep(const SpectralSHScalar& velT, const SpectralSHScalar& velP);
+
+         /**
+          * @brief Update value of the spectral CFL conditions timestep for 
+          *          magnetic case
+          *
+          * @param magB Magnetic rtp space field
+          * @param velV Velocity spectral space field
+          */
+         void updateSpecCFLTimestep(const SpectralSHScalar& magT, const SpectralSHScalar& magP, const SpectralSHScalar& velT, const SpectralSHScalar& velP);
 
          /**
           * @brief Print some useful information
@@ -129,7 +137,7 @@ namespace EPMDynamo {
          /**
           * @brief Get the Simulation wide CFL condition (MPI communication)
           */
-         void getSimulationCFLCondition();
+         EPMFloat getSimulationCFLCondition();
 
          /**
           * @brief test for initialisation timestep condition
@@ -153,9 +161,9 @@ namespace EPMDynamo {
          void testCFLCondition(EPMFloat& rDt);
 
          /**
-          * @brief Use the adaptive timestep condition
+          * @brief Use the adaptive timestep error controller condition
           */
-         void useAdaptiveTimestep(EPMFloat& rDt);
+         void useErrorCtrlTimestep();
 
          /**
           * @brief Include courant number in obtained timestep
@@ -178,11 +186,6 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief CFL condition imposed timestep
-          */
-         EPMFloat   mCFLTimestep;
-
-         /**
           * @brief Reference to a TimestepParameters object
           */
          TimestepParameters&  mrTSParams;
@@ -197,9 +200,8 @@ namespace EPMDynamo {
           */
          TimestepController   mController;
 
-         TimestepController   mCtrlA;
-         TimestepController   mCtrlB;
-         TimestepController   mCtrlC;
+         TimestepController   mCtrlPI42;
+         TimestepController   mCtrlH211B;
    };
 
    inline bool TimestepControlBase::keepRunning() const

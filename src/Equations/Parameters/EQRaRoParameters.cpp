@@ -121,17 +121,14 @@ namespace EPMDynamo {
       return 1.0/this->Ro();
    }
 
-   void EQRaRoParameters::testGlobalCFL(EPMFloat &rDt) const
+   EPMFloat EQRaRoParameters::inertialCFL() const
    {
-      if(this->Ro() != 0.0)
-      {
-         rDt = std::min(rDt, this->Ro());
-      }
+      return this->Ro();
+   }
 
-      if(this->E() != 0.0)
-      {
-         rDt = std::min(rDt, std::sqrt(this->E()));
-      }
+   EPMFloat EQRaRoParameters::torsionalCFL() const
+   {
+      return std::sqrt(this->E());
    }
 
    EPMFloat EQRaRoParameters::codSourceScale() const

@@ -110,12 +110,12 @@ namespace EPMDynamo {
       if(this->rTSParams().isNextStep())
       {
          // Store current timestep
-         EPMFloat dt = this->rTSParams().dt();
+         EPMFloat dt = std::numeric_limits<EPMFloat>::max();
 
          // Set timestep according to adaptive timestep controller
          if(! this->rTSParams().isRejected())
          {
-            this->useAdaptiveTimestep(dt);
+            this->useErrorCtrlTimestep();
          }
 
          // Set timestep according to CFL condition

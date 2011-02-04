@@ -132,6 +132,7 @@ namespace EPMDynamo {
          /**
           * @brief Get all the CFLs
           */
+         const Array& globalCFLs() const;
          const Array& rtpCFLs() const;
          Array& rRTPCFLs();
          const Array& specCFLs() const;
@@ -190,6 +191,11 @@ namespace EPMDynamo {
           */
          void setErrorCFL(EPMFloat dt, int cId);
 
+         /**
+          * @brief Compute the active CFL condition from all the stored values
+          */
+         EPMFloat getCFL() const;
+
       protected:
 
       private:
@@ -237,6 +243,7 @@ namespace EPMDynamo {
          /**
           * @brief Storage for the different CFL conditions
           */
+         Array mGlobalCFLs;
          Array mRTPCFLs;
          Array mSpecCFLs;
          Array mRTPCFLPos;
@@ -309,6 +316,24 @@ namespace EPMDynamo {
       return this->mError;
    }
 
+   inline EPMFloat TimestepParameters::getCFL() const
+   {
+      // Get the minimal global CFL
+      EPMFloat cfl = this->mGlobalCFLs.minCoeff();
+
+      // Get the minimal local RTP CFL
+      cfl = std::min(cfl, this->mRTPCFLs.minCoeff());
+
+      // Get the minimal error control CFL
+      cfl = std::min(cfl, this->mErrCFLs.minCoeff());
+
+      return cfl;
+   }
+
+   inline const Array& TimestepParameters::globalCFLs() const
+   {
+      return this->mGlobalCFLs;
+   }
 
    inline const Array& TimestepParameters::rtpCFLs() const
    {
@@ -374,35 +399,35 @@ namespace EPMDynamo {
 
    inline void TimestepParameters::setInertialCFL(EPMFloat dt)
    {
-      this->mRTPCFLs(0) = dt;
+      this->mGlobalCFLs(0) = dt;
    }
 
    inline void TimestepParameters::setTorsionalCFL(EPMFloat dt)
    {
-      this->mRTPCFLs(1) = dt;
+      this->mGlobalCFLs(1) = dt;
    }
 
    inline void TimestepParameters::setHozRTPVCFL(EPMFloat dt, EPMFloat pos)
    {
-      this->mRTPCFLs(2) = dt;
+      this->mRTPCFLs(0) = dt;
       this->mRTPCFLPos(0) = pos;
    }
 
    inline void TimestepParameters::setHozRTPVBCFL(EPMFloat dt, EPMFloat pos)
    {
-      this->mRTPCFLs(3) = dt;
+      this->mRTPCFLs(1) = dt;
       this->mRTPCFLPos(1) = pos;
    }
 
    inline void TimestepParameters::setRadRTPVCFL(EPMFloat dt, EPMFloat pos)
    {
-      this->mRTPCFLs(4) = dt;
+      this->mRTPCFLs(2) = dt;
       this->mRTPCFLPos(2) = pos;
    }
 
    inline void TimestepParameters::setRadRTPVBCFL(EPMFloat dt, EPMFloat pos)
    {
-      this->mRTPCFLs(5) = dt;
+      this->mRTPCFLs(3) = dt;
       this->mRTPCFLPos(3) = pos;
    }
 
