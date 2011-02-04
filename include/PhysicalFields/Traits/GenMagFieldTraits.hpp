@@ -15,7 +15,7 @@
 //
 #include "PhysicalFields/Fields/PhysicalTorPolCurlBase.hpp"
 #include "PhysicalFields/Fields/PhysicalTorPolCurl.hpp"
-#include "PhysicalFields/Imposed/ImposedTorPol.hpp"
+#include "PhysicalFields/Imposed/ImposedTorPolCurl.hpp"
 
 namespace EPMDynamo {
 

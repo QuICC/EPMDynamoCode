@@ -96,7 +96,7 @@ namespace EPMDynamo {
 
    template<typename TSimType> inline bool PhysicalTorPolCurlBase<TSimType>::needAnyTransform() const
    {
-      return ((this->mNeedTransform == 0) && (this->mNeedGradTransform == 0));
+      return ((this->mNeedTransform == 0) && (this->mNeedCurlTransform == 0));
    }
 
    template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolCurlBase<TSimType>::perturbation() const

@@ -15,7 +15,7 @@
 //
 #include "PhysicalFields/Fields/PhysicalTorPolCurlBase.hpp"
 #include "PhysicalFields/Fields/PhysicalTorPolCurl.hpp"
-#include "PhysicalFields/Imposed/ImposedTorPol.hpp"
+#include "PhysicalFields/Imposed/ImposedTorPolCurl.hpp"
 
 namespace EPMDynamo {
 
@@ -34,7 +34,7 @@ namespace EPMDynamo {
          typedef PhysicalTorPolCurl<TSimType, PhysicalTorPolCurlBase> ICFieldType;
 
          /// Typedef for the type of an outer core field
-         typedef PhysicalTorPolCurl<TSimType, ImposedTorPol> OCFieldType;
+         typedef PhysicalTorPolCurl<TSimType, ImposedTorPolCurl> OCFieldType;
    };
 
 }
