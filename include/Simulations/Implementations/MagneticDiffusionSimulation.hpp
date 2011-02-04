@@ -110,11 +110,6 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Angular distance factor for CFL condition
-          */
-         EPMFloat mCFLFactor;
-
-         /**
           * @brief Magnetic field
           */
          typename MagneticDiffusionTraits<TSimType>::MagType   mMagB;
@@ -126,11 +121,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> MagneticDiffusionSimulation<TSimType>::MagneticDiffusionSimulation()
-      : mCFLFactor(1.0), mMagB(this->mpTrunc, this->mTransform), mInduction(mMagB, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mMagB(this->mpTrunc, this->mTransform), mInduction(mMagB, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
-      // Set the CFL factor to L*(L+1)
-      int l = this->mpTrunc->sim()->hoz()->nL();
-      this->mCFLFactor = static_cast<EPMFloat>(l*(l+1));
    }
 
    template <typename TSimType> void MagneticDiffusionSimulation<TSimType>::initEquations()
@@ -187,7 +179,7 @@ namespace EPMDynamo {
       this->mInduction.updateRHS();
 
       // Update the CFL timestep condition
-      this->mSimControl.tsControl().updateCFLTimestep(this->mMagB.oc().rtp(), this->mCFLFactor);
+      this->mSimControl.tsControl().updateRTPCFLTimestep(this->mMagB.oc().rtp());
    }
 
    template <typename TSimType> void MagneticDiffusionSimulation<TSimType>::transformEquationsRHS(const int step)

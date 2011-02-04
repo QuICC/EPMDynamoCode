@@ -109,11 +109,6 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Angular distance factor for CFL condition
-          */
-         EPMFloat mCFLFactor;
-
-         /**
           * @brief Codensity scalar
           */
          typename CodensityDiffusionTraits<TSimType>::CodType   mCodC;
@@ -125,11 +120,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> CodensityDiffusionSimulation<TSimType>::CodensityDiffusionSimulation()
-      : mCFLFactor(1.0), mCodC(this->mpTrunc, this->mTransform), mTransport(mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCodC(this->mpTrunc, this->mTransform), mTransport(mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
-      // Set the CFL factor to L*(L+1)
-      int l = this->mpTrunc->sim()->hoz()->nL();
-      this->mCFLFactor = static_cast<EPMFloat>(l*(l+1));
    }
 
    template <typename TSimType> void CodensityDiffusionSimulation<TSimType>::initEquations()

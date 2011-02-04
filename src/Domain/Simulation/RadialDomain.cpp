@@ -18,7 +18,7 @@
 namespace EPMDynamo {
 
    RadialDomain::RadialDomain(const int maxN, const int nR)
-      : RadialTruncation(maxN, nR)
+      : RadialTruncation(maxN, nR), mpRSll(new Array(nR))
    {
    }
 

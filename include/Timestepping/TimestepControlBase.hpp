@@ -14,6 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "GeneralScalars/SpectralSHScalar.hpp"
 #include "GeneralFields/RTPField.hpp"
 #include "Equations/Parameters/EquationParameters.hpp"
 #include "Timestepping/TimestepParameters.hpp"
@@ -60,22 +61,29 @@ namespace EPMDynamo {
          virtual void updateTimestep() = 0;
 
          /**
-          * @brief Update value of the CFL condition timestep for 
+          * @brief Update value of the RTP CFL conditions timestep for 
           *          non-magnetic case
           *
           * @param velV Velocity rtp space field
-          * @param llFactor Spherical geometry factor
           */
-         void updateCFLTimestep(const RTPField &velV, const EPMFloat llFactor);
+         void updateRTPCFLTimestep(const RTPField &velV);
 
          /**
-          * @brief Update value of the CFL condition timestep
+          * @brief Update value of the spectral CFL conditions timestep for 
+          *          non-magnetic case
+          *
+          * @param velV Velocity spectral space field
+          */
+         void updateSpecCFLTimestep(const SpectralSHScalar& velT, const SpectralSHScalar& velP);
+         void updateSpecCFLTimestep(const SpectralSHScalar& magT, const SpectralSHScalar& magP, const SpectralSHScalar& velT, const SpectralSHScalar& velP);
+
+         /**
+          * @brief Update value of the RTP CFL condition timestep
           *
           * @param magB Magnetic rtp space field
           * @param velV Velocity rtp space field
-          * @param llFactor Spherical geometry factor
           */
-         void updateCFLTimestep(const RTPField &magB, const RTPField &velV, const EPMFloat llFactor);
+         void updateRTPCFLTimestep(const RTPField &magB, const RTPField &velV);
 
          /**
           * @brief Print some useful information
@@ -188,6 +196,10 @@ namespace EPMDynamo {
           * @brief Adaptive timestep controller
           */
          TimestepController   mController;
+
+         TimestepController   mCtrlA;
+         TimestepController   mCtrlB;
+         TimestepController   mCtrlC;
    };
 
    inline bool TimestepControlBase::keepRunning() const

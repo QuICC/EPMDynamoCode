@@ -111,11 +111,6 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Angular distance factor for CFL condition
-          */
-         EPMFloat mCFLFactor;
-
-         /**
           * @brief Velocity field
           */
          typename VelocityDiffusionTraits<TSimType>::VelType   mVelV;
@@ -127,11 +122,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> VelocityDiffusionSimulation<TSimType>::VelocityDiffusionSimulation()
-      : mCFLFactor(1.0), mVelV(this->mpTrunc, this->mTransform), mNavierStokes(mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
-      // Set the CFL factor to L*(L+1)
-      int l = this->mpTrunc->sim()->hoz()->nL();
-      this->mCFLFactor = static_cast<EPMFloat>(l*(l+1));
    }
 
    template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::initEquations()
@@ -197,7 +189,7 @@ namespace EPMDynamo {
       this->mNavierStokes.updateRHS();
 
       // Update the CFL timestep condition
-      this->mSimControl.tsControl().updateCFLTimestep(this->mVelV.oc().rtp(), this->mCFLFactor);
+      this->mSimControl.tsControl().updateRTPCFLTimestep(this->mVelV.oc().rtp());
    }
 
    template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::transformEquationsRHS(const int step)

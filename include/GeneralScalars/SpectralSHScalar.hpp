@@ -48,6 +48,7 @@ namespace EPMDynamo {
           * @brief Compute the L2 norm of the spectral values
           */
          EPMFloat l2Norm() const;
+         Array l2NormByL() const;
 
          /**
           * @brief Compute the L2 norm for each mode separately

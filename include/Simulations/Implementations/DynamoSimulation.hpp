@@ -26,6 +26,8 @@
 #include "IO/HDF5/Source/SourceFileReader.hpp"
 #include "IO/ASCII/EnergyFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
+#include "IO/ASCII/TimeFile.hpp"
+#include "IO/ASCII/CFLTimestepFile.hpp"
 
 #include "Equations/Induction/InductionMHD.hpp"
 #include "Equations/Transport/TransportMHD.hpp"
@@ -115,11 +117,6 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Angular distance factor for CFL condition
-          */
-         EPMFloat mCFLFactor;
-
-         /**
           * @brief Codensity scalar
           */
          typename DynamoTraits<TSimType>::CodType   mCodC;
@@ -151,11 +148,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> DynamoSimulation<TSimType>::DynamoSimulation()
-      : mCFLFactor(1.0), mCodC(this->mpTrunc, this->mTransform), mMagB(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mInduction(mMagB, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mMagB, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCodC(this->mpTrunc, this->mTransform), mMagB(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mInduction(mMagB, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mMagB, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
-      // Set the CFL factor to L*(L+1)
-      int l = this->mpTrunc->sim()->hoz()->nL();
-      this->mCFLFactor = static_cast<EPMFloat>(l*(l+1));
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::initEquations()
@@ -215,7 +209,7 @@ namespace EPMDynamo {
       this->mNavierStokes.updateRHS();
 
       // Update the CFL timestep condition
-      this->mSimControl.tsControl().updateCFLTimestep(this->mMagB.oc().rtp(), this->mVelV.oc().rtp(), this->mCFLFactor);
+      this->mSimControl.tsControl().updateRTPCFLTimestep(this->mMagB.oc().rtp(), this->mVelV.oc().rtp());
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::transformEquationsRHS(const int step)
@@ -228,6 +222,9 @@ namespace EPMDynamo {
 
       // Transform RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
+
+      // Update the spectral CFL timestep condition
+      this->mSimControl.tsControl().updateSpecCFLTimestep(this->mMagB.oc().perturbation().tor(), this->mMagB.oc().perturbation().pol(), this->mVelV.oc().perturbation().tor(), this->mVelV.oc().perturbation().pol());
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::addExternalInfluence()
@@ -325,6 +322,16 @@ namespace EPMDynamo {
 
    template <typename TSimType> void DynamoSimulation<TSimType>::addASCIIOutput()
    {
+      // Create a CFL timestep ASCII logging file
+      EPMSHARED_PTR<CFLTimestepFile> pCFLFile(new CFLTimestepFile("cfl_timestep", this->mSimControl.tsParams()));
+      // Add time file to ASCII output
+      this->mIOSys.addASCIIWriter(pCFLFile);
+
+      // Create a timestep ASCII logging file
+      EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
+      // Add time file to ASCII output
+      this->mIOSys.addASCIIWriter(pTimeFile);
+
       // Create a energy ASCII diagnostic file for the codensity scalar
       EPMSHARED_PTR<EnergyFile<TSimType, typename DynamoTraits<TSimType>::CodType> > pCodEnergy(new EnergyFile<TSimType, typename DynamoTraits<TSimType>::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the magnetic field

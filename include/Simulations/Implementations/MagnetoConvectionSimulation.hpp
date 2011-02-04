@@ -115,11 +115,6 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Angular distance factor for CFL condition
-          */
-         EPMFloat mCFLFactor;
-
-         /**
           * @brief Codensity scalar
           */
          typename MagnetoConvectionTraits<TSimType>::CodType   mCodC;
@@ -151,11 +146,8 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> MagnetoConvectionSimulation<TSimType>::MagnetoConvectionSimulation()
-      : mCFLFactor(1.0), mCodC(this->mpTrunc, this->mTransform), mMagB(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mInduction(mMagB, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mMagB, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCodC(this->mpTrunc, this->mTransform), mMagB(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mInduction(mMagB, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mMagB, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
-      // Set the CFL factor to L*(L+1)
-      int l = this->mpTrunc->sim()->hoz()->nL();
-      this->mCFLFactor = static_cast<EPMFloat>(l*(l+1));
    }
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::initEquations()
@@ -215,7 +207,7 @@ namespace EPMDynamo {
       this->mNavierStokes.updateRHS();
 
       // Update the CFL timestep condition
-      this->mSimControl.tsControl().updateCFLTimestep(mMagB.oc().rtp(), mVelV.oc().rtp(), mCFLFactor);
+      this->mSimControl.tsControl().updateRTPCFLTimestep(mMagB.oc().rtp(), mVelV.oc().rtp());
    }
 
    template <typename TSimType> void MagnetoConvectionSimulation<TSimType>::transformEquationsRHS(const int step)

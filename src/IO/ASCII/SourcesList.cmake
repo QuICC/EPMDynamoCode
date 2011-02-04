@@ -8,6 +8,8 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       ASCIIReader.cpp
       ASCIIRWriter.cpp 
       ASCIIWriter.cpp
+      CFLTimestepFileDefs.cpp
+      CFLTimestepFile.cpp
       ControlInterface.cpp
       ControlInterfaceDefs.cpp
       EnergyFileDefs.cpp

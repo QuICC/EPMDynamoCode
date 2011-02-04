@@ -90,6 +90,40 @@ namespace EPMDynamo {
       return norm;
    }
 
+   Array SpectralSHScalar::l2NormByL() const
+   {
+      // Get truncation information
+      const int l0 = this->minL();
+      int nL = this->nL();
+      int nM;
+      Array norm(nL);
+
+      EPMFloat tmp = 0.0;
+      EPMFloat tmpMax = 0.0;
+
+      // Loop over harmonic modes
+      for(int l = l0; l < nL; ++l)
+      {
+         nM = this->nM(l);
+         tmpMax = 0.0;
+         for(int m=0; m < nM; ++m)
+         {
+            // Compute L2 norm            
+            tmp = this->lshell(l).col(m).real().dot(this->lshell(l).col(m).real()) + this->lshell(l).col(m).imag().dot(this->lshell(l).col(m).imag());
+            tmpMax = std::max(tmpMax, std::sqrt(tmp));
+         }
+         norm(l) = tmpMax;
+
+      }
+
+      // Get the "global" norm for MPI code
+      #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, &norm, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+      #endif // EPMDYNAMO_MPI
+
+      return norm;
+   }
+
    Array SpectralSHScalar::energy() const
    {
       Array energy(1);
