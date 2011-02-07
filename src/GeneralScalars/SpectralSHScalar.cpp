@@ -94,31 +94,33 @@ namespace EPMDynamo {
    {
       // Get truncation information
       const int l0 = this->minL();
-      int nL = this->nL();
+      int nL = this->trunc()->sim()->hoz()->nL();
       int nM;
       Array norm(nL);
+      norm.setConstant(0.0);
+      ArrayI ls = this->trunc()->local()->spec()->lArray();
 
       EPMFloat tmp = 0.0;
       EPMFloat tmpMax = 0.0;
 
       // Loop over harmonic modes
-      for(int l = l0; l < nL; ++l)
+      for(int i = l0; i < this->nL(); ++i)
       {
-         nM = this->nM(l);
+         nM = this->nM(i);
          tmpMax = 0.0;
          for(int m=0; m < nM; ++m)
          {
             // Compute L2 norm            
-            tmp = this->lshell(l).col(m).real().dot(this->lshell(l).col(m).real()) + this->lshell(l).col(m).imag().dot(this->lshell(l).col(m).imag());
+            tmp = this->lshell(i).col(m).real().dot(this->lshell(i).col(m).real()) + this->lshell(i).col(m).imag().dot(this->lshell(i).col(m).imag());
             tmpMax = std::max(tmpMax, std::sqrt(tmp));
          }
-         norm(l) = tmpMax;
+         norm(ls(i)) = tmpMax;
 
       }
 
       // Get the "global" norm for MPI code
       #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, &norm, nL, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, &norm, norm.size(), MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
 
       return norm;

@@ -77,23 +77,6 @@ namespace EPMDynamo {
          void updateRTPCFLTimestep(const RTPField &magB, const RTPField &velV);
 
          /**
-          * @brief Update value of the spectral CFL conditions timestep for 
-          *          non-magnetic case
-          *
-          * @param velV Velocity spectral space field
-          */
-         void updateSpecCFLTimestep(const SpectralSHScalar& velT, const SpectralSHScalar& velP);
-
-         /**
-          * @brief Update value of the spectral CFL conditions timestep for 
-          *          magnetic case
-          *
-          * @param magB Magnetic rtp space field
-          * @param velV Velocity spectral space field
-          */
-         void updateSpecCFLTimestep(const SpectralSHScalar& magT, const SpectralSHScalar& magP, const SpectralSHScalar& velT, const SpectralSHScalar& velP);
-
-         /**
           * @brief Print some useful information
           */
          void printInfo() const;

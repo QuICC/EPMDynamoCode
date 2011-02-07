@@ -222,9 +222,6 @@ namespace EPMDynamo {
 
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
-
-      // Update the spectral CFL timestep condition
-      this->mSimControl.tsControl().updateSpecCFLTimestep(this->mVelV.oc().perturbation().tor(), this->mVelV.oc().perturbation().pol());
    }
 
    template <typename TSimType> void ThermalConvectionSimulation<TSimType>::addExternalInfluence()

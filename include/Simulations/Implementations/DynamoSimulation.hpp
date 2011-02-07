@@ -222,9 +222,6 @@ namespace EPMDynamo {
 
       // Transform RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
-
-      // Update the spectral CFL timestep condition
-      this->mSimControl.tsControl().updateSpecCFLTimestep(this->mMagB.oc().perturbation().tor(), this->mMagB.oc().perturbation().pol(), this->mVelV.oc().perturbation().tor(), this->mVelV.oc().perturbation().pol());
    }
 
    template <typename TSimType> void DynamoSimulation<TSimType>::addExternalInfluence()

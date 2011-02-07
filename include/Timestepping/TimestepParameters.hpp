@@ -135,16 +135,10 @@ namespace EPMDynamo {
          const Array& globalCFLs() const;
          const Array& rtpCFLs() const;
          Array& rRTPCFLs();
-         const Array& specCFLs() const;
-         Array& rSpecCFLs();
          const Array& errCFLs() const;
          Array& rErrCFLs();
          const Array& rtpCFLPos() const;
          Array& rRTPCFLPos();
-         const Array& specCFLPos() const;
-         Array& rSpecCFLPos();
-         const ArrayI& specCFLDeg() const;
-         ArrayI& rSpecCFLDeg();
 
          /**
           * @brief Set the inertial global CFL
@@ -167,24 +161,6 @@ namespace EPMDynamo {
           */
          void setRadRTPVCFL(EPMFloat dt, EPMFloat pos);
          void setRadRTPVBCFL(EPMFloat dt, EPMFloat pos);
-
-         /**
-          * @brief Set the local horizontal spectral CFL
-          */
-         void setTorHozSpecVCFL(EPMFloat dt, EPMFloat pos, int l);
-         void setTorHozSpecVBCFL(EPMFloat dt, EPMFloat pos, int l);
-
-         /**
-          * @brief Set the local horizontal spectral CFL
-          */
-         void setPolHozSpecVCFL(EPMFloat dt, EPMFloat pos, int l);
-         void setPolHozSpecVBCFL(EPMFloat dt, EPMFloat pos, int l);
-
-         /**
-          * @brief Set the local radial spectral CFL
-          */
-         void setPolRadSpecVCFL(EPMFloat dt, EPMFloat pos, int l);
-         void setPolRadSpecVBCFL(EPMFloat dt, EPMFloat pos, int l);
 
          /**
           * @brief Set the error control CFL
@@ -245,10 +221,7 @@ namespace EPMDynamo {
           */
          Array mGlobalCFLs;
          Array mRTPCFLs;
-         Array mSpecCFLs;
          Array mRTPCFLPos;
-         Array mSpecCFLPos;
-         ArrayI mSpecCFLDeg;
 
          /**
           * @brief Storage for the different  error CFL conditions
@@ -340,11 +313,6 @@ namespace EPMDynamo {
       return this->mRTPCFLs;
    }
 
-   inline const Array& TimestepParameters::specCFLs() const
-   {
-      return this->mSpecCFLs;
-   }
-
    inline const Array& TimestepParameters::errCFLs() const
    {
       return this->mErrCFLs;
@@ -355,24 +323,9 @@ namespace EPMDynamo {
       return this->mRTPCFLPos;
    }
 
-   inline const Array& TimestepParameters::specCFLPos() const
-   {
-      return this->mSpecCFLPos;
-   }
-
-   inline const ArrayI& TimestepParameters::specCFLDeg() const
-   {
-      return this->mSpecCFLDeg;
-   }
-
    inline Array& TimestepParameters::rRTPCFLs()
    {
       return this->mRTPCFLs;
-   }
-
-   inline Array& TimestepParameters::rSpecCFLs()
-   {
-      return this->mSpecCFLs;
    }
 
    inline Array& TimestepParameters::rErrCFLs()
@@ -384,17 +337,6 @@ namespace EPMDynamo {
    {
       return this->mRTPCFLPos;
    }
-
-   inline Array& TimestepParameters::rSpecCFLPos()
-   {
-      return this->mSpecCFLPos;
-   }
-
-   inline ArrayI& TimestepParameters::rSpecCFLDeg()
-   {
-      return this->mSpecCFLDeg;
-   }
-
 
 
    inline void TimestepParameters::setInertialCFL(EPMFloat dt)
@@ -429,48 +371,6 @@ namespace EPMDynamo {
    {
       this->mRTPCFLs(3) = dt;
       this->mRTPCFLPos(3) = pos;
-   }
-
-   inline void TimestepParameters::setTorHozSpecVCFL(EPMFloat dt, EPMFloat pos, int l)
-   {
-      this->mSpecCFLs(0) = dt;
-      this->mSpecCFLPos(0) = pos;
-      this->mSpecCFLDeg(0) = l;
-   }
-
-   inline void TimestepParameters::setTorHozSpecVBCFL(EPMFloat dt, EPMFloat pos, int l)
-   {
-      this->mSpecCFLs(1) = dt;
-      this->mSpecCFLPos(1) = pos;
-      this->mSpecCFLDeg(1) = l;
-   }
-
-   inline void TimestepParameters::setPolHozSpecVCFL(EPMFloat dt, EPMFloat pos, int l)
-   {
-      this->mSpecCFLs(2) = dt;
-      this->mSpecCFLPos(2) = pos;
-      this->mSpecCFLDeg(2) = l;
-   }
-
-   inline void TimestepParameters::setPolHozSpecVBCFL(EPMFloat dt, EPMFloat pos, int l)
-   {
-      this->mSpecCFLs(3) = dt;
-      this->mSpecCFLPos(3) = pos;
-      this->mSpecCFLDeg(3) = l;
-   }
-
-   inline void TimestepParameters::setPolRadSpecVCFL(EPMFloat dt, EPMFloat pos, int l)
-   {
-      this->mSpecCFLs(4) = dt;
-      this->mSpecCFLPos(4) = pos;
-      this->mSpecCFLDeg(4) = l;
-   }
-
-   inline void TimestepParameters::setPolRadSpecVBCFL(EPMFloat dt, EPMFloat pos, int l)
-   {
-      this->mSpecCFLs(5) = dt;
-      this->mSpecCFLPos(5) = pos;
-      this->mSpecCFLDeg(5) = l;
    }
 
    inline void TimestepParameters::setErrorCFL(EPMFloat dt, int cId)

@@ -47,8 +47,8 @@ namespace EPMDynamo {
       {
          /////////////////////////////////////////////////////
          // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
-         EPMFloat radVPos;
-         EPMFloat hozVPos;
+         EPMFloat radVPos = -1;
+         EPMFloat hozVPos = -1;
          /////////////////////////////////////////////////////
 
 
@@ -126,8 +126,8 @@ namespace EPMDynamo {
       {
          /////////////////////////////////////////////////////
          // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
-         EPMFloat radVBPos;
-         EPMFloat hozVBPos;
+         EPMFloat radVBPos = -1;
+         EPMFloat hozVBPos = -1;
          ////////////////////////////////////////////////////
 
 
@@ -209,214 +209,6 @@ namespace EPMDynamo {
       }
    }
 
-   void TimestepControlBase::updateSpecCFLTimestep(const SpectralSHScalar& velT, const SpectralSHScalar& velP)
-   {
-      if(this->rTSParams().isNextStep())
-      {
-         /////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         EPMFloat polRadVPos;
-         int polRadVDeg;
-         EPMFloat torHozVPos;
-         int torHozVDeg;
-         EPMFloat polHozVPos;
-         int polHozVDeg;
-         /////////////////////////////////////////////////////
-
-
-
-         // Get truncation information
-         int nR = velT.trunc()->sim()->rad()->nR();
-         ArrayI ls = velT.trunc()->local()->spec()->lArray();
-         int nL = ls.size();
-
-         /////////////////////////////////////////////////////
-         Array startIdx(nL);
-         startIdx << 0,1,2,2,3,4,4,5,5,6,6,7,7,7,8,8,8,9,9,10,10,10,10,11,11,11,12,12,12,12,13,13;
-         /////////////////////////////////////////////////////
-
-         // Get radii
-         Array radii = velT.trunc()->sim()->rad()->radGrid();
-
-         // Compute the L2 norms by harmonic degree
-         Array velTNorm = velT.l2NormByL();
-         Array velPNorm = velP.l2NormByL();
-
-         // Initialise to highest representable value
-         EPMFloat minVPolRad = std::numeric_limits<EPMFloat>::max();
-         EPMFloat minVTorHoz = std::numeric_limits<EPMFloat>::max();
-         EPMFloat minVPolHoz = std::numeric_limits<EPMFloat>::max();
-
-         // Local CFL Condition
-         EPMFloat dr;
-         int n_;
-         int l;
-         for(int i = 0; i < nL; i++)
-         {
-            // Get the harmonic degree l
-            l = ls(i);
-
-            // Local CFL Condition
-            n_ = startIdx(l);
-
-            for(;n_ < nR; n_++)
-            {
-               if(n_ == 0)
-               {
-                  dr = radii(1)-radii(0);
-               }
-               else if(n_ == nR - 1)
-               {
-                  dr = 1.0 - radii(n_);
-               } else
-               {
-                  dr = std::min(radii(n_) - radii(n_-1), radii(n_+1) - radii(n_));
-               }
-
-               if(dr/velPNorm(l) < minVPolRad)
-               {
-                  minVPolRad = dr/velPNorm(l);
-                  polRadVPos = radii(n_);
-                  polRadVDeg = l;
-               }
-
-               dr = radii(n_)/std::sqrt(l*(l+1));
-
-               if(dr/velTNorm(l) < minVTorHoz)
-               {
-                  minVTorHoz = dr/velTNorm(l);
-                  torHozVPos = radii(n_);
-                  torHozVDeg = l;
-               }
-
-               if(dr/velPNorm(l) < minVPolHoz)
-               {
-                  minVPolHoz = dr/velPNorm(l);
-                  polHozVPos = radii(n_);
-                  polHozVDeg = l;
-               }
-            }
-         }
-
-         // Store local spectral CFL conditions
-         this->rTSParams().setPolRadSpecVCFL(minVPolRad, polRadVPos, polRadVDeg);
-         this->rTSParams().setTorHozSpecVCFL(minVTorHoz, torHozVPos, torHozVDeg);
-         this->rTSParams().setPolHozSpecVCFL(minVPolHoz, polHozVPos, polHozVDeg);
-      }
-   }
-
-   void TimestepControlBase::updateSpecCFLTimestep(const SpectralSHScalar& magT, const SpectralSHScalar& magP, const SpectralSHScalar& velT, const SpectralSHScalar& velP)
-   {
-      if(this->rTSParams().isNextStep())
-      {
-         /////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         EPMFloat polRadVBPos;
-         int polRadVBDeg;
-         EPMFloat torHozVBPos;
-         int torHozVBDeg;
-         EPMFloat polHozVBPos;
-         int polHozVBDeg;
-         /////////////////////////////////////////////////////
-         
-         // Get truncation information
-         int nR = velT.trunc()->sim()->rad()->nR();
-         ArrayI ls = velT.trunc()->local()->spec()->lArray();
-         int nL = ls.size();
-
-         // Initialise to highest representable value
-         EPMFloat minVBPolRad = std::numeric_limits<EPMFloat>::max();
-         EPMFloat minVBTorHoz = std::numeric_limits<EPMFloat>::max();
-         EPMFloat minVBPolHoz = std::numeric_limits<EPMFloat>::max();
-
-         // Get radii
-         Array radii = velT.trunc()->sim()->rad()->radGrid();
-         
-         Array startIdx(nL);
-         startIdx << 0,1,2,2,3,4,4,5,5,6,6,7,7,7,8,8,8,9,9,10,10,10,10,11,11,11,12,12,12,12,13,13;
-
-         Array magTNorm = magT.l2NormByL();
-         Array magPNorm = magP.l2NormByL();
-         Array velTNorm = velT.l2NormByL();
-         Array velPNorm = velP.l2NormByL();
-
-         // Local CFL Condition
-         EPMFloat dr;
-         EPMFloat d;
-         EPMFloat maxVel = 0.0;
-         EPMFloat p;
-         int n_;
-         int l;
-         for(int i = 0; i < nL; i++)
-         {
-            // Get the right harmonic degree l
-            l = ls(i);
-
-            // Local CFL Condition
-            n_ = startIdx(l);
-
-            // Loop over the remaining radial grid points
-            for(;n_ < nR; n_++)
-            {
-               if(n_ == 0)
-               {
-                  dr = radii(1)-radii(0);
-               }
-               else if(n_ == nR - 1)
-               {
-                  dr = 1.0 - radii(n_);
-               } else
-               {
-                  dr = std::min(radii(n_) - radii(n_-1), radii(n_+1) - radii(n_));
-               }
-               d = this->eqParams().alfvenDamping(dr);
-
-               p = magPNorm(l)*magPNorm(l)*this->eqParams().alfvenFactor();
-               maxVel = p/std::sqrt(p + d) + velPNorm(l);
-
-               if(dr/maxVel < minVBPolRad)
-               {
-                  minVBPolRad = dr/maxVel;
-                  polRadVBPos = radii(n_);
-                  polRadVBDeg = l;
-               }
-
-               dr = radii(n_)/std::sqrt(l*(l+1));
-               d = this->eqParams().alfvenDamping(dr);
-               p = magTNorm(l)*magTNorm(l)*this->eqParams().alfvenFactor();
-               maxVel = p/std::sqrt(p + d) + velTNorm(l);
-
-               if(dr/maxVel < minVBTorHoz)
-               {
-                  minVBTorHoz = dr/maxVel;
-                  torHozVBPos = radii(n_);
-                  torHozVBDeg = l;
-               }
-
-               p = magPNorm(l)*magPNorm(l)*this->eqParams().alfvenFactor();
-               maxVel = p/std::sqrt(p + d) + velPNorm(l);
-
-               if(dr/maxVel < minVBPolHoz)
-               {
-                  minVBPolHoz = dr/maxVel;
-                  polHozVBPos = radii(n_);
-                  polHozVBDeg = l;
-               }
-            }
-         }
-
-         // Store local CFL conditions
-         this->rTSParams().setPolRadSpecVBCFL(minVBPolRad, polRadVBPos, polRadVBDeg);
-         this->rTSParams().setTorHozSpecVBCFL(minVBTorHoz, torHozVBPos, torHozVBDeg);
-         this->rTSParams().setPolHozSpecVBCFL(minVBPolHoz, polHozVBPos, polHozVBDeg);
-
-         /////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         this->updateSpecCFLTimestep(velT, velP);
-         /////////////////////////////////////////////////////
-      }
-   }
-
    EPMFloat TimestepControlBase::getSimulationCFLCondition()
    {
       EPMFloat cfl = this->rTSParams().getCFL();
@@ -430,20 +222,7 @@ namespace EPMDynamo {
          // Get global RTP CFL minima
          MPI_Allreduce(MPI_IN_PLACE, this->rTSParams().rRTPCFLs().data(), this->rTSParams().rtpCFLs().size(), MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
 
-         // Get global spectral CFL minima
-         Matrix   test(2,this->rTSParams().specCFLs().size());
-         test.row(0) = this->rTSParams().specCFLs();
-         test.row(1) = this->rTSParams().specCFLPos();
-         MPI_Allreduce(MPI_IN_PLACE, test.data(), this->rTSParams().specCFLs().size(), MPI_2DOUBLE_PRECISION, MPI_MINLOC, MPI_COMM_WORLD);
-         this->rTSParams().rSpecCFLPos() = test.row(1);
-
-         test.row(0) = this->rTSParams().specCFLs();
-         test.row(1) = this->rTSParams().specCFLDeg();
-         MPI_Allreduce(MPI_IN_PLACE, test.data(), this->rTSParams().specCFLs().size(), MPI_2DOUBLE_PRECISION, MPI_MINLOC, MPI_COMM_WORLD);
-         this->rTSParams().rSpecCFLDeg() = test.row(1);
-         this->rTSParams().rSpecCFLs() = test.row(0);
-
-         // Get global errorr CFL minima
+         // Get global error CFL minima
          MPI_Allreduce(MPI_IN_PLACE, this->rTSParams().rErrCFLs().data(), this->rTSParams().errCFLs().size(), MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       #endif // EPMDYNAMO_MPI
