@@ -22,9 +22,6 @@ namespace EPMDynamo {
    {
       // Initialise the radial sqrt(L(L+1)) factors
       this->mpRadial->initRadSll(maxL);
-
-      // FOR THE MOMENT THE VALUES ARE SET BY HAND
-      this->mpRadial->setRadSll();
    }
 
 }

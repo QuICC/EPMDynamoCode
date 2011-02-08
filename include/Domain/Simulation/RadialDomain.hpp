@@ -46,11 +46,6 @@ namespace EPMDynamo {
          const Array&  radGrid() const;
 
          /**
-          * @brief Get the radial depend spherical geometry factor $\sqrt(l(l+1))$
-          */
-         const Array&  radSll() const;
-
-         /**
           * @brief Set the radial grid
           *
           * \param rad Radial grid
@@ -58,20 +53,25 @@ namespace EPMDynamo {
          void setRadGrid(SmartArray rad);
 
          /**
+          * @brief Get the radial depend spherical geometry factor $\sqrt(l(l+1))$
+          */
+         const Array&  radSll() const;
+
+         /**
           * @brief Set the radial spherical geometric factor to stringentest value
           *
           * \param maxL Maximum harmonic degree
           */
          void initRadSll(int maxL);
-
-         /**
-          * @brief Set specific values for the radial spherical geometric factor
-          */
-         void setRadSll();
          
       protected:
 
       private:
+         /**
+          * @brief Local storage for the highest L
+          */
+         int   mMaxL;
+
          /**
           * @brief Smart pointer to the radial grid
           */
@@ -81,6 +81,21 @@ namespace EPMDynamo {
           * @brief Smart pointer to the spherical geometric factor
           */
          SmartArray  mpRSll;
+
+         /**
+          * @brief Set specific values for the radial spherical geometric factor
+          */
+         void setRadSll();
+
+         /**
+          * @brief Compute the alpha parameter of the Jacobi polynomials
+          */
+         EPMFloat alpha() const;
+
+         /**
+          * @brief Compute the beta parameter of the Jacobi polynomials
+          */
+         EPMFloat beta(int l) const;
    };
 
    inline const Array& RadialDomain::radGrid() const
@@ -95,30 +110,20 @@ namespace EPMDynamo {
 
    inline void RadialDomain::setRadGrid(SmartArray rad)
    {
+      // Set the radial grid
       this->mpRGrid = rad;
+
+      // Set the sqrt(l(l+1)) factors related to the grid
+      this->setRadSll();
    }
 
    inline void RadialDomain::initRadSll(int maxL)
    {
+      // Store the maximul harmonic degree
+      this->mMaxL = maxL;
+
       // Fill array with maximal value
       this->mpRSll->setConstant(std::sqrt(static_cast<EPMFloat>(maxL*(maxL+1))));
-   }
-
-   inline void RadialDomain::setRadSll()
-   {
-      // Currently set it by hand for the currently used resolution ...
-      (*this->mpRSll)(0) = std::sqrt(2.0);
-      (*this->mpRSll)(1) = std::sqrt(2.0);
-      (*this->mpRSll)(2) = std::sqrt(12.0);
-      (*this->mpRSll)(3) = std::sqrt(20.0);
-      (*this->mpRSll)(4) = std::sqrt(42.0);
-      (*this->mpRSll)(5) = std::sqrt(72.0);
-      (*this->mpRSll)(6) = std::sqrt(110.0);
-      (*this->mpRSll)(7) = std::sqrt(182.0);
-      (*this->mpRSll)(8) = std::sqrt(272.0);
-      (*this->mpRSll)(10) = std::sqrt(420.0);
-      (*this->mpRSll)(11) = std::sqrt(552.0);
-      (*this->mpRSll)(12) = std::sqrt(702.0);
    }
 
    /// Typedef for a smart simulation wide radial domain information 
