@@ -122,7 +122,6 @@ namespace EPMDynamo {
    
    /// Enumb of the different type of predefined timestep controllers
    enum TimestepCtrlTypes {ElementaryCtrl, PI42Ctrl, H211BCtrl};
-   
 }
 
 #endif // EPMTYPEDEFS_HPP

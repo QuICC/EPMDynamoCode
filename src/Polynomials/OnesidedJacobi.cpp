@@ -20,14 +20,14 @@
 namespace EPMDynamo {
 
    OnesidedJacobi::OnesidedJacobi(const int pL, const int nX, const int nN)
-      : WeightedPolynomial(pL, nX, nN, msMaxDiff), mAlpha(PolynomialTraits::ALPHA), mBeta(pL + PolynomialTraits::BETA), mBPoly(nN)
+      : WeightedPolynomial(pL, nX, nN, msMaxDiff), mAlpha(SimulationConstants::RadialGridTraits::ALPHA), mBeta(pL + SimulationConstants::RadialGridTraits::BETA), mBPoly(nN)
    {
       // Initialise everything
       this->initFull();
    }
 
    OnesidedJacobi::OnesidedJacobi(const int pL, const SmartArray grid, const int nN, const SmartArray weights)
-      : WeightedPolynomial(pL, grid, nN, weights, msMaxDiff), mAlpha(PolynomialTraits::ALPHA), mBeta(pL + PolynomialTraits::BETA), mBPoly(nN)
+      : WeightedPolynomial(pL, grid, nN, weights, msMaxDiff), mAlpha(SimulationConstants::RadialGridTraits::ALPHA), mBeta(pL + SimulationConstants::RadialGridTraits::BETA), mBPoly(nN)
    {
       // Initialise using the provided grid and weights
       this->initPartial();
@@ -81,7 +81,7 @@ namespace EPMDynamo {
    void OnesidedJacobi::computeWeightedGrid()
    {
       // Initialise the grid generator
-      PolynomialTraits::RadialGrid  generator(this->gridN(), GridGeneratorBase::RADIAL_GRID, SimulationConstants::isCSCSGrid());
+      SimulationConstants::RadialGridTraits::RadialGrid  generator(this->gridN(), GridGeneratorBase::RADIAL_GRID, SimulationConstants::isCSCSGrid());
 
       // get computed grid
       this->rGrid() = generator.grid();

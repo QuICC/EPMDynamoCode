@@ -13,6 +13,8 @@
 
 // Project includes
 //
+#include "Polynomials/WorlandChebyshevTraits.hpp"
+#include "Polynomials/WorlandLegendreTraits.hpp"
 
 namespace EPMDynamo {
 
@@ -22,6 +24,9 @@ namespace EPMDynamo {
    class SimulationConstants
    {
       public:
+         /// Typedef for the radial worland polynomials traits to generate (either Chebyshev grid or Legendre grid)
+         typedef WorlandChebyshevTraits RadialGridTraits;
+
          /**
           * @brief Check if grid is a CSCS grid
           */
