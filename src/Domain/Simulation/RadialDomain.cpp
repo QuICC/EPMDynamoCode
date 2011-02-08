@@ -37,7 +37,7 @@ namespace EPMDynamo {
    void RadialDomain::setRadSll()
    {
       // Create the grid generator
-      int gridN = std::ceil(static_cast<EPMFloat>(3*this->maxN())/2.0);
+      int gridN = static_cast<int>(std::ceil(static_cast<EPMFloat>(3*this->maxN())/2.0));
       JacobiGrid   generator(gridN, GridGeneratorBase::RADIAL_GRID, SimulationConstants::isCSCSGrid());
 
       // Create storage for the jacobiGrid
