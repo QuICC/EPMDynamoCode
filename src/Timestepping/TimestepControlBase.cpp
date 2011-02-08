@@ -25,11 +25,22 @@
 namespace EPMDynamo {
 
    TimestepControlBase::TimestepControlBase(TimestepParameters &tsParams, const EquationParameters &eqParams, TimestepCtrlTypes ctrlType, int order)
-      : mKeepRunning(true), mNeedInit(true), mError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mrTSParams(tsParams), mrEqParams(eqParams), mController(ctrlType, order, tsParams), mCtrlPI42(PI42Ctrl, order, tsParams), mCtrlH211B(H211BCtrl, order, tsParams)
+      : mKeepRunning(true), mNeedInit(true), mError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mOldError(TimestepConfig::TIMESTEP_ERROR_EPSILON), mrTSParams(tsParams), mrEqParams(eqParams), mController(ctrlType, order, tsParams)
    {
       // Set the two global CFL conditions
       this->rTSParams().setInertialCFL(this->eqParams().inertialCFL());
       this->rTSParams().setTorsionalCFL(this->eqParams().torsionalCFL());
+
+      // Create some controllers to experiment with
+      this->mCtrls.push_back(new TimestepController(ElementaryCtrl, order, tsParams, 1e-1)); 
+      this->mCtrls.push_back(new TimestepController(ElementaryCtrl, order, tsParams, 1e-2)); 
+      this->mCtrls.push_back(new TimestepController(ElementaryCtrl, order, tsParams, 1e-3)); 
+      this->mCtrls.push_back(new TimestepController(PI42Ctrl, order, tsParams, 1e-1)); 
+      this->mCtrls.push_back(new TimestepController(PI42Ctrl, order, tsParams, 1e-2)); 
+      this->mCtrls.push_back(new TimestepController(PI42Ctrl, order, tsParams, 1e-3)); 
+      this->mCtrls.push_back(new TimestepController(H211BCtrl, order, tsParams, 1e-1)); 
+      this->mCtrls.push_back(new TimestepController(H211BCtrl, order, tsParams, 1e-2)); 
+      this->mCtrls.push_back(new TimestepController(H211BCtrl, order, tsParams, 1e-3)); 
    }
 
    void TimestepControlBase::resetError()
@@ -45,12 +56,9 @@ namespace EPMDynamo {
    {
       if(this->rTSParams().isNextStep())
       {
-         /////////////////////////////////////////////////////
-         // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
+         // Variables to store the radial position of the minima
          EPMFloat radVPos = -1;
          EPMFloat hozVPos = -1;
-         /////////////////////////////////////////////////////
-
 
          // Get truncation information
          int r0 = velV.trunc()->local()->rtp()->r0();
@@ -115,8 +123,8 @@ namespace EPMDynamo {
          }
 
          // Set the local CFL conditions from the velocity field
-         this->rTSParams().setRadRTPVCFL(minVRad, radVPos);
-         this->rTSParams().setHozRTPVCFL(minVHoz, hozVPos);
+         this->rTSParams().setRadRTPCFL(minVRad, radVPos);
+         this->rTSParams().setHozRTPCFL(minVHoz, hozVPos);
       }
    }
 
@@ -124,12 +132,9 @@ namespace EPMDynamo {
    {
       if(this->rTSParams().isNextStep())
       {
-         /////////////////////////////////////////////////////
-         // ADDITIONAL ELEMENTS TEMPORARY REQUIRED
+         // Variables to store the radial position of the minima
          EPMFloat radVBPos = -1;
          EPMFloat hozVBPos = -1;
-         ////////////////////////////////////////////////////
-
 
          // Get truncation information
          int r0 = magB.trunc()->local()->rtp()->r0();
@@ -199,13 +204,8 @@ namespace EPMDynamo {
          }
 
          // Store the resulting CFL conditions
-         this->rTSParams().setRadRTPVBCFL(minVBRad, radVBPos);
-         this->rTSParams().setHozRTPVBCFL(minVBHoz, hozVBPos);
-
-         /////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         this->updateRTPCFLTimestep(velV);
-         ///////////////////////////////////////////////////
+         this->rTSParams().setRadRTPCFL(minVBRad, radVBPos);
+         this->rTSParams().setHozRTPCFL(minVBHoz, hozVBPos);
       }
    }
 
@@ -217,14 +217,16 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_MPI
          MPI_Allreduce(MPI_IN_PLACE, &cfl, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         // STORE TEMPORARY SOME ADDITIONAL INFORMATION
-         // Get global RTP CFL minima
-         MPI_Allreduce(MPI_IN_PLACE, this->rTSParams().rRTPCFLs().data(), this->rTSParams().rtpCFLs().size(), MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+         // Get global RTP CFL minima and position
+         Matrix tmp(2, this->rTSParams().rtpCFLs().size());
+         tmp.row(0) = this->rTSParams().rtpCFLs();
+         tmp.row(1) = this->rTSParams().rtpCFLPos();
+         MPI_Allreduce(MPI_IN_PLACE, tmp.data(), tmp.cols(), MPI_2DOUBLE_PRECISION, MPI_MINLOC, MPI_COMM_WORLD);
+         this->rTSParams().rRTPCFLs() = tmp.row(0);
+         this->rTSParams().rRTPCFLPos() = tmp.row(1);
 
          // Get global error CFL minima
          MPI_Allreduce(MPI_IN_PLACE, this->rTSParams().rErrCFLs().data(), this->rTSParams().errCFLs().size(), MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       #endif // EPMDYNAMO_MPI
 
       return cfl;
@@ -277,8 +279,11 @@ namespace EPMDynamo {
    {
       // Store the values for three different controllers
       this->rTSParams().setErrorCFL(this->mController.nextTimestep(this->mError, this->mOldError), 0);
-      this->rTSParams().setErrorCFL(this->mCtrlPI42.nextTimestep(this->mError, this->mOldError), 1);
-      this->rTSParams().setErrorCFL(this->mCtrlH211B.nextTimestep(this->mError, this->mOldError), 2);
+
+      for(unsigned int i = 0; i < this->mCtrls.size(); i++)
+      {
+         this->rTSParams().setErrorCFL(this->mCtrls.at(i)->nextTimestep(this->mError, this->mOldError), i + 1);
+      }
    }
 
    void TimestepControlBase::useCourantTimestep(EPMFloat& rDt)

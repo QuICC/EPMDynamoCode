@@ -130,14 +130,38 @@ namespace EPMDynamo {
          void resetError();
 
          /**
-          * @brief Get all the CFLs
+          * @brief Get the array of global CFLs
           */
          const Array& globalCFLs() const;
+
+         /**
+          * @brief Get the array of RTP CFLs
+          */
          const Array& rtpCFLs() const;
-         Array& rRTPCFLs();
+
+         /**
+          * @brief Get the array of error controlled CFLs
+          */
          const Array& errCFLs() const;
-         Array& rErrCFLs();
+
+         /**
+          * @brief Get the radial position of the RTP CFL condition
+          */
          const Array& rtpCFLPos() const;
+
+         /**
+          * @brief Set the array of RTP CFL conditions
+          */
+         Array& rRTPCFLs();
+
+         /**
+          * @brief Set the array of error control CFL conditions
+          */
+         Array& rErrCFLs();
+
+         /**
+          * @brief Set the array of RTP CFL conditions positions
+          */
          Array& rRTPCFLPos();
 
          /**
@@ -153,14 +177,12 @@ namespace EPMDynamo {
          /**
           * @brief Set the local horizontal RTP CFL
           */
-         void setHozRTPVCFL(EPMFloat dt, EPMFloat pos);
-         void setHozRTPVBCFL(EPMFloat dt, EPMFloat pos);
+         void setHozRTPCFL(EPMFloat dt, EPMFloat pos);
 
          /**
           * @brief Set the local radial RTP CFL
           */
-         void setRadRTPVCFL(EPMFloat dt, EPMFloat pos);
-         void setRadRTPVBCFL(EPMFloat dt, EPMFloat pos);
+         void setRadRTPCFL(EPMFloat dt, EPMFloat pos);
 
          /**
           * @brief Set the error control CFL
@@ -217,16 +239,24 @@ namespace EPMDynamo {
          void checkValues();
 
          /**
-          * @brief Storage for the different CFL conditions
+          * @brief Storage for the global CFL conditions
           */
          Array mGlobalCFLs;
+
+         /**
+          * @brief Storage for the RTP CFL conditions
+          */
          Array mRTPCFLs;
-         Array mRTPCFLPos;
 
          /**
           * @brief Storage for the different  error CFL conditions
           */
          Array mErrCFLs;
+
+         /**
+          * @brief Storage for the radial positions of the RTP CFL conditions
+          */
+         Array mRTPCFLPos;
    };
 
    inline bool TimestepParameters::isNextStep() const
@@ -298,7 +328,7 @@ namespace EPMDynamo {
       cfl = std::min(cfl, this->mRTPCFLs.minCoeff());
 
       // Get the minimal error control CFL
-      cfl = std::min(cfl, this->mErrCFLs.minCoeff());
+      cfl = std::min(cfl, this->mErrCFLs(0));
 
       return cfl;
    }
@@ -316,6 +346,33 @@ namespace EPMDynamo {
    inline const Array& TimestepParameters::errCFLs() const
    {
       return this->mErrCFLs;
+   }
+
+   inline void TimestepParameters::setInertialCFL(EPMFloat dt)
+   {
+      this->mGlobalCFLs(0) = dt;
+   }
+
+   inline void TimestepParameters::setTorsionalCFL(EPMFloat dt)
+   {
+      this->mGlobalCFLs(1) = dt;
+   }
+
+   inline void TimestepParameters::setHozRTPCFL(EPMFloat dt, EPMFloat pos)
+   {
+      this->mRTPCFLs(0) = dt;
+      this->mRTPCFLPos(0) = pos;
+   }
+
+   inline void TimestepParameters::setRadRTPCFL(EPMFloat dt, EPMFloat pos)
+   {
+      this->mRTPCFLs(1) = dt;
+      this->mRTPCFLPos(1) = pos;
+   }
+
+   inline void TimestepParameters::setErrorCFL(EPMFloat dt, int cId)
+   {
+      this->mErrCFLs(cId) = dt;
    }
 
    inline const Array& TimestepParameters::rtpCFLPos() const
@@ -336,46 +393,6 @@ namespace EPMDynamo {
    inline Array& TimestepParameters::rRTPCFLPos()
    {
       return this->mRTPCFLPos;
-   }
-
-
-   inline void TimestepParameters::setInertialCFL(EPMFloat dt)
-   {
-      this->mGlobalCFLs(0) = dt;
-   }
-
-   inline void TimestepParameters::setTorsionalCFL(EPMFloat dt)
-   {
-      this->mGlobalCFLs(1) = dt;
-   }
-
-   inline void TimestepParameters::setHozRTPVCFL(EPMFloat dt, EPMFloat pos)
-   {
-      this->mRTPCFLs(0) = dt;
-      this->mRTPCFLPos(0) = pos;
-   }
-
-   inline void TimestepParameters::setHozRTPVBCFL(EPMFloat dt, EPMFloat pos)
-   {
-      this->mRTPCFLs(1) = dt;
-      this->mRTPCFLPos(1) = pos;
-   }
-
-   inline void TimestepParameters::setRadRTPVCFL(EPMFloat dt, EPMFloat pos)
-   {
-      this->mRTPCFLs(2) = dt;
-      this->mRTPCFLPos(2) = pos;
-   }
-
-   inline void TimestepParameters::setRadRTPVBCFL(EPMFloat dt, EPMFloat pos)
-   {
-      this->mRTPCFLs(3) = dt;
-      this->mRTPCFLPos(3) = pos;
-   }
-
-   inline void TimestepParameters::setErrorCFL(EPMFloat dt, int cId)
-   {
-      this->mErrCFLs(cId) = dt;
    }
 
    /// Typedef for a shared pointer to a TimestepParameters

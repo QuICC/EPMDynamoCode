@@ -183,8 +183,10 @@ namespace EPMDynamo {
           */
          TimestepController   mController;
 
-         TimestepController   mCtrlPI42;
-         TimestepController   mCtrlH211B;
+         /**
+          * @brief Vector of controller to do some experiments
+          */
+         std::vector<TimestepController*>  mCtrls;
    };
 
    inline bool TimestepControlBase::keepRunning() const

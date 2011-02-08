@@ -216,10 +216,10 @@ namespace EPMDynamo {
       // Check if predictor step is coming
       if(this->rTSParams().isNextStep())
       {
-         // Store current timestep
+         // Store maximum value as initial timestep
          EPMFloat dt = std::numeric_limits<EPMFloat>::max();
 
-         // Set timestep according to adaptive timestep error controller
+         // Compute the error controller adaptive timestep 
          if(! this->rTSParams().isRejected())
          {
             this->useErrorCtrlTimestep();
