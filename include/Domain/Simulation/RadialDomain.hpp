@@ -53,7 +53,7 @@ namespace EPMDynamo {
          void setRadGrid(SmartArray rad);
 
          /**
-          * @brief Get the radial depend spherical geometry factor $\sqrt(l(l+1))$
+          * @brief Get the radial depend spherical geometry factor \f$\sqrt(l(l+1))\f$
           */
          const Array&  radSll() const;
 

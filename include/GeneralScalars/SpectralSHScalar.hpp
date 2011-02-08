@@ -50,7 +50,7 @@ namespace EPMDynamo {
          EPMFloat l2Norm() const;
 
          /**
-          * @breif Compute an L2 norm of the spectral values for each degree
+          * @brief Compute an L2 norm of the spectral values for each degree
           *
           * This is an attempt to obtain a norm usable in the "spectral" CFL
           * condition
