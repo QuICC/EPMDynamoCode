@@ -140,9 +140,9 @@ namespace EPMDynamo {
          const Array& rtpCFLs() const;
 
          /**
-          * @brief Get the array of error controlled CFLs
+          * @brief Get the error controlled CFL
           */
-         const Array& errCFLs() const;
+         EPMFloat errCFL() const;
 
          /**
           * @brief Get the radial position of the RTP CFL condition
@@ -153,11 +153,6 @@ namespace EPMDynamo {
           * @brief Set the array of RTP CFL conditions
           */
          Array& rRTPCFLs();
-
-         /**
-          * @brief Set the array of error control CFL conditions
-          */
-         Array& rErrCFLs();
 
          /**
           * @brief Set the array of RTP CFL conditions positions
@@ -187,7 +182,7 @@ namespace EPMDynamo {
          /**
           * @brief Set the error control CFL
           */
-         void setErrorCFL(EPMFloat dt, int cId);
+         void setErrorCFL(EPMFloat dt);
 
          /**
           * @brief Compute the active CFL condition from all the stored values
@@ -249,9 +244,9 @@ namespace EPMDynamo {
          Array mRTPCFLs;
 
          /**
-          * @brief Storage for the different  error CFL conditions
+          * @brief Storage for the error CFL condition
           */
-         Array mErrCFLs;
+         EPMFloat mErrCFL;
 
          /**
           * @brief Storage for the radial positions of the RTP CFL conditions
@@ -328,7 +323,7 @@ namespace EPMDynamo {
       cfl = std::min(cfl, this->mRTPCFLs.minCoeff());
 
       // Get the minimal error control CFL
-      cfl = std::min(cfl, this->mErrCFLs(0));
+      cfl = std::min(cfl, this->mErrCFL);
 
       return cfl;
    }
@@ -343,9 +338,9 @@ namespace EPMDynamo {
       return this->mRTPCFLs;
    }
 
-   inline const Array& TimestepParameters::errCFLs() const
+   inline EPMFloat TimestepParameters::errCFL() const
    {
-      return this->mErrCFLs;
+      return this->mErrCFL;
    }
 
    inline void TimestepParameters::setInertialCFL(EPMFloat dt)
@@ -370,9 +365,9 @@ namespace EPMDynamo {
       this->mRTPCFLPos(1) = pos;
    }
 
-   inline void TimestepParameters::setErrorCFL(EPMFloat dt, int cId)
+   inline void TimestepParameters::setErrorCFL(EPMFloat dt)
    {
-      this->mErrCFLs(cId) = dt;
+      this->mErrCFL = dt;
    }
 
    inline const Array& TimestepParameters::rtpCFLPos() const
@@ -383,11 +378,6 @@ namespace EPMDynamo {
    inline Array& TimestepParameters::rRTPCFLs()
    {
       return this->mRTPCFLs;
-   }
-
-   inline Array& TimestepParameters::rErrCFLs()
-   {
-      return this->mErrCFLs;
    }
 
    inline Array& TimestepParameters::rRTPCFLPos()

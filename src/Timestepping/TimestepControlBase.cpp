@@ -30,17 +30,6 @@ namespace EPMDynamo {
       // Set the two global CFL conditions
       this->rTSParams().setInertialCFL(this->eqParams().inertialCFL());
       this->rTSParams().setTorsionalCFL(this->eqParams().torsionalCFL());
-
-      // Create some controllers to experiment with
-      this->mCtrls.push_back(new TimestepController(ElementaryCtrl, order, tsParams, 1e-1)); 
-      this->mCtrls.push_back(new TimestepController(ElementaryCtrl, order, tsParams, 1e-2)); 
-      this->mCtrls.push_back(new TimestepController(ElementaryCtrl, order, tsParams, 1e-3)); 
-      this->mCtrls.push_back(new TimestepController(PI42Ctrl, order, tsParams, 1e-1)); 
-      this->mCtrls.push_back(new TimestepController(PI42Ctrl, order, tsParams, 1e-2)); 
-      this->mCtrls.push_back(new TimestepController(PI42Ctrl, order, tsParams, 1e-3)); 
-      this->mCtrls.push_back(new TimestepController(H211BCtrl, order, tsParams, 1e-1)); 
-      this->mCtrls.push_back(new TimestepController(H211BCtrl, order, tsParams, 1e-2)); 
-      this->mCtrls.push_back(new TimestepController(H211BCtrl, order, tsParams, 1e-3)); 
    }
 
    void TimestepControlBase::resetError()
@@ -226,7 +215,9 @@ namespace EPMDynamo {
          this->rTSParams().rRTPCFLPos() = tmp.row(1);
 
          // Get global error CFL minima
-         MPI_Allreduce(MPI_IN_PLACE, this->rTSParams().rErrCFLs().data(), this->rTSParams().errCFLs().size(), MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+         EPMFloat errCfl = this->rTSParams().errCFL();
+         MPI_Allreduce(MPI_IN_PLACE, &errCfl, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+         this->rTSParams().setErrorCFL(errCfl);
       #endif // EPMDYNAMO_MPI
 
       return cfl;
@@ -277,13 +268,8 @@ namespace EPMDynamo {
 
    void TimestepControlBase::useErrorCtrlTimestep()
    {
-      // Store the values for three different controllers
-      this->rTSParams().setErrorCFL(this->mController.nextTimestep(this->mError, this->mOldError), 0);
-
-      for(unsigned int i = 0; i < this->mCtrls.size(); i++)
-      {
-         this->rTSParams().setErrorCFL(this->mCtrls.at(i)->nextTimestep(this->mError, this->mOldError), i + 1);
-      }
+      // Store the value of the error controller
+      this->rTSParams().setErrorCFL(this->mController.nextTimestep(this->mError, this->mOldError));
    }
 
    void TimestepControlBase::useCourantTimestep(EPMFloat& rDt)

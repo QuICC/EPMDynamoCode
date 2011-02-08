@@ -19,13 +19,13 @@
 
 namespace EPMDynamo {
 
-   TimestepController::TimestepController(EPMFloat beta1, EPMFloat beta2, EPMFloat alpha, TimestepParameters &params, EPMFloat epsilon)
-      : mControllerBeta1(beta1), mControllerBeta2(beta2), mControllerAlpha(alpha), mrParams(params), mEpsilon(epsilon)
+   TimestepController::TimestepController(EPMFloat beta1, EPMFloat beta2, EPMFloat alpha, TimestepParameters &params)
+      : mControllerBeta1(beta1), mControllerBeta2(beta2), mControllerAlpha(alpha), mrParams(params)
    {
    }
 
-   TimestepController::TimestepController(TimestepCtrlTypes type, int order, TimestepParameters &params, EPMFloat epsilon)
-      : mControllerBeta1(1.0), mControllerBeta2(0.0), mControllerAlpha(0.0), mrParams(params), mEpsilon(epsilon)
+   TimestepController::TimestepController(TimestepCtrlTypes type, int order, TimestepParameters &params)
+      : mControllerBeta1(1.0), mControllerBeta2(0.0), mControllerAlpha(0.0), mrParams(params)
    {
       // Setup a predefined controller of order order
       this->setPredefinedController(type, order);
@@ -33,15 +33,8 @@ namespace EPMDynamo {
 
    EPMFloat TimestepController::nextTimestep(EPMFloat errn, EPMFloat errn_1)
    {
-      EPMFloat epsilon;
       // Include multiplicative for tolerance
-      if(this->mEpsilon > 0.0)
-      {
-         epsilon = this->mEpsilon;
-      } else
-      {
-         epsilon = TimestepConfig::TIMESTEP_ERROR_EPSILON;
-      }
+      EPMFloat epsilon = TimestepConfig::TIMESTEP_ERROR_EPSILON;
 
       // Get previous timestep
       EPMFloat hn_1 = this->mrParams.oldDt();

@@ -182,11 +182,6 @@ namespace EPMDynamo {
           * @brief Adaptive timestep controller
           */
          TimestepController   mController;
-
-         /**
-          * @brief Vector of controller to do some experiments
-          */
-         std::vector<TimestepController*>  mCtrls;
    };
 
    inline bool TimestepControlBase::keepRunning() const

@@ -33,7 +33,7 @@ namespace EPMDynamo {
           * @param alpha Alpha parameter of controller
           * @param params Timestep parameters
           */
-         TimestepController(EPMFloat beta1, EPMFloat beta2, EPMFloat alpha, TimestepParameters& params, EPMFloat epsilon = -1.0);
+         TimestepController(EPMFloat beta1, EPMFloat beta2, EPMFloat alpha, TimestepParameters& params);
          
          /**
           * @brief Constructor for predefined type
@@ -42,7 +42,7 @@ namespace EPMDynamo {
           * @param order Order of the timestep scheme
           * @param params Timestep parameters
           */
-         TimestepController(TimestepCtrlTypes type, int order, TimestepParameters& params, EPMFloat epsilon = -1.0);
+         TimestepController(TimestepCtrlTypes type, int order, TimestepParameters& params);
 
          /**
           * @brief Destructor
@@ -99,11 +99,6 @@ namespace EPMDynamo {
           * @brief Reference to TimestepParameters object
           */
          TimestepParameters& mrParams;
-
-         /**
-          * @brief Specialised epsilon (in case not the same as simulation wide)
-          */
-         EPMFloat mEpsilon;
 
          /**
           * @brief Get \f$\beta_1\f$ paramter

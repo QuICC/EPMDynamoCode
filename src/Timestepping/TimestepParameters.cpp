@@ -19,7 +19,7 @@
 namespace EPMDynamo {
 
    TimestepParameters::TimestepParameters(EPMFloat time, EPMFloat timestep)
-      : mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0), mGlobalCFLs(2), mRTPCFLs(2), mErrCFLs(10), mRTPCFLPos(2)
+      : mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0), mGlobalCFLs(2), mRTPCFLs(2), mErrCFL(0.0), mRTPCFLPos(2)
    {
       // Check initial values
       this->checkValues();
@@ -27,7 +27,7 @@ namespace EPMDynamo {
       // Initialise all the CFLs to very hight values
       this->mGlobalCFLs.setConstant(std::numeric_limits<EPMFloat>::max());
       this->mRTPCFLs.setConstant(std::numeric_limits<EPMFloat>::max());
-      this->mErrCFLs.setConstant(std::numeric_limits<EPMFloat>::max());
+      this->mErrCFL = std::numeric_limits<EPMFloat>::max();
    }
  
    void TimestepParameters::updateError(EPMFloat err)
