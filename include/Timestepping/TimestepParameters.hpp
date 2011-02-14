@@ -345,12 +345,24 @@ namespace EPMDynamo {
 
    inline void TimestepParameters::setInertialCFL(EPMFloat dt)
    {
-      this->mGlobalCFLs(0) = dt;
+      if(dt != 0.0)
+      {
+         this->mGlobalCFLs(0) = dt;
+      } else
+      {
+         this->mGlobalCFLs(0) = 1.0;
+      }
    }
 
    inline void TimestepParameters::setTorsionalCFL(EPMFloat dt)
    {
-      this->mGlobalCFLs(1) = dt;
+      if(dt != 0.0)
+      {
+         this->mGlobalCFLs(1) = dt;
+      } else
+      {
+         this->mGlobalCFLs(1) = 1.0;
+      }
    }
 
    inline void TimestepParameters::setHozRTPCFL(EPMFloat dt, EPMFloat pos)
