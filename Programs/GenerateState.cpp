@@ -27,7 +27,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::DynamoTraits
+#define TSIMTRAITS epm::RotatingConvectionTraits
 #define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
 typedef epm::RandomState<SIMTRAITS>  StateType;
