@@ -13,6 +13,7 @@
  *    - Alfven wave generation going through the origin
  *    - Implement axial vorticity CSCS output
  *    - State/CSCS/Source/Imposed files generation parallel support
+ *    - Correct CSCS output due to new CFL condition
  *    - Modifiy code to remove the need of EIGEN_INITIALIZE_MATRICES_BY_ZERO
  *
  * ****************************************************************************************************************
