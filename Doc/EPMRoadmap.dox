@@ -9,12 +9,10 @@
  *    - Implement a clean Physical field traits system, the current one is too messy
  *    - Correct race condition appearing in RotatingConvection computations
  *    - Cleanup implementation of splitting structure output
- *    - Compute angular momentum, check conservation, and if required IMPOSE it!
  *    - Alfven wave generation going through the origin
  *    - Implement axial vorticity CSCS output
  *    - State/CSCS/Source/Imposed files generation parallel support
  *    - Correct CSCS output due to new CFL condition
- *    - Modifiy code to remove the need of EIGEN_INITIALIZE_MATRICES_BY_ZERO
  *
  * ****************************************************************************************************************
  * \section epmRoadV15 Version 1.5.z
