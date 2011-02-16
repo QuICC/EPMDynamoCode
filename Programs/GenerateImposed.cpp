@@ -15,7 +15,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Traits/DynamoTraits.hpp"
+#include "Utilities/Traits/ImposedMagneticTraits.hpp"
 #include "Utilities/ImposedFieldGenerator.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
@@ -24,7 +24,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::DynamoTraits
+#define TSIMTRAITS epm::ImposedMagneticTraits
 #define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
 typedef epm::BasicImposed<SIMTRAITS>  ImposedType;

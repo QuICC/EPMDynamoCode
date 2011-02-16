@@ -63,6 +63,11 @@ namespace EPMDynamo {
           * @brief Set spectral expansion scalar
           */
          ScalarType&  rPerturbation();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
          /**
@@ -112,6 +117,13 @@ namespace EPMDynamo {
       this->mNeedGradTransform = 0;
 
       return this->mPerturbation;
+   }
+
+   template <typename TSimType> void PhysicalScalarGradientBase<TSimType>::initialiseZeros()
+   {
+      PhysicalRTPScalarGradient<TSimType>::initialiseZeros();
+
+      this->mPerturbation.initialiseZeros();
    }
 
 }

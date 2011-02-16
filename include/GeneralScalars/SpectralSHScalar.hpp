@@ -106,6 +106,11 @@ namespace EPMDynamo {
           */
          void scaleSpectra();
 
+         /**
+          * @brief Initialise values to zero
+          */
+         void initialiseZeros();
+
       protected:
 
       private:

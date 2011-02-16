@@ -126,7 +126,12 @@ namespace EPMDynamo {
           * @param scale Scaling factor
           */
          void rescale(const EPMFloat scale);
-         
+
+         /**
+          * @brief initialise field to zeros
+          */
+         void initialiseZeros();
+
       protected:
 
       private:
@@ -312,6 +317,15 @@ namespace EPMDynamo {
 
       // Set normalisation for the poloidal component
       this->rPol().setEnergyScale(eFactor);
+   }
+
+   template <typename TSimType> void TorPolField<TSimType>::initialiseZeros()
+   {
+      // initialise Toroidal scalar to zero
+      this->rTor().initialiseZeros();
+
+      // initialise Poloidal scalar to zero
+      this->rPol().initialiseZeros();
    }
 }
 

@@ -68,6 +68,11 @@ namespace EPMDynamo {
           */
          QSTField<TSimType>&  rPerturbation();
 
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
+
       protected:
          /**
           * @brief Spectral QST decomposition of the field
@@ -99,6 +104,12 @@ namespace EPMDynamo {
       return this->mPerturbation;
    }
 
+   template<typename TSimType> void PhysicalQSTBase<TSimType>::initialiseZeros()
+   {
+      PhysicalRTPField<TSimType>::initialiseZeros();
+
+      this->mPerturbation.initialiseZeros();
+   }
 }
 
 #endif // PHYSICALQSTBASE_HPP

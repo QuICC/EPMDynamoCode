@@ -95,7 +95,6 @@ namespace EPMDynamo {
           */
          TimestepParameters   mTSParams;
 
-      private:
          /**
           * @brief Smart pointer of Codensity type
           */
@@ -111,6 +110,7 @@ namespace EPMDynamo {
           */
          EPMSHARED_PTR<typename TSimTraits<TSimType>::VelType> mpVelV;
 
+      private:
 
    };
 
@@ -153,18 +153,27 @@ namespace EPMDynamo {
       if(TSimTraits<TSimType>::NeedCodensity)
       {
          this->mpCodC.reset(new typename TSimTraits<TSimType>::CodType(this->mpTrunc, this->mTransform));
+
+         // Initialise to zero spectral values
+        this->mpCodC->initialiseZeros();
       }
 
       // Create magnetic field storage
       if(TSimTraits<TSimType>::NeedMagnetic)
       {
          this->mpMagB.reset(new typename TSimTraits<TSimType>::MagType(this->mpTrunc, this->mTransform));
+
+         // Initialise to zero spectral values
+         this->mpMagB->initialiseZeros();
       }
 
       // Create velocity field storage
       if(TSimTraits<TSimType>::NeedVelocity)
       {
          this->mpVelV.reset(new typename TSimTraits<TSimType>::VelType(this->mpTrunc, this->mTransform));
+
+         // Initialise to zero
+         this->mpVelV->initialiseZeros();
       }
    }
 

@@ -68,6 +68,11 @@ namespace EPMDynamo {
           */
          QSTField<TSimType>&  rPerturbation();
 
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
+
       protected:
          /**
           * @brief Flag to check if curl transform has already been
@@ -105,6 +110,13 @@ namespace EPMDynamo {
       this->mNeedCurlTransform = 0;
       
       return this->mPerturbation;
+   }
+
+   template<typename TSimType> void PhysicalQSTCurlBase<TSimType>::initialiseZeros()
+   {
+      PhysicalRTPFieldCurl<TSimType>::initialiseZeros();
+
+      this->mPerturbation.initialiseZeros();
    }
 
 }

@@ -55,6 +55,11 @@ namespace EPMDynamo {
           * @brief Set Physical variable in IC
           */
          ICFieldType&   rIc();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
          /**
@@ -78,6 +83,11 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename>  class TFieldTraits> InnerCoreField<TSimType, TFieldTraits>::ICFieldType<TSimType>& InnerCoreField<TSimType, TFieldTraits>::rIc()
    {
       return this->mICVar;
+   }
+
+   template <typename TSimType, template <typename>  class TFieldTraits> void InnerCoreField<TSimType, TFieldTraits>::initialiseZeros()
+   {
+      this->mICVar.initialiseZeros();
    }
 
 }

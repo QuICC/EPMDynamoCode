@@ -66,6 +66,11 @@ namespace EPMDynamo {
           * @brief Set Toroidal/Poloidal decomposition of the field (perturbation part)
           */
          TorPolField<TSimType>&  rPerturbation();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
          /**
@@ -108,6 +113,13 @@ namespace EPMDynamo {
       this->mNeedTransform = 0;
 
       return this->mPerturbation;
+   }
+
+   template<typename TSimType> void PhysicalTorPolBase<TSimType>::initialiseZeros()
+   {
+      PhysicalRTPField<TSimType>::initialiseZeros();
+
+      this->mPerturbation.initialiseZeros();
    }
 
 }

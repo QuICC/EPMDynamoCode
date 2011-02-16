@@ -65,6 +65,11 @@ namespace EPMDynamo {
           * @brief Set values of outer core source term
           */
          SpectralFieldType&  rOcSrc();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -104,6 +109,15 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename>  class TSourceTraits> typename FullCoreSource<TSimType, TSourceTraits>::SpectralFieldType& FullCoreSource<TSimType, TSourceTraits>::rOcSrc()
    {
       return this->mOcSrc;
+   }
+
+   template <typename TSimType, template <typename>  class TSourceTraits> void FullCoreSource<TSimType, TSourceTraits>::initialiseZeros()
+   {
+      TSourceTraits<TSimType>::DomainType::initialiseZeros();
+
+      this->mIcSrc.intialiseZeros();
+
+      this->mOcSrc.intialiseZeros();
    }
 
 }

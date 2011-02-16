@@ -55,6 +55,11 @@ namespace EPMDynamo {
           * @brief Set Physical variable in OC (or full sphere)
           */
          OCFieldType&   rOc();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
          /**
@@ -78,6 +83,11 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename>  class TFieldTraits> OuterCoreField<TSimType, TFieldTraits>::OCFieldType& OuterCoreField<TSimType, TFieldTraits>::rOc()
    {
       return this->mOCVar;
+   }
+
+   template <typename TSimType, template <typename>  class TFieldTraits>  OuterCoreField<TSimType, TFieldTraits>::initialiseZeros()
+   {
+      this->mOCVar.initialiseZeros();
    }
 
 }

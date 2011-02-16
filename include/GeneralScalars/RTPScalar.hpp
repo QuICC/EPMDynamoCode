@@ -83,6 +83,11 @@ namespace EPMDynamo {
           * @param coeff Multiplicative coefficient
           */
          template <int TOp> void radVectProj(RTPScalar &rScalar, const EPMFloat = 1) const;
+
+         /**
+          * @brief Initialise values to zero
+          */
+         void initialiseZeros();
          
       protected:
 

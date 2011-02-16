@@ -55,6 +55,11 @@ namespace EPMDynamo {
           * @param step Current step in multistep transform
           */
          virtual void gradTransform(const int step) = 0;
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -84,6 +89,13 @@ namespace EPMDynamo {
    template<typename TSimType> inline RTPField&  PhysicalRTPScalarGradient<TSimType>::rGrad()
    {
       return this->mGrad;
+   }
+
+   template<typename TSimType> void  PhysicalRTPScalarGradient<TSimType>::initialiseZeros()
+   {
+      PhysicalRTPScalar<TSimType>::initialiseZeros();
+
+      this->mGrad.initialiseZeros();
    }
 
 }

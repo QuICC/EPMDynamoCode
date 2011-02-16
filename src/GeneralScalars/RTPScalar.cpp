@@ -32,4 +32,13 @@ namespace EPMDynamo {
       }
    }
 
+   void RTPScalar::initialiseZeros()
+   {
+      int nR = this->nR();
+      for(int n=0; n < nR; ++n)
+      {
+         this->rShell(n).setConstant(0.0);
+      }
+   }
+
 }

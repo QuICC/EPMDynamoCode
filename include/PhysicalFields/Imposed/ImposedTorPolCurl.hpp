@@ -67,6 +67,11 @@ namespace EPMDynamo {
           * @brief Update the value of the total field (perturbation + imposed)
           */
          virtual void updateTotalField();
+
+         /**
+          * @brief Initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
          /**
@@ -120,6 +125,13 @@ namespace EPMDynamo {
             this->mTotalField.rPol().rLShell(l) = this->perturbation().pol().lshell(l) + this->imposed().pol().lshell(l);
          }
       }
+   }
+
+   template<typename TSimType> void ImposedTorPolCurl<TSimType>::initialiseZeros()
+   {
+      PhysicalTorPolCurlBase<TSimType>::initialiseZeros();
+
+      this->mImposedField.initialiseZeros();
    }
 
 }

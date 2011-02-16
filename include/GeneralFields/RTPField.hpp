@@ -102,6 +102,11 @@ namespace EPMDynamo {
           */
          template <int TOp> void crossZVect(RTPField &rField, const EPMFloat coeff = 1.0) const;
 
+         /**
+          * @brief Initialise field to zeros
+          */
+         void initialiseZeros();
+
       protected:
 
       private:

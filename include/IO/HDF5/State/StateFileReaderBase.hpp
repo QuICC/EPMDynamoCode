@@ -69,7 +69,7 @@ namespace EPMDynamo {
          EPMFloat mTimestep;
 
          /**
-          * @brief Read Physical parameters to file
+          * @brief Read Physical parameters from file
           *
           * @param E Storage to read Ekman number
           * @param q Storage to read Roberts number

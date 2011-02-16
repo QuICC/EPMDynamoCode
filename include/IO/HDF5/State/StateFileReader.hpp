@@ -121,31 +121,55 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
       : StateFileReaderBase(name, codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
    {
+      // Make sur the extra terms are zero
+      this->mpCodC->initialiseZeros();
+
+      // Make sur the extra terms are zero
+      this->mpMagB->initialiseZeros();
+
+      // Make sur the extra terms are zero
+      this->mpVelV->initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV, std::string name)
       : StateFileReaderBase(name, codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
    {
+      // Make sur the extra terms are zero
+      this->mpCodC->initialiseZeros();
+
+      // Make sur the extra terms are zero
+      this->mpVelV->initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
       : StateFileReaderBase(name, magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
    {
+      // Make sur the extra terms are zero
+      this->mpMagB->initialiseZeros();
+
+      // Make sur the extra terms are zero
+      this->mpVelV->initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, std::string name)
       : StateFileReaderBase(name, codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
    {
+      // Make sur the extra terms are zero
+      this->mpCodC->initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::MagType &magB, std::string name)
       : StateFileReaderBase(name, magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
    {
+      // Make sur the extra terms are zero
+      this->mpMagB->initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::VelType &velV, std::string name)
       : StateFileReaderBase(name, velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
    {
+      // Make sur the extra terms are zero
+      this->mpVelV->initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void StateFileReader<TSimType, TSimTraits>::read()

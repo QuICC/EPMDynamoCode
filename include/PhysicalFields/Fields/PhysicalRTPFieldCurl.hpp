@@ -60,6 +60,11 @@ namespace EPMDynamo {
           * @param step Current step in a multistep transform
           */
          virtual void curlTransform(const int step) = 0;
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -89,6 +94,13 @@ namespace EPMDynamo {
    template<typename TSimType> inline RTPField&  PhysicalRTPFieldCurl<TSimType>::rCurl()
    {
       return this->mCurl;
+   }
+
+   template<typename TSimType> void  PhysicalRTPFieldCurl<TSimType>::initialiseZeros()
+   {
+      PhysicalRTPField<TSimType>::initialiseZeros();
+
+      this->mCurl.initialiseZeros();
    }
 
 }

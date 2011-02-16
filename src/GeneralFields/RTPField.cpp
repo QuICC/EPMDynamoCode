@@ -22,4 +22,16 @@ namespace EPMDynamo {
    {
    }
 
+   void RTPField::initialiseZeros()
+   {
+      // initialise the R component to zero
+      this->rR().initialiseZeros();
+
+      // initialise the Theta component to zero
+      this->rTheta().initialiseZeros();
+
+      // initialise the Phi component to zero
+      this->rPhi().initialiseZeros();
+   }
+
 }

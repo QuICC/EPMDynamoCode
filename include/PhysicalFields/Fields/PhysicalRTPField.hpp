@@ -57,6 +57,11 @@ namespace EPMDynamo {
           * @brief Set the RTP field values
           */
          RTPField&   rRTP();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -81,6 +86,11 @@ namespace EPMDynamo {
    template<typename TSimType> inline RTPField&  PhysicalRTPField<TSimType>::rRTP()
    {
       return this->mRTP;
+   }
+
+   template<typename TSimType> void PhysicalRTPField<TSimType>::initialiseZeros()
+   {
+      this->mRTP.initialiseZeros();
    }
 }
 

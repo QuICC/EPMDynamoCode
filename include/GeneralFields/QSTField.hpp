@@ -112,6 +112,11 @@ namespace EPMDynamo {
           * \param radBasis Radial basis
           */
          void  computeTSpectra(const RadialBasisType &radBasis);
+
+         /**
+          * @brief Initialise field to zero
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -369,6 +374,18 @@ namespace EPMDynamo {
 
       // Set normalisation for the T component
       this->rT().setEnergyScale(eFactor);
+   }
+
+   template <typename TSimType> void QSTField<TSimType>::initialiseZeros()
+   {
+      // initialise Q component to zeros
+      this->rQ().initialiseZeros();
+
+      // initialise S component to zeros
+      this->rS().initialiseZeros();
+
+      // initialise T component to zeros
+      this->rT().initialiseZeros();
    }
 }
 

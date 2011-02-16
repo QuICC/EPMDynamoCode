@@ -53,6 +53,11 @@ namespace EPMDynamo {
           * @brief Set the RTP scalar values
           */
          RTPScalar&   rRTP();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -77,6 +82,11 @@ namespace EPMDynamo {
    template<typename TSimType> inline RTPScalar&  PhysicalRTPScalar<TSimType>::rRTP()
    {
       return this->mRTP;
+   }
+
+   template<typename TSimType> void  PhysicalRTPScalar<TSimType>::initialiseZeros()
+   {
+      this->mRTP.initialiseZeros();
    }
 
 }

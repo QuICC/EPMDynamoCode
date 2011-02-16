@@ -64,6 +64,11 @@ namespace EPMDynamo {
           * @brief Update the value of the total field (perturbation + imposed)
           */
          virtual void updateTotalField();
+
+         /**
+          * @brief Initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
          /**
@@ -110,6 +115,13 @@ namespace EPMDynamo {
             this->mTotalField.rLShell(l) = this->perturbation().lshell(l) + this->imposed().lshell(l);
          }
       }
+   }
+
+   template<typename TSimType> void ImposedScalar<TSimType>::initialiseZeros()
+   {
+      PhysicalScalarBase<TSimType>::initialiseZeros();
+
+      this->mImposedField.initialiseZeros();
    }
 
 }

@@ -55,6 +55,11 @@ namespace EPMDynamo {
           * @brief Set values of inner core source term
           */
          SpectralFieldType&  rIcSrc();
+
+         /**
+          * @brief initialise to zeros
+          */
+         void initialiseZeros();
          
       protected:
 
@@ -79,6 +84,13 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename>  class TSourceTraits> typename InnerCoreSource<TSimType, TSourceTraits>::SpectralFieldType& InnerCoreSource<TSimType, TSourceTraits>::rIcSrc()
    {
       return this->mIcSrc;
+   }
+
+   template <typename TSimType, template <typename>  class TSourceTraits>  void InnerCoreSource<TSimType, TSourceTraits>::initialiseZeros()
+   {
+      TSourceTraits<TSimType>::DomainType::initialiseZeros();
+
+      this->mIcSrc.initialiseZeros();
    }
 
 }

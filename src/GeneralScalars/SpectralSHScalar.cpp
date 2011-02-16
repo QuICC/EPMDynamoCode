@@ -164,4 +164,12 @@ namespace EPMDynamo {
       }
    }
 
+   void SpectralSHScalar::initialiseZeros()
+   {
+      for(int l=0; l < this->nL(); ++l)
+      {
+         this->rLShell(l).setConstant(EPMComplex(0.0,0.0));
+      }
+   }
+
 }
