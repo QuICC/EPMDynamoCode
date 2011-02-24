@@ -1,9 +1,11 @@
-/** \file ETDScheme.hpp
- *  \brief Implementation of a general ETD scheme
+/** \file IterativeScheme.hpp
+ *  \brief Implementation of the high level representation of an iterative timestep scheme
+ *
+ *  This should allow a general implementation for RK, PC and ETD methods
  */
 
-#ifndef ETDSCHEME_HPP
-#define ETDSCHEME_HPP
+#ifndef ITERATIVESCHEME_HPP
+#define ITERATIVESCHEME_HPP
 
 // System includes
 //
@@ -20,12 +22,12 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of a general Predictor/Corrector scheme
+    * \brief Implementation of the high level representation of an iterative timestep scheme
     *
     * \tparam TSimType Type of the simulation
-    * \tparam TMethod ETD Method to use
+    * \tparam TMethod The actual timestep method in use
     */
-   template <typename TSimType, template <typename> class TMethod> class ETDScheme: public TMethod<TSimType>
+   template <typename TSimType, template <typename> class TMethod> class IterativeScheme: public TMethod<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -44,15 +46,15 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETDScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
+         IterativeScheme(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETDScheme() {};
+         virtual ~IterativeScheme() {};
 
          /**
-          * @brief Perform a type step (the actual order/type depends on template)
+          * @brief Perform a time step (the actual order/type depends on the selected method)
           *
           * @param rVar Input/Output variable to timestep
           * @param nTerms Non linear terms
@@ -64,12 +66,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TMethod> ETDScheme<TSimType, TMethod>::ETDScheme(EPMFloat a, EPMFloat b, const typename ETDScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+   template <typename TSimType, template <typename> class TMethod> IterativeScheme<TSimType, TMethod>::IterativeScheme(EPMFloat a, EPMFloat b, const typename IterativeScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
       : TMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0) 
    {
    }
 
-   template <typename TSimType, template <typename> class TMethod> void ETDScheme<TSimType, TMethod>::timestep(typename ETDScheme<TSimType, TMethod>::ScalarType& rVar, typename ETDScheme<TSimType, TMethod>::ScalarType& nTerms)
+   template <typename TSimType, template <typename> class TMethod> void IterativeScheme<TSimType, TMethod>::timestep(typename IterativeScheme<TSimType, TMethod>::ScalarType& rVar, typename IterativeScheme<TSimType, TMethod>::ScalarType& nTerms)
    {
       // If the timestep has been rejected recover previous timestep values
       if(this->rTSParams().isRejected())
@@ -103,4 +105,4 @@ namespace EPMDynamo {
    }
 }
 
-#endif // ETDSCHEME_HPP
+#endif // ITERATIVESCHEME_HPP

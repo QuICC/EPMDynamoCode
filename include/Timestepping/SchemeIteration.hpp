@@ -1,9 +1,9 @@
-/** \file ETDIteration.hpp
- *  \brief General implementation of an ETD iteration (step)
+/** \file SchemeIteration.hpp
+ *  \brief General implementation of an iterative scheme iteration (step)
  */
 
-#ifndef ETDITERATION_HPP
-#define ETDITERATION_HPP
+#ifndef SCHEMEITERATION_HPP
+#define SCHEMEITERATION_HPP
 
 // System includes
 //
@@ -17,11 +17,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief General implementation of an ETD iteration (step)
+    * \brief General implementation of an iterative scheme iteration (step)
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETDIteration
+   template <typename TSimType> class SchemeIteration
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -30,12 +30,12 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           */
-         ETDIteration();
+         SchemeIteration();
 
          /**
           * @brief Destructor
           */
-         virtual ~ETDIteration() {};
+         virtual ~SchemeIteration() {};
 
          /**
           * @brief Compute the implemented iteration
@@ -44,16 +44,25 @@ namespace EPMDynamo {
           * @param rNTerms New non linear terms
           */
          virtual void compute(ScalarType &rVar, ScalarType &rNTerms) = 0;
+
+         /**
+          * @brief Does this iteration provide timestep error information
+          */
+         bool providesError() const;
          
       protected:
 
       private:
    };
 
-   template <typename TSimType> ETDIteration<TSimType>::ETDIteration()
+   template <typename TSimType> SchemeIteration<TSimType>::SchemeIteration()
    {
    }
 
+   template <typename TSimType> bool SchemeIteration<TSimType>::providesError() const
+   {
+      return false;
+   }
 }
 
-#endif // ETDITERATION_HPP
+#endif // SCHEMEITERATION_HPP

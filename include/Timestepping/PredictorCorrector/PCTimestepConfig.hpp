@@ -26,7 +26,7 @@ namespace EPMDynamo {
          /**
           * @brief Maximum number of corrector iterations
           */
-         static const int MAX_CORRECTOR_ITERATIONS = 10;
+         static const int MAX_CORRECTOR_ITERATIONS = 5;
 
          /**
           * @brief Maximum corrector norm value

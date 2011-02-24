@@ -1,9 +1,9 @@
-/** \file ETDMethodBase.hpp
- *  \brief Base of the implementation of a ETD Metdod
+/** \file IterativeSchemeBase.hpp
+ *  \brief Base of the implementation of an iterative timestep scheme
  */
 
-#ifndef ETDMETHODBASE_HPP
-#define ETDMETHODBASE_HPP
+#ifndef ITERATIVESCHEMEBASE_HPP
+#define ITERATIVESCHEMEBASE_HPP
 
 // System includes
 //
@@ -14,21 +14,20 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
+#include "Timestepping/ErrorControl.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/TimestepSchemeBase.hpp"
-#include "Timestepping/ETD/ETDIteration.hpp"
-#include "Timestepping/ETD/ETDOperators.hpp"
-#include "Timestepping/ETD/ETDSchemeTraits.hpp"
+#include "Timestepping/SchemeIteration.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Base of the implementation of a ETD Metdod
+    * \brief Base of the implementation of an iterative timestep scheme
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETDMethodBase: public TimestepSchemeBase<TSimType>
+   template <typename TSimType> class IterativeSchemeBase: public TimestepSchemeBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -40,11 +39,8 @@ namespace EPMDynamo {
          /// Typedef for a smart pointer to a scalar type
          typedef EPMSHARED_PTR<ScalarType>   SmartScalarType;
 
-         /// Typedef for the smart pointer to an ETDStep
-         typedef EPMSHARED_PTR<ETDIteration<TSimType> >   SmartETDIteration;
-
-         /// Typedef for the smart pointer to an ETDOperator
-         typedef EPMSHARED_PTR<typename ETDSchemeTraits<TSimType>::Operators>   SmartETDOperator;
+         /// Typedef for the smart pointer to an general iteration
+         typedef EPMSHARED_PTR<SchemeIteration<TSimType> >   SmartIteration;
 
          /**
           * @brief Constructor
@@ -56,12 +52,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETDMethodBase(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
+         IterativeSchemeBase(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETDMethodBase() {};
+         virtual ~IterativeSchemeBase() {};
 
          /**
           * @brief Add a boundary condition
@@ -74,7 +70,7 @@ namespace EPMDynamo {
          /**
           * @brief  Iterator to current iteration
           */
-         typename std::vector<SmartETDIteration>::iterator  mCurrentIt;
+         typename std::vector<SmartIteration>::iterator  mCurrentIt;
 
          /**
           * @brief \f$a\f$ coefficient of timestep operator
@@ -92,14 +88,14 @@ namespace EPMDynamo {
          const BasisType&   mrBasis;
 
          /**
-          * @brief Vector of all the steps required for the selected scheme
+          * @brief Vector of all the steps required for the implemented scheme
           */
-         std::vector<SmartETDIteration>  mETDSteps;
+         std::vector<SmartIteration>  mSteps;
 
          /**
-          * @brief Storage for the required intermediate values
+          * @brief Storage for possible required intermediate values
           */
-         std::vector<SmartScalarType>  mIntTmp;
+         std::vector<SmartScalarType>  mTmpScalars;
 
          /**
           * @brief Reset current pointer to first step
@@ -117,25 +113,30 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETDMethodBase<TSimType>::ETDMethodBase(EPMFloat a, EPMFloat b, const typename ETDMethodBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+   template <typename TSimType> IterativeSchemeBase<TSimType>::IterativeSchemeBase(EPMFloat a, EPMFloat b, const typename IterativeSchemeBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
       : TimestepSchemeBase<TSimType>(tsteps, pTrunc, hasL0), mA(a), mB(b), mrBasis(basis)
    {
    }
 
-   template <typename TSimType> void ETDMethodBase<TSimType>::resetIterations()
+   template <typename TSimType> void IterativeSchemeBase<TSimType>::resetIterations()
    {
-      this->mCurrentIt = this->mETDSteps.begin();
+      this->mCurrentIt = this->mSteps.begin();
    }
 
-   template <typename TSimType> void ETDMethodBase<TSimType>::doIteration(typename ETDMethodBase<TSimType>::ScalarType& rVar, typename ETDMethodBase<TSimType>::ScalarType& rNTerms)
+   template <typename TSimType> void IterativeSchemeBase<TSimType>::doIteration(typename IterativeSchemeBase<TSimType>::ScalarType& rVar, typename IterativeSchemeBase<TSimType>::ScalarType& rNTerms)
    {
       // Do step computation
       (*this->mCurrentIt)->compute(rVar, rNTerms);
 
+      // Update the error from timestep
+      if((*this->mCurrentIt)->providesError())
+      {
+         this->rTSParams().updateError(ErrorControl<TSimType>::errorNorm(rNTerms, this->oldVar(), this->rTSParams().error()));
+      }
+
       // Go forward one step
       ++this->mCurrentIt;
    }
-
 }
 
-#endif // ETDMETHODBASE_HPP
+#endif // ITERATIVESCHEMEBASE_HPP

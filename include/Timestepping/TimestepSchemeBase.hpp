@@ -1,5 +1,5 @@
 /** \file TimestepSchemeBase.hpp
- *  \brief Base of the implementation of a timestep scheme
+ *  \brief Base for any implementation of timestep scheme
  */
 
 #ifndef TIMESTEPSCHEMEBASE_HPP
@@ -24,7 +24,7 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Base of the implementation of a timestep scheme
+    * \brief Base for any implementation of timestep scheme
     *
     * \tparam TSimType Type of the simulation
     */
@@ -195,7 +195,6 @@ namespace EPMDynamo {
          nTerms.rLShell(l) = this->oldNTerms().lshell(l);
       }
    }
-
 }
 
 #endif // TIMESTEPSCHEMEBASE_HPP
