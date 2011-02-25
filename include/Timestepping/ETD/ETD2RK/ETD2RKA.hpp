@@ -86,6 +86,7 @@ namespace EPMDynamo {
       {  
          this->mpOpM1->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l),l);
          this->mpOpM0->affineOrders(rVar.rLShell(l), rVar.lshell(l), rNTerms.lshell(l), l);
+         this->mpOpM0->extendOrders(rVar.rLShell(l), l);
       }
    }
 

@@ -227,6 +227,13 @@ namespace EPMDynamo {
           * @param basis Radial basis
           */
          void initEigenvalues(const BasisType &basis);
+
+         /**
+          * @brief Compute the rank of the operators
+          *
+          * @param basis Radial basis
+          */
+         void initRanks(const BasisType &basis);
    };
 
    template <typename TSimType, int TSchemeOrder> inline const typename ETDNOperators<TSimType, TSchemeOrder>::ETDOps& ETDNOperators<TSimType, TSchemeOrder>::etdF(const int n) const
@@ -273,12 +280,49 @@ namespace EPMDynamo {
       }
 
       // Compute the eigenvalues
+      this->initRanks(basis);
+
+      // Compute the eigenvalues
       this->initEigenvalues(basis);
 
    }
 
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::initRanks(const ETDNOperators<TSimType, TSchemeOrder>::BasisType &basis)
+   {
+      // Loop over all degrees
+      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
+      {
+         // Define homogeneous operator
+         this->rEtdF(0).rHarmOp(i).constructBOperator(1.0, basis.at(i).specLaplacian());
+
+         char jobu = 'N';
+         char jobvt = 'N';
+
+         int N = this->rEtdF(0).rHarmOp(i).nTau();
+         int lwork = 5*N;
+         int info;
+
+         Array s(N);
+         Array work(lwork);
+
+         // Call LAPACK dgetrf routine for factorisation
+         dgesvd_(&jobu, &jobvt, &N, &N, this->rEtdF(0).rHarmOp(i).rOp().data(), &N, s.data(), NULL, &N, NULL, &N, work.data(), &lwork, &info);
+
+         // Test success of computation through assert
+         assert(info == 0);
+
+         // Set the rank flag of the operator, this information will be used in a further step
+         if(s.array().minCoeff() == 0.0)
+         {
+            this->mMaxEig(i) = -1;
+         }
+      }
+   }
+
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::initEigenvalues(const ETDNOperators<TSimType, TSchemeOrder>::BasisType &basis)
    {
+      std::cerr << "Rank flag: " << this->mMaxEig.transpose() << std::endl;
+
       // Loop over all degrees
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
@@ -294,7 +338,7 @@ namespace EPMDynamo {
 
          Array wr(N);
          Array wi(N);
-         Array work(3*N);
+         Array work(lwork);
 
          // Call LAPACK dgetrf routine for factorisation
          dgeev_(&jobvl, &jobvr, &N, this->rEtdF(0).rHarmOp(i).rOp().data(), &N, wr.data(), wi.data(), NULL, &N, NULL, &N, work.data(), &lwork, &info);
@@ -306,7 +350,7 @@ namespace EPMDynamo {
          assert(wi.sum() == 0.0);
 
          // Test that all eigenvalues are negative else you risk a nasty blowup!
-         std::cerr << "l = " << i << "--> " << wr.maxCoeff() << std::endl;
+         std::cerr << "l = " << i << "--> " << wr.transpose() << std::endl;
          assert(wr.maxCoeff() <= 0.0);
 
          // Set the maximum eigenvalue

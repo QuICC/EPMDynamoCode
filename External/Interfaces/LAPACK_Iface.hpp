@@ -40,6 +40,11 @@ extern "C"
     * @brief Declaration for the LAPACK dgeev routine
     */
    void dgeev_(char* jobvl, char* jobvr, int* N, double* A, int* lda, double* wr, double* wi, double* vl, int* ldvl, double* vr, int* ldvr, double* work, int* lwork, int* info); 
+
+   /**
+    * @brief Declaration for the LAPACK dgeev routine
+    */
+   void dgesvd_(char* jobu, char* jobvt, int* M, int* N, double* A, int* lda, double* s, double* u, int* ldu, double* vt, int* ldvt, double* work, int* lwork, int* info); 
 }
 
 #endif // LAPACK_IFACE_HPP

@@ -75,6 +75,23 @@ namespace EPMDynamo {
          SmartTruncation trunc() const;
 
          /**
+          * @brief Extend the solution to include the boundary coefficients
+          *
+          * @param spectra  input/output value
+          * @param l Harmonic degree l
+          */
+         void extendOrders(MatrixZ&  spectra, const int l) const;
+
+         /**
+          * @brief Extend the solution to include the boundary coefficients for
+          * homogeneous boundary conditions
+          *
+          * @param spectra  input/output value
+          * @param l Harmonic degree l
+          */
+         void extendZeroOrders(MatrixZ&  spectra, const int l) const; 
+
+         /**
           * @brief Compute affine the matrix product for the orders of given degree
           *
           * @param rhs RHS output value
@@ -333,6 +350,16 @@ namespace EPMDynamo {
       int nM = this->trunc()->local()->spec()->nM(l);
 
       rhs.topLeftCorner(rows, nM) = this->harmOp(l).op()*old.topLeftCorner(rows,nM);
+   }
+
+   template <typename TOpType> void BoundedOperatorSet<TOpType>::extendOrders(MatrixZ& spectra, const int l) const
+   {
+      this->harmOp(l).extend(spectra);
+   }
+
+   template <typename TOpType> void BoundedOperatorSet<TOpType>::extendZeroOrders(MatrixZ& spectra, const int l) const
+   {
+      this->harmOp(l).extendZero(spectra);
    }
 
    template <typename TOpType> void BoundedOperatorSet<TOpType>::affineOrders(MatrixZ& rhs, const MatrixZ& old, const MatrixZ& cTerms, const int l)

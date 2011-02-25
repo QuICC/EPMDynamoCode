@@ -75,6 +75,17 @@ namespace EPMDynamo {
           */
          virtual void solveZero(Array& vector);
 
+         /**
+          * @brief Extend solution to full truncation
+          */
+         virtual void extend(MatrixZ& rMat) const;
+
+         /**
+          * @brief Extend solution to full truncation with homogeneous boundary
+          * condition
+          */
+         virtual void extendZero(MatrixZ& rMat) const;
+
       protected:
 
       private:
@@ -120,6 +131,18 @@ namespace EPMDynamo {
 
       // Extend solution to full truncation
       this->mExt.extendZero(vector);
+   }
+
+   template <typename TOpType> void BoundedOperator<TOpType>::extend(MatrixZ& rMat) const
+   {
+      // Extend solution to full truncation
+      this->mExt.extend(rMat);
+   }
+
+   template <typename TOpType> void BoundedOperator<TOpType>::extendZero(MatrixZ& rMat) const
+   {
+      // Extend solution to full truncation
+      this->mExt.extendZero(rMat);
    }
 
    template <typename TOpType> void BoundedOperator<TOpType>::solve(Array& vector, bool isHomogeneous)

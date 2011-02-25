@@ -46,14 +46,28 @@ namespace EPMDynamo {
           *
           * @param rVector Vector of coefficients to extend
           */
-         void extend(Array& rVector);
+         void extend(Array& rVector) const;
+
+         /**
+          * @brief Compute the missing coefficients including NH correction
+          *
+          * @param rMat Matrix of coefficients to extend
+          */
+         void extend(MatrixZ& rMat) const;
 
          /**
           * @brief Compute the missing coefficients with zero BC value
           *
           * @param rVector Vector of coefficients to extend
           */
-         void extendZero(Array& rVector);
+         void extendZero(Array& rVector) const;
+
+         /**
+          * @brief Compute the missing coefficients with zero BC value
+          *
+          * @param rMat Matrix of coefficients to extend
+          */
+         void extendZero(MatrixZ& rMat) const;
 
          /**
           * @brief Impose boundary value on RHS

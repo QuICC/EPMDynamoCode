@@ -90,7 +90,10 @@ namespace EPMDynamo {
       // loop over degrees 
       for(int l = l0; l < nL; ++l)
       {
-         rVar.rLShell(l) = rVar.lshell(l) + this->mpOpM2->harmOp(l).op() * (rNTerms.lshell(l) - this->mpOldN->lshell(l))/h;
+         rNTerms.rLShell(l) -= this->mpOldN->lshell(l);
+         this->mpOpM2->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l), l);
+         rVar.rLShell(l) += rNTerms.lshell(l)/h;
+         this->mpOpM2->extendOrders(rNTerms.rLShell(l),l);
       }
    }
 

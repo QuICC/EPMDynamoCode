@@ -91,14 +91,24 @@ namespace EPMDynamo {
       rVector.head(this->mNBOp) -= this->NH() * rVector.tail(this->mNBCs);
    }
 
-   void ExtensionMatrix::extendZero(Array &rVector)
+   void ExtensionMatrix::extendZero(Array &rVector) const
    {
       rVector.tail(this->mNBCs) = this->G() * rVector.head(this->mNBOp);
    }
 
-   void ExtensionMatrix::extend(Array &rVector)
+   void ExtensionMatrix::extendZero(MatrixZ &rMat) const
+   {
+      rMat.bottomRows(this->mNBCs) = this->G() * rMat.topRows(this->mNBOp);
+   }
+
+   void ExtensionMatrix::extend(Array &rVector) const
    {
       rVector.tail(this->mNBCs) = this->G() * rVector.head(this->mNBOp) + this->H() * rVector.tail(this->mNBCs);
+   }
+
+   void ExtensionMatrix::extend(MatrixZ &rMat) const
+   {
+      rMat.bottomRows(this->mNBCs) = this->G() * rMat.topRows(this->mNBOp) + this->H() * rMat.bottomRows(this->mNBCs);
    }
 
    void ExtensionMatrix::restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
