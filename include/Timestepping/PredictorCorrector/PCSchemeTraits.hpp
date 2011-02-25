@@ -20,8 +20,8 @@ namespace EPMDynamo {
 
    // Forward declarations
    template <typename, template <typename> class> class IterativeScheme;
-   template <typename> class ThetaMethodImplementation;
-   template <typename> class ThetaInfluenceMethodImplementation;
+   template <typename> class ThetaMethod;
+   template <typename> class ThetaInfluenceMethod;
 
    /**
     * \brief Traits to describe the request Predictor/Corrector scheme
@@ -35,10 +35,10 @@ namespace EPMDynamo {
          typedef ThetaTraits<TSimType>  MethodTraits;
 
          /// Typedef for the simple timestepper (no influence matrix)
-         typedef IterativeScheme<TSimType, ThetaMethodImplementation>   Timestepper;  
+         typedef IterativeScheme<TSimType, ThetaMethod>   Timestepper;  
 
          /// Typedef for the timestepper with influence matrix step
-         typedef IterativeScheme<TSimType, ThetaInfluenceMethodImplementation>   InfluenceTimestepper;  
+         typedef IterativeScheme<TSimType, ThetaInfluenceMethod>   InfluenceTimestepper;  
 
          /// Typedef for the timestep control object type
          typedef PCTimestepControl<MethodTraits>   TimestepControl;

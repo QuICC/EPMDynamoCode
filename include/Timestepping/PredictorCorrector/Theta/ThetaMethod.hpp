@@ -1,9 +1,9 @@
-/** \file ThetaMethodImplementation.hpp
+/** \file ThetaMethod.hpp
  *  \brief Implementation of the predictor-corrector theta method (without influence matrix)
  */
 
-#ifndef THETAMETHODIMPLEMENTATION_HPP
-#define THETAMETHODIMPLEMENTATION_HPP
+#ifndef THETAMETHOD_HPP
+#define THETAMETHOD_HPP
 
 // Configuration includes
 //
@@ -33,7 +33,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaMethodImplementation: public IterativeSchemeBase<TSimType>
+   template <typename TSimType> class ThetaMethod: public IterativeSchemeBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -58,12 +58,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ThetaMethodImplementation(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
+         ThetaMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
           */
-         virtual ~ThetaMethodImplementation() {};
+         virtual ~ThetaMethod() {};
 
          /**
           * @brief Add a boundary condition
@@ -96,6 +96,11 @@ namespace EPMDynamo {
          void updateTimeMatrices();
 
          /**
+          * @brief Initialise the operators
+          */
+         void initOperators();
+
+         /**
           * @brief Compute next scheme iteration
           *
           * @param rVar Input/Output variable
@@ -116,12 +121,12 @@ namespace EPMDynamo {
          void updatePrevious(const ScalarType& previous);
    };
 
-   template <typename TSimType> ThetaMethodImplementation<TSimType>::ThetaMethodImplementation(EPMFloat a, EPMFloat b, const typename ThetaMethodImplementation<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+   template <typename TSimType> ThetaMethod<TSimType>::ThetaMethod(EPMFloat a, EPMFloat b, const typename ThetaMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
       : IterativeSchemeBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mpLHS(new ThetaLHSTOperatorSet<TSimType>(a, b, basis, pTrunc, hasL0)), mpRHS(new ThetaRHSTOperatorSet<TSimType>(a, b, basis, pTrunc, hasL0))
    {
    }
 
-   template <typename TSimType> void ThetaMethodImplementation<TSimType>::addBC(SmartBC pBC)
+   template <typename TSimType> void ThetaMethod<TSimType>::addBC(SmartBC pBC)
    {
       // Add boundary condition to LHS of theta method
       this->mpLHS->addBC(pBC);
@@ -130,11 +135,17 @@ namespace EPMDynamo {
       this->mpRHS->addBC(pBC);
    }
 
-   template <typename TSimType> void ThetaMethodImplementation<TSimType>::init()
+   template <typename TSimType> void ThetaMethod<TSimType>::init()
    {
       // initialise pointers
       this->initStorage();
 
+      // initialise the operators
+      this->initOperators();
+   }
+
+   template <typename TSimType> void ThetaMethod<TSimType>::initOperators()
+   {
       // Create LHS operators and LU factorise them
       this->mpLHS->initOperators();
 
@@ -142,7 +153,7 @@ namespace EPMDynamo {
       this->mpRHS->initOperators();
    }
 
-   template <typename TSimType> void ThetaMethodImplementation<TSimType>::updateTimeMatrices()
+   template <typename TSimType> void ThetaMethod<TSimType>::updateTimeMatrices()
    {
       // Updated the LHS operator due to new timestep
       this->mpLHS->update(this->rTSParams().dt());
@@ -151,7 +162,7 @@ namespace EPMDynamo {
       this->mpRHS->update(this->rTSParams().dt());
    }
 
-   template <typename TSimType> void ThetaMethodImplementation<TSimType>::initStorage()
+   template <typename TSimType> void ThetaMethod<TSimType>::initStorage()
    {
       //
       // Create intermediate storage
@@ -173,7 +184,7 @@ namespace EPMDynamo {
       this->mSteps.push_back(pItC);
    }
 
-   template <typename TSimType> void ThetaMethodImplementation<TSimType>::doIteration(typename ThetaMethodImplementation<TSimType>::ScalarType& rVar, typename ThetaMethodImplementation<TSimType>::ScalarType& rNTerms)
+   template <typename TSimType> void ThetaMethod<TSimType>::doIteration(typename ThetaMethod<TSimType>::ScalarType& rVar, typename ThetaMethod<TSimType>::ScalarType& rNTerms)
    {
       // Do normal iteration
       IterativeSchemeBase<TSimType>::doIteration(rVar, rNTerms);
@@ -182,7 +193,7 @@ namespace EPMDynamo {
       this->updatePrevious(rNTerms);
    }
 
-   template <typename TSimType> inline void ThetaMethodImplementation<TSimType>::updatePrevious(const typename ThetaMethodImplementation::ScalarType& previous)
+   template <typename TSimType> inline void ThetaMethod<TSimType>::updatePrevious(const typename ThetaMethod::ScalarType& previous)
    {
       // Get number of harmonic degrees
       int nL = this->mTmpScalars.at(0)->nL();
@@ -199,4 +210,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // THETAMETHODIMPLEMENTATION_HPP
+#endif // THETAMETHOD_HPP

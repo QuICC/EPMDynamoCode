@@ -64,6 +64,11 @@ namespace EPMDynamo {
           * @brief Does this iteration provide timestep error information
           */
          bool providesError() const;
+
+         /**
+          * @brief Keep the system in the corrector iteration
+          */
+         bool doNextIteration() const;
          
       protected:
          /**
@@ -119,6 +124,11 @@ namespace EPMDynamo {
    template <typename TSimType> inline bool ThetaCorrector<TSimType>::providesError() const
    {
       return true;
+   }
+
+   template <typename TSimType> inline bool ThetaCorrector<TSimType>::doNextIteration() const
+   {
+      return false;
    }
 
    template <typename TSimType> void ThetaCorrector<TSimType>::compute(typename ThetaCorrector<TSimType>::ScalarType &rVar, typename ThetaCorrector<TSimType>::ScalarType &rNTerms)

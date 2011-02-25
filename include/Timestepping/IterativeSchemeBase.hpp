@@ -134,8 +134,12 @@ namespace EPMDynamo {
          this->rTSParams().updateError(ErrorControl<TSimType>::errorNorm(rNTerms, this->oldVar(), this->rTSParams().error()));
       }
 
-      // Go forward one step
-      ++this->mCurrentIt;
+      // Go one iteration further (this allows to stay on the same iteration several times)
+      if((*this->mCurrentIt)->doNextIteration())
+      {
+         // Go forward one step
+         ++this->mCurrentIt;
+      }
    }
 }
 

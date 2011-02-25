@@ -49,6 +49,11 @@ namespace EPMDynamo {
           * @brief Does this iteration provide timestep error information
           */
          bool providesError() const;
+
+         /**
+          * @brief Does this iteration provide timestep error information
+          */
+         bool doNextIteration() const;
          
       protected:
 
@@ -59,9 +64,14 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType> bool SchemeIteration<TSimType>::providesError() const
+   template <typename TSimType> inline bool SchemeIteration<TSimType>::providesError() const
    {
       return false;
+   }
+
+   template <typename TSimType> inline bool SchemeIteration<TSimType>::doNextIteration() const
+   {
+      return true;
    }
 }
 

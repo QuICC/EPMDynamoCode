@@ -1,9 +1,9 @@
-/** \file ThetaInfluenceMethodImplementation.hpp
+/** \file ThetaInfluenceMethod.hpp
  *  \brief Implementation of the predictor-corrector theta method with influence matrix
  */
 
-#ifndef THETAINFLUENCEMETHODIMPLEMENTATION_HPP
-#define THETAINFLUENCEMETHODIMPLEMENTATION_HPP
+#ifndef THETAINFLUENCEMETHOD_HPP
+#define THETAINFLUENCEMETHOD_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "Timestepping/PredictorCorrector/Theta/ThetaMethodImplementation.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaMethod.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaInfluencePredictor.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaInfluenceCorrector.hpp"
 #include "Equations/InfluenceMatrix.hpp"
@@ -32,7 +32,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaInfluenceMethodImplementation: public ThetaMethodImplementation<TSimType>
+   template <typename TSimType> class ThetaInfluenceMethod: public ThetaMethod<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -54,12 +54,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ThetaInfluenceMethodImplementation(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
+         ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
           */
-         virtual ~ThetaInfluenceMethodImplementation() {};
+         virtual ~ThetaInfluenceMethod() {};
 
          /**
           * @brief Add a boundary condition
@@ -106,17 +106,17 @@ namespace EPMDynamo {
          void updateInfluence();
    };
 
-   template <typename TSimType> ThetaInfluenceMethodImplementation<TSimType>::ThetaInfluenceMethodImplementation(EPMFloat a, EPMFloat b, const typename ThetaInfluenceMethodImplementation<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : ThetaMethodImplementation<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mpInfluence(new InfluenceMatrix<TSimType> (pTrunc, basis, hasL0))
+   template <typename TSimType> ThetaInfluenceMethod<TSimType>::ThetaInfluenceMethod(EPMFloat a, EPMFloat b, const typename ThetaInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : ThetaMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mpInfluence(new InfluenceMatrix<TSimType> (pTrunc, basis, hasL0))
    {
    }
 
-   template <typename TSimType> void ThetaInfluenceMethodImplementation<TSimType>::addBC(SmartBC pBC)
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::addBC(SmartBC pBC)
    {
       // Propagate only the first boundary condition to standard implementation
       if(this->mInfluenceNBC == -2)
       {
-         ThetaMethodImplementation<TSimType>::addBC(pBC);
+         ThetaMethod<TSimType>::addBC(pBC);
       }
 
       // Add boundary condition to influence matrix
@@ -126,28 +126,28 @@ namespace EPMDynamo {
       ++this->mInfluenceNBC;
    }
 
-   template <typename TSimType> void ThetaInfluenceMethodImplementation<TSimType>::init()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::init()
    {
       // initialise pointers
       this->initStorage();
 
-      // Initialise the timestep operators
-      ThetaMethodImplementation<TSimType>::init();
+      // Initialise the operators
+      this->initOperators();
 
       // Initialise the influence matrix
       this->initInfluence();
    }
 
-   template <typename TSimType> void ThetaInfluenceMethodImplementation<TSimType>::updateTimeMatrices()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::updateTimeMatrices()
    {
       // Update the timestep operators
-      ThetaMethodImplementation<TSimType>::updateTimeMatrices();
+      ThetaMethod<TSimType>::updateTimeMatrices();
 
       // Update the influence matrix solution
       this->updateInfluence();
    }
 
-   template <typename TSimType> void ThetaInfluenceMethodImplementation<TSimType>::initStorage()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::initStorage()
    {
       //
       // Create intermediate storage
@@ -169,7 +169,7 @@ namespace EPMDynamo {
       this->mSteps.push_back(pItC);
    }
 
-   template <typename TSimType> void ThetaInfluenceMethodImplementation<TSimType>::initInfluence()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::initInfluence()
    {
       if(this->mInfluenceNBC  == 0)
       {
@@ -180,11 +180,11 @@ namespace EPMDynamo {
          this->mpInfluence->computeOperators();
       } else
       {
-         throw EPMException("ThetaInfluenceMethodImplementation::initInfluence", "Tried to initialise with wrong number of BCs");
+         throw EPMException("ThetaInfluenceMethod::initInfluence", "Tried to initialise with wrong number of BCs");
       }
    }
 
-   template <typename TSimType> void ThetaInfluenceMethodImplementation<TSimType>::updateInfluence()
+   template <typename TSimType> void ThetaInfluenceMethod<TSimType>::updateInfluence()
    {
       // Get size of radial truncation
       int nN = this->mpLHS->trunc()->sim()->rad()->nN();
@@ -214,4 +214,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // THETAINFLUENCEMETHODIMPLEMENTATION_HPP
+#endif // THETAINFLUENCEMETHOD_HPP
