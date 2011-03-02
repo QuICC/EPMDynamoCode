@@ -30,10 +30,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param c Stiffness constant
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETDOperators(SmartTruncation pTrunc, bool hasL0);
+         ETDOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -56,6 +57,11 @@ namespace EPMDynamo {
 
       private:
          /**
+          * @brief Storage for the stiffness constant c
+          */
+         EPMFloat mC;
+
+         /**
           * @brief Storage for the current timestep length
           */
          EPMFloat mH;
@@ -69,13 +75,16 @@ namespace EPMDynamo {
       return this->mH;
    }
 
-   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(SmartTruncation pTrunc, bool hasL0)
-      : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mH(-1)
+   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
+      : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mC(c), mH(-1)
    {
    }
 
    template <typename TSimType, typename TOpType> void ETDOperators<TSimType, TOpType>::updateTimestep(EPMFloat h)
    {
+      // Guard from uninitialised timestep length
+      assert(h > 0.0);
+
       this->mH = h;
    }
 

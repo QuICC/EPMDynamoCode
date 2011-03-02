@@ -45,10 +45,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param c Stiffness constant
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETDNOperators(SmartTruncation pTrunc, bool hasL0);
+         ETDNOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -109,6 +110,16 @@ namespace EPMDynamo {
 
       protected:
          /**
+          * @brief get stiffness constant c
+          */
+         EPMFloat c() const;
+
+         /**
+          * @brief Check if matrix is full rank
+          */
+         bool isFullRank(const int l) const;
+
+         /**
           * @brief Update the number of required scalings
           *
           * @param h Timestep lenght
@@ -116,42 +127,52 @@ namespace EPMDynamo {
          void updateScalings(const EPMFloat h);
 
          /**
+          * @brief Scale given operator
+          */
+         void scaleOperator(Matrix& rMat, const int l);
+
+         /**
           * @brief Compute the scaled F0 values
           */
-         void computeScaledF0();
+         void computeScaledF0(const int l);
 
          /**
           * @brief Compute the squared F0 values
           */
-         void computeSquaredF0();
+         void computeSquaredF0(const int l);
 
          /**
           * @brief Compute the squared F0 and F1 values
           */
-         void computeSquaredF1();
+         void computeSquaredF1(const int l);
 
          /**
           * @brief Compute the squared F0, F1 and F2 values
           */
-         void computeSquaredF2();
+         void computeSquaredF2(const int l);
 
          /**
           * @brief Compute the squared F0, F1, F2 and F3 values
           */
-         void computeSquaredF3();
+         void computeSquaredF3(const int l);
 
          /**
           * @brief Compute the inverse of the given matrix
           *
           * @param rMat Matrix to invert
           */
-         void computeInverse(Matrix &rMat);
+         void computeInverse(Matrix &rMat, const int l);
 
       private:
          /**
           * @brief Threshold value for requiring the scaling/squaring approach
           */
          static const EPMFloat  SCALINGSQUARING_THRESHOLD;
+
+         /**
+          * @brief Storage for the stiffness constant c
+          */
+         EPMFloat mC;
 
          /**
           * @brief Is l=0 mode required?
@@ -167,6 +188,11 @@ namespace EPMDynamo {
           * @brief Number of scalings/squaring required
           */
          ArrayI   mScalings;
+
+         /**
+          * @brief Is the matrix full rank?
+          */
+         ArrayB mFullRank;
 
          /**
           * @brief Absolute value of maximum eigenvalues of the whole set of operators
@@ -236,6 +262,11 @@ namespace EPMDynamo {
          void initRanks(const BasisType &basis);
    };
 
+   template <typename TSimType, int TSchemeOrder> inline EPMFloat ETDNOperators<TSimType, TSchemeOrder>::c() const
+   {
+      return this->mC;
+   }
+
    template <typename TSimType, int TSchemeOrder> inline const typename ETDNOperators<TSimType, TSchemeOrder>::ETDOps& ETDNOperators<TSimType, TSchemeOrder>::etdF(const int n) const
    {
       return *(this->mOperators.at(n));
@@ -251,11 +282,17 @@ namespace EPMDynamo {
       return *(this->mOperators.at(n));
    }
 
-   template <typename TSimType, int TSchemeOrder> ETDNOperators<TSimType, TSchemeOrder>::ETDNOperators(SmartTruncation pTrunc, bool hasL0)
-      : mHasL0(hasL0), mNOps(TSchemeOrder), mScalings(pTrunc->local()->spec()->nL()), mMaxEig(pTrunc->local()->spec()->nL()), mpTrunc(pTrunc)
+   template <typename TSimType, int TSchemeOrder> inline bool ETDNOperators<TSimType, TSchemeOrder>::isFullRank(const int l) const
+   {
+      return this->mFullRank(l);
+   }
+
+   template <typename TSimType, int TSchemeOrder> ETDNOperators<TSimType, TSchemeOrder>::ETDNOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
+      : mC(c), mHasL0(hasL0), mNOps(TSchemeOrder), mScalings(pTrunc->local()->spec()->nL()), mFullRank(pTrunc->local()->spec()->nL()), mMaxEig(pTrunc->local()->spec()->nL()), mpTrunc(pTrunc)
    {
       // Initialise the scalings and eigen values
       this->mScalings.setConstant(0);
+      this->mFullRank.setConstant(true);
       this->mMaxEig.setConstant(0.0);
 
       // Initialise operators
@@ -314,15 +351,13 @@ namespace EPMDynamo {
          // Set the rank flag of the operator, this information will be used in a further step
          if(s.array().minCoeff() == 0.0)
          {
-            this->mMaxEig(i) = -1;
+            this->mFullRank(i) = false;
          }
       }
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::initEigenvalues(const ETDNOperators<TSimType, TSchemeOrder>::BasisType &basis)
    {
-      std::cerr << "Rank flag: " << this->mMaxEig.transpose() << std::endl;
-
       // Loop over all degrees
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
@@ -350,7 +385,6 @@ namespace EPMDynamo {
          assert(wi.sum() == 0.0);
 
          // Test that all eigenvalues are negative else you risk a nasty blowup!
-         std::cerr << "l = " << i << "--> " << wr.transpose() << std::endl;
          assert(wr.maxCoeff() <= 0.0);
 
          // Set the maximum eigenvalue
@@ -364,7 +398,7 @@ namespace EPMDynamo {
 
       for(int i=0; i < this->mNOps; ++i)
       {
-         pOp = SmartETDOperators(new ETDOps(this->mpTrunc, this->mHasL0));
+         pOp = SmartETDOperators(new ETDOps(this->c(), this->mpTrunc, this->mHasL0));
 
          this->mOperators.push_back(pOp);
       }
@@ -377,7 +411,7 @@ namespace EPMDynamo {
       // Loop over all degrees
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
-         this->mScalings(i) = std::ceil(std::log(SCALINGSQUARING_THRESHOLD*h*this->mMaxEig(i))/std::log(2.0));
+         this->mScalings(i) = std::max(0.0, 1+std::ceil(std::log(SCALINGSQUARING_THRESHOLD*h*this->c()*this->mMaxEig(i))/std::log(2.0)));
       }
 
       // Loop over all the ETD operators
@@ -387,55 +421,111 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeInverse(Matrix &rMat)
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeInverse(Matrix &rMat, const int l)
    {
-      int rows = rMat.rows();
-      int cols = rMat.cols();
+      // Comput the inverse
+      if(this->isFullRank(l))
+      {
+         int rows = rMat.rows();
+         int cols = rMat.cols();
 
-      int info;
-      ArrayI ipiv(rows);
+         int info;
+         ArrayI ipiv(rows);
 
-      // Call LAPACK dgetrf routine for factorisation
-      dgetrf_(&rows, &cols, rMat.data(), &rows, ipiv.data(), &info);
+         // Call LAPACK dgetrf routine for factorisation
+         dgetrf_(&rows, &cols, rMat.data(), &rows, ipiv.data(), &info);
 
-      // Test success of computation through assert
-      assert(info == 0);
+         // Test success of computation through assert
+         assert(info == 0);
 
-      int lwork = -1;
-      Array work(rows);
+         int lwork = -1;
+         Array work(rows);
 
-      // Call LAPACK dgetri routine for optimal work size
-      dgetri_(&rows, rMat.data(), &rows, ipiv.data(), work.data(), &lwork, &info);
+         // Call LAPACK dgetri routine for optimal work size
+         dgetri_(&rows, rMat.data(), &rows, ipiv.data(), work.data(), &lwork, &info);
 
-      // Test success of computation through assert
-      assert(info == 0);
+         // Test success of computation through assert
+         assert(info == 0);
 
-      // Set to optimal work size
-      lwork = static_cast<int>(work(0));
-      work.resize(lwork);
+         // Set to optimal work size
+         lwork = static_cast<int>(work(0));
+         work.resize(lwork);
 
-      // Call LAPACK dgetri routine for inverse computation
-      dgetri_(&rows, rMat.data(), &rows, ipiv.data(), work.data(), &lwork, &info);
+         // Call LAPACK dgetri routine for inverse computation
+         dgetri_(&rows, rMat.data(), &rows, ipiv.data(), work.data(), &lwork, &info);
 
-      // Test success of computation through assert
-      assert(info == 0);
+         // Test success of computation through assert
+         assert(info == 0);
+
+      // Compute pseudoinverse
+      } else
+      {
+         // Define homogeneous operator
+         char jobu = 'A';
+         char jobvt = 'A';
+
+         int N = rMat.cols();
+         int lwork = -1;
+         int info;
+
+         Array s(N);
+         Array work(N);
+
+         Matrix U(N,N);
+         Matrix VT(N,N);
+
+         // Call LAPACK dgesvd with lwork=-1 to get optimal size
+         dgesvd_(&jobu, &jobvt, &N, &N, rMat.data(), &N, s.data(), U.data(), &N, VT.data(), &N, work.data(), &lwork, &info);
+
+         // Test success of computation through assert
+         assert(info == 0);
+
+         // Set to optimal work size
+         lwork = static_cast<int>(work(0));
+         work.resize(lwork);
+
+         // Call LAPACK dgesvd routine for SVD decomposition
+         dgesvd_(&jobu, &jobvt, &N, &N, rMat.data(), &N, s.data(), U.data(), &N, VT.data(), &N, work.data(), &lwork, &info);
+
+         // Test success of computation through assert
+         assert(info == 0);
+
+         // Create array of reciprocal values
+         for(int i=0;i< N; i++)
+         {
+            if(s(i) != 0.0)
+            {
+               s(i) = 1.0/s(i);
+            }
+         }
+
+         // Compute the pseudo inverse
+         rMat = VT.transpose() * s.asDiagonal() * U.transpose();
+
+         std::cerr << rMat << std::endl;
+      }
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF0()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::scaleOperator(Matrix& rMat, const int l)
    {
-      // Loop over all degrees
-      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
-      {
          // Rescale operator
-         this->rEtdF(0).rHarmOp(i).rOp() *= std::pow(2.0, this->mScalings(i));
+         rMat *= std::pow(2.0, -this->mScalings(l));
+   }
 
-         // Compute exponential of operator
-         this->computeExponential(this->rEtdF(0).rHarmOp(i).rOp());
-      }
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF0(const int l)
+   {
+      // Rescale operator
+      this->scaleOperator(this->rEtdF(0).rHarmOp(l).rOp(), l);
+
+      // Compute exponential of operator
+      this->computeExponential(this->rEtdF(0).rHarmOp(l).rOp());
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeExponential(Matrix& rMat)
    {
+      Matrix inOp = rMat;
+      Matrix tmp = rMat;
+
       // Add identity
       rMat.diagonal().array() += 1.0;
 
@@ -443,11 +533,13 @@ namespace EPMDynamo {
       EPMFloat factor = 1.0;
 
       // Loop over a certain number of expansion factors
-      for(int i=2; i < 12; ++i)
+      for(int i=2; i < 16; ++i)
       {
          factor *= static_cast<EPMFloat>(i);
 
-         rMat += (rMat*rMat)/factor;
+         tmp *= inOp;
+
+         rMat += tmp/factor;
       }
    }
 
@@ -457,40 +549,32 @@ namespace EPMDynamo {
       this->rEtdF(0).rHarmOp(l).rOp() *= this->etdF(0).harmOp(l).op();
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF0()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF0(const int l)
    {
-      // Loop over all degrees
-      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
+      // Perform the squarings
+      for(int i = 0; i < this->mScalings(l); ++i)
       {
-         // Perform the squarings
-         for(int i = 0; i < this->mScalings(l); ++i)
-         {
-            // Square F0
-            this->squareF0(l);
-         }
+         // Square F0
+         this->squareF0(l);
       }
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::squareF1(const int l)
    {
-      this->rEtdF(1).rHarmOp(l).rOp() += this->etdF(1).harmOp(l).op()*this->etdF(0).harmOp(l).op();
+      this->rEtdF(1).rHarmOp(l).rOp() += this->etdF(0).harmOp(l).op()*this->etdF(1).harmOp(l).op();
       this->rEtdF(1).rHarmOp(l).rOp() *= 0.5;
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF1()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF1(const int l)
    {
-      // Loop over all degrees
-      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
+      // Perform the squarings
+      for(int i = 0; i < this->mScalings(l); ++i)
       {
-         // Perform the squarings
-         for(int i = 0; i < this->mScalings(l); ++i)
-         {
-            // "Square" F1
-            this->squareF1(l);
+         // "Square" F1
+         this->squareF1(l);
 
-            // Square F0
-            this->squareF0(l);
-         }
+         // Square F0
+         this->squareF0(l);
       }
    }
 
@@ -502,23 +586,19 @@ namespace EPMDynamo {
       this->rEtdF(2).rHarmOp(l).rOp() *= 0.25;
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF2()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF2(const int l)
    {
-      // Loop over all degrees
-      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
+      // Perform the squarings
+      for(int i = 0; i < this->mScalings(l); ++i)
       {
-         // Perform the squarings
-         for(int i = 0; i < this->mScalings(l); ++i)
-         {
-            // "Square" F2
-            this->squareF2(l);
+         // "Square" F2
+         this->squareF2(l);
 
-            // "Square" F1
-            this->squareF1(l);
+         // "Square" F1
+         this->squareF1(l);
 
-            // Square F0
-            this->squareF0(l);
-         }
+         // Square F0
+         this->squareF0(l);
       }
    }
 
@@ -530,26 +610,22 @@ namespace EPMDynamo {
       this->rEtdF(3).rHarmOp(l).rOp().array() *= 0.125;
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF3()
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeSquaredF3(const int l)
    {
-      // Loop over all degrees
-      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
+      // Perform the squarings
+      for(int i = 0; i < this->mScalings(l); ++i)
       {
-         // Perform the squarings
-         for(int i = 0; i < this->mScalings(l); ++i)
-         {
-            // "Square" F3
-            this->squareF3(l);
+         // "Square" F3
+         this->squareF3(l);
 
-            // "Square" F2
-            this->squareF2(l);
+         // "Square" F2
+         this->squareF2(l);
 
-            // "Square" F1
-            this->squareF1(l);
+         // "Square" F1
+         this->squareF1(l);
 
-            // Square F0
-            this->squareF0(l);
-         }
+         // Square F0
+         this->squareF0(l);
       }
    }
 

@@ -41,9 +41,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param nFactor Non linear terms multiplicative factor
+          * @param pOldN Pointer to the old non linear terms
           * @param pOpM2 Pointer to the \f$M_2\f$ operator
           */
-         ETD2RKTimestep(SmartScalarType pOldN, SmartETDOperators pOpM2);
+         ETD2RKTimestep(EPMFloat nFactor, SmartScalarType pOldN, SmartETDOperators pOpM2);
 
          /**
           * @brief Destructor
@@ -60,6 +62,11 @@ namespace EPMDynamo {
          
       protected:
          /**
+          * @brief multiplicative factor required for the non linear terms
+          */
+         EPMFloat mNFactor;
+
+         /**
           * @brief Storage for the old NTerms
           */
          SmartScalarType   mpOldN;
@@ -72,8 +79,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD2RKTimestep<TSimType>::ETD2RKTimestep(typename ETD2RKTimestep<TSimType>::SmartScalarType pOldN, typename ETD2RKTimestep<TSimType>::SmartETDOperators pOpM2)
-      : mpOldN(pOldN), mpOpM2(pOpM2)
+   template <typename TSimType> ETD2RKTimestep<TSimType>::ETD2RKTimestep(EPMFloat nFactor, typename ETD2RKTimestep<TSimType>::SmartScalarType pOldN, typename ETD2RKTimestep<TSimType>::SmartETDOperators pOpM2)
+      : mNFactor(nFactor), mpOldN(pOldN), mpOpM2(pOpM2)
    {
    }
 
@@ -91,9 +98,10 @@ namespace EPMDynamo {
       for(int l = l0; l < nL; ++l)
       {
          rNTerms.rLShell(l) -= this->mpOldN->lshell(l);
+         rNTerms.rLShell(l) *= this->mNFactor;
          this->mpOpM2->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l), l);
          rVar.rLShell(l) += rNTerms.lshell(l)/h;
-         this->mpOpM2->extendOrders(rNTerms.rLShell(l),l);
+         this->mpOpM2->extendOrders(rVar.rLShell(l), l);
       }
    }
 

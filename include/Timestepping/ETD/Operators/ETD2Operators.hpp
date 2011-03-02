@@ -37,10 +37,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param c Stiffness constant
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETD2Operators(SmartTruncation pTrunc, bool hasL0);
+         ETD2Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -70,8 +71,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD2Operators<TSimType>::ETD2Operators(SmartTruncation pTrunc, bool hasL0)
-      : ETDNOperators<TSimType, 3>(pTrunc, hasL0)
+   template <typename TSimType> ETD2Operators<TSimType>::ETD2Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
+      : ETDNOperators<TSimType, 3>(c, pTrunc, hasL0)
    {
    }
 
@@ -89,46 +90,55 @@ namespace EPMDynamo {
       Matrix tmpM;
 
       // Loop over all degrees
-      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
+      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(h, basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(l).constructBOperator(h*this->c(), basis.at(l).specLaplacian());
 
-         // Store the operator including boundary conditions and its inverse
-         tmpM = this->etdF(0).harmOp(i).op();
+         // Store the operator including boundary conditions
+         tmpM = this->etdF(0).harmOp(l).op();
+
+         // Scale the Lh operator
+         this->scaleOperator(tmpM, l);
          
          // Compute the exponential of the created operator
-         this->computeScaledF0();
+         this->computeScaledF0(l);
 
          // Initialise F1 numerator part of operator
-         this->rEtdF(1).rHarmOp(i).rOp() = this->etdF(0).harmOp(i).op();
+         this->rEtdF(1).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
 
          // Remove identity
-         this->rEtdF(1).rHarmOp(i).rOp().diagonal().array() -= 1.0;
+         this->rEtdF(1).rHarmOp(l).rOp().diagonal().array() -= 1.0;
 
          // initialise F2 numerator part of operator
-         this->rEtdF(2).rHarmOp(i).rOp() = this->etdF(1).harmOp(i).op();
+         this->rEtdF(2).rHarmOp(l).rOp() = this->etdF(1).harmOp(l).op();
 
          // Remove c L
-         this->rEtdF(2).rHarmOp(i).rOp() -= tmpM;
+         this->rEtdF(2).rHarmOp(l).rOp() -= tmpM;
 
          // Compute inverse of M
-         this->computeInverse(tmpM);
+         this->computeInverse(tmpM, l);
 
          // Multiply F1 by 1/c L^-1
-         this->rEtdF(1).rHarmOp(i).rOp() *= tmpM;
+         this->rEtdF(1).rHarmOp(l).rOp() *= tmpM;
 
          // Multiply F2 by 1/c² L^-2
          tmpM *= tmpM;
-         this->rEtdF(2).rHarmOp(i).rOp() *= tmpM;
+         this->rEtdF(2).rHarmOp(l).rOp() *= tmpM;
 
          // Compute the unscale values
-         this->computeSquaredF2();
+         this->computeSquaredF2(l);
+
+         // Include the missing h factor
+         this->rEtdF(1).rHarmOp(l).rOp() *= h;
+
+         // Include the missing h^2 factor
+         this->rEtdF(2).rHarmOp(l).rOp() *= h*h;
 
          // Do finalisation step (for example factorisation)
-         this->rEtdF(0).rHarmOp(i).finaliseOp();
-         this->rEtdF(1).rHarmOp(i).finaliseOp();
-         this->rEtdF(2).rHarmOp(i).finaliseOp();
+         this->rEtdF(0).rHarmOp(l).finaliseOp();
+         this->rEtdF(1).rHarmOp(l).finaliseOp();
+         this->rEtdF(2).rHarmOp(l).finaliseOp();
       }
    }
 

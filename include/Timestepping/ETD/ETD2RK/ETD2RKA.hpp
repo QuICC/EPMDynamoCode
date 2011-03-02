@@ -36,10 +36,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param nFactor Non linear terms multiplicative factor
           * @param pOpM0 Pointer to operator M0
           * @param pOpM1 Pointer to operator M1
           */
-         ETD2RKA(SmartETDOperators pOpM0, SmartETDOperators pOpM1);
+         ETD2RKA(EPMFloat nFactor, SmartETDOperators pOpM0, SmartETDOperators pOpM1);
 
          /**
           * @brief Destructor
@@ -56,6 +57,11 @@ namespace EPMDynamo {
          
       protected:
          /**
+          * @brief multiplicative factor required for the non linear terms
+          */
+         EPMFloat mNFactor;
+
+         /**
           * @brief Pointer to the ETD operator M0
           */
          SmartETDOperators  mpOpM0;
@@ -68,8 +74,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD2RKA<TSimType>::ETD2RKA(SmartETDOperators pOpM0, SmartETDOperators pOpM1)
-      : mpOpM0(pOpM0), mpOpM1(pOpM1)
+   template <typename TSimType> ETD2RKA<TSimType>::ETD2RKA(EPMFloat nFactor, SmartETDOperators pOpM0, SmartETDOperators pOpM1)
+      : mNFactor(nFactor), mpOpM0(pOpM0), mpOpM1(pOpM1)
    {
    }
 
@@ -84,6 +90,7 @@ namespace EPMDynamo {
       // loop over degrees 
       for(int l = l0; l < nL; ++l)
       {  
+         rNTerms.rLShell(l) *= this->mNFactor;
          this->mpOpM1->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l),l);
          this->mpOpM0->affineOrders(rVar.rLShell(l), rVar.lshell(l), rNTerms.lshell(l), l);
          this->mpOpM0->extendOrders(rVar.rLShell(l), l);

@@ -77,19 +77,18 @@ namespace EPMDynamo {
          /**
           * @brief Extend the solution to include the boundary coefficients
           *
-          * @param spectra  input/output value
+          * @param spectra  input/output complex matrix
           * @param l Harmonic degree l
           */
          void extendOrders(MatrixZ&  spectra, const int l) const;
 
          /**
-          * @brief Extend the solution to include the boundary coefficients for
-          * homogeneous boundary conditions
+          * @brief Extend the solution to include the boundary coefficients
           *
-          * @param spectra  input/output value
+          * @param kernel  input/output array
           * @param l Harmonic degree l
           */
-         void extendZeroOrders(MatrixZ&  spectra, const int l) const; 
+         void extendOrders(Array&  kernel, const int l) const;
 
          /**
           * @brief Compute affine the matrix product for the orders of given degree
@@ -357,9 +356,9 @@ namespace EPMDynamo {
       this->harmOp(l).extend(spectra);
    }
 
-   template <typename TOpType> void BoundedOperatorSet<TOpType>::extendZeroOrders(MatrixZ& spectra, const int l) const
+   template <typename TOpType> void BoundedOperatorSet<TOpType>::extendOrders(Array& kernel, const int l) const
    {
-      this->harmOp(l).extendZero(spectra);
+      this->harmOp(l).extend(kernel);
    }
 
    template <typename TOpType> void BoundedOperatorSet<TOpType>::affineOrders(MatrixZ& rhs, const MatrixZ& old, const MatrixZ& cTerms, const int l)

@@ -114,21 +114,13 @@ namespace EPMDynamo {
           * @brief update the influence matrix solution
           */
          void updateInfluence();
-
-         /**
-          * @brief Compute the influence of the kernel on the timestep
-          *
-          * @param kernel Kernel of the laplacian
-          * @param l Harmonic degree 
-          */
-         void computeKernelInfluence(Array &kernel, const int l);
    };
 
    template <typename TSimType> ETD2RKInfluenceMethod<TSimType>::ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD2RKInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
       : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mInfluence(pTrunc, basis, hasL0)
    {
       // Set the influence kernel
-      SmartInfluenceKernel pIKernel(new ETD2RKInfluenceKernel<TSimType>(this->mETD2.pEtdF(1), this->mETD2.pEtdF(2)));
+      SmartInfluenceKernel pIKernel(new ETD2RKInfluenceKernel<TSimType>(1.0/this->mA, this->mETD2.pEtdF(1)));
 
       this->mpKernel = pIKernel;
    }
@@ -214,16 +206,11 @@ namespace EPMDynamo {
          tmp(0) = 1.0;
 
          // Compute the kernel influence
-         this->computeKernelInfluence(tmp, l);
+         this->mpKernel->computeInfluence(tmp, l);
 
          // Store solution from influence matrix
          this->mInfluence.storeKernelBC(tmp, l);
       }
-   }
-
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::computeKernelInfluence(Array &kernel, const int l)
-   {
-      this->mpKernel->computeInfluence(kernel, l);
    }
 
 }

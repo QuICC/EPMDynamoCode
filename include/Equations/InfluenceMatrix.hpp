@@ -194,7 +194,7 @@ namespace EPMDynamo {
          {
             // Compute the boundary values of the timestep RHS (real and imaginary parts)
             bcVal.real() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).real()); 
-            bcVal.imag() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag()); 
+            bcVal.imag() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag());
 
             // Loop over all radial coefficients
             for(int n=0; n < nN; ++n)

@@ -33,6 +33,7 @@
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 
 namespace EPMDynamo {
@@ -146,10 +147,14 @@ namespace EPMDynamo {
       // Set boundary condition to the Navier-Stokes equation
       SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
       SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
-      this->mNavierStokes.addTorBC(pSFBC);
+SmartBC  pNSBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
+SmartBC  pDBC(new DRadialBC<TSimType>(this->mTransform.radBasis()));
+//      this->mNavierStokes.addTorBC(pSFBC);
+this->mNavierStokes.addTorBC(pNSBC);
       // Order of Poloidal BCs is important
       this->mNavierStokes.addPolBC(pZeroBC);
-      this->mNavierStokes.addPolBC(pDDBC);
+//      this->mNavierStokes.addPolBC(pDDBC);
+this->mNavierStokes.addPolBC(pDBC);
 
       // Initialise the transport equation
       this->mTransport.init();

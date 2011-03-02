@@ -37,10 +37,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param c Stiffness constant
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETD0Operators(SmartTruncation pTrunc, bool hasL0);
+         ETD0Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
@@ -70,8 +71,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD0Operators<TSimType>::ETD0Operators(SmartTruncation pTrunc, bool hasL0)
-      : ETDNOperators<TSimType, 1>(pTrunc, hasL0)
+   template <typename TSimType> ETD0Operators<TSimType>::ETD0Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
+      : ETDNOperators<TSimType, 1>(c, pTrunc, hasL0)
    {
    }
 
@@ -89,7 +90,7 @@ namespace EPMDynamo {
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(h, basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).constructBOperator(h*this->c(), basis.at(i).specLaplacian());
 
          // Compute the scaled exponential of the created operator
          this->computeScaledF0();

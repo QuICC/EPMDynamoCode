@@ -34,10 +34,11 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
+          * @param nFactor Non linear terms multiplicative factor
           * @param pOpM1 Pointer to operator M1
           * @param pOpM2 Pointer to operator M2
           */
-         ETD2RKInfluenceKernel(SmartETDOperators pOpM1, SmartETDOperators pOpM2);
+         ETD2RKInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1);
 
          /**
           * @brief Destructor
@@ -54,41 +55,28 @@ namespace EPMDynamo {
          
       protected:
          /**
-          * @brief Get the current timestep length
+          * @brief multiplicative factor required for the non linear terms
           */
-         EPMFloat h() const;
-
-         /**
-          * @brief Storage for the current timestep length
-          */
-         EPMFloat mH;
+         EPMFloat mNFactor;
 
          /**
           * @brief Pointer to the ETD operator M1
           */
          SmartETDOperators  mpOpM1;
 
-         /**
-          * @brief Pointer to the ETD operator M2
-          */
-         SmartETDOperators  mpOpM2;
-
       private:
    };
 
-   template <typename TSimType> ETD2RKInfluenceKernel<TSimType>::ETD2RKInfluenceKernel(SmartETDOperators pOpM1, SmartETDOperators pOpM2)
-      : mH(-1), mpOpM1(pOpM1), mpOpM2(pOpM2)
+   template <typename TSimType> ETD2RKInfluenceKernel<TSimType>::ETD2RKInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1)
+      : mNFactor(nFactor), mpOpM1(pOpM1)
    {
-   }
-
-   template <typename TSimType> inline EPMFloat ETD2RKInfluenceKernel<TSimType>::h() const
-   {
-      return this->mH;
    }
 
    template <typename TSimType> void ETD2RKInfluenceKernel<TSimType>::computeInfluence(Array &rKernel, const int l)
    {
-      rKernel = (this->mpOpM1->harmOp(l).op() + this->mpOpM2->harmOp(l).op()/this->h()) * rKernel;
+      int rows = this->mpOpM1->harmOp(l).op().rows();
+      rKernel.topRows(rows) = this->mNFactor*this->mpOpM1->harmOp(l).op() * rKernel.topRows(rows);
+      this->mpOpM1->extendOrders(rKernel, l);
    }
 
 }

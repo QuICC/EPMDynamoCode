@@ -92,54 +92,54 @@ namespace EPMDynamo {
    {
       this->mpCodC = &codC;
       // make sure extra values are zero
-      this->mpCodC->initialiseZeros();
+      this->mpCodC->rOcSrc().initialiseZeros();
 
       this->mpMagB = &magB;
-      this->mpMagB->initialiseZeros();
+      this->mpMagB->rOcSrc().initialiseZeros();
 
       this->mpVelV = &velV;
-      this->mpVelV->initialiseZeros();
+      this->mpVelV->rOcSrc().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV)
       : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("codVel", codC.oc().trunc())
    {
       this->mpCodC = &codC;
-      this->mpCodC->initialiseZeros();
+      this->mpCodC->rOcSrc().initialiseZeros();
 
       this->mpVelV = &velV;
-      this->mpVelV->initialiseZeros();
+      this->mpVelV->rOcSrc().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
       : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("magVel", magB.oc().trunc())
    {
       this->mpMagB = &magB;
-      this->mpMagB->initialiseZeros();
+      this->mpMagB->rOcSrc().initialiseZeros();
 
       this->mpVelV = &velV;
-      this->mpVelV->initialiseZeros();
+      this->mpVelV->rOcSrc().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::CodType &codC)
       : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("cod", codC.oc().trunc())
    {
       this->mpCodC = &codC;
-      this->mpCodC->initialiseZeros();
+      this->mpCodC->rOcSrc().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::MagType &magB)
       : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("mag", magB.oc().trunc())
    {
       this->mpMagB = &magB;
-      this->mpMagB->initialiseZeros();
+      this->mpMagB->rOcSrc().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> SourceFileReader<TSimType, TSimTraits>::SourceFileReader(typename TSimTraits<TSimType>::VelType &velV)
       : SourceCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("vel", velV.oc().trunc())
    {
       this->mpVelV = &velV;
-      this->mpVelV->initialiseZeros();
+      this->mpVelV->rOcSrc().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void SourceFileReader<TSimType, TSimTraits>::read()

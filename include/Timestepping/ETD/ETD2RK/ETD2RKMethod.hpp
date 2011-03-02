@@ -96,7 +96,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : IterativeSchemeBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mETD2(pTrunc, hasL0)
+      : IterativeSchemeBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mETD2(b/a, pTrunc, hasL0)
    {
    }
 
@@ -130,10 +130,10 @@ namespace EPMDynamo {
    template <typename TSimType> void ETD2RKMethod<TSimType>::initStorage()
    {
       // Create intermediate value a computation step
-      EPMSHARED_PTR<ETD2RKA<TSimType> > pItA(new ETD2RKA<TSimType> (this->mETD2.pEtdF(0), this->mETD2.pEtdF(1)));
+      EPMSHARED_PTR<ETD2RKA<TSimType> > pItA(new ETD2RKA<TSimType> (1.0/this->mA, this->mETD2.pEtdF(0), this->mETD2.pEtdF(1)));
 
       // Create timestep computation step
-      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (this->pOldNTerms(), this->mETD2.pEtdF(2)));
+      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (1.0/this->mA, this->pOldNTerms(), this->mETD2.pEtdF(2)));
 
       // Add required ETD steps
          // Add intermediate value A computation
