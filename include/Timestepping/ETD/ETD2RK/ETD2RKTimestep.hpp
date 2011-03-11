@@ -92,15 +92,13 @@ namespace EPMDynamo {
       // Get minimal degree index (not l=0)
       int l0 = rVar.minL();
 
-      EPMFloat h = this->mpOpM2->h();
-
       // loop over degrees 
       for(int l = l0; l < nL; ++l)
       {
          rNTerms.rLShell(l) -= this->mpOldN->lshell(l);
          rNTerms.rLShell(l) *= this->mNFactor;
          this->mpOpM2->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l), l);
-         rVar.rLShell(l) += rNTerms.lshell(l)/h;
+         rVar.rLShell(l) += rNTerms.lshell(l);
          this->mpOpM2->extendOrders(rVar.rLShell(l), l);
       }
    }

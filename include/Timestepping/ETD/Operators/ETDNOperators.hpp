@@ -137,6 +137,21 @@ namespace EPMDynamo {
          void computeScaledF0(const int l);
 
          /**
+          * @brief Compute the scaled F0 and F1 values
+          */
+         void computeScaledF1(const int l);
+
+         /**
+          * @brief Compute the scaled F0, F1 and F2 values
+          */
+         void computeScaledF2(const int l);
+
+         /**
+          * @brief Compute the scaled F0, F1, F2 and F3 values
+          */
+         void computeScaledF3(const int l);
+
+         /**
           * @brief Compute the squared F0 values
           */
          void computeSquaredF0(const int l);
@@ -210,11 +225,11 @@ namespace EPMDynamo {
          std::vector<SmartETDOperators>  mOperators;
 
          /**
-          * @brief Compute the exponential of the given matrix
+          * @brief Compute the taylor series of the Fk functions
           *
-          * @param mat Matrix to exponentiate
+          * @param mat Matrix to expand
           */
-         void computeExponential(Matrix& mat);
+         void computeFkTaylor(Matrix& mat, int k);
 
          /**
           * @brief Compute the F0(2z)
@@ -517,23 +532,98 @@ namespace EPMDynamo {
       // Rescale operator
       this->scaleOperator(this->rEtdF(0).rHarmOp(l).rOp(), l);
 
-      // Compute exponential of operator
-      this->computeExponential(this->rEtdF(0).rHarmOp(l).rOp());
+      // Compute taylor series of F0
+      this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeExponential(Matrix& rMat)
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF1(const int l)
    {
-      Matrix inOp = rMat;
-      Matrix tmp = rMat;
+      // Rescale operator
+      this->scaleOperator(this->rEtdF(0).rHarmOp(l).rOp(), l);
 
-      // Add identity
-      rMat.diagonal().array() += 1.0;
+      // Copy rescaled operator in F1
+      this->rEtdF(1).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
 
+      // Compute taylor series of F0
+      this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
+
+      // Compute taylor series of F1
+      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1);
+   }
+
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF2(const int l)
+   {
+      // Rescale operator
+      this->scaleOperator(this->rEtdF(0).rHarmOp(l).rOp(), l);
+
+      // Copy rescaled operator in F1
+      this->rEtdF(1).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
+
+      // Copy rescaled operator in F1
+      this->rEtdF(2).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
+
+      // Compute taylor series of F0
+      this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
+
+      // Compute taylor series of F1
+      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1);
+
+      // Compute taylor series of F2
+      this->computeFkTaylor(this->rEtdF(2).rHarmOp(l).rOp(), 2);
+   }
+
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF3(const int l)
+   {
+      // Rescale operator
+      this->scaleOperator(this->rEtdF(0).rHarmOp(l).rOp(), l);
+
+      // Copy rescaled operator in F1
+      this->rEtdF(1).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
+
+      // Copy rescaled operator in F2
+      this->rEtdF(2).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
+
+      // Copy rescaled operator in F3
+      this->rEtdF(3).rHarmOp(l).rOp() = this->etdF(0).harmOp(l).op();
+
+      // Compute taylor series of F0
+      this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
+
+      // Compute taylor series of F1
+      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1);
+
+      // Compute taylor series of F2
+      this->computeFkTaylor(this->rEtdF(2).rHarmOp(l).rOp(), 2);
+
+      // Compute taylor series of F3
+      this->computeFkTaylor(this->rEtdF(3).rHarmOp(l).rOp(), 3);
+   }
+
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeFkTaylor(Matrix& rMat, int k)
+   {
       // Storage for the factorial factor
       EPMFloat factor = 1.0;
 
-      // Loop over a certain number of expansion factors
-      for(int i=2; i < 16; ++i)
+      // Compute the starting factorial factor
+      for(int i=2; i <= k; i++)
+      {
+         factor *= static_cast<EPMFloat>(i);
+      }
+
+      // Store input matrix
+      Matrix inOp = rMat;
+
+      // Set starting values to identity matrix
+      Matrix tmp(rMat.rows(), rMat.cols());
+      tmp.setConstant(0.0);
+      tmp.diagonal().setConstant(1.0);
+
+      // Set staring value to Identity/factor
+      rMat.setConstant(0.0);
+      rMat.diagonal().setConstant(1.0/factor);
+
+      // Do the taylor expansion loop
+      for(int i=k+1; i < 16; ++i)
       {
          factor *= static_cast<EPMFloat>(i);
 

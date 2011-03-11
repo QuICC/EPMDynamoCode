@@ -87,6 +87,14 @@ EPMWorlandProjPol2CurlT::usage =
 "EPMWorlandProjPol2CurlT[N,L] Get the intg integrator . EPMWorlandProjPol2CurlT[N,L, l] Get the intg integrator for a given l.";
 
 
+EPMWorlandProjLaplacian::usage = 
+"EPMWorlandProjLaplacian[N,L] Get the intg integrator . EPMWorlandProjLaplacian[N,L, l] Get the intg integrator for a given l.";
+
+
+EPMWorlandSpecLaplacian::usage = 
+"EPMWorlandSpecLaplacian[N,L] Get the spectral laplacian . EPMWorlandSpecLaplacian[N,L, l] Get the spectral laplacian for a given l.";
+
+
 Begin["`Private`"]
 
 
@@ -97,7 +105,7 @@ epmPrecision=16;
 
 (*****************  Compute grid size *******************)
 wGridN[n_, l_] = Ceiling[3/2 n] + Ceiling[3/4 l] + 1;
-EPMWorlandGridSize[n_,l_] = n + Floor[l/2] + 1;
+EPMWorlandGridSize[n_,l_] = Ceiling[3/2 n] + Ceiling[3/4 l] + 1;
 
 
 (*****************  Setup general normalisation function *******************)
@@ -120,6 +128,7 @@ wProjTor2T[n_Integer, l_Integer, r_Real]:= -Sqrt[l (l+1)]r^l JacobiP[n,-1/2, l-1
 wProjTor2CurlQ[n_Integer, l_Integer, r_Real]:= l (l+1) r^(l-1) JacobiP[n,-1/2, l-1/2,2r^2-1];
 wProjTor2CurlS[n_Integer, l_Integer, r_Real]:=Evaluate[Sqrt[l (l+1)] 1/r D[r^(l+1)JacobiP[n,-1/2, l-1/2,2r^2-1],r]];
 wProjPol2CurlT[n_Integer, l_Integer, r_Real]:= Sqrt[l (l+1)](Evaluate[Simplify[D[x^l JacobiP[n,-1/2, l-1/2,2 x^2-1],{x,2}] + 2/x D[x^l JacobiP[n,-1/2, l-1/2,2x^2-1], x] - l (l+1)x^(l-2) JacobiP[n,-1/2, l-1/2,2x^2-1]]])/.{x->r};
+wProjLaplacian[n_Integer, l_Integer, r_Real]:= Evaluate[D[r^l JacobiP[n,-1/2, l-1/2,2r^2-1],{r,2}]+2/r D[r^l JacobiP[n,-1/2, l-1/2,2r^2-1],{r,1}]-(l(l+1))/r^2 r^l JacobiP[n,-1/2, l-1/2,2r^2-1]];
 wIntg[n_Integer, l_Integer, r_Real]:= r^l JacobiP[n,-1/2, l-1/2,2r^2-1];
 wIntgQ2Pol[n_Integer, l_Integer, r_Real]:= If[l != 0,1/(l (l+1)),0]r^(l+1) JacobiP[n,-1/2, l-1/2,2r^2-1];
 wIntgT2Tor[n_Integer, l_Integer, r_Real]:= If[l != 0,-1/Sqrt[l (l+1)],0]r^l JacobiP[n,-1/2, l-1/2,2r^2-1];
@@ -207,6 +216,16 @@ EPMWorlandProjTor2CurlS[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGr
 (*****************  Compute EPM precision Worland proj projector *******************)
 EPMWorlandProjPol2CurlT[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Table[wProjPol2CurlT[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}], epmPrecision]];
 EPMWorlandProjPol2CurlT[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Table[wProjPol2CurlT[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}], epmPrecision]];
+
+
+(*****************  Compute EPM precision Worland laplacian projector *******************)
+EPMWorlandProjLaplacian[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Table[wProjLaplacian[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}], epmPrecision]];
+EPMWorlandProjLaplacian[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Table[wProjLaplacian[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}], epmPrecision]];
+
+
+(*****************  Compute EPM precision Worland spectral laplacian *******************)
+EPMWorlandSpecLaplacian[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Transpose[EPMWorlandIntg[n,l]].Transpose[Table[wProjLaplacian[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}]], epmPrecision]];
+EPMWorlandSpecLaplacian[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Transpose[EPMWorlandIntg[n,lmax,l]].Transpose[Table[wProjLaplacian[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}]], epmPrecision]];
 
 
 (*****************  Compute EPM precision Worland intg integrator *******************)

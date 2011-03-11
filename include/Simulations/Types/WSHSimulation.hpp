@@ -74,7 +74,7 @@ namespace EPMDynamo {
       SimulationConstants::lockGridType();
       
       // Set radial grid size
-      int nR = (3*maxN)/2 + (3*maxL)/4 + 1;
+      int nR = std::ceil(3.0*maxN/2.0) + std::ceil(3.0*maxL/4.0) + 1;
 
       return SmartTruncation(new Truncation(maxN, nR, maxL, maxM, mp, nCore));
    }
@@ -85,7 +85,7 @@ namespace EPMDynamo {
       SimulationConstants::lockGridType();
 
       // Set radial grid size
-      int nR = (3*arr(0))/2 + (3*arr(1))/4 + 1;
+      int nR = std::ceil(3.0*arr(0)/2.0) + std::ceil(3.0*arr(1)/4.0) + 1;
 
       return SmartTruncation(new Truncation(arr(0), nR, arr(1), arr(2), arr(3), arr(4)));
    }

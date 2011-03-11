@@ -87,46 +87,24 @@ namespace EPMDynamo {
       // Update the required scaling power
       this->updateScalings(h);
 
-      // Storage for a temporary operator
-      Matrix tmpM;
-
       // Loop over all degrees
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
          // Define homogeneous operator
          this->rEtdF(0).rHarmOp(i).constructBOperator(h*this->c(), basis.at(i).specLaplacian());
 
-         // Store the operator including boundary conditions
-         tmpM = this->etdF(0).harmOp(i).op();
+         // Compute the taylor expansion of the Fk functionals of the created operator
+         this->computeScaledF1(l);
 
-         // Scale the Lh operator
-         this->scaleOperator(tmpM, l);
-
-         // Compute the exponential of the created operator
-         this->computeScaledF0();
-
-         // Initialise F1 operator
-         this->rEtdF(1).rHarmOp(i).rOp() = this->etdF(0).op(i).op();
-
-         // Remove identity
-         this->rEtdF(1).rHarmOp(i).rOp().diagonal().array() -= 1.0;
-
-         // Compute inverse of operator
-         tmpM *= h;
-         this->computeInverse(tmpM);
-
-         // Multiply F1 by 1/c L^-1
-         this->rEtdF(1).rHarmOp(i).rOp() *= tmpM;
-
-         // Compute the unscale values
-         this->computeSquaredF1();
+         // Compute the unscaled values
+         this->computeSquaredF1(l);
 
          // Include the missing h factor
          this->rEtdF(1).rHarmOp(l).rOp() *= h;
 
-         // Do finalisation step (for example factorisation)
-         this->rEtdF(0).rHarmOp(i).finaliseOp();
-         this->rEtdF(1).rHarmOp(i).finaliseOp();
+         // Do finalisation step
+         this->rEtdF(0).rHarmOp(l).finaliseOp();
+         this->rEtdF(1).rHarmOp(l).finaliseOp();
       }
    }
 
