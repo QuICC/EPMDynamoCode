@@ -1,9 +1,9 @@
-/** \file ETD2RKInfluenceMethod.hpp
- *  \brief Implementation of the ETD2RK method (with influence matrix)
+/** \file ETD1InfluenceMethod.hpp
+ *  \brief Implementation of the ETD1 method (with influence matrix)
  */
 
-#ifndef ETD2RKINFLUENCEMETHOD_HPP
-#define ETD2RKINFLUENCEMETHOD_HPP
+#ifndef ETD1INFLUENCEMETHOD_HPP
+#define ETD1INFLUENCEMETHOD_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "Timestepping/ETD/ETD2RK/ETD2RKMethod.hpp"
+#include "Timestepping/ETD/ETD1/ETD1Method.hpp"
 #include "Timestepping/ETD/ETDInfluenceKernel.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
@@ -30,7 +30,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD2RKInfluenceMethod: public ETD2RKMethod<TSimType>
+   template <typename TSimType> class ETD1InfluenceMethod: public ETD1Method<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -39,7 +39,7 @@ namespace EPMDynamo {
          /// Typedef from Simulation trait to local scalar type
          typedef typename TSimType::ScalarType    ScalarType;
 
-         /// Typedef for a smart ETD influence kernel
+         /// Typedef for a smart ETD1 influence kernel
          typedef EPMSHARED_PTR<ETDInfluenceKernel<TSimType> > SmartInfluenceKernel;
 
          /**
@@ -52,12 +52,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is the l=0 mode required?
           */
-         ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
+         ETD1InfluenceMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETD2RKInfluenceMethod() {};
+         virtual ~ETD1InfluenceMethod() {};
 
          /**
           * @brief Add boundary condition
@@ -70,7 +70,7 @@ namespace EPMDynamo {
          void addBC(SmartBC pBC);
 
          /**
-          * @brief Initialise the ETD2 influence matrix method
+          * @brief Initialise the ETD1 influence matrix method
           */
          void init();
          
@@ -116,21 +116,21 @@ namespace EPMDynamo {
          void updateInfluence();
    };
 
-   template <typename TSimType> ETD2RKInfluenceMethod<TSimType>::ETD2RKInfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD2RKInfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : ETD2RKMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mInfluence(pTrunc, basis, hasL0)
+   template <typename TSimType> ETD1InfluenceMethod<TSimType>::ETD1InfluenceMethod(EPMFloat a, EPMFloat b, const typename ETD1InfluenceMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : ETD1Method<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mInfluenceNBC(-2), mInfluence(pTrunc, basis, hasL0)
    {
       // Set the influence kernel
-      SmartInfluenceKernel pIKernel(new ETDInfluenceKernel<TSimType>(1.0/this->mA, this->mETD2.pEtdF(1)));
+      SmartInfluenceKernel pIKernel(new ETDInfluenceKernel<TSimType>(1.0/this->mA, this->mETD1.pEtdF(1)));
 
       this->mpKernel = pIKernel;
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::addBC(SmartBC pBC)
+   template <typename TSimType> void ETD1InfluenceMethod<TSimType>::addBC(SmartBC pBC)
    {
       // Propagate only the first boundary condition to standard implementation
       if(this->mInfluenceNBC == -2)
       {
-         ETD2RKMethod<TSimType>::addBC(pBC);
+         ETD1Method<TSimType>::addBC(pBC);
       }
 
       // Add boundary condition
@@ -140,37 +140,37 @@ namespace EPMDynamo {
       ++this->mInfluenceNBC;
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::init()
+   template <typename TSimType> void ETD1InfluenceMethod<TSimType>::init()
    {
       // Initialise the timestep operators
-      ETD2RKMethod<TSimType>::init();
+      ETD1Method<TSimType>::init();
 
       // Initialise the influence matrix
       this->initInfluence();
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::updateTimeMatrices()
+   template <typename TSimType> void ETD1InfluenceMethod<TSimType>::updateTimeMatrices()
    {
       // Update the timestep operators
-      ETD2RKMethod<TSimType>::updateTimeMatrices();
+      ETD1Method<TSimType>::updateTimeMatrices();
 
       // Update the influence matrix solution
       this->updateInfluence();
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::doIteration(typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rVar, typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rNTerms)
+   template <typename TSimType> void ETD1InfluenceMethod<TSimType>::doIteration(typename ETD1InfluenceMethod<TSimType>::ScalarType& rVar, typename ETD1InfluenceMethod<TSimType>::ScalarType& rNTerms)
    {
       // Solve influence matrix part
       this->mInfluence.solve(rNTerms);
 
       // Go on with normal timestep
-      ETD2RKMethod<TSimType>::doIteration(rVar, rNTerms);
+      ETD1Method<TSimType>::doIteration(rVar, rNTerms);
 
       // Include kernel influence
       this->mInfluence.addKernel(rVar);
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::initInfluence()
+   template <typename TSimType> void ETD1InfluenceMethod<TSimType>::initInfluence()
    {
       if(this->mInfluenceNBC  == 0)
       {
@@ -181,11 +181,11 @@ namespace EPMDynamo {
          this->mInfluence.computeOperators();
       } else
       {
-         throw EPMException("ETD2RKInfluenceMethod::initInfluence", "Tried to initialise with wrong number of BCs");
+         throw EPMException("ETD1InfluenceMethod::initInfluence", "Tried to initialise with wrong number of BCs");
       }
    }
 
-   template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::updateInfluence()
+   template <typename TSimType> void ETD1InfluenceMethod<TSimType>::updateInfluence()
    {
       // Get size of radial truncation
       int nN = this->mInfluence.trunc()->sim()->rad()->nN();
@@ -215,4 +215,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ETD2RKINFLUENCEMETHOD_HPP
+#endif // ETD1INFLUENCEMETHOD_HPP

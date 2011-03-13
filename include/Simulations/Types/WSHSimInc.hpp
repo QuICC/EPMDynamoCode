@@ -22,6 +22,8 @@
 #include "Timestepping/PredictorCorrector/PCTimestepControl.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaMethod.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaInfluenceMethod.hpp"
+#include "Timestepping/ETD/ETD1/ETD1Method.hpp"
+#include "Timestepping/ETD/ETD1/ETD1InfluenceMethod.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKMethod.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKInfluenceMethod.hpp"
 

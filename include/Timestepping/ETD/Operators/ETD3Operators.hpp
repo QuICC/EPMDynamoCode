@@ -78,7 +78,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType> void ETD3Operators<TSimType>::update(const EPMFloat dt, const typename ETD0Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD3Operators<TSimType>::update(const EPMFloat dt, const typename ETD3Operators<TSimType>::BasisType &basis)
    {
       this->createOperators(dt, basis);
    }
@@ -89,10 +89,10 @@ namespace EPMDynamo {
       this->updateScalings(h);
 
       // Loop over all degrees
-      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
+      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(h*this->c(), basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(l).constructBOperator(h*this->c(), basis.at(l).specLaplacian());
 
          // Compute the taylor expansion of the Fk functionals of the created operator
          this->computeScaledF3(l);
@@ -110,10 +110,10 @@ namespace EPMDynamo {
          this->rEtdF(3).rHarmOp(l).rOp() *= h*h;
 
          // Do finalisation step (for example factorisation)
-         this->rEtdF(0).rHarmOp(i).finaliseOp();
-         this->rEtdF(1).rHarmOp(i).finaliseOp();
-         this->rEtdF(2).rHarmOp(i).finaliseOp();
-         this->rEtdF(3).rHarmOp(i).finaliseOp();
+         this->rEtdF(0).rHarmOp(l).finaliseOp();
+         this->rEtdF(1).rHarmOp(l).finaliseOp();
+         this->rEtdF(2).rHarmOp(l).finaliseOp();
+         this->rEtdF(3).rHarmOp(l).finaliseOp();
       }
    }
 

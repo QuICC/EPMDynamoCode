@@ -1,9 +1,9 @@
-/** \file ETD2RKInfluenceKernel.hpp
+/** \file ETDInfluenceKernel.hpp
  *  \brief Implemenation of influence of the kernel solution
  */
 
-#ifndef ETD2RKINFLUENCEKERNEL_HPP
-#define ETD2RKINFLUENCEKERNEL_HPP
+#ifndef ETDINFLUENCEKERNEL_HPP
+#define ETDINFLUENCEKERNEL_HPP
 
 // System includes
 //
@@ -22,7 +22,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD2RKInfluenceKernel
+   template <typename TSimType> class ETDInfluenceKernel
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -38,12 +38,12 @@ namespace EPMDynamo {
           * @param pOpM1 Pointer to operator M1
           * @param pOpM2 Pointer to operator M2
           */
-         ETD2RKInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1);
+         ETDInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETD2RKInfluenceKernel() {};
+         virtual ~ETDInfluenceKernel() {};
 
          /**
           * @brief Compute the influence of the kernel
@@ -67,12 +67,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD2RKInfluenceKernel<TSimType>::ETD2RKInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1)
+   template <typename TSimType> ETDInfluenceKernel<TSimType>::ETDInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1)
       : mNFactor(nFactor), mpOpM1(pOpM1)
    {
    }
 
-   template <typename TSimType> void ETD2RKInfluenceKernel<TSimType>::computeInfluence(Array &rKernel, const int l)
+   template <typename TSimType> void ETDInfluenceKernel<TSimType>::computeInfluence(Array &rKernel, const int l)
    {
       int rows = this->mpOpM1->harmOp(l).op().rows();
       rKernel.topRows(rows) = this->mNFactor*this->mpOpM1->harmOp(l).op() * rKernel.topRows(rows);
@@ -81,4 +81,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ETD2RKINFLUENCEKERNEL_HPP
+#endif // ETDINFLUENCEKERNEL_HPP

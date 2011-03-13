@@ -1,9 +1,9 @@
-/** \file ETD2RKMethod.hpp
- *  \brief Implementation of the ETD2RK method (without influence matrix)
+/** \file ETD1Method.hpp
+ *  \brief Implementation of the ETD1 method (without influence matrix)
  */
 
-#ifndef ETD2RKMETHOD_HPP
-#define ETD2RKMETHOD_HPP
+#ifndef ETD1METHOD_HPP
+#define ETD1METHOD_HPP
 
 // Configuration includes
 //
@@ -20,9 +20,8 @@
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/IterativeSchemeBase.hpp"
-#include "Timestepping/ETD/Operators/ETD2Operators.hpp"
+#include "Timestepping/ETD/Operators/ETD1Operators.hpp"
 #include "Timestepping/ETD/Iterations/ETD1Iteration.hpp"
-#include "Timestepping/ETD/Iterations/ETD2RKTimestep.hpp"
 #include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
@@ -32,7 +31,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD2RKMethod: public IterativeSchemeBase<TSimType>
+   template <typename TSimType> class ETD1Method: public IterativeSchemeBase<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
@@ -51,12 +50,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is l=0 mode required?
           */
-         ETD2RKMethod(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
+         ETD1Method(EPMFloat a, EPMFloat b, const BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETD2RKMethod() {};
+         virtual ~ETD1Method() {};
 
          /**
           * @brief Add a boundary condition
@@ -66,16 +65,16 @@ namespace EPMDynamo {
          virtual void addBC(SmartBC pBC);
 
          /**
-          * @brief Initialise the ETD2RK method
+          * @brief Initialise the ETD1 method
           */
          void init();
          
       protected:
 
          /**
-          * @brief The set of ETD2 operators
+          * @brief The set of ETD1 operators
           */
-         ETD2Operators<TSimType>  mETD2;
+         ETD1Operators<TSimType>  mETD1;
 
          /**
           * @brief Update the timestep matrices after a timestep change
@@ -95,18 +94,18 @@ namespace EPMDynamo {
          void initStorage();
    };
 
-   template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : IterativeSchemeBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mETD2(b/a, pTrunc, hasL0)
+   template <typename TSimType> ETD1Method<TSimType>::ETD1Method(EPMFloat a, EPMFloat b, const typename ETD1Method<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : IterativeSchemeBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mETD1(b/a, pTrunc, hasL0)
    {
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::addBC(SmartBC pBC)
+   template <typename TSimType> void ETD1Method<TSimType>::addBC(SmartBC pBC)
    {
       // add boundary condition to operators
-      this->mETD2.addBC(pBC);
+      this->mETD1.addBC(pBC);
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::init()
+   template <typename TSimType> void ETD1Method<TSimType>::init()
    {
       // initialise pointers
       this->initStorage();
@@ -115,33 +114,28 @@ namespace EPMDynamo {
       this->initOperators();
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::initOperators()
+   template <typename TSimType> void ETD1Method<TSimType>::initOperators()
    {
       // initialise the operators
-      this->mETD2.initOperators(this->mrBasis);
+      this->mETD1.initOperators(this->mrBasis);
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::updateTimeMatrices()
+   template <typename TSimType> void ETD1Method<TSimType>::updateTimeMatrices()
    {
       // Update the time depended matrices
-      this->mETD2.update(this->rTSParams().dt(), this->mrBasis);
+      this->mETD1.update(this->rTSParams().dt(), this->mrBasis);
    }
 
-   template <typename TSimType> void ETD2RKMethod<TSimType>::initStorage()
+   template <typename TSimType> void ETD1Method<TSimType>::initStorage()
    {
       // Create intermediate value a computation step
-      EPMSHARED_PTR<ETD1Iteration<TSimType> > pItA(new ETD1Iteration<TSimType> (1.0/this->mA, this->mETD2.pEtdF(0), this->mETD2.pEtdF(1)));
-
-      // Create timestep computation step
-      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (1.0/this->mA, this->pOldNTerms(), this->mETD2.pEtdF(2)));
+      EPMSHARED_PTR<ETD1Iteration<TSimType> > pIt(new ETD1Iteration<TSimType> (1.0/this->mA, this->mETD1.pEtdF(0), this->mETD1.pEtdF(1)));
 
       // Add required ETD steps
          // Add intermediate value A computation
-      this->mSteps.push_back(pItA);
-         // Add timestep step
-      this->mSteps.push_back(pItTimestep);
+      this->mSteps.push_back(pIt);
    }
 
 }
 
-#endif // ETD2RKMETHOD_HPP
+#endif // ETD1METHOD_HPP

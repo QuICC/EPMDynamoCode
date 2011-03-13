@@ -78,6 +78,13 @@ namespace EPMDynamo {
 
          // Increment the intermediate steps counter
          ++this->mInterCounter;
+
+         // Make sure O(1) schemes also work
+         if(this->mInterCounter > TMethodTraits::INTERMEDIATE_STATES)
+         {
+            this->rTSParams().toggleTimestepStatus();
+         }
+
       } else
       {
          // Check if timestep is bigger than minimum and if the initialisation steps are over

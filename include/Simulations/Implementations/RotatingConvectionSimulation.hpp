@@ -149,12 +149,12 @@ namespace EPMDynamo {
       SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
 SmartBC  pNSBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
 SmartBC  pDBC(new DRadialBC<TSimType>(this->mTransform.radBasis()));
-//      this->mNavierStokes.addTorBC(pSFBC);
-this->mNavierStokes.addTorBC(pNSBC);
+      this->mNavierStokes.addTorBC(pSFBC);
+//this->mNavierStokes.addTorBC(pNSBC);
       // Order of Poloidal BCs is important
       this->mNavierStokes.addPolBC(pZeroBC);
-//      this->mNavierStokes.addPolBC(pDDBC);
-this->mNavierStokes.addPolBC(pDBC);
+      this->mNavierStokes.addPolBC(pDDBC);
+//this->mNavierStokes.addPolBC(pDBC);
 
       // Initialise the transport equation
       this->mTransport.init();

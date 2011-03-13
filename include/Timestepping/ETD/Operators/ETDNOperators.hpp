@@ -377,7 +377,7 @@ namespace EPMDynamo {
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(1.0, basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).constructBOperator(this->c(), basis.at(i).specLaplacian());
 
          char jobvl = 'N';
          char jobvr = 'N';
@@ -426,8 +426,9 @@ namespace EPMDynamo {
       // Loop over all degrees
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
-         this->mScalings(i) = std::max(0.0, 1+std::ceil(std::log(SCALINGSQUARING_THRESHOLD*h*this->c()*this->mMaxEig(i))/std::log(2.0)));
+         this->mScalings(i) = std::max(0.0, 1+std::ceil(std::log(SCALINGSQUARING_THRESHOLD*h*this->mMaxEig(i))/std::log(2.0)));
       }
+      std::cerr << this->mScalings.transpose() << std::endl;
 
       // Loop over all the ETD operators
       for(int i=0; i < this->mNOps; ++i)
@@ -516,8 +517,6 @@ namespace EPMDynamo {
 
          // Compute the pseudo inverse
          rMat = VT.transpose() * s.asDiagonal() * U.transpose();
-
-         std::cerr << rMat << std::endl;
       }
    }
 

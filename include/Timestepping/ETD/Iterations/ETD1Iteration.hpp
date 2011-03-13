@@ -1,9 +1,9 @@
-/** \file ETD2RKA.hpp
- *  \brief Implemenation of the "a" step in the ETD2RK method 
+/** \file ETD1Iteration.hpp
+ *  \brief Implemenation of the simple ETD1 iteration step. This is also the A step for ETD2RK method. 
  */
 
-#ifndef ETD2RKA_HPP
-#define ETD2RKA_HPP
+#ifndef ETD1ITERATION_HPP
+#define ETD1ITERATION_HPP
 
 // System includes
 //
@@ -20,11 +20,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implemenation of the "a" step in the ETD2RK method 
+    * \brief Implemenation of the simple ETD1 iteration step. This is also the A step for ETD2RK method. 
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD2RKA: public SchemeIteration<TSimType>
+   template <typename TSimType> class ETD1Iteration: public SchemeIteration<TSimType>
    {
       public:
          /// Typedef from Simulation trait to local scalar type
@@ -40,12 +40,12 @@ namespace EPMDynamo {
           * @param pOpM0 Pointer to operator M0
           * @param pOpM1 Pointer to operator M1
           */
-         ETD2RKA(EPMFloat nFactor, SmartETDOperators pOpM0, SmartETDOperators pOpM1);
+         ETD1Iteration(EPMFloat nFactor, SmartETDOperators pOpM0, SmartETDOperators pOpM1);
 
          /**
           * @brief Destructor
           */
-         virtual ~ETD2RKA() {};
+         virtual ~ETD1Iteration() {};
 
          /**
           * @brief Compute the implemented iteration
@@ -74,12 +74,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD2RKA<TSimType>::ETD2RKA(EPMFloat nFactor, SmartETDOperators pOpM0, SmartETDOperators pOpM1)
+   template <typename TSimType> ETD1Iteration<TSimType>::ETD1Iteration(EPMFloat nFactor, SmartETDOperators pOpM0, SmartETDOperators pOpM1)
       : mNFactor(nFactor), mpOpM0(pOpM0), mpOpM1(pOpM1)
    {
    }
 
-   template <typename TSimType> void ETD2RKA<TSimType>::compute(typename ETD2RKA<TSimType>::ScalarType &rVar, typename ETD2RKA<TSimType>::ScalarType &rNTerms)
+   template <typename TSimType> void ETD1Iteration<TSimType>::compute(typename ETD1Iteration<TSimType>::ScalarType &rVar, typename ETD1Iteration<TSimType>::ScalarType &rNTerms)
    {
       // Get number of harmonic degrees
       int nL = rVar.trunc()->local()->spec()->nL();
@@ -99,4 +99,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ETD2RKA_HPP
+#endif // ETD1ITERATION_HPP

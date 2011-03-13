@@ -15,12 +15,15 @@
 //
 #include "Operators/DenseOperator.hpp"
 #include "Timestepping/ETD/ETDTimestepControl.hpp"
+#include "Timestepping/ETD/ETD1/ETD1Traits.hpp"
 #include "Timestepping/ETD/ETD2RK/ETD2RKTraits.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
 
 namespace EPMDynamo {
 
    // Forward declaration
+   template <typename> class ETD1Method;
+   template <typename> class ETD1InfluenceMethod;
    template <typename> class ETD2RKMethod;
    template <typename> class ETD2RKInfluenceMethod;
 
@@ -34,12 +37,15 @@ namespace EPMDynamo {
       public:
          /// Typedef for the "general" setup traits
          typedef ETD2RKTraits<TSimType>  MethodTraits;
+         //typedef ETD1Traits<TSimType>  MethodTraits;
 
          /// Typedef for the simple timestepper (without influence matrix step)
          typedef IterativeScheme<TSimType, ETD2RKMethod>   Timestepper;  
+         //typedef IterativeScheme<TSimType, ETD1Method>   Timestepper;  
 
          /// Typedef for the timestepper with influence matrix step
          typedef IterativeScheme<TSimType, ETD2RKInfluenceMethod>   InfluenceTimestepper;  
+         //typedef IterativeScheme<TSimType, ETD1InfluenceMethod>   InfluenceTimestepper;  
 
          /// Typedef for the timestep control object
          typedef ETDTimestepControl<MethodTraits>   TimestepControl;

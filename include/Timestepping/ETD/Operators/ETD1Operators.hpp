@@ -72,26 +72,26 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ETD1Operators<TSimType>::ETD0Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
+   template <typename TSimType> ETD1Operators<TSimType>::ETD1Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
       : ETDNOperators<TSimType,2>(c, pTrunc, hasL0)
    {
    }
 
-   template <typename TSimType> void ETD1Operators<TSimType>::update(const EPMFloat dt, const typename ETD0Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD1Operators<TSimType>::update(const EPMFloat dt, const typename ETD1Operators<TSimType>::BasisType &basis)
    {
       this->createOperators(dt, basis);
    }
 
-   template <typename TSimType> void ETD1Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD0Operators<TSimType>::BasisType &basis)
+   template <typename TSimType> void ETD1Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD1Operators<TSimType>::BasisType &basis)
    {
       // Update the required scaling power
       this->updateScalings(h);
 
       // Loop over all degrees
-      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
+      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(h*this->c(), basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(l).constructBOperator(h*this->c(), basis.at(l).specLaplacian());
 
          // Compute the taylor expansion of the Fk functionals of the created operator
          this->computeScaledF1(l);

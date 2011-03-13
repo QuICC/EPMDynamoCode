@@ -87,10 +87,10 @@ namespace EPMDynamo {
       this->updateScalings(h);
 
       // Loop over all degrees
-      for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
+      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(h*this->c(), basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(l).constructBOperator(h*this->c(), basis.at(l).specLaplacian());
 
          // Compute the scaled exponential of the created operator
          this->computeScaledF0();
@@ -99,7 +99,7 @@ namespace EPMDynamo {
          this->computeSquaredF0();
 
          // Do finalisation step (for example factorisation)
-         this->rEtdF(0).rHarmOp(i).finaliseOp();
+         this->rEtdF(0).rHarmOp(l).finaliseOp();
       }
    }
 
