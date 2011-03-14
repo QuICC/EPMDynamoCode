@@ -36,16 +36,16 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the "general" setup traits
+//         typedef ETD1Traits<TSimType>  MethodTraits;
          typedef ETD2RKTraits<TSimType>  MethodTraits;
-         //typedef ETD1Traits<TSimType>  MethodTraits;
 
          /// Typedef for the simple timestepper (without influence matrix step)
+//         typedef IterativeScheme<TSimType, ETD1Method>   Timestepper;  
          typedef IterativeScheme<TSimType, ETD2RKMethod>   Timestepper;  
-         //typedef IterativeScheme<TSimType, ETD1Method>   Timestepper;  
 
          /// Typedef for the timestepper with influence matrix step
+//         typedef IterativeScheme<TSimType, ETD1InfluenceMethod>   InfluenceTimestepper;  
          typedef IterativeScheme<TSimType, ETD2RKInfluenceMethod>   InfluenceTimestepper;  
-         //typedef IterativeScheme<TSimType, ETD1InfluenceMethod>   InfluenceTimestepper;  
 
          /// Typedef for the timestep control object
          typedef ETDTimestepControl<MethodTraits>   TimestepControl;

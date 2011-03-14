@@ -229,7 +229,7 @@ namespace EPMDynamo {
           *
           * @param mat Matrix to expand
           */
-         void computeFkTaylor(Matrix& mat, int k);
+         void computeFkTaylor(Matrix& mat, int k, bool isFull = true);
 
          /**
           * @brief Compute the F0(2z)
@@ -428,7 +428,6 @@ namespace EPMDynamo {
       {
          this->mScalings(i) = std::max(0.0, 1+std::ceil(std::log(SCALINGSQUARING_THRESHOLD*h*this->mMaxEig(i))/std::log(2.0)));
       }
-      std::cerr << this->mScalings.transpose() << std::endl;
 
       // Loop over all the ETD operators
       for(int i=0; i < this->mNOps; ++i)
@@ -547,7 +546,7 @@ namespace EPMDynamo {
       this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
 
       // Compute taylor series of F1
-      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1);
+      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1, this->isFullRank(l));
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF2(const int l)
@@ -565,10 +564,10 @@ namespace EPMDynamo {
       this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
 
       // Compute taylor series of F1
-      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1);
+      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1, this->isFullRank(l));
 
       // Compute taylor series of F2
-      this->computeFkTaylor(this->rEtdF(2).rHarmOp(l).rOp(), 2);
+      this->computeFkTaylor(this->rEtdF(2).rHarmOp(l).rOp(), 2, this->isFullRank(l));
    }
 
    template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeScaledF3(const int l)
@@ -589,16 +588,16 @@ namespace EPMDynamo {
       this->computeFkTaylor(this->rEtdF(0).rHarmOp(l).rOp(), 0);
 
       // Compute taylor series of F1
-      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1);
+      this->computeFkTaylor(this->rEtdF(1).rHarmOp(l).rOp(), 1, this->isFullRank(l));
 
       // Compute taylor series of F2
-      this->computeFkTaylor(this->rEtdF(2).rHarmOp(l).rOp(), 2);
+      this->computeFkTaylor(this->rEtdF(2).rHarmOp(l).rOp(), 2, this->isFullRank(l));
 
       // Compute taylor series of F3
-      this->computeFkTaylor(this->rEtdF(3).rHarmOp(l).rOp(), 3);
+      this->computeFkTaylor(this->rEtdF(3).rHarmOp(l).rOp(), 3, this->isFullRank(l));
    }
 
-   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeFkTaylor(Matrix& rMat, int k)
+   template <typename TSimType, int TSchemeOrder> void ETDNOperators<TSimType, TSchemeOrder>::computeFkTaylor(Matrix& rMat, int k, bool isFull)
    {
       // Storage for the factorial factor
       EPMFloat factor = 1.0;
@@ -617,9 +616,13 @@ namespace EPMDynamo {
       tmp.setConstant(0.0);
       tmp.diagonal().setConstant(1.0);
 
+      if(k != 0 && !isFull)
+      {
+         tmp.diagonal()(0) = 0.0;
+      }
+
       // Set staring value to Identity/factor
-      rMat.setConstant(0.0);
-      rMat.diagonal().setConstant(1.0/factor);
+      rMat = (1.0/factor) * tmp;
 
       // Do the taylor expansion loop
       for(int i=k+1; i < 16; ++i)

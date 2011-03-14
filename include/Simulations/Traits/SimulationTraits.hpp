@@ -66,8 +66,8 @@ namespace EPMDynamo {
          typedef  DenseLUOperator  FactoredOpType;
 
          /// Typedef for the timestepping scheme traits
-//         typedef  PCSchemeTraits<TSimType>  TimestepTraits;
-         typedef  ETDSchemeTraits<TSimType>  TimestepTraits;
+         typedef  PCSchemeTraits<TSimType>  TimestepTraits;
+//         typedef  ETDSchemeTraits<TSimType>  TimestepTraits;
          
          /// Typedef for the equation parameters
          typedef EQRaRoParameters  EquationParametersType;

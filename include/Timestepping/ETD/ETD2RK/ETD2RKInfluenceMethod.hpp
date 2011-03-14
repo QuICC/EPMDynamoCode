@@ -160,6 +160,9 @@ namespace EPMDynamo {
 
    template <typename TSimType> void ETD2RKInfluenceMethod<TSimType>::doIteration(typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rVar, typename ETD2RKInfluenceMethod<TSimType>::ScalarType& rNTerms)
    {
+      // Prepare values for iteration
+      (*this->mCurrentIt)->prepare(rVar, rNTerms);
+
       // Solve influence matrix part
       this->mInfluence.solve(rNTerms);
 

@@ -102,6 +102,12 @@ namespace EPMDynamo {
          // Include the missing h factor
          this->rEtdF(1).rHarmOp(l).rOp() *= h;
 
+         // Correct the results for zero eigenvalues
+         if(!this->isFullRank(l))
+         { 
+            this->rEtdF(1).rHarmOp(l).rOp().topRows(1) += h*this->etdF(0).harmOp(l).op().leftCols(1).transpose();
+         }
+
          // Do finalisation step
          this->rEtdF(0).rHarmOp(l).finaliseOp();
          this->rEtdF(1).rHarmOp(l).finaliseOp();

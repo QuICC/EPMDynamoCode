@@ -123,7 +123,7 @@ namespace EPMDynamo {
 
    EPMFloat EQRaRoParameters::inertialCFL() const
    {
-      return this->Ro()/30.0;
+      return this->Ro()/3.0;
    }
 
    EPMFloat EQRaRoParameters::torsionalCFL() const

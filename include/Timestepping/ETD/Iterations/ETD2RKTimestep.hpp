@@ -53,6 +53,14 @@ namespace EPMDynamo {
          virtual ~ETD2RKTimestep() {};
 
          /**
+          * @brief Prepare the computation of the implemented iteration
+          *
+          * @param rVar Input/Output variable
+          * @param rNTerms New non linear terms
+          */
+         virtual void prepare(ScalarType &rVar, ScalarType &rNTerms);
+
+         /**
           * @brief Compute the implemented iteration
           *
           * @param rVar Input/Output variable
@@ -84,7 +92,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
+   template <typename TSimType> void ETD2RKTimestep<TSimType>::prepare(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
    {
       // Get number of harmonic degrees
       int nL = rVar.trunc()->local()->spec()->nL();
@@ -97,6 +105,20 @@ namespace EPMDynamo {
       {
          rNTerms.rLShell(l) -= this->mpOldN->lshell(l);
          rNTerms.rLShell(l) *= this->mNFactor;
+      }
+   }
+
+   template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
+   {
+      // Get number of harmonic degrees
+      int nL = rVar.trunc()->local()->spec()->nL();
+
+      // Get minimal degree index (not l=0)
+      int l0 = rVar.minL();
+
+      // loop over degrees 
+      for(int l = l0; l < nL; ++l)
+      {
          this->mpOpM2->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l), l);
          rVar.rLShell(l) += rNTerms.lshell(l);
          this->mpOpM2->extendOrders(rVar.rLShell(l), l);

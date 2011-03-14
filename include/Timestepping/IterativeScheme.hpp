@@ -87,7 +87,6 @@ namespace EPMDynamo {
          this->resetIterations();
 
          // Store the variable before timestep to allow rejection of timestep
-         std::cerr << "Store old nTerms" << std::endl;
          this->storeOld(rVar, nTerms);
 
          // Update timesteping matrices if required

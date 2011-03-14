@@ -38,6 +38,14 @@ namespace EPMDynamo {
          virtual ~SchemeIteration() {};
 
          /**
+          * @brief Prepare the computation of the iteration
+          *
+          * @param rVar Input/Output variable
+          * @param rNTerms New non linear terms
+          */
+         virtual void prepare(ScalarType &rVar, ScalarType &rNTerms){};
+
+         /**
           * @brief Compute the implemented iteration
           *
           * @param rVar Input/Output variable
