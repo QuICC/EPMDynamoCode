@@ -120,7 +120,7 @@ namespace EPMDynamo {
          virtual ~RandomState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e2;
+   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e0;
 
    template <typename TGenTraits> void RandomState<TGenTraits>::setRTPCodensity(typename RandomState<TGenTraits>::Codensity &codC)
    {

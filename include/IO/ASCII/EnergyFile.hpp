@@ -36,7 +36,7 @@ namespace EPMDynamo {
          * @param name File name
          * @param tsParams Timestep parameters
          */
-         EnergyFile(TFieldType& var, std::string name, const TimestepParameters &tsParams);
+         EnergyFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, const int format = 0);
 
          /**
          * @brief Destructor
@@ -56,10 +56,15 @@ namespace EPMDynamo {
           * @brief Reference to a TimestepParameters object to get access to time and timestep
           */
          const TimestepParameters&  mrTSParams;
+
+         /**
+          * @brief Output format flag
+          */
+         const int mFormat;
    };
 
-   template <typename TSimType, typename TFieldType> EnergyFile<TSimType, TFieldType>::EnergyFile(TFieldType &var, std::string name, const TimestepParameters &tsParams)
-      : ASCIIFieldWriter<TSimType, TFieldType, ASCIIEWriter>(var, name + EnergyFileDefs::BASENAME, EnergyFileDefs::EXTENSION, EnergyFileDefs::HEADER, EnergyFileDefs::VERSION), mrTSParams(tsParams)
+   template <typename TSimType, typename TFieldType> EnergyFile<TSimType, TFieldType>::EnergyFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, int format)
+      : ASCIIFieldWriter<TSimType, TFieldType, ASCIIEWriter>(var, name + EnergyFileDefs::BASENAME, EnergyFileDefs::EXTENSION, EnergyFileDefs::HEADER, EnergyFileDefs::VERSION), mrTSParams(tsParams), mFormat(format)
    {
    }
 
@@ -73,7 +78,19 @@ namespace EPMDynamo {
          this->preWrite();
 
          // Write energy
-         this->mFile << this->mrTSParams.time() << "  " << this->mrVar.oc().energy().transpose() << std::endl;
+         this->mFile << this->mrTSParams.time() << "  " << this->mrVar.oc().energy().transpose();
+
+         // If format = 1 output the energy harmonic degree spectrum evolution
+         if(this->mFormat == 1)
+         {
+            for(int i = 1; i < this->mrVar.oc().spectrumL().cols(); ++i)
+            {
+               this->mFile << this->mrVar.oc().spectrumL().col(i).transpose();
+            }
+         }
+
+         // Add newline at the end of ouput
+         this->mFile << std::endl;
 
          //Do post write operations
          this->postWrite();

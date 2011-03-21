@@ -32,6 +32,7 @@
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 
 namespace EPMDynamo {
@@ -130,18 +131,31 @@ namespace EPMDynamo {
    {
       // Create Zero boundary condition pointer
       SmartBC  pZeroBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
-      // Create toroidal stress free boundary condition pointer
-      SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
-      // Create poloidal stress free boundary condition pointer
-      SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
 
-      // Set boundary condition for the toroidal component
-      this->mNavierStokes.addTorBC(pSFBC);
+      // Set boundary condition to the Navier-Stokes equation
+      if(true)
+      {
+         SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
+         SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
 
-      // Set boundary conditions for the Poloidal component
-      // Order of BCs is IMPORTANT (first one is applied to influence matrix steps)
-      this->mNavierStokes.addPolBC(pZeroBC);
-      this->mNavierStokes.addPolBC(pDDBC);
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pSFBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDDBC);
+      } else
+      {
+         SmartBC  pNSBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
+         SmartBC  pDBC(new DRadialBC<TSimType>(this->mTransform.radBasis()));
+
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pNSBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDBC);
+      }
 
       // Initialise the Navier-Stokes equation
       this->mNavierStokes.init();
