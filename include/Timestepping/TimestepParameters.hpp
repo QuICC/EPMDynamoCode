@@ -42,6 +42,11 @@ namespace EPMDynamo {
          ~TimestepParameters() {};
 
          /**
+          * @brief Should uses adaptive timestep?
+          */
+         bool isAdaptive() const;
+
+         /**
           * @brief Has the timestep been computed?
           *
           * This flag allows to relatively easily implemented "iterative" timestep schemes like predictor/corrector
@@ -194,6 +199,11 @@ namespace EPMDynamo {
       private:
 
          /**
+          * @brief Is adaptive timestep?
+          */
+         bool mIsAdaptive;
+
+         /**
           * @brief Can compute next timestep?
           */
          bool mIsNextStep;
@@ -257,6 +267,11 @@ namespace EPMDynamo {
    inline bool TimestepParameters::isNextStep() const
    {
       return this->mIsNextStep;
+   }
+
+   inline bool TimestepParameters::isAdaptive() const
+   {
+      return this->mIsAdaptive;
    }
 
    inline void TimestepParameters::toggleTimestepStatus()

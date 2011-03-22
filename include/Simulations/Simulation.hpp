@@ -172,7 +172,10 @@ namespace EPMDynamo {
          this->addExternalInfluence();
 
          // Update the timestep
-         this->mSimControl.tsControl().updateTimestep();
+         if(this->mSimControl.tsParams().isAdaptive())
+         {
+            this->mSimControl.tsControl().updateTimestep();
+         }
 
          // Timestep all equations
          this->timestepEquations();
