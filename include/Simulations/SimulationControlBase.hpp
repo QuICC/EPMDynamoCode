@@ -35,15 +35,16 @@ namespace EPMDynamo {
           * \param aRate ASCII save rate
           * \param sRate State file save rate
           * \param wall Wall time
+          * \param maxtime Max integration time
           */
-         SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall);
+         SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall, EPMFloat maxtime);
 
          /**
           * @brief Constructor 
           *
           * \param time Time related values: (0) Initial time, (1) Reached timestep
           * \param runI Run related values (integer type): (0) Maximum number of timsteps, (1) ASCII save rate, (2) State file save rate
-          * \param run Run related values (float type): (0) Wall time
+          * \param run Run related values (float type): (0) Wall time (1) Max integration time
           */
          SimulationControlBase(const Array& time, const ArrayI& runI, const Array& run);
 

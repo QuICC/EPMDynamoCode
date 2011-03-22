@@ -17,13 +17,13 @@
 
 namespace EPMDynamo {
 
-   SimulationControlBase::SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall)
-      : mKeepRunning(true), mTSParams(t, dt), mTSCounter(maxtstep, aRate, sRate), mRunControl(wall), mUseWall(mTSCounter.isUnlimited()), mCtrlIface()
+   SimulationControlBase::SimulationControlBase(EPMFloat t, EPMFloat dt, int maxtstep, int aRate, int sRate, EPMFloat wall, EPMFloat maxtime)
+      : mKeepRunning(true), mTSParams(t, dt), mTSCounter(maxtstep, aRate, sRate), mRunControl(wall, maxtime), mUseWall(mTSCounter.isUnlimited()), mCtrlIface()
    {
    }
 
    SimulationControlBase::SimulationControlBase(const Array& time, const ArrayI& runI, const Array& run)
-      : mKeepRunning(true), mTSParams(time(0), time(1)), mTSCounter(runI(0), runI(1), runI(2)), mRunControl(run(0)), mUseWall(mTSCounter.isUnlimited()), mCtrlIface()
+      : mKeepRunning(true), mTSParams(time(0), time(1)), mTSCounter(runI(0), runI(1), runI(2)), mRunControl(run(0), run(1)), mUseWall(mTSCounter.isUnlimited()), mCtrlIface()
    {
    }
 

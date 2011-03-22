@@ -37,8 +37,9 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param wall Wall time
+          * @param maxtime Max integration time
           */
-         RuntimeControl(EPMFloat wall);
+         RuntimeControl(EPMFloat wall, EPMFloat maxtime);
 
          /**
           * @brief Destructor
@@ -58,7 +59,7 @@ namespace EPMDynamo {
          /**
           * @brief Update run time
           */
-         void  update();
+         void  update(const EPMFloat time);
 
          /**
           * @brief Print some run info
@@ -76,9 +77,19 @@ namespace EPMDynamo {
          const EPMFloat mWallTime;
 
          /**
+          * @brief Wall time
+          */
+         const EPMFloat mMaxtime;
+
+         /**
           * @brief Run time
           */
          EPMFloat mRuntime;
+
+         /**
+          * @brief Run time
+          */
+         EPMFloat mTime;
    };
 
    inline EPMFloat RuntimeControl::runtime() const

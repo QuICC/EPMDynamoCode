@@ -73,6 +73,8 @@ namespace EPMDynamo {
 
    const std::string ParametersFileDefs::RUNXML = "run";
 
+   const std::string ParametersFileDefs::RUNMAXTIMEXML = "maxtime";
+
    const std::string ParametersFileDefs::RUNMAXTSTEPXML = "maxtstep";
 
    const std::string ParametersFileDefs::RUNARATEXML = "arate";

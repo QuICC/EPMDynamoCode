@@ -40,8 +40,9 @@ namespace EPMDynamo {
           * \param aRate ASCII save rate
           * \param sRate State file save rate
           * \param wall Wall time
+          * \param maxtime Max integration time
           */
-         SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall);
+         SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall, EPMFloat maxtime);
 
          /**
           * @brief Constructor
@@ -49,7 +50,7 @@ namespace EPMDynamo {
           * \param time Time related values: (0) Initial time, (1) Reached timestep
           * \param eqParams Equation parameters
           * \param runI Run related values (integer type): (0) Maximum number of timsteps, (1) ASCII save rate, (2) State file save rate
-          * \param run Run related values (float type): (0) Wall time
+          * \param run Run related values (float type): (0) Wall time, (1) Max integration time
           */
          SimulationControl(const Array& time, const EquationParameters& eqParams, const ArrayI& runI, const Array& run);
 
@@ -83,8 +84,8 @@ namespace EPMDynamo {
       return this->mTSControl;
    }
 
-   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall)
-      : SimulationControlBase(t, dt, maxtstep, aRate, sRate, wall), mTSControl(mTSParams, eqParams)
+   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall, EPMFloat maxtime)
+      : SimulationControlBase(t, dt, maxtstep, aRate, sRate, wall, maxtime), mTSControl(mTSParams, eqParams)
    {
    }
 
@@ -107,7 +108,7 @@ namespace EPMDynamo {
          this->tsCounter().increment();
 
          // Update runtime
-         this->runControl().update();
+         this->runControl().update(this->tsParams().time());
       }
 
       // Keep running simulation?

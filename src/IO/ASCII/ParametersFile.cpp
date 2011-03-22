@@ -26,7 +26,7 @@
 namespace EPMDynamo {
 
    ParametersFile::ParametersFile(std::string type)
-      : XMLReader(type, ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(1), mBCArray(3), mTStepArray(2), mRunArrayI(3), mRunArray(1)
+      : XMLReader(type, ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(1), mBCArray(3), mTStepArray(2), mRunArrayI(3), mRunArray(2)
    {
       // Resize arrays depending on given file type
       this->setupStorage();
@@ -340,6 +340,8 @@ namespace EPMDynamo {
             this->readValue(this->mRunArrayI(2), node, ParametersFileDefs::RUNSRATEXML);
 
             this->readValue(this->mRunArray(0), node, ParametersFileDefs::RUNWALLXML);
+
+            this->readValue(this->mRunArray(1), node, ParametersFileDefs::RUNMAXTIMEXML);
          } else
          {
             throw EPMException("ParametersFile::readRun", "Couldn't find tag!");
@@ -436,6 +438,7 @@ namespace EPMDynamo {
          std::cout << "--------------------" << std::endl;
          std::cout << "******* Run ********" << std::endl;
          std::cout << "--------------------" << std::endl;
+         std::cout << "  " << "Max time: " << this->mRunArray(1) << std::endl;
          std::cout << "  " << "Maxtstep: " << this->mRunArrayI(0) << std::endl;
          std::cout << "  " << "ASCII Rate: " << this->mRunArrayI(1) << std::endl;
          std::cout << "  " << "State Rate: " << this->mRunArrayI(2) << std::endl;
@@ -495,7 +498,7 @@ namespace EPMDynamo {
       // Create mRunArray part
       MPI_Get_address(this->mRunArray.data(), &element);
       displ[idx] = element;
-      blocks[idx] = 1;
+      blocks[idx] = 2;
       types[idx] = MPI_DOUBLE;
       idx++;
 

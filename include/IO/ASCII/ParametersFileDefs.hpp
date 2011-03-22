@@ -165,6 +165,11 @@ namespace EPMDynamo {
          static const std::string   RUNXML;
 
          /**
+          * @brief Maximum integration time node of parameters file
+          */
+         static const std::string   RUNMAXTIMEXML;
+
+         /**
           * @brief Maximum number of timesteps node of parameters file
           */
          static const std::string   RUNMAXTSTEPXML;
