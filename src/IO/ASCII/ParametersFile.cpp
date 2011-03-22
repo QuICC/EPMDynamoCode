@@ -292,7 +292,7 @@ namespace EPMDynamo {
       }
 
       // Check for defined BC values for velocity
-      if(this->mBCArray(1) != 0 || this->mBCArray(1) != 1)
+      if(this->mBCArray(1) != 0 && this->mBCArray(1) != 1)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for velocity");
       }
