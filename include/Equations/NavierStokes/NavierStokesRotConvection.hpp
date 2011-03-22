@@ -1,9 +1,9 @@
-/** \file NavierStokesLinRotating.hpp
- *  \brief Implementation of the Navier-Stokes equation for rotating convection
+/** \file NavierStokesRotConvection.hpp
+ *  \brief Implementation of a rotating convection equation
  */
 
-#ifndef NAVIERSTOKESLINROTATING_HPP
-#define NAVIERSTOKESLINROTATING_HPP
+#ifndef NAVIERSTOKESROTCONVECTION_HPP
+#define NAVIERSTOKESROTCONVECTION_HPP
 
 // System includes
 //
@@ -15,15 +15,18 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
-#include "Equations/TorPolDiffusionEquation.hpp"
-#include "Equations/NavierStokes/NavierStokesThermal.hpp"
+#include "Equations/NavierStokes/NavierStokesConvection.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief General representation of the Navier-Stokes equation with rotating convection
+    *
+    * \tparam TSimType Type of the simulation
+    * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesLinRotating : public NavierStokesThermal<TSimType, TSimTraits>  {
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesRotConvection : public NavierStokesConvection<TSimType, TSimTraits>
+   {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
@@ -37,18 +40,18 @@ namespace EPMDynamo {
          /**
           * @brief Constructor
           *
-          * @param rV Magnetic field (stored as reference)
+          * @param rV Velocity field (stored as reference)
           * @param rC Codensity scalar (stored as reference)
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesLinRotating(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesRotConvection(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~NavierStokesLinRotating() {};
+         virtual ~NavierStokesRotConvection() {};
 
          /**
           * @brief Update RTP values of the equation
@@ -67,12 +70,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesLinRotating<TSimType, TSimTraits>::NavierStokesLinRotating(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesLinRotating<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesLinRotating<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesThermal<TSimType, TSimTraits>(rV, rC, transform, tsteps, params)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesRotConvection<TSimType, TSimTraits>::NavierStokesRotConvection(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesRotConvection<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesRotConvection<TSimType, TSimTraits>::EquationParametersType &params)
+      : NavierStokesConvection<TSimType, TSimTraits>(rV, rC, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinRotating<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotConvection<TSimType, TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
@@ -81,7 +84,7 @@ namespace EPMDynamo {
       this->mrC.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesLinRotating<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotConvection<TSimType, TSimTraits>::updateRHS()
    {
       // Compute \f$C \vec{r}\f$
       this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
@@ -92,4 +95,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // NAVIERSTOKESLINROTATING_HPP
+#endif // NAVIERSTOKESROTCONVECTION_HPP

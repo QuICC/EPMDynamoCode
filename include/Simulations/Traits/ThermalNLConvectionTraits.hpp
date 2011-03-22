@@ -1,9 +1,9 @@
-/** \file LinearThermalConvectionTraits.hpp
- *  \brief Traits for the linear thermal convection simulation implementation
+/** \file ThermalNLConvectionTraits.hpp
+ *  \brief Traits for the thermal convection simulation implementation
  */
 
-#ifndef LINEARTHERMALCONVECTIONTRAITS_HPP
-#define LINEARTHERMALCONVECTIONTRAITS_HPP
+#ifndef THERMALNLCONVECTIONTRAITS_HPP
+#define THERMALNLCONVECTIONTRAITS_HPP
 
 // System includes
 //
@@ -21,11 +21,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the linear thermal convection simulation implementation
+    * \brief Traits for the thermal convection simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class LinearThermalConvectionTraits
+   template <typename TSimType> class ThermalNLConvectionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -93,9 +93,9 @@ namespace EPMDynamo {
          static const bool NeedVelocity = true;
 
          /// Does simulation required a velocity curl field
-         static const bool NeedVelocityCurl = false;
+         static const bool NeedVelocityCurl = true;
    };
 
 }
 
-#endif // LINEARTHERMALCONVECTIONTRAITS_HPP
+#endif // THERMALNLCONVECTIONTRAITS_HPP

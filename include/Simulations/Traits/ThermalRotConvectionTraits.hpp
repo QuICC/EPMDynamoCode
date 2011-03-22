@@ -1,9 +1,9 @@
-/** \file RotatingConvectionTraits.hpp
- *  \brief Traits for the rotating convection simulation implementation
+/** \file ThermalRotConvectionTraits.hpp
+ *  \brief Traits for the thermal convection simulation implementation
  */
 
-#ifndef ROTATINGCONVECTIONTRAITS_HPP
-#define ROTATINGCONVECTIONTRAITS_HPP
+#ifndef THERMALROTCONVECTIONTRAITS_HPP
+#define THERMALROTCONVECTIONTRAITS_HPP
 
 // System includes
 //
@@ -21,11 +21,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the rotating convection simulation implementation
+    * \brief Traits for the thermal convection simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class RotatingConvectionTraits
+   template <typename TSimType> class ThermalRotConvectionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -93,9 +93,9 @@ namespace EPMDynamo {
          static const bool NeedVelocity = true;
 
          /// Does simulation required a velocity curl field
-         static const bool NeedVelocityCurl = true;
+         static const bool NeedVelocityCurl = false;
    };
 
 }
 
-#endif // ROTATINGCONVECTIONTRAITS_HPP
+#endif // THERMALROTCONVECTIONTRAITS_HPP

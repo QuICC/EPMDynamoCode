@@ -26,7 +26,7 @@
 namespace EPMDynamo {
 
    ParametersFile::ParametersFile(std::string type)
-      : XMLReader(type, ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(1), mTStepArray(2), mRunArrayI(3), mRunArray(1)
+      : XMLReader(type, ParametersFileDefs::BASENAME, ParametersFileDefs::EXTENSION, ParametersFileDefs::HEADER, ParametersFileDefs::VERSION), mTruncArray(5), mEqArray(1), mBCArray(3), mTStepArray(2), mRunArrayI(3), mRunArray(1)
    {
       // Resize arrays depending on given file type
       this->setupStorage();
@@ -65,6 +65,9 @@ namespace EPMDynamo {
 
             // Read Physical parameters from file
             this->readPhysical();
+
+            // Read boundary parameters from file
+            this->readBoundary();
 
             // Read timestepping parameters from file
             this->readTimestepping();
@@ -131,6 +134,11 @@ namespace EPMDynamo {
    const Array& ParametersFile::aEquation() const
    {
       return this->mEqArray;
+   }
+
+   const ArrayI& ParametersFile::aBC() const
+   {
+      return this->mBCArray;
    }
 
    void ParametersFile::readTruncation()
@@ -255,6 +263,47 @@ namespace EPMDynamo {
       }
    }
 
+   void ParametersFile::readBoundary()
+   {
+      if(this->doesIO())
+      {
+         rapidxml::xml_node<> *node = mXML.first_node(ParametersFileDefs::BOUNDARYXML.c_str());
+
+         if(node)
+         {
+            this->readValue(this->mBCArray(0), node, ParametersFileDefs::BCCODXML);
+
+            this->readValue(this->mBCArray(1), node, ParametersFileDefs::BCVELXML);
+
+            this->readValue(this->mBCArray(2), node, ParametersFileDefs::BCMAGXML);
+         } else
+         {
+            throw EPMException("ParametersFile::readBoundary", "Couldn't find tag!");
+         }
+      } else
+      {
+         this->mBCArray.setConstant(-1);
+      }
+
+      // Check for defined BC values for codensity
+      if(this->mBCArray(0) != 0)
+      {
+         throw EPMException("ParametersFile::readBoundary", "Unknown BC for codensity");
+      }
+
+      // Check for defined BC values for velocity
+      if(this->mBCArray(1) != 0 || this->mBCArray(1) != 1)
+      {
+         throw EPMException("ParametersFile::readBoundary", "Unknown BC for velocity");
+      }
+
+      // Check for defined BC values for magnetic
+      if(this->mBCArray(2) != 0)
+      {
+         throw EPMException("ParametersFile::readBoundary", "Unknown BC for magnetic");
+      }
+   }
+
    void ParametersFile::readTimestepping()
    {
       if(this->doesIO())
@@ -357,6 +406,26 @@ namespace EPMDynamo {
          std::cout << "********************" << std::endl;
          std::cout << std::endl;
          std::cout << "--------------------" << std::endl;
+         std::cout << "***** Boundary *****" << std::endl;
+         std::cout << "--------------------" << std::endl;
+         if(this->mBCArray(0) == 0)
+         {
+            std::cout << "  " << "Codensity: " << "Zero" << std::endl;
+         }
+         if(this->mBCArray(1) == 0)
+         {
+            std::cout << "  " << "Velocity: " << "No-slip" << std::endl;
+         } else if(this->mBCArray(1) == 1)
+         {
+            std::cout << "  " << "Velocity: " << "Stress-free" << std::endl;
+         }
+         if(this->mBCArray(2) == 0)
+         {
+            std::cout << "  " << "Magnetic: " << "Insulating" << std::endl;
+         }
+         std::cout << "********************" << std::endl;
+         std::cout << std::endl;
+         std::cout << "--------------------" << std::endl;
          std::cout << "*** Timestepping ***" << std::endl;
          std::cout << "--------------------" << std::endl;
          std::cout << "  " << "Time: " << this->mTStepArray(0) << std::endl;
@@ -400,6 +469,13 @@ namespace EPMDynamo {
       displ[idx] = element;
       blocks[idx] = this->mEqArray.size();
       types[idx] = MPI_DOUBLE;
+      idx++;
+
+      // Create mBCArray part
+      MPI_Get_address(this->mBCArray.data(), &element);
+      displ[idx] = element;
+      blocks[idx] = 3;
+      types[idx] = MPI_INT;
       idx++;
 
       // Create mTStepArray part

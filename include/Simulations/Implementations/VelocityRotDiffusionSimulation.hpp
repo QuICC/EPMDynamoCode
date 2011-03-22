@@ -1,9 +1,9 @@
-/** \file VelocityDiffusionSimulation.hpp
+/** \file VelocityRotDiffusionSimulation.hpp
  *  \brief Implementation of a velocity diffusion simulation
  */
 
-#ifndef VELOCITYDIFFUSIONSIMULATION_HPP
-#define VELOCITYDIFFUSIONSIMULATION_HPP
+#ifndef VELOCITYROTDIFFUSIONSIMULATION_HPP
+#define VELOCITYROTDIFFUSIONSIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/VelocityDiffusionTraits.hpp"
+#include "Simulations/Traits/VelocityRotDiffusionTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
@@ -28,11 +28,11 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/NavierStokes/NavierStokesDiffusion.hpp"
+#include "Equations/NavierStokes/NavierStokesRotDiffusion.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 
 namespace EPMDynamo {
@@ -42,19 +42,19 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class VelocityDiffusionSimulation: public SimulationBase<TSimType>
+   template <typename TSimType> class VelocityRotDiffusionSimulation: public SimulationBase<TSimType>
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~VelocityDiffusionSimulation() {};
+         virtual ~VelocityRotDiffusionSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         VelocityDiffusionSimulation();
+         VelocityRotDiffusionSimulation();
 
          /**
           * @brief Initialise the fields
@@ -114,20 +114,20 @@ namespace EPMDynamo {
          /**
           * @brief Velocity field
           */
-         typename VelocityDiffusionTraits<TSimType>::VelType   mVelV;
+         typename VelocityRotDiffusionTraits<TSimType>::VelType   mVelV;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesDiffusion<TSimType, VelocityDiffusionTraits>    mNavierStokes;
+         NavierStokesRotDiffusion<TSimType, VelocityRotDiffusionTraits>    mNavierStokes;
    };
 
-   template <typename TSimType> VelocityDiffusionSimulation<TSimType>::VelocityDiffusionSimulation()
+   template <typename TSimType> VelocityRotDiffusionSimulation<TSimType>::VelocityRotDiffusionSimulation()
       : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::initEquations()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::initEquations()
    {
       // Create Zero boundary condition pointer
       SmartBC  pZeroBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
@@ -161,7 +161,7 @@ namespace EPMDynamo {
       this->mNavierStokes.init();
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::configureTransforms()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::configureTransforms()
    {
       //
       // Setup the SSH transform data manipulator
@@ -191,13 +191,13 @@ namespace EPMDynamo {
       this->configureTransformNesting();
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::updateEquationsRTP(const int step)
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::updateEquationsRTP(const int step)
    {
       // Update RTP values of the Navier-Stokes equation
       this->mNavierStokes.updateRTP(step);
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::updateEquationsRHS()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::updateEquationsRHS()
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.updateRHS();
@@ -206,39 +206,39 @@ namespace EPMDynamo {
       this->mSimControl.tsControl().updateRTPCFLTimestep(this->mVelV.oc().rtp());
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::transformEquationsRHS(const int step)
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::transformEquationsRHS(const int step)
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::addExternalInfluence()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::addExternalInfluence()
    {
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::timestepEquations()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::timestepEquations()
    {
       // Timestep the Navier-Stokes equation
       this->mNavierStokes.timestep();
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::initFields()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::initFields()
    {
       // Create a state file reader for the initial state
-      EPMSHARED_PTR<StateFileReader<TSimType, VelocityDiffusionTraits> > pInState(new StateFileReader<TSimType, VelocityDiffusionTraits>(this->mVelV,  "_initial"));
+      EPMSHARED_PTR<StateFileReader<TSimType, VelocityRotDiffusionTraits> > pInState(new StateFileReader<TSimType, VelocityRotDiffusionTraits>(this->mVelV,  "_initial"));
 
       // Read in initial state
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::addHDF5Output()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::addHDF5Output()
    {
-      EPMSHARED_PTR<StateFileWriter<TSimType, VelocityDiffusionTraits> >  pOutState(new StateFileWriter<TSimType, VelocityDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
+      EPMSHARED_PTR<StateFileWriter<TSimType, VelocityRotDiffusionTraits> >  pOutState(new StateFileWriter<TSimType, VelocityRotDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
    }
 
-   template <typename TSimType> void VelocityDiffusionSimulation<TSimType>::addASCIIOutput()
+   template <typename TSimType> void VelocityRotDiffusionSimulation<TSimType>::addASCIIOutput()
    {
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
@@ -246,13 +246,13 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename VelocityDiffusionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename VelocityDiffusionTraits<TSimType>::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename VelocityRotDiffusionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename VelocityRotDiffusionTraits<TSimType>::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename VelocityDiffusionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename VelocityDiffusionTraits<TSimType>::VelType>(this->mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename VelocityRotDiffusionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename VelocityRotDiffusionTraits<TSimType>::VelType>(this->mVelV, "vel"));
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
@@ -260,4 +260,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // VELOCITYDIFFUSIONSIMULATION_HPP
+#endif // VELOCITYROTDIFFUSIONSIMULATION_HPP

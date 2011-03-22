@@ -125,6 +125,26 @@ namespace EPMDynamo {
          static const std::string   PHYSROSSBYXML;
 
          /**
+          * @brief Boundary condition node of parameters file
+          */
+         static const std::string   BOUNDARYXML;
+
+         /**
+          * @brief Codensity boundary condition of parameters file
+          */
+         static const std::string   BCCODXML;
+
+         /**
+          * @brief Velocity boundary condition of parameters file
+          */
+         static const std::string   BCVELXML;
+
+         /**
+          * @brief Magnetic boundary condition of parameters file
+          */
+         static const std::string   BCMAGXML;
+
+         /**
           * @brief Timestepping node of parameters file
           */
          static const std::string   TIMEXML;

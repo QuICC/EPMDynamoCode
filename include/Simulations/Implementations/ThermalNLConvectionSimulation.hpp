@@ -1,9 +1,9 @@
-/** \file RotatingConvectionSimulation.hpp
- *  \brief Implementation of a rotating convection simulation
+/** \file ThermalNLConvectionSimulation.hpp
+ *  \brief Implementation of a thermal convection simulation
  */
 
-#ifndef ROTATINGCONVECTIONSIMULATION_HPP
-#define ROTATINGCONVECTIONSIMULATION_HPP
+#ifndef THERMALNLCONVECTIONSIMULATION_HPP
+#define THERMALNLCONVECTIONSIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/RotatingConvectionTraits.hpp"
+#include "Simulations/Traits/ThermalNLConvectionTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
@@ -29,33 +29,33 @@
 #include "IO/ASCII/TimeFile.hpp"
 
 #include "Equations/Transport/TransportMHD.hpp"
-#include "Equations/NavierStokes/NavierStokesRotating.hpp"
+#include "Equations/NavierStokes/NavierStokesNLConvection.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of a rotating convection simulation
+    * \brief Implementation of a thermal convection simulation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class RotatingConvectionSimulation: public SimulationBase<TSimType>
+   template <typename TSimType> class ThermalNLConvectionSimulation: public SimulationBase<TSimType>
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~RotatingConvectionSimulation() {};
+         virtual ~ThermalNLConvectionSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         RotatingConvectionSimulation();
+         ThermalNLConvectionSimulation();
 
          /**
           * @brief Initialise the fields
@@ -115,37 +115,37 @@ namespace EPMDynamo {
          /**
           * @brief Codensity scalar
           */
-         typename RotatingConvectionTraits<TSimType>::CodType   mCodC;
+         typename ThermalNLConvectionTraits<TSimType>::CodType   mCodC;
 
          /**
           * @brief Velocity field
           */
-         typename RotatingConvectionTraits<TSimType>::VelType   mVelV;
+         typename ThermalNLConvectionTraits<TSimType>::VelType   mVelV;
 
          /**
           * @brief Transport equation
           */
-         TransportMHD<TSimType, RotatingConvectionTraits>    mTransport;
+         TransportMHD<TSimType, ThermalNLConvectionTraits>    mTransport;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesRotating<TSimType, RotatingConvectionTraits>    mNavierStokes;
+         NavierStokesNLConvection<TSimType, ThermalNLConvectionTraits>    mNavierStokes;
    };
 
-   template <typename TSimType> RotatingConvectionSimulation<TSimType>::RotatingConvectionSimulation()
+   template <typename TSimType> ThermalNLConvectionSimulation<TSimType>::ThermalNLConvectionSimulation()
       : mCodC(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::initEquations()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::initEquations()
    {
       // Set boundary condition to the transport equation
       SmartBC  pZeroBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
       this->mTransport.addBC(pZeroBC);
 
       // Set boundary condition to the Navier-Stokes equation
-      if(true)
+      if(this->mIOSys.cfg()->aBC()(1) == 1)
       {
          SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
          SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
@@ -176,7 +176,7 @@ namespace EPMDynamo {
       this->mNavierStokes.init();
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::configureTransforms()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::configureTransforms()
    {
       //
       // Setup the SSH transform data manipulator
@@ -212,7 +212,7 @@ namespace EPMDynamo {
       this->configureTransformNesting();
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::updateEquationsRTP(const int step)
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::updateEquationsRTP(const int step)
    {
       // Update RTP values of the transport equation
       this->mTransport.updateRTP(step);
@@ -221,7 +221,7 @@ namespace EPMDynamo {
       this->mNavierStokes.updateRTP(step);
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::updateEquationsRHS()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::updateEquationsRHS()
    {
       // Update RHS of the transport equation
       this->mTransport.updateRHS();
@@ -229,11 +229,11 @@ namespace EPMDynamo {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.updateRHS();
 
-      // Update the CFL timestep condition
+      // Update the RTP CFL timestep condition
       this->mSimControl.tsControl().updateRTPCFLTimestep(this->mVelV.oc().rtp());
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::transformEquationsRHS(const int step)
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::transformEquationsRHS(const int step)
    {
       // Update RHS of the transport equation
       this->mTransport.transformRHS(step);
@@ -242,13 +242,13 @@ namespace EPMDynamo {
       this->mNavierStokes.transformRHS(step);
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::addExternalInfluence()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::addExternalInfluence()
    {
       // Add Thermal source term
       this->mTransport.addSourceTerm();
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::timestepEquations()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::timestepEquations()
    {
       // Timestep the transport equation
       this->mTransport.timestep();
@@ -257,16 +257,16 @@ namespace EPMDynamo {
       this->mNavierStokes.timestep();
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::initFields()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::initFields()
    {
       // Create a state file reader for the initial state
-      EPMSHARED_PTR<StateFileReader<TSimType, RotatingConvectionTraits> > pInState(new StateFileReader<TSimType, RotatingConvectionTraits>(this->mCodC, this->mVelV,  "_initial"));
+      EPMSHARED_PTR<StateFileReader<TSimType, ThermalNLConvectionTraits> > pInState(new StateFileReader<TSimType, ThermalNLConvectionTraits>(this->mCodC, this->mVelV,  "_initial"));
 
       // Read in initial state
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
 
       // Create a source file reader for the codensity source
-      EPMSHARED_PTR<SourceFileReader<TSimType, RotatingConvectionTraits> > pSource(new SourceFileReader<TSimType, RotatingConvectionTraits>(this->mCodC));
+      EPMSHARED_PTR<SourceFileReader<TSimType, ThermalNLConvectionTraits> > pSource(new SourceFileReader<TSimType, ThermalNLConvectionTraits>(this->mCodC));
 
       // Read in source state
       this->mIOSys.useSource(pSource);
@@ -279,14 +279,14 @@ namespace EPMDynamo {
 
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::addHDF5Output()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::addHDF5Output()
    {
-      EPMSHARED_PTR<StateFileWriter<TSimType, RotatingConvectionTraits> >  pOutState(new StateFileWriter<TSimType, RotatingConvectionTraits>(this->mCodC, this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
+      EPMSHARED_PTR<StateFileWriter<TSimType, ThermalNLConvectionTraits> >  pOutState(new StateFileWriter<TSimType, ThermalNLConvectionTraits>(this->mCodC, this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
    }
 
-   template <typename TSimType> void RotatingConvectionSimulation<TSimType>::addASCIIOutput()
+   template <typename TSimType> void ThermalNLConvectionSimulation<TSimType>::addASCIIOutput()
    {
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
@@ -294,9 +294,9 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the codensity scalar
-      EPMSHARED_PTR<EnergyFile<TSimType, typename RotatingConvectionTraits<TSimType>::CodType> > pCodEnergy(new EnergyFile<TSimType, typename RotatingConvectionTraits<TSimType>::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::CodType> > pCodEnergy(new EnergyFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename RotatingConvectionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename RotatingConvectionTraits<TSimType>::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add codensity energy to ASCII output
       this->mIOSys.addASCIIWriter(pCodEnergy);
@@ -304,9 +304,9 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy spectrum ASCII diagnostic file for the codensity scalar
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename RotatingConvectionTraits<TSimType>::CodType> > pCodSpectrum(new SpectrumFile<TSimType, typename RotatingConvectionTraits<TSimType>::CodType>(this->mCodC, "cod"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::CodType> > pCodSpectrum(new SpectrumFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::CodType>(this->mCodC, "cod"));
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename RotatingConvectionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename RotatingConvectionTraits<TSimType>::VelType>(this->mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename ThermalNLConvectionTraits<TSimType>::VelType>(this->mVelV, "vel"));
 
       // Add codensity energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pCodSpectrum);
@@ -316,4 +316,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ROTATINGCONVECTIONSIMULATION_HPP
+#endif // THERMALNLCONVECTIONSIMULATION_HPP

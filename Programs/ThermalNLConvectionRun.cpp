@@ -1,5 +1,5 @@
-/** \file RotatingConvectionRun.cpp
- *  \brief Rotating convection simulation executable
+/** \file ThermalNLConvectionRun.cpp
+ *  \brief Thermal convection simulation executable
  */
 
 // Configuration includes
@@ -14,19 +14,19 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Implementations/RotatingConvectionSimulation.hpp"
+#include "Simulations/Implementations/ThermalNLConvectionSimulation.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
 namespace epm = EPMDynamo;
 
 /**
- * @brief Rotating convection simulation
+ * @brief Thermal convection simulation
  */
 int runProgram()
 {
    // Create the simulation object
-   epm::Simulation<epm::WSHSimulation, epm::RotatingConvectionSimulation>   sim;
+   epm::Simulation<epm::WSHSimulation, epm::ThermalNLConvectionSimulation>   sim;
 
    // Exception handling during the initialisation part
    try

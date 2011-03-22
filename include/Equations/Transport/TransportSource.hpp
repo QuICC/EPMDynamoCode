@@ -15,7 +15,7 @@
 //
 #include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
-#include "Equations/Transport/TransportBase.hpp"
+#include "Equations/Transport/TransportDiffusion.hpp"
 
 namespace EPMDynamo {
 
@@ -25,7 +25,7 @@ namespace EPMDynamo {
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportSource: public TransportBase<TSimType, TSimTraits>
+   template <typename TSimType, template <typename> class TSimTraits> class TransportSource: public TransportDiffusion<TSimType, TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -50,25 +50,6 @@ namespace EPMDynamo {
          virtual ~TransportSource() {};
 
          /**
-          * @brief Update RTP of the equation
-          *
-          * \param step Current step in a multistep transform
-          */
-         void updateRTP(const int step);
-
-         /**
-          * @brief Update RHS of the equation
-          */
-         void updateRHS();
-
-         /**
-          * @brief Transform RHS of the equation
-          *
-          * \param step Current step in a multistep transform
-          */
-         void transformRHS(const int step);
-
-         /**
           * @brief Add codensity source term to the non linear part
           */
          void addSourceTerm();
@@ -79,7 +60,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType, template <typename> class TSimTraits> TransportSource<TSimType, TSimTraits>::TransportSource(typename TSimTraits<TSimType>::CodType &rC, typename TransportSource<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportSource<TSimType, TSimTraits>::EquationParametersType &params)
-      : TransportBase<TSimType, TSimTraits>(rC, transform, tsteps, params)
+      : TransportDiffusion<TSimType, TSimTraits>(rC, transform, tsteps, params)
    {
    }
 
@@ -93,21 +74,6 @@ namespace EPMDynamo {
          this->mNTerms.rOc().rPerturbation().rLShell(l) += this->mrX.ocSrc().lshell(l);
       }
    }
-
-   template <typename TSimType, template <typename> class TSimTraits> void TransportSource<TSimType, TSimTraits>::updateRTP(const int step)
-   {
-   }
-
-   template <typename TSimType, template <typename> class TSimTraits> void TransportSource<TSimType, TSimTraits>::updateRHS()
-   {
-   }
-
-   template <typename TSimType, template <typename> class TSimTraits> void TransportSource<TSimType, TSimTraits>::transformRHS(const int step)
-   {
-      // Transform Non Linear terms to spectral space from mNTerms values
-      this->transformNTerms();
-   }
-
 }
 
 #endif // TRANSPORTSOURCE_HPP

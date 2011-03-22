@@ -1,9 +1,9 @@
-/** \file LinearRotatingConvectionTraits.hpp
- *  \brief Traits for the linear rotating convection simulation implementation
+/** \file VelocityNLRotDiffusionTraits.hpp
+ *  \brief Traits for the velocity diffusion simulation implementation
  */
 
-#ifndef LINEARROTATINGCONVECTIONTRAITS_HPP
-#define LINEARROTATINGCONVECTIONTRAITS_HPP
+#ifndef VELOCITYNLROTDIFFUSIONTRAITS_HPP
+#define VELOCITYNLROTDIFFUSIONTRAITS_HPP
 
 // System includes
 //
@@ -21,11 +21,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the linear rotating convection simulation implementation
+    * \brief Traits for the velocity diffusion simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class LinearRotatingConvectionTraits
+   template <typename TSimType> class VelocityNLRotDiffusionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -35,7 +35,7 @@ namespace EPMDynamo {
          static const bool HasCodICSource = false;
 
          /// Does the codensity field have an OC source ?
-         static const bool HasCodOCSource = true;
+         static const bool HasCodOCSource = false;
 
          /// Does the codensity field have an IC imposed field ? 
          static const bool HasCodICImposed = false; 
@@ -44,10 +44,10 @@ namespace EPMDynamo {
          static const bool HasCodOCImposed = false; 
 
          /// Does simulation required a codensity field
-         static const bool NeedCodensity = true;
+         static const bool NeedCodensity = false;
 
          /// Does simulation required a codensity gradient field
-         static const bool NeedCodensityGrad = true;
+         static const bool NeedCodensityGrad = false;
 
 
 
@@ -93,9 +93,9 @@ namespace EPMDynamo {
          static const bool NeedVelocity = true;
 
          /// Does simulation required a velocity curl field
-         static const bool NeedVelocityCurl = false;
+         static const bool NeedVelocityCurl = true;
    };
 
 }
 
-#endif // LINEARROTATINGCONVECTIONTRAITS_HPP
+#endif // VELOCITYNLROTDIFFUSIONTRAITS_HPP

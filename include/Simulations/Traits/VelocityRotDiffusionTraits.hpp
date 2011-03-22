@@ -1,9 +1,9 @@
-/** \file RotatingDiffusionTraits.hpp
- *  \brief Traits for the rotating velocity diffusion simulation implementation
+/** \file VelocityRotDiffusionTraits.hpp
+ *  \brief Traits for the velocity diffusion simulation implementation
  */
 
-#ifndef ROTATINGDIFFUSIONTRAITS_HPP
-#define ROTATINGDIFFUSIONTRAITS_HPP
+#ifndef VELOCITYROTDIFFUSIONTRAITS_HPP
+#define VELOCITYROTDIFFUSIONTRAITS_HPP
 
 // System includes
 //
@@ -21,11 +21,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the rotating velocity diffusion simulation implementation
+    * \brief Traits for the velocity diffusion simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class RotatingDiffusionTraits
+   template <typename TSimType> class VelocityRotDiffusionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -35,7 +35,7 @@ namespace EPMDynamo {
          static const bool HasCodICSource = false;
 
          /// Does the codensity field have an OC source ?
-         static const bool HasCodOCSource = true;
+         static const bool HasCodOCSource = false;
 
          /// Does the codensity field have an IC imposed field ? 
          static const bool HasCodICImposed = false; 
@@ -93,9 +93,9 @@ namespace EPMDynamo {
          static const bool NeedVelocity = true;
 
          /// Does simulation required a velocity curl field
-         static const bool NeedVelocityCurl = true;
+         static const bool NeedVelocityCurl = false;
    };
 
 }
 
-#endif // ROTATINGDIFFUSIONTRAITS_HPP
+#endif // VELOCITYROTDIFFUSIONTRAITS_HPP

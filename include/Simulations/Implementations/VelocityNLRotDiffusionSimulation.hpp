@@ -1,9 +1,9 @@
-/** \file RotatingDiffusionSimulation.hpp
- *  \brief Implementation of a rotating velocity diffusion simulation
+/** \file VelocityNLRotDiffusionSimulation.hpp
+ *  \brief Implementation of a velocity diffusion simulation
  */
 
-#ifndef ROTATINGDIFFUSIONSIMULATION_HPP
-#define ROTATINGDIFFUSIONSIMULATION_HPP
+#ifndef VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#define VELOCITYNLROTDIFFUSIONSIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/RotatingDiffusionTraits.hpp"
+#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
@@ -28,32 +28,33 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/NavierStokes/NavierStokesDiffusion.hpp"
+#include "Equations/NavierStokes/NavierStokesNLRotDiffusion.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of a rotating velocity diffusion simulation
+    * \brief Implementation of a velocity diffusion simulation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class RotatingDiffusionSimulation: public SimulationBase<TSimType>
+   template <typename TSimType> class VelocityNLRotDiffusionSimulation: public SimulationBase<TSimType>
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~RotatingDiffusionSimulation() {};
+         virtual ~VelocityNLRotDiffusionSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         RotatingDiffusionSimulation();
+         VelocityNLRotDiffusionSimulation();
 
          /**
           * @brief Initialise the fields
@@ -113,41 +114,54 @@ namespace EPMDynamo {
          /**
           * @brief Velocity field
           */
-         typename RotatingDiffusionTraits<TSimType>::VelType   mVelV;
+         typename VelocityNLRotDiffusionTraits<TSimType>::VelType   mVelV;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesDiffusion<TSimType, RotatingDiffusionTraits>    mNavierStokes;
+         NavierStokesNLRotDiffusion<TSimType, VelocityNLRotDiffusionTraits>    mNavierStokes;
    };
 
-   template <typename TSimType> RotatingDiffusionSimulation<TSimType>::RotatingDiffusionSimulation()
+   template <typename TSimType> VelocityNLRotDiffusionSimulation<TSimType>::VelocityNLRotDiffusionSimulation()
       : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::initEquations()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::initEquations()
    {
       // Create Zero boundary condition pointer
       SmartBC  pZeroBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
-      // Create toroidal stress free boundary condition pointer
-      SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
-      // Create poloidal stress free boundary condition pointer
-      SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
 
-      // Set boundary condition for the toroidal component
-      this->mNavierStokes.addTorBC(pSFBC);
+      // Set boundary condition to the Navier-Stokes equation
+      if(this->mIOSys.cfg()->aBC()(1) == 1)
+      {
+         SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
+         SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));
 
-      // Set boundary conditions for the Poloidal component
-      // Order of BCs is IMPORTANT (first one is applied to influence matrix steps)
-      this->mNavierStokes.addPolBC(pZeroBC);
-      this->mNavierStokes.addPolBC(pDDBC);
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pSFBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDDBC);
+      } else
+      {
+         SmartBC  pNSBC(new ZeroBC<TSimType>(this->mTransform.radBasis()));
+         SmartBC  pDBC(new DRadialBC<TSimType>(this->mTransform.radBasis()));
+
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pNSBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDBC);
+      }
 
       // Initialise the Navier-Stokes equation
       this->mNavierStokes.init();
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::configureTransforms()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::configureTransforms()
    {
       //
       // Setup the SSH transform data manipulator
@@ -177,13 +191,13 @@ namespace EPMDynamo {
       this->configureTransformNesting();
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::updateEquationsRTP(const int step)
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::updateEquationsRTP(const int step)
    {
       // Update RTP values of the Navier-Stokes equation
       this->mNavierStokes.updateRTP(step);
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::updateEquationsRHS()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::updateEquationsRHS()
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.updateRHS();
@@ -192,39 +206,39 @@ namespace EPMDynamo {
       this->mSimControl.tsControl().updateRTPCFLTimestep(this->mVelV.oc().rtp());
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::transformEquationsRHS(const int step)
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::transformEquationsRHS(const int step)
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::addExternalInfluence()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::addExternalInfluence()
    {
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::timestepEquations()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::timestepEquations()
    {
       // Timestep the Navier-Stokes equation
       this->mNavierStokes.timestep();
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::initFields()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::initFields()
    {
       // Create a state file reader for the initial state
-      EPMSHARED_PTR<StateFileReader<TSimType, RotatingDiffusionTraits> > pInState(new StateFileReader<TSimType, RotatingDiffusionTraits>(this->mVelV,  "_initial"));
+      EPMSHARED_PTR<StateFileReader<TSimType, VelocityNLRotDiffusionTraits> > pInState(new StateFileReader<TSimType, VelocityNLRotDiffusionTraits>(this->mVelV,  "_initial"));
 
       // Read in initial state
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::addHDF5Output()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::addHDF5Output()
    {
-      EPMSHARED_PTR<StateFileWriter<TSimType, RotatingDiffusionTraits> >  pOutState(new StateFileWriter<TSimType, RotatingDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
+      EPMSHARED_PTR<StateFileWriter<TSimType, VelocityNLRotDiffusionTraits> >  pOutState(new StateFileWriter<TSimType, VelocityNLRotDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
    }
 
-   template <typename TSimType> void RotatingDiffusionSimulation<TSimType>::addASCIIOutput()
+   template <typename TSimType> void VelocityNLRotDiffusionSimulation<TSimType>::addASCIIOutput()
    {
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
@@ -232,13 +246,13 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<TSimType, typename RotatingDiffusionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename RotatingDiffusionTraits<TSimType>::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<TSimType, typename VelocityNLRotDiffusionTraits<TSimType>::VelType> > pVelEnergy(new EnergyFile<TSimType, typename VelocityNLRotDiffusionTraits<TSimType>::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<TSimType, typename RotatingDiffusionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename RotatingDiffusionTraits<TSimType>::VelType>(this->mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<TSimType, typename VelocityNLRotDiffusionTraits<TSimType>::VelType> > pVelSpectrum(new SpectrumFile<TSimType, typename VelocityNLRotDiffusionTraits<TSimType>::VelType>(this->mVelV, "vel"));
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
@@ -246,4 +260,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ROTATINGDIFFUSIONSIMULATION_HPP
+#endif // VELOCITYNLROTDIFFUSIONSIMULATION_HPP

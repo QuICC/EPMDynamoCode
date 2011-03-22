@@ -166,7 +166,7 @@ namespace EPMDynamo {
       this->mInduction.addPolBC(pInsulatingBC);
 
       // Set boundary condition to the Navier-Stokes equation
-      if(false)
+      if(this->mIOSys.cfg()->aBC()(1) == 1)
       {
          SmartBC  pSFBC(new StressFreeTorBC<TSimType>(this->mTransform.radBasis()));
          SmartBC  pDDBC(new DDRadialBC<TSimType>(this->mTransform.radBasis()));

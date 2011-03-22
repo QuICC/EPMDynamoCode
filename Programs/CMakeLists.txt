@@ -1,42 +1,7 @@
 #
-# Create CodensityDiffusionRun 
-#
-set(RunName CodensityDiffusionRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
 # Create DynamoRun 
 #
 set(RunName DynamoRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
-# Create LinearMagnetoConvectionRun 
-#
-set(RunName LinearMagnetoConvectionRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
-# Create LinearRotatingConvectionRun 
-#
-set(RunName LinearRotatingConvectionRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
-# Create LinearThermalConvectionRun 
-#
-set(RunName LinearThermalConvectionRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
-# Create MagneticDiffusionRun 
-#
-set(RunName MagneticDiffusionRun)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
@@ -48,20 +13,6 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
-# Create RotatingConvectionRun 
-#
-set(RunName RotatingConvectionRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
-# Create RotatingDiffusionRun 
-#
-set(RunName RotatingDiffusionRun)
-set(SrcsList ${RunName} ${All_Srcs})
-add_executable(${RunName} ${SrcsList})
-
-#
 # Create ThermalConvectionRun 
 #
 set(RunName ThermalConvectionRun)
@@ -69,9 +20,72 @@ set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 
 #
+# Create ThermalRotConvectionRun 
+#
+set(RunName ThermalRotConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create ThermalNLConvectionRun 
+#
+set(RunName ThermalNLConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create ThermalNLRotConvectionRun 
+#
+set(RunName ThermalNLRotConvectionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
 # Create VelocityDiffusionRun 
 #
 set(RunName VelocityDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create VelocityRotDiffusionRun 
+#
+set(RunName VelocityRotDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create VelocityNLDiffusionRun 
+#
+set(RunName VelocityNLDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create VelocityNLRotDiffusionRun 
+#
+set(RunName VelocityNLRotDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create MagneticDiffusionRun 
+#
+set(RunName MagneticDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create CodensityDiffusionRun 
+#
+set(RunName CodensityDiffusionRun)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
+
+#
+# Create CodensitySrcDiffusionRun 
+#
+set(RunName CodensitySrcDiffusionRun)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
 

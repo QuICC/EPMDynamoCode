@@ -1,5 +1,5 @@
-/** \file RotatingDiffusionRun.cpp
- *  \brief Rotating diffusion simulation executable
+/** \file VelocityNLDiffusionRun.cpp
+ *  \brief Velocity diffusion simulation executable
  */
 
 // Configuration includes
@@ -14,19 +14,19 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Implementations/RotatingDiffusionSimulation.hpp"
+#include "Simulations/Implementations/VelocityNLDiffusionSimulation.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
 namespace epm = EPMDynamo;
 
 /**
- * @brief Rotating diffusion simulation
+ * @brief Velocity diffusion simulation
  */
 int runProgram()
 {
    // Create the simulation object
-   epm::Simulation<epm::WSHSimulation, epm::RotatingDiffusionSimulation>   sim;
+   epm::Simulation<epm::WSHSimulation, epm::VelocityNLDiffusionSimulation>   sim;
 
    // Exception handling during the initialisation part
    try

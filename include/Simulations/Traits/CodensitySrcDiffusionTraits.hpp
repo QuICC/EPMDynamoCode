@@ -1,9 +1,9 @@
-/** \file ThermalConvectionTraits.hpp
- *  \brief Traits for the thermal convection simulation implementation
+/** \file CodensitySrcDiffusionTraits.hpp
+ *  \brief Traits for the codensity diffusion simulation implementation
  */
 
-#ifndef THERMALCONVECTIONTRAITS_HPP
-#define THERMALCONVECTIONTRAITS_HPP
+#ifndef CODENSITYSRCDIFFUSIONTRAITS_HPP
+#define CODENSITYSRCDIFFUSIONTRAITS_HPP
 
 // System includes
 //
@@ -21,11 +21,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Traits for the thermal convection simulation implementation
+    * \brief Traits for the codensity diffusion simulation implementation
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThermalConvectionTraits
+   template <typename TSimType> class CodensitySrcDiffusionTraits
    {
       public:
          /// Typedef for the codensity scalar type
@@ -47,7 +47,7 @@ namespace EPMDynamo {
          static const bool NeedCodensity = true;
 
          /// Does simulation required a codensity gradient field
-         static const bool NeedCodensityGrad = true;
+         static const bool NeedCodensityGrad = false;
 
 
 
@@ -90,7 +90,7 @@ namespace EPMDynamo {
          static const bool HasVelOCImposed = false; 
 
          /// Does simulation required a velocity field
-         static const bool NeedVelocity = true;
+         static const bool NeedVelocity = false;
 
          /// Does simulation required a velocity curl field
          static const bool NeedVelocityCurl = false;
@@ -98,4 +98,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // THERMALCONVECTIONTRAITS_HPP
+#endif // CODENSITYSRCDIFFUSIONTRAITS_HPP

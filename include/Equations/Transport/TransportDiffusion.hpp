@@ -84,21 +84,14 @@ namespace EPMDynamo {
 
    template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::updateRHS()
    {
+      // Set the RTP non linear terms to zero
+      this->mNTerms.rOc().rRTP().initialiseZeros();
    }
 
    template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::transformRHS(const int step)
    {
-      if(step == 0)
-      {
-         // Set the non linear terms to zero
-         int nL = this->mrX.oc().perturbation().nL();
-         const int l0 = this->mrX.oc().perturbation().minL();
-
-         for(int l = l0; l < nL; ++l)
-         {
-            this->mNTerms.rOc().rPerturbation().rLShell(l).setConstant(0.0);
-         }
-      }
+      // Transform Non Linear terms to spectral space from mNTerms values
+      this->transformNTerms();
    }
 
 }

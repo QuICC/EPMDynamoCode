@@ -1,5 +1,5 @@
-/** \file LinearMagnetoConvectionRun.cpp
- *  \brief Linear magneto-convection simulation executable
+/** \file VelocityRotDiffusionRun.cpp
+ *  \brief Velocity diffusion simulation executable
  */
 
 // Configuration includes
@@ -14,19 +14,19 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Implementations/LinearMagnetoConvectionSimulation.hpp"
+#include "Simulations/Implementations/VelocityRotDiffusionSimulation.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
 
 namespace epm = EPMDynamo;
 
 /**
- * @brief Linear magneto-convection simulation
+ * @brief Velocity diffusion simulation
  */
 int runProgram()
 {
    // Create the simulation object
-   epm::Simulation<epm::WSHSimulation, epm::LinearMagnetoConvectionSimulation>   sim;
+   epm::Simulation<epm::WSHSimulation, epm::VelocityRotDiffusionSimulation>   sim;
 
    // Exception handling during the initialisation part
    try

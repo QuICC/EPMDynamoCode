@@ -1,9 +1,9 @@
-/** \file NavierStokesMHD.hpp
- *  \brief Implementation of the MHD Navier-Stokes equation
+/** \file NavierStokesNLRotConvection.hpp
+ *  \brief Implementation of a rotating convection equation
  */
 
-#ifndef NAVIERSTOKESMHD_HPP
-#define NAVIERSTOKESMHD_HPP
+#ifndef NAVIERSTOKESNLROTCONVECTION_HPP
+#define NAVIERSTOKESNLROTCONVECTION_HPP
 
 // System includes
 //
@@ -20,12 +20,12 @@
 namespace EPMDynamo {
 
    /**
-    * @brief This class implements the full MHD Navierr-Stokes equation
+    * @brief General representation of the Navier-Stokes equation with rotating convection
     *
     * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesMHD : public NavierStokesConvection<TSimType, TSimTraits>
+   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesNLRotConvection : public NavierStokesConvection<TSimType, TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -41,22 +41,21 @@ namespace EPMDynamo {
           * @brief Constructor
           *
           * @param rV Velocity field (stored as reference)
-          * @param rB Magnetic field (stored as reference)
           * @param rC Codensity scalar (stored as reference)
           * @param transform Transform object (stored as reference)
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesNLRotConvection(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~NavierStokesMHD() {};
+         virtual ~NavierStokesNLRotConvection() {};
 
          /**
           * @brief Update RTP values of the equation
-          * 
+          *
           * \param step Current step in a multistep transform
           */
          void updateRTP(const int step);
@@ -68,20 +67,15 @@ namespace EPMDynamo {
          
       protected:
 
-         /**
-          * @brief Const Reference variable to the magnetic field
-          */
-         typename TSimTraits<TSimType>::MagType&  mrB;
-
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesMHD<TSimType, TSimTraits>::NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesMHD<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesConvection<TSimType, TSimTraits>(rV, rC, transform, tsteps, params), mrB(rB)
+   template <typename TSimType, template <typename> class TSimTraits> NavierStokesNLRotConvection<TSimType, TSimTraits>::NavierStokesNLRotConvection(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesNLRotConvection<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesNLRotConvection<TSimType, TSimTraits>::EquationParametersType &params)
+      : NavierStokesConvection<TSimType, TSimTraits>(rV, rC, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesMHD<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesNLRotConvection<TSimType, TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
@@ -89,23 +83,14 @@ namespace EPMDynamo {
       // Update real space values of the curl of the velocity field
       this->mrX.rOc().curlTransform(step);
 
-      // Update real space values of magnetic field
-      this->mrB.rOc().transform(step);
-
-      // Update real space values of the curl of the magnetic field
-      this->mrB.rOc().curlTransform(step);
-
       // Update real space values of codensity scalar
       this->mrC.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesMHD<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesNLRotConvection<TSimType, TSimTraits>::updateRHS()
    {
       // Compute \f$u\times (\nabla \times u) \f$
       this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
-
-      // Compute \f$(\nabla \times B)\times B\f$
-      this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
 
       // Compute \f$C \vec{r}\f$
       this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
@@ -116,4 +101,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // NAVIERSTOKESMHD_HPP
+#endif // NAVIERSTOKESNLROTCONVECTION_HPP

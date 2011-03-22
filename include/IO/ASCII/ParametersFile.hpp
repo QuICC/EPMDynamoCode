@@ -67,6 +67,11 @@ namespace EPMDynamo {
          const Array& aEquation() const;
 
          /**
+          * @brief Get boundary condition parameters array
+          */
+         const ArrayI& aBC() const;
+
+         /**
           * @brief Read content of configuration file
           */
          virtual void read();
@@ -98,6 +103,11 @@ namespace EPMDynamo {
          void readPhysical();
 
          /**
+          * @brief Read boundary condition parameters information from file
+          */
+         void readBoundary();
+
+         /**
           * @brief Read io parameters information from file
           */
          void readTimestepping();
@@ -117,6 +127,11 @@ namespace EPMDynamo {
           * @brief Storage for the equation parameters
           */
          Array    mEqArray;
+
+         /**
+          * @brief Storage for the boundary paramters
+          */
+         ArrayI    mBCArray;
 
          /**
           * @brief Storage for the timestep parameters

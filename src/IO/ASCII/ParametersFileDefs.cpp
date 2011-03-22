@@ -57,6 +57,14 @@ namespace EPMDynamo {
 
    const std::string ParametersFileDefs::PHYSROSSBYXML = "rossby";
 
+   const std::string ParametersFileDefs::BOUNDARYXML = "boundary";
+
+   const std::string ParametersFileDefs::BCCODXML = "codensity";
+
+   const std::string ParametersFileDefs::BCVELXML = "velocity";
+
+   const std::string ParametersFileDefs::BCMAGXML = "magnetic";
+
    const std::string ParametersFileDefs::TIMEXML = "timestepping";
 
    const std::string ParametersFileDefs::TIMETIMEXML = "time";
