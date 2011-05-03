@@ -452,7 +452,7 @@ namespace EPMDynamo {
    {
       #ifdef EPMDYNAMO_MPI
 
-      int nBlocks = 5;
+      int nBlocks = 6;
       int idx = 0;
       MPI_Aint    displ[nBlocks];
       int         blocks[nBlocks];

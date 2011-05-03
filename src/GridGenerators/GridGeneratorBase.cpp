@@ -51,7 +51,7 @@ namespace EPMDynamo {
       // Check that no point got lost
       if(sorter.size() != static_cast<unsigned int>(this->gridN()))
       {
-         throw EPMException("GridGeneratorBase::sortGrid", "Lost grid points during conversion!");
+//         throw EPMException("GridGeneratorBase::sortGrid", "Lost grid points during conversion!");
       }
 
       std::map<EPMFloat, EPMFloat>::const_iterator  it;

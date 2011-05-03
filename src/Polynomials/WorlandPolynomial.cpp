@@ -19,14 +19,14 @@
 namespace EPMDynamo {
 
    WorlandPolynomial::WorlandPolynomial(const int pL, const int nX, const int nN)
-      : OnesidedJacobi(pL, nX, nN)
+      : OnesidedJacobi(pL, nX, nN), mNormalisation(nN)
    {
       // Initialise everything
       this->initFull();
    }
 
    WorlandPolynomial::WorlandPolynomial(const int pL, const SmartArray grid, const int nN, const SmartArray weights)
-      : OnesidedJacobi(pL, grid, nN, weights)
+      : OnesidedJacobi(pL, grid, nN, weights), mNormalisation(nN)
    {
       // Initialise using the provided grid and weights
       this->initPartial();
@@ -54,6 +54,9 @@ namespace EPMDynamo {
       // Compute the Weighted polynomials
       this->computeWPolynomials();
 
+      // Normalise polynomials
+      this->normalise();
+
       // Correct the polynomials for special cases (for example CSCS output)
       this->correctPolynomials();
    }
@@ -80,13 +83,41 @@ namespace EPMDynamo {
       // Compute the Weighted polynomials
       this->computeWPolynomials();
 
+      // Normalise polynomials
+      this->normalise();
+
       // Correct the polynomials for special cases (for example CSCS output)
       this->correctPolynomials();
    }
 
-   EPMFloat WorlandPolynomial::normaliseW(const int n)
+   const Array& WorlandPolynomial::normalisation() const
    {
-      return 1.0/this->weights().dot(this->poly().row(n).array().pow(2).matrix());
+      return this->mNormalisation;
+   }
+
+   void WorlandPolynomial::normalise()
+   {
+      // Loop over all degrees
+      for(int n = 0; n < this->polyN(); ++n)
+      {
+         this->mNormalisation(n) = this->inverseNorm(n);
+         this->rPoly().row(n) *= this->mNormalisation(n);
+         this->rBPoly()(n) *= this->mNormalisation(n);
+         this->rWPoly().col(n) *= this->mNormalisation(n);
+         
+         // Loop over derivatives
+         for(int i=1; i <= this->msMaxDiff; ++i)
+         {
+            this->rDiff(i).row(n) *= this->mNormalisation(n);
+            this->rBDiff(i)(n) *= this->mNormalisation(n);
+            this->rWDiff(i).col(n) *= this->mNormalisation(n);
+         }
+      }
+   }
+
+   EPMFloat WorlandPolynomial::inverseNorm(const int n)
+   {
+      return 1.0/std::sqrt(this->weights().dot(this->poly().row(n).array().pow(2).matrix()));
    }
 
    void WorlandPolynomial::computePolynomials()
@@ -183,7 +214,7 @@ namespace EPMDynamo {
    {
       for(int n = 0; n < this->polyN(); ++n)
       {
-         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array() * this->normaliseW(n);
+         this->rWPoly().col(n) = this->poly().row(n).transpose().array() * this->weights().array();
       }
    }
 
@@ -193,7 +224,7 @@ namespace EPMDynamo {
       {
          for(int n = 0; n < this->polyN(); ++n)
          {
-            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights().array() * this->normaliseW(n);
+            this->rWDiff(i).col(n) = this->diff(i).row(n).transpose().array() * this->weights().array();
          }
       }
    }

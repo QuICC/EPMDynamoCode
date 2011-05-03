@@ -16,8 +16,7 @@
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
-#include "Simulations/Traits/ThermalConvectionTraits.hpp"
-#include "Simulations/Traits/RotatingConvectionTraits.hpp"
+#include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Utilities/InitialStateGenerator.hpp"
 #include "Simulations/Types/WSHSimulation.hpp"
 #include "Simulations/Types/WSHSimInc.hpp"
@@ -27,7 +26,7 @@
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::RotatingConvectionTraits
+#define TSIMTRAITS epm::ThermalRotConvectionTraits
 #define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
 
 typedef epm::RandomState<SIMTRAITS>  StateType;

@@ -120,7 +120,7 @@ namespace EPMDynamo {
          virtual ~RandomState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e0;
+   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-3;
 
    template <typename TGenTraits> void RandomState<TGenTraits>::setRTPCodensity(typename RandomState<TGenTraits>::Codensity &codC)
    {
@@ -174,8 +174,10 @@ namespace EPMDynamo {
       }
 
       // Create basic state
-      codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
-      codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
+      //codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
+      codC.rOc().rPerturbation().rLShell(0)(0,0) += 0.313329;
+      //codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
+      codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.221557;
    }
 
    template <typename TGenTraits> void RandomState<TGenTraits>::setSpecMagnetic(typename RandomState<TGenTraits>::Magnetic &magB)

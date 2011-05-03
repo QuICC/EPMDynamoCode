@@ -64,6 +64,11 @@ namespace EPMDynamo {
           */
          virtual ~WorlandPolynomial() {};
 
+         /**
+          * @brief Get the normalisation factors
+          */
+         const Array& normalisation() const; 
+
       protected:
          /**
           * @brief Complete initialisation of the polynomials
@@ -103,6 +108,11 @@ namespace EPMDynamo {
           */
          virtual void computeWDerivatives();
 
+         /**
+          * @brief Storage for the normalisation factors
+          */
+         Array mNormalisation;
+
       private:
          /**
           * @brief Compute the first Derivatives
@@ -125,6 +135,11 @@ namespace EPMDynamo {
          void computeBoundarySecondDerivative();
 
          /**
+          * @brief Normalise all the polynomials
+          */
+         void normalise();
+
+         /**
           * @brief Compute normalisation factor required for weight
           *
           * The normalisation has no analytical form unfortunately. The normalisation 
@@ -132,7 +147,7 @@ namespace EPMDynamo {
           *
           * @param n Order of the polynomial
           */
-         EPMFloat normaliseW(const int n);
+         EPMFloat inverseNorm(const int n);
 
          /**
           * @brief Correct the polynomials for special cases (for example CSCS output)

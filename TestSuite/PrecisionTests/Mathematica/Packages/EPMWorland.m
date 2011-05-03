@@ -229,7 +229,7 @@ EPMWorlandSpecLaplacian[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGr
 
 
 (*****************  Compute EPM precision Worland intg integrator *******************)
-EPMWorlandIntg[n_,l_] := Module[{grid =wGrid[n,l], weights=wWeights[n,l], gridN = wGridN[n,l]},N[Table[weights[[j]]/wNorm[k,i] wIntg[i,k,grid[[j]]], {k, 0, l},{j, 1, gridN},{i, 0, n}], epmPrecision]];
+EPMWorlandIntg[n_,l_] := Module[{grid =wGrid[n,l], weights=wWeights[n,l], gridN = wGridN[n,l]},N[Table[weights[[j]]/wNorm[l,i] wIntg[i,k,grid[[j]]], {k, 0, l},{j, 1, gridN},{i, 0, n}], epmPrecision]];
 EPMWorlandIntg[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], weights=wWeights[n,lmax], gridN = wGridN[n,lmax]},N[Table[weights[[j]]/wNorm[l,i] wIntg[i,l,grid[[j]]],{j, 1, gridN},{i, 0, n}], epmPrecision]];
 
 

@@ -279,9 +279,11 @@ namespace EPMDynamo {
       {
          this->mLaplacianProj.row(n).array() *= rfactor1.transpose().array();
          this->mLaplacianProj.row(n).array() += rfactor2.transpose().array()*tmp1.row(n).array();
+
+         // normalise the laplacian projector
+         this->mLaplacianProj.row(n).array() *= this->normalisation()(n);
       }
 
-      //this->mLaplacianSpec.template triangularView<Eigen::StrictlyUpper>() = (this->mLaplacianProj*this->wPoly()).template triangularView<Eigen::StrictlyLower>().transpose();
       this->mLaplacianSpec = (this->mLaplacianProj*this->wPoly()).transpose().template triangularView<Eigen::StrictlyUpper>();
    }
 
