@@ -320,7 +320,7 @@ namespace EPMDynamo {
       {
          for(int i=0; i < this->polyN(); ++i)
          {
-            correctNorm = this->normalisation()(i)*this->normalisation()(n)/(tmpPoly.normalisation()(i)*tmpPoly.normalisation()(n))
+            correctNorm = this->normalisation()(i)*this->normalisation()(n)/(tmpPoly.normalisation()(i)*tmpPoly.normalisation()(n));
             this->mEWeights(i,n) = (tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).matrix().dot ((eGrid->array().pow(2)*eWeights->array()).matrix())*correctNorm;
          }
       }
