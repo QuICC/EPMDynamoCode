@@ -314,13 +314,15 @@ namespace EPMDynamo {
       TPolynomial  tmpPoly(this->l(), eGrid, this->polyN(), eWeights); 
 
       Matrix   tmp(this->polyN(), ptsN);
+      EPMFloat correctNorm;
 
       for(int n=0; n < this->polyN(); ++n)
       {
          for(int i=0; i < this->polyN(); ++i)
          {
-            this->mEWeights(i,n) = (tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).matrix().dot ((eGrid->array().pow(2)*eWeights->array()).matrix());
-         }  
+            correctNorm = this->normalisation()(i)*this->normalisation()(n)/(tmpPoly.normalisation()(i)*tmpPoly.normalisation()(n))
+            this->mEWeights(i,n) = (tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).matrix().dot ((eGrid->array().pow(2)*eWeights->array()).matrix())*correctNorm;
+         }
       }
    }
 
