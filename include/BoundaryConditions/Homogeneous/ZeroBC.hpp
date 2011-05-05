@@ -5,6 +5,10 @@
 #ifndef ZEROBC_HPP
 #define ZEROBC_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -20,14 +24,12 @@ namespace EPMDynamo {
 
    /**
     * @brief This class defines the zero boundary condition
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ZeroBC: public HomogeneousBC
+   class ZeroBC: public HomogeneousBC
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /**
           * @brief Constructor
@@ -52,22 +54,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> ZeroBC<TSimType>::ZeroBC(const typename ZeroBC<TSimType>::BasisType &basis)
-      : HomogeneousBC(basis.basisN(), basis.polyN())
-   {
-      // Fill Operator BC values
-      fillLHSBCValues(basis);
-   }
-
-   template <typename TSimType> void ZeroBC<TSimType>::fillLHSBCValues(const typename ZeroBC<TSimType>::BasisType &basis)
-   {
-      int nL = this->nL();
-      for(int l = 0; l < nL; ++l)
-      {
-         rLHSBCValues(l) = basis.at(l).bpoly();
-      }
-   }
 
 }
 

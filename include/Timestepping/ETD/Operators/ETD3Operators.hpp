@@ -18,7 +18,7 @@
 #include "Timestepping/ETD/ETDOperators.hpp"
 #include "Timestepping/ETD/ETDSchemeTraits.hpp"
 #include "Timestepping/ETD/Operators/ETDNOperators.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 

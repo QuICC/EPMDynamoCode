@@ -5,6 +5,9 @@
 #ifndef GENCODDOMAINTRAITS_HPP
 #define GENCODDOMAINTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,17 +23,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the Domain of the generators codensity scalar field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenCodDomainTraits
+   class GenCodDomainTraits
    {
       public:
          /// Typedef for the spectral field type
-         typedef typename GenCodFieldTraits<TSimType>::SpectralFieldType  SpectralFieldType;
+         typedef typename GenCodFieldTraits::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the domain type
-         typedef FullSphereField<TSimType, GenCodFieldTraits> DomainType;
+         typedef FullSphereField<GenCodFieldTraits> DomainType;
    };
 
 }

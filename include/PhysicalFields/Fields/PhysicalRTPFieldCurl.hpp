@@ -6,6 +6,10 @@
 #ifndef PHYSICALRTPFIELDCURL_HPP
 #define PHYSICALRTPFIELDCURL_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -14,7 +18,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalRTPField.hpp"
 #include "Domain/Truncation.hpp"
 
@@ -26,14 +29,12 @@ namespace EPMDynamo {
     *
     * This class contains the different element and representation that are required
     * for a generic physical field.
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalRTPFieldCurl : public PhysicalRTPField<TSimType>
+   class PhysicalRTPFieldCurl : public PhysicalRTPField
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
          * @brief Constructs the field elements and representations for the given
@@ -81,26 +82,14 @@ namespace EPMDynamo {
          RTPField mCurl;
    };
 
-   template<typename TSimType> inline PhysicalRTPFieldCurl<TSimType>::PhysicalRTPFieldCurl(SmartTruncation pTrunc, typename PhysicalRTPFieldCurl<TSimType>::TransformType &transform)
-      : PhysicalRTPField<TSimType>(pTrunc, transform), mCurl(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const RTPField&  PhysicalRTPFieldCurl<TSimType>::curl() const
+   inline const RTPField&  PhysicalRTPFieldCurl::curl() const
    {
       return this->mCurl;
    }
 
-   template<typename TSimType> inline RTPField&  PhysicalRTPFieldCurl<TSimType>::rCurl()
+   inline RTPField&  PhysicalRTPFieldCurl::rCurl()
    {
       return this->mCurl;
-   }
-
-   template<typename TSimType> void  PhysicalRTPFieldCurl<TSimType>::initialiseZeros()
-   {
-      PhysicalRTPField<TSimType>::initialiseZeros();
-
-      this->mCurl.initialiseZeros();
    }
 
 }

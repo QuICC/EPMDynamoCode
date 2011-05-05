@@ -5,6 +5,9 @@
 #ifndef SCALARNTERMSTRAITS_HPP
 #define SCALARNTERMSTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the default scalar non linear terms
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class ScalarNTermsTraits
+   class ScalarNTermsTraits
    {
       public:
          /// Typedef for the variable type
-         typedef FullSphereField<TSimType, ScalarNTermsFieldTraits> VariableType;
+         typedef FullSphereField<ScalarNTermsFieldTraits> VariableType;
    };
 
 }

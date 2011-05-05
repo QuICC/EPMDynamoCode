@@ -14,7 +14,7 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
 
@@ -25,7 +25,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaLHSTOperatorSet: public ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>
+   template <typename TSimType> class ThetaLHSTOperatorSet: public ThetaTOperatorSet<TSimType, SimulationConfig::FactoredOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -77,7 +77,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> ThetaLHSTOperatorSet<TSimType>::ThetaLHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaLHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
-      : ThetaTOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(a, b, basis, pTrunc, hasL0)
+      : ThetaTOperatorSet<TSimType, SimulationConfig::FactoredOpType>(a, b, basis, pTrunc, hasL0)
    {
    }
 

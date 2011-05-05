@@ -5,6 +5,9 @@
 #ifndef FIELDNTERMSFIELDTRAITS_HPP
 #define FIELDNTERMSFIELDTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,20 +23,18 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the field of the vector field non linear terms
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class FieldNTermsFieldTraits
+   class FieldNTermsFieldTraits
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalTorPolField<TSimType, PhysicalTorPolBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalTorPolField<PhysicalTorPolBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the type of an inner core field
-         typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> ICFieldType;
+         typedef PhysicalTorPolField<PhysicalTorPolBase> ICFieldType;
 
          /// Typedef for the type of an outer core field
-         typedef PhysicalTorPolField<TSimType, PhysicalTorPolBase> OCFieldType;
+         typedef PhysicalTorPolField<PhysicalTorPolBase> OCFieldType;
    };
 
 }

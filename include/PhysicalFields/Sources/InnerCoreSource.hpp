@@ -5,6 +5,10 @@
 #ifndef INNERCORESOURCE_HPP
 #define INNERCORESOURCE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a field with a source term in inner core
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSourceTraits Traits describing the field
     */
-   template <typename TSimType, template <typename> class TSourceTraits> class InnerCoreSource: public TSourceTraits<TSimType>::DomainType
+   template <typename TSourceTraits> class InnerCoreSource: public TSourceTraits::DomainType
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from the spectral field from field traits
-         typedef typename TSourceTraits<TSimType>::SpectralFieldType    SpectralFieldType;
+         typedef typename TSourceTraits::SpectralFieldType    SpectralFieldType;
 
          /**
           * @brief Constructor
@@ -71,24 +73,24 @@ namespace EPMDynamo {
 
    };
 
-   template <typename TSimType, template <typename>  class TSourceTraits> InnerCoreSource<TSimType, TSourceTraits>::InnerCoreSource(SmartTruncation pTrunc, typename InnerCoreSource<TSimType,TSourceTraits>::TransformType &transform)
-      : TSourceTraits<TSimType>::DomainType(pTrunc, transform), mIcSrc(pTrunc, true)
+   template <typename TSourceTraits> InnerCoreSource<TSourceTraits>::InnerCoreSource(SmartTruncation pTrunc, typename InnerCoreSource<TSourceTraits>::TransformType &transform)
+      : TSourceTraits::DomainType(pTrunc, transform), mIcSrc(pTrunc, true)
    {
    }
 
-   template <typename TSimType, template <typename>  class TSourceTraits> const typename InnerCoreSource<TSimType, TSourceTraits>::SpectralFieldType& InnerCoreSource<TSimType, TSourceTraits>::icSrc() const
+   template <typename TSourceTraits> const typename InnerCoreSource<TSourceTraits>::SpectralFieldType& InnerCoreSource<TSourceTraits>::icSrc() const
    {
       return this->mIcSrc;
    }
 
-   template <typename TSimType, template <typename>  class TSourceTraits> typename InnerCoreSource<TSimType, TSourceTraits>::SpectralFieldType& InnerCoreSource<TSimType, TSourceTraits>::rIcSrc()
+   template <typename TSourceTraits> typename InnerCoreSource<TSourceTraits>::SpectralFieldType& InnerCoreSource<TSourceTraits>::rIcSrc()
    {
       return this->mIcSrc;
    }
 
-   template <typename TSimType, template <typename>  class TSourceTraits>  void InnerCoreSource<TSimType, TSourceTraits>::initialiseZeros()
+   template <typename TSourceTraits>  void InnerCoreSource<TSourceTraits>::initialiseZeros()
    {
-      TSourceTraits<TSimType>::DomainType::initialiseZeros();
+      TSourceTraits::DomainType::initialiseZeros();
 
       this->mIcSrc.initialiseZeros();
    }

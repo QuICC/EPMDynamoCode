@@ -8,10 +8,10 @@
 // Configuration includes
 //
 #include "Config/Parallelisation.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
-#include <boost/static_assert.hpp>
 
 // External includes
 //
@@ -30,17 +30,15 @@ namespace EPMDynamo {
 
    /**
     * @brief Implements the implementation independent part of a simulation
-    *
-    * \tparam TSimType General simulation type
     */
-   template <typename TSimType> class SimulationBase: public ComputationBase<TSimType, IOSystem>
+   class SimulationBase: public ComputationBase<IOSystem>
    {
       public:
          /// Typedef for the transform type
-         typedef  typename SimulationTraits<TSimType>::TransformType  TransformType;
+         typedef SimulationConfig::TransformType  TransformType;
 
          /// Typedef for the EquationParameters type
-         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+         typedef SimulationConfig::EquationParametersType EquationParametersType;
 
          /**
           * @brief Simple empty destructor
@@ -56,7 +54,7 @@ namespace EPMDynamo {
          /**
           * @brief SimulationBase control
           */
-         SimulationControl<TSimType>   mSimControl;
+         SimulationControl  mSimControl;
 
          /**
           * @brief write data to files
@@ -142,148 +140,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> SimulationBase<TSimType>::SimulationBase()
-      : ComputationBase<TSimType, IOSystem>(), mSimControl(this->mIOSys.cfg()->aTStep(), this->mEqParams, this->mIOSys.cfg()->aRunI(), this->mIOSys.cfg()->aRun())
-   {
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::initOutput()
-   {
-      // Write the splitting descriptions
-      this->describeSplitting();
-
-      // Initialise all the create writers
-      this->mIOSys.initWriters();
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::writeFiles()
-   {
-      if(this->mSimControl.tsParams().isNextStep())
-      {
-         // Save ASCII files
-         if(this->mSimControl.tsCounter().triggerASCII())
-         {
-            this->mIOSys.writeASCII();
-
-            this->mSimControl.checkInterface();
-         }
-
-         // Save state file
-         if(this->mSimControl.tsCounter().triggerState())
-         {
-            this->mIOSys.writeHDF5();
-         }
-      }
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::preRun()
-   {
-      // Write loaded state to HDF5 file (this can be important if the truncations were not the same)
-      this->mIOSys.writeHDF5();
-
-      // Synchronize simulation
-      EPMDYNAMO_SYNCHRONIZE;
-
-      // Execute last minute simulation control initialisation operations
-      this->mSimControl.preRun();
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::postRun()
-   {
-      // Write the state to HDF5 file before finishing
-      this->mIOSys.writeHDF5();
-
-      // Execute early simulation control finalisation operations
-      this->mSimControl.postRun();
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::initFields()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::addHDF5Output()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::addASCIIOutput()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::initEquations()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::updateEquationsRTP(const int step)
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::updateEquationsRHS()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::transformEquationsRHS(const int step)
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::addExternalInfluence()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::timestepEquations()
-   {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
-   }
-
-   template <typename TSimType> void SimulationBase<TSimType>::describeSplitting()
-   {
-      // Create the Physical splitting description file
-      PhysicalSplittingFile   physFile(this->mpTrunc);
-
-      // Initialise physical description file
-      physFile.init();
-
-      // Write physical description file
-      physFile.write();
-
-      // Finalise physical description file
-      physFile.finalise();
-
-
-      // Create the Physical splitting description file
-      FDSHSplittingFile   fdshFile(this->mpTrunc);
-
-      // Initialise physical description file
-      fdshFile.init();
-
-      // Write physical description file
-      fdshFile.write();
-
-      // Finalise physical description file
-      fdshFile.finalise();
-
-
-      // Create the Physical splitting description file
-      SpectralSplittingFile   specFile(this->mpTrunc);
-
-      // Initialise physical description file
-      specFile.init();
-
-      // Write physical description file
-      specFile.write();
-
-      // Finalise physical description file
-      specFile.finalise();
-   }
-
 }
 
 #endif // SIMULATIONBASE_HPP

@@ -5,6 +5,10 @@
 #ifndef PHYSICALRTPSCALAR_HPP
 #define PHYSICALRTPSCALAR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalBase.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralScalars/RTPScalar.hpp"
@@ -22,14 +25,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Base of the implementation of the RTP component of a physical scalar
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalRTPScalar : public PhysicalBase<TSimType>
+   class PhysicalRTPScalar : public PhysicalBase
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
          * @brief Constructs the basic information required for a physical scalar
@@ -69,24 +70,14 @@ namespace EPMDynamo {
          RTPScalar mRTP;
    };
 
-   template<typename TSimType> inline PhysicalRTPScalar<TSimType>::PhysicalRTPScalar(SmartTruncation pTrunc, typename PhysicalRTPScalar<TSimType>::TransformType &transform)
-      : PhysicalBase<TSimType>(pTrunc, transform), mRTP(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const RTPScalar&  PhysicalRTPScalar<TSimType>::rtp() const
+   inline const RTPScalar&  PhysicalRTPScalar::rtp() const
    {
       return this->mRTP;
    }
 
-   template<typename TSimType> inline RTPScalar&  PhysicalRTPScalar<TSimType>::rRTP()
+   inline RTPScalar&  PhysicalRTPScalar::rRTP()
    {
       return this->mRTP;
-   }
-
-   template<typename TSimType> void  PhysicalRTPScalar<TSimType>::initialiseZeros()
-   {
-      this->mRTP.initialiseZeros();
    }
 
 }

@@ -24,7 +24,7 @@
 #include "Timestepping/PredictorCorrector/Theta/ThetaRHSTOperatorSet.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaPredictor.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaCorrector.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 

@@ -5,6 +5,10 @@
 #ifndef PHYSICALQSTCURLBASE_HPP
 #define PHYSICALQSTCURLBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 #include "PhysicalFields/Fields/PhysicalRTPFieldCurl.hpp"
 #include "GeneralFields/QSTField.hpp"
@@ -25,20 +28,18 @@ namespace EPMDynamo {
     *
     * The used spectral expansion is an QST expansion as it is a completely general
     * expansion
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalQSTCurlBase : public PhysicalRTPFieldCurl<TSimType>
+   class PhysicalQSTCurlBase : public PhysicalRTPFieldCurl
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef QSTField<TSimType>  SpectralFieldType;
+         typedef QSTField  SpectralFieldType;
 
          /**
          * @brief Constructs underlying rtp and spectral fields
@@ -56,17 +57,17 @@ namespace EPMDynamo {
          /**
           * @brief Get QST decomposition of the perturbation part
           */
-         const QSTField<TSimType>&  perturbation() const;
+         const QSTField&  perturbation() const;
 
          /**
           * @brief Get QST decomposition of the total field
           */
-         const QSTField<TSimType>&  totalField() const;
+         const QSTField&  totalField() const;
 
          /**
           * @brief Set QST decomposition of the perturbation part
           */
-         QSTField<TSimType>&  rPerturbation();
+         QSTField&  rPerturbation();
 
          /**
           * @brief initialise to zeros
@@ -83,40 +84,28 @@ namespace EPMDynamo {
          /**
           * @brief Spectral QST decomposition of the field
           */
-         QSTField<TSimType>    mPerturbation;
+         QSTField    mPerturbation;
 
       private:
    };
 
-   template<typename TSimType> PhysicalQSTCurlBase<TSimType>::PhysicalQSTCurlBase(SmartTruncation pTrunc, typename PhysicalQSTCurlBase<TSimType>::TransformType &transform)
-      : PhysicalRTPFieldCurl<TSimType>(pTrunc, transform), mNeedCurlTransform(0), mPerturbation(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const QSTField<TSimType>& PhysicalQSTCurlBase<TSimType>::perturbation() const
+   inline const QSTField& PhysicalQSTCurlBase::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   template<typename TSimType> inline const QSTField<TSimType>& PhysicalQSTCurlBase<TSimType>::totalField() const
+   inline const QSTField& PhysicalQSTCurlBase::totalField() const
    {
       return this->mPerturbation;
    }
 
-   template<typename TSimType> inline QSTField<TSimType>& PhysicalQSTCurlBase<TSimType>::rPerturbation()
+   inline QSTField& PhysicalQSTCurlBase::rPerturbation()
    {
       this->mNeedTransform = 0;
 
       this->mNeedCurlTransform = 0;
       
       return this->mPerturbation;
-   }
-
-   template<typename TSimType> void PhysicalQSTCurlBase<TSimType>::initialiseZeros()
-   {
-      PhysicalRTPFieldCurl<TSimType>::initialiseZeros();
-
-      this->mPerturbation.initialiseZeros();
    }
 
 }

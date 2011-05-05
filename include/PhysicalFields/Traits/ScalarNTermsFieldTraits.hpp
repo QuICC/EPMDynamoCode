@@ -5,6 +5,9 @@
 #ifndef SCALARNTERMSFIELDTRAITS_HPP
 #define SCALARNTERMSFIELDTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,20 +23,18 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the fields of the scalar non linear terms
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class ScalarNTermsFieldTraits
+   class ScalarNTermsFieldTraits
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalScalar<TSimType, PhysicalScalarBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalScalar<PhysicalScalarBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the inner core field
-         typedef PhysicalScalar<TSimType, PhysicalScalarBase> ICFieldType;
+         typedef PhysicalScalar<PhysicalScalarBase> ICFieldType;
 
          /// Typedef for the outer core field
-         typedef PhysicalScalar<TSimType, PhysicalScalarBase> OCFieldType;
+         typedef PhysicalScalar<PhysicalScalarBase> OCFieldType;
    };
 
 }

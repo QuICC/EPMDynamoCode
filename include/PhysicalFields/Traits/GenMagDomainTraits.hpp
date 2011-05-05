@@ -5,6 +5,9 @@
 #ifndef GENMAGDOMAINTRAITS_HPP
 #define GENMAGDOMAINTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,17 +23,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the generators magnetic field domain
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenMagDomainTraits
+   class GenMagDomainTraits
    {
       public:
          /// Typedef for the spectral field type
-         typedef typename GenMagFieldTraits<TSimType>::SpectralFieldType  SpectralFieldType;
+         typedef typename GenMagFieldTraits::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the variable type
-         typedef FullSphereField<TSimType, GenMagFieldTraits> DomainType;
+         typedef FullSphereField<GenMagFieldTraits> DomainType;
    };
 
 }

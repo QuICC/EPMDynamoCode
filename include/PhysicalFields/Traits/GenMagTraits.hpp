@@ -5,6 +5,9 @@
 #ifndef GENMAGTRAITS_HPP
 #define GENMAGTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the generators magnetic field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenMagTraits
+   class GenMagTraits
    {
       public:
          /// Typedef for the variable type
-         typedef OuterCoreSource<TSimType, GenMagDomainTraits> VariableType;
+         typedef OuterCoreSource<GenMagDomainTraits> VariableType;
    };
 
 }

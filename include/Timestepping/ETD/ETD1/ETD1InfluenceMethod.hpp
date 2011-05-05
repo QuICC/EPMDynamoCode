@@ -21,7 +21,7 @@
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETD1/ETD1Method.hpp"
 #include "Timestepping/ETD/ETDInfluenceKernel.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 

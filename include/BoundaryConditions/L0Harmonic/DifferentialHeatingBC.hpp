@@ -5,6 +5,10 @@
 #ifndef DIFFERENTIALHEATINGBC_HPP
 #define DIFFERENTIALHEATINGBC_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -20,14 +24,12 @@ namespace EPMDynamo {
 
    /**
     * @brief This class defines the  L=0 harmonic differential heating boundary condition
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class DifferentialHeatingBC: public L0HarmonicBC
+   class DifferentialHeatingBC: public L0HarmonicBC
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /**
           * @brief Constructor
@@ -60,36 +62,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> DifferentialHeatingBC<TSimType>::DifferentialHeatingBC(const EPMFloat bcValue, const typename DifferentialHeatingBC<TSimType>::BasisType &basis)
-      : L0HarmonicBC(basis.basisN(), basis.polyN())
-   {
-      // Fill Operator BC values
-      this->fillLHSBCValues(basis);
-
-      // Set boundary value
-      this->setBCValue(bcValue);
-
-      // Check if boundary condition is homogeneous
-      if(bcValue == 0.0)
-      {
-         this->mIsHomogeneous = true;
-      }
-   }
-
-   template <typename TSimType> void DifferentialHeatingBC<TSimType>::fillLHSBCValues(const typename DifferentialHeatingBC<TSimType>::BasisType &basis)
-   {
-      int nL = this->nL();
-      for(int l = 0; l < nL; ++l)
-      {
-         this->rLHSBCValues(l) = basis.at(l).bpoly();
-      }
-   }
-
-   template <typename TSimType> void DifferentialHeatingBC<TSimType>::setBCValue(const EPMFloat bcValue)
-   {
-      this->mValue = bcValue;
-   }
 
 }
 

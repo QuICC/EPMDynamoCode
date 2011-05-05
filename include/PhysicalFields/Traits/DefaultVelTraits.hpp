@@ -5,6 +5,9 @@
 #ifndef DEFAULTVELTRAITS_HPP
 #define DEFAULTVELTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the default velocity field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class DefaultVelTraits
+   class DefaultVelTraits
    {
       public:
          /// Typedef for the variable type
-         typedef FullSphereField<TSimType, DefaultVelFieldTraits> VariableType;
+         typedef FullSphereField<DefaultVelFieldTraits> VariableType;
    };
 
 }

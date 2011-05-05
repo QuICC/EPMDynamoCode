@@ -5,6 +5,9 @@
 #ifndef IMPOSEDMAGTRAITS_HPP
 #define IMPOSEDMAGTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the imposed magnetic field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class ImposedMagTraits
+   class ImposedMagTraits
    {
       public:
          /// Typedef for the variable type
-         typedef FullSphereField<TSimType, ImposedMagFieldTraits> VariableType;
+         typedef FullSphereField<ImposedMagFieldTraits> VariableType;
    };
 
 }

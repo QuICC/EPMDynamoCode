@@ -15,8 +15,8 @@
 
 // Project includes
 //
+#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 #include "Operators/LaplacianBOperatorSet.hpp"
 
@@ -27,7 +27,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class InfluenceMatrix: public LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>
+   template <typename TSimType> class InfluenceMatrix: public LaplacianBOperatorSet<TSimType, SimulationConfig::FactoredOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -113,7 +113,7 @@ namespace EPMDynamo {
    };
 
    template <typename TSimType> InfluenceMatrix<TSimType>::InfluenceMatrix(SmartTruncation pTrunc, const typename InfluenceMatrix<TSimType>::BasisType &basis, bool hasL0)
-      : LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>(basis, pTrunc, hasL0), mOpBCs(-2)
+      : LaplacianBOperatorSet<TSimType, SimulationConfig::FactoredOpType>(basis, pTrunc, hasL0), mOpBCs(-2)
    {
       this->initSolutions();
    }
@@ -141,7 +141,7 @@ namespace EPMDynamo {
       // The first boundary conditions is implemented into the laplacian
       if(this->mOpBCs == -2)
       {
-         LaplacianBOperatorSet<TSimType, typename SimulationTraits<TSimType>::FactoredOpType>::addBC(pBC);
+         LaplacianBOperatorSet<TSimType, SimulationConfig::FactoredOpType>::addBC(pBC);
       }
       // Other boundary conditions are stored in the influence matrix object
       else

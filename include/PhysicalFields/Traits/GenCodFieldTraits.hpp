@@ -5,6 +5,9 @@
 #ifndef GENCODFIELDTRAITS_HPP
 #define GENCODFIELDTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,20 +24,18 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the fields of the generators codensitfy scalar field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenCodFieldTraits
+   class GenCodFieldTraits
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalScalarGradient<TSimType, PhysicalScalarGradientBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalScalarGradient<PhysicalScalarGradientBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the inner core field
-         typedef PhysicalScalarGradient<TSimType, PhysicalScalarGradientBase> ICFieldType;
+         typedef PhysicalScalarGradient<PhysicalScalarGradientBase> ICFieldType;
 
          /// Typedef for the outer core field
-         typedef PhysicalScalarGradient<TSimType, ImposedScalar> OCFieldType;
+         typedef PhysicalScalarGradient<ImposedScalar> OCFieldType;
    };
 
 }

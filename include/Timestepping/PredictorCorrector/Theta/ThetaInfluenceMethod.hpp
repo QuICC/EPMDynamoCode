@@ -23,7 +23,7 @@
 #include "Timestepping/PredictorCorrector/Theta/ThetaInfluencePredictor.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaInfluenceCorrector.hpp"
 #include "Equations/InfluenceMatrix.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 

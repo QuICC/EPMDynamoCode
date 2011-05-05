@@ -5,6 +5,10 @@
 #ifndef IMPOSEDSCALAR_HPP
 #define IMPOSEDSCALAR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,24 +17,21 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalScalarBase.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of scalar imposed field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ImposedScalar : public PhysicalScalarBase<TSimType>
+   class ImposedScalar : public PhysicalScalarBase
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef typename PhysicalScalarBase<TSimType>::SpectralFieldType  SpectralFieldType;
+         typedef PhysicalScalarBase::SpectralFieldType  SpectralFieldType;
 
          /**
           * @brief Constructs the underlying rtp and spectral fields
@@ -84,27 +85,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType> ImposedScalar<TSimType>::ImposedScalar(SmartTruncation pTrunc, typename ImposedScalar<TSimType>::TransformType &transform)
-      : PhysicalScalarBase<TSimType>(pTrunc, transform), mTotalField(pTrunc, true), mImposedField(pTrunc, true)
-   {
-   }
-
-   template<typename TSimType> inline const typename ImposedScalar<TSimType>::SpectralFieldType& ImposedScalar<TSimType>::totalField() const
+   inline const ImposedScalar::SpectralFieldType& ImposedScalar::totalField() const
    {
       return this->mTotalField;
    }
 
-   template<typename TSimType> inline const typename ImposedScalar<TSimType>::SpectralFieldType& ImposedScalar<TSimType>::imposed() const
+   inline const ImposedScalar::SpectralFieldType& ImposedScalar::imposed() const
    {
       return this->mImposedField;
    }
 
-   template<typename TSimType> inline typename ImposedScalar<TSimType>::SpectralFieldType& ImposedScalar<TSimType>::rImposed()
+   inline ImposedScalar::SpectralFieldType& ImposedScalar::rImposed()
    {
       return this->mImposedField;
    }
 
-   template<typename TSimType> inline void ImposedScalar<TSimType>::updateTotalField()
+   inline void ImposedScalar::updateTotalField()
    {
       if(this->needAnyTransform())
       {
@@ -115,13 +111,6 @@ namespace EPMDynamo {
             this->mTotalField.rLShell(l) = this->perturbation().lshell(l) + this->imposed().lshell(l);
          }
       }
-   }
-
-   template<typename TSimType> void ImposedScalar<TSimType>::initialiseZeros()
-   {
-      PhysicalScalarBase<TSimType>::initialiseZeros();
-
-      this->mImposedField.initialiseZeros();
    }
 
 }

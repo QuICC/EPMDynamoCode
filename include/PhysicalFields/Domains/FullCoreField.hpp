@@ -5,6 +5,10 @@
 #ifndef FULLCOREFIELD_HPP
 #define FULLCOREFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -21,20 +24,19 @@ namespace EPMDynamo {
    /**
     * \brief Implementation for a full core field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldTraits Traits to describe the field
     */
-   template <typename TSimType, template <typename> class TFieldTraits> class FullCoreField
+   template <typename TFieldTraits> class FullCoreField
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the inner core field type
-         typedef typename TFieldTraits<TSimType>::ICFieldType  ICFieldType;
+         typedef typename TFieldTraits::ICFieldType  ICFieldType;
 
          /// Typedef for the outer core field type
-         typedef typename TFieldTraits<TSimType>::OCFieldType  OCFieldType;
+         typedef typename TFieldTraits::OCFieldType  OCFieldType;
 
          /**
           * @brief Constructor
@@ -88,32 +90,32 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename>  class TFieldTraits> FullCoreField<TSimType, TFieldTraits>::FullCoreField(SmartTruncation pTrunc, typename FullCoreField<TSimType,TFieldTraits>::TransformType &transform)
+   template <typename TFieldTraits> FullCoreField<TFieldTraits>::FullCoreField(SmartTruncation pTrunc, typename FullCoreField<TFieldTraits>::TransformType &transform)
       : mICVar(pTrunc, transform), mOCVar(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> const FullCoreField<TSimType, TFieldTraits>::ICFieldType& FullCoreField<TSimType, TFieldTraits>::ic() const
+   template <typename TFieldTraits> const FullCoreField<TFieldTraits>::ICFieldType& FullCoreField<TFieldTraits>::ic() const
    {
       return this->mICVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> FullCoreField<TSimType, TFieldTraits>::ICFieldType& FullCoreField<TSimType, TFieldTraits>::rIc()
+   template <typename TFieldTraits> FullCoreField<TFieldTraits>::ICFieldType& FullCoreField<TFieldTraits>::rIc()
    {
       return this->mICVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> const FullCoreField<TSimType, TFieldTraits>::OCFieldType& FullCoreField<TSimType, TFieldTraits>::oc() const
+   template <typename TFieldTraits> const FullCoreField<TFieldTraits>::OCFieldType& FullCoreField<TFieldTraits>::oc() const
    {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> FullCoreField<TSimType, TFieldTraits>::OCFieldType& FullCoreField<TSimType, TFieldTraits>::rOc()
+   template <typename TFieldTraits> FullCoreField<TFieldTraits>::OCFieldType& FullCoreField<TFieldTraits>::rOc()
    {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> void FullCoreField<TSimType, TFieldTraits>::initialiseZeros()
+   template <typename TFieldTraits> void FullCoreField<TFieldTraits>::initialiseZeros()
    {
       this->mICVar.initialiseZeros();
 

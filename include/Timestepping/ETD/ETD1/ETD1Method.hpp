@@ -22,7 +22,7 @@
 #include "Timestepping/IterativeSchemeBase.hpp"
 #include "Timestepping/ETD/Operators/ETD1Operators.hpp"
 #include "Timestepping/ETD/Iterations/ETD1Iteration.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 

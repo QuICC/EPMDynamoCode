@@ -14,7 +14,7 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Timestepping/ImplicitTOperatorSet.hpp"
 

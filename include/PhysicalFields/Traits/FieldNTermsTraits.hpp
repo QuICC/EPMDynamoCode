@@ -5,6 +5,9 @@
 #ifndef FIELDNTERMSTRAITS_HPP
 #define FIELDNTERMSTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the vector field non linear terms
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class FieldNTermsTraits
+   class FieldNTermsTraits
    {
       public:
          /// Typedef for the variable type
-         typedef FullSphereField<TSimType, FieldNTermsFieldTraits> VariableType;
+         typedef FullSphereField<FieldNTermsFieldTraits> VariableType;
    };
 
 }

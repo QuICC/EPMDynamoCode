@@ -5,6 +5,10 @@
 #ifndef PHYSICALRTPSCALARGRADIENT_HPP
 #define PHYSICALRTPSCALARGRADIENT_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalRTPScalar.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/RTPField.hpp"
@@ -22,14 +25,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Base of the implementation of the RTP component of a physical scalar with gradient
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalRTPScalarGradient : public PhysicalRTPScalar<TSimType>
+   class PhysicalRTPScalarGradient : public PhysicalRTPScalar
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
          * @brief Constructs the basic information required for a physical scalar
@@ -76,26 +77,14 @@ namespace EPMDynamo {
          RTPField mGrad;
    };
 
-   template<typename TSimType> inline PhysicalRTPScalarGradient<TSimType>::PhysicalRTPScalarGradient(SmartTruncation pTrunc, typename PhysicalRTPScalarGradient<TSimType>::TransformType &transform)
-      : PhysicalRTPScalar<TSimType>(pTrunc, transform), mGrad(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const RTPField&  PhysicalRTPScalarGradient<TSimType>::grad() const
+   inline const RTPField&  PhysicalRTPScalarGradient::grad() const
    {
       return this->mGrad;
    }
 
-   template<typename TSimType> inline RTPField&  PhysicalRTPScalarGradient<TSimType>::rGrad()
+   inline RTPField&  PhysicalRTPScalarGradient::rGrad()
    {
       return this->mGrad;
-   }
-
-   template<typename TSimType> void  PhysicalRTPScalarGradient<TSimType>::initialiseZeros()
-   {
-      PhysicalRTPScalar<TSimType>::initialiseZeros();
-
-      this->mGrad.initialiseZeros();
    }
 
 }

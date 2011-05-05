@@ -5,6 +5,10 @@
 #ifndef OUTERCOREFIELD_HPP
 #define OUTERCOREFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation for an outer core field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TFieldTraits> class OuterCoreField
+   template <typename TFieldTraits> class OuterCoreField
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the outer core field type
-         typedef typename TFieldTraits<TSimType>::OCFieldType  OCFieldType;
+         typedef typename TFieldTraits::OCFieldType  OCFieldType;
 
          /**
           * @brief Constructor
@@ -70,22 +72,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename>  class TFieldTraits> OuterCoreField<TSimType, TFieldTraits>::OuterCoreField(SmartTruncation pTrunc, typename OuterCoreField<TSimType,TFieldTraits>::TransformType &transform)
+   template <typename TFieldTraits> OuterCoreField<TFieldTraits>::OuterCoreField(SmartTruncation pTrunc, typename OuterCoreField<TFieldTraits>::TransformType &transform)
       : mOCVar(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> const OuterCoreField<TSimType, TFieldTraits>::OCFieldType& OuterCoreField<TSimType, TFieldTraits>::oc() const
+   template <typename TFieldTraits> const OuterCoreField<TFieldTraits>::OCFieldType& OuterCoreField<TFieldTraits>::oc() const
    {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> OuterCoreField<TSimType, TFieldTraits>::OCFieldType& OuterCoreField<TSimType, TFieldTraits>::rOc()
+   template <typename TFieldTraits> OuterCoreField<TFieldTraits>::OCFieldType& OuterCoreField<TFieldTraits>::rOc()
    {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits>  OuterCoreField<TSimType, TFieldTraits>::initialiseZeros()
+   template <typename TFieldTraits>  OuterCoreField<TFieldTraits>::initialiseZeros()
    {
       this->mOCVar.initialiseZeros();
    }

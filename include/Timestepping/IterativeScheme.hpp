@@ -16,7 +16,7 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 
 namespace EPMDynamo {

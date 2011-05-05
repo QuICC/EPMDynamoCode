@@ -5,6 +5,10 @@
 #ifndef QSTDIFFUSIONEQUATION_HPP
 #define QSTDIFFUSIONEQUATION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TimeEquation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
@@ -24,20 +27,19 @@ namespace EPMDynamo {
     * @brief This class specialises the TimeEquation class to the case where the unknown
     *        is a general field (using QST decomposition)
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldType Type of the field
     */
-   template <typename TSimType, typename TFieldType> class QSTDiffusionEquation : public TimeEquation<TSimType, TFieldType>
+   template <typename TFieldType> class QSTDiffusionEquation : public TimeEquation<TFieldType>
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from the simulation trait to local timestepping scheme
-         typedef typename SimulationTraits<TSimType>::TimestepTraits  TimeTraits;
+         typedef SimulationConfig::TimestepTraits  TimeTraits;
 
          /**
           * @brief Constructs the Time equation from the given general Physical Field, the transform reference and the timestepping parameters
@@ -136,14 +138,14 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType> QSTDiffusionEquation<TSimType, TFieldType>::QSTDiffusionEquation(TFieldType &rF, typename QSTDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBCQ, int nBCS, int nBCT, EPMFloat a, EPMFloat b)
-      : TimeEquation<TSimType, TFieldType>(rF, transform, tsteps), mQTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true), mSTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true), mTTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true)
+   template <typename TFieldType> QSTDiffusionEquation<TFieldType>::QSTDiffusionEquation(TFieldType &rF, typename QSTDiffusionEquation<TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBCQ, int nBCS, int nBCT, EPMFloat a, EPMFloat b)
+      : TimeEquation<TFieldType>(rF, transform, tsteps), mQTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true), mSTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true), mTTStepper(a, b, transform.radBasis(), tsteps, rF.trunc(), true)
    {
       // Set counter to total number of boundary conditions
       this->mBCCounter = nBCQ + nBCS + nBCT;
    }
 
-   template <typename TSimType, typename TFieldType> void QSTDiffusionEquation<TSimType, TFieldType>::addQBC(SmartBC pBC)
+   template <typename TFieldType> void QSTDiffusionEquation<TFieldType>::addQBC(SmartBC pBC)
    {
       // Add Q component BC to list
       this->mQBCs.push_back(pBC);
@@ -152,7 +154,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType> void QSTDiffusionEquation<TSimType, TFieldType>::addSBC(SmartBC pBC)
+   template <typename TFieldType> void QSTDiffusionEquation<TFieldType>::addSBC(SmartBC pBC)
    {
       // Add S component BC to list
       this->mSBCs.push_back(pBC);
@@ -161,7 +163,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType> void QSTDiffusionEquation<TSimType, TFieldType>::addTBC(SmartBC pBC)
+   template <typename TFieldType> void QSTDiffusionEquation<TFieldType>::addTBC(SmartBC pBC)
    {
       // Add T component BC to list
       this->mTBCs.push_back(pBC);
@@ -170,7 +172,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType> inline void QSTDiffusionEquation<TSimType, TFieldType>::initTSteppers()
+   template <typename TFieldType> inline void QSTDiffusionEquation<TFieldType>::initTSteppers()
    {
       // Set Boundary condition of timestepper for Q component
       for(int i=0; i < this->mQBCs.size(); ++i)
@@ -211,12 +213,12 @@ namespace EPMDynamo {
       this->mTBCs.clear();
    }
 
-   template <typename TSimType, typename TFieldType> inline void QSTDiffusionEquation<TSimType, TFieldType>::transformNTerms()
+   template <typename TFieldType> inline void QSTDiffusionEquation<TFieldType>::transformNTerms()
    {
       this->mrTransform.transformRTP2QST(this->mNTerms.rOc().rPerturbation(), this->mNTerms.oc().rtp());
    }
 
-   template <typename TSimType, typename TFieldType> inline void QSTDiffusionEquation<TSimType, TFieldType>::timestep()
+   template <typename TFieldType> inline void QSTDiffusionEquation<TFieldType>::timestep()
    {
       // Timestep the Q component equation
       this->mQTStepper.timestep(this->mrX.rOc().rPerturbation().rQ(), this->mNTerms.rOc().rPerturbation().rQ());

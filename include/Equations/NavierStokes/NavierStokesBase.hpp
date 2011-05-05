@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
 
@@ -29,13 +29,13 @@ namespace EPMDynamo {
    template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
          typedef typename TSimType::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
-         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+         typedef SimulationConfig::EquationParametersType EquationParametersType;
 
          /**
           * @brief Constructor

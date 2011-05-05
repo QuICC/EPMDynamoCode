@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Transport/TransportBase.hpp"
 
@@ -29,10 +29,10 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the EquationParameters type
-         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+         typedef SimulationConfig::EquationParametersType EquationParametersType;
 
          /**
          * @brief Constructor

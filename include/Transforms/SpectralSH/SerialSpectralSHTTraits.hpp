@@ -13,6 +13,7 @@
 
 // Project includes
 //
+#include "GeneralFields/TorPolField.hpp"
 #include "GeneralScalars/FDSHOrderScalar.hpp"
 #include "GeneralScalars/FDSHDegreeScalar.hpp"
 #include "GeneralFields/TorPolField.hpp"

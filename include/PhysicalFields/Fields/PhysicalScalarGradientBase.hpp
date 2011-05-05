@@ -5,6 +5,10 @@
 #ifndef PHYSICALSCALARGRADIENTBASE_HPP
 #define PHYSICALSCALARGRADIENTBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalRTPScalarGradient.hpp"
 #include "General/EPMTypedefs.hpp"
 
@@ -21,17 +24,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Implementation of physical scalar base
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalScalarGradientBase: public PhysicalRTPScalarGradient<TSimType>
+   class PhysicalScalarGradientBase: public PhysicalRTPScalarGradient
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType  ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType  ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType  TransformType;
+         typedef SimulationConfig::TransformType  TransformType;
 
          /// Typedef for the spectral field type
          typedef ScalarType SpectralFieldType;
@@ -89,41 +90,29 @@ namespace EPMDynamo {
 
       private:
    };
-   
-   template <typename TSimType> PhysicalScalarGradientBase<TSimType>::PhysicalScalarGradientBase(SmartTruncation pTrunc, typename PhysicalScalarGradientBase<TSimType>::TransformType &transform)
-      : PhysicalRTPScalarGradient<TSimType>(pTrunc, transform), mNeedGradTransform(0), mPerturbation(pTrunc, true)
-   {
-   }
 
-   template <typename TSimType> inline bool PhysicalScalarGradientBase<TSimType>::needAnyTransform() const
+   inline bool PhysicalScalarGradientBase::needAnyTransform() const
    {
       return ((this->mNeedTransform == 0) && (this->mNeedGradTransform == 0));
    }
 
-   template <typename TSimType> inline const typename PhysicalScalarGradientBase<TSimType>::ScalarType& PhysicalScalarGradientBase<TSimType>::perturbation() const
+   inline const typename PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   template <typename TSimType> inline const typename PhysicalScalarGradientBase<TSimType>::ScalarType& PhysicalScalarGradientBase<TSimType>::totalField() const
+   inline const typename PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::totalField() const
    {
       return this->mPerturbation;
    }
 
-   template <typename TSimType> inline typename PhysicalScalarGradientBase<TSimType>::ScalarType& PhysicalScalarGradientBase<TSimType>::rPerturbation()
+   inline typename PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::rPerturbation()
    {
       this->mNeedTransform = 0;
 
       this->mNeedGradTransform = 0;
 
       return this->mPerturbation;
-   }
-
-   template <typename TSimType> void PhysicalScalarGradientBase<TSimType>::initialiseZeros()
-   {
-      PhysicalRTPScalarGradient<TSimType>::initialiseZeros();
-
-      this->mPerturbation.initialiseZeros();
    }
 
 }

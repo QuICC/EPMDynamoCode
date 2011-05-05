@@ -5,6 +5,10 @@
 #ifndef PHYSICALTORPOLFIELD_HPP
 #define PHYSICALTORPOLFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "GeneralFields/TorPolField.hpp"
 
 namespace EPMDynamo {
@@ -24,20 +27,19 @@ namespace EPMDynamo {
     * The used spectral expansion is a Toroidal/Poloidal expansion to take advantage of
     * the divergence free aspect of the field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> class TBase> class PhysicalTorPolField: public TBase<TSimType> 
+   template <typename TBase> class PhysicalTorPolField: public TBase 
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef TorPolField<TSimType>  SpectralFieldType;
+         typedef TorPolField  SpectralFieldType;
 
          /**
           * @brief Constructs the underlying rtp and spectral fields
@@ -84,12 +86,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType, template <typename> class TBase> PhysicalTorPolField<TSimType, TBase>::PhysicalTorPolField(SmartTruncation pTrunc, typename PhysicalTorPolField<TSimType, TBase>::TransformType &transform)
-      : TBase<TSimType>(pTrunc, transform)
+   template<typename TBase> PhysicalTorPolField<TBase>::PhysicalTorPolField(SmartTruncation pTrunc, typename PhysicalTorPolField<TBase>::TransformType &transform)
+      : TBase(pTrunc, transform)
    {
    }
 
-   template<typename TSimType, template <typename> class TBase> inline void PhysicalTorPolField<TSimType, TBase>::transform(const int step)
+   template<typename TBase> inline void PhysicalTorPolField<TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -101,14 +103,14 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> void PhysicalTorPolField<TSimType, TBase>::updateSpectra()
+   template <typename TBase> void PhysicalTorPolField<TBase>::updateSpectra()
    {
       this->rPerturbation().computeTorSpectra(this->mrTransform.radBasis());
 
       this->rPerturbation().computePolSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType, template <typename> class TBase> Array PhysicalTorPolField<TSimType, TBase>::energy() const
+   template <typename TBase> Array PhysicalTorPolField<TBase>::energy() const
    {
       // Toroidal Energy
       Array torE = this->perturbation().tor().energy();
@@ -125,7 +127,7 @@ namespace EPMDynamo {
       return energy;
    }
 
-   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolField<TSimType, TBase>::spectrumL() const
+   template <typename TBase> Matrix PhysicalTorPolField<TBase>::spectrumL() const
    {
       // Toroidal Energy spectrum
       Array torE = this->perturbation().tor().spectrumL();
@@ -144,7 +146,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType, template <typename> class TBase> Matrix PhysicalTorPolField<TSimType, TBase>::spectrumM() const
+   template <typename TBase> Matrix PhysicalTorPolField<TBase>::spectrumM() const
    {
       // Toroidal Energy spectrum
       Array torE = this->perturbation().tor().spectrumM();

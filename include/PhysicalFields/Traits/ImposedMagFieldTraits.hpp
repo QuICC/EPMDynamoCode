@@ -5,6 +5,9 @@
 #ifndef IMPOSEDMAGFIELDTRAITS_HPP
 #define IMPOSEDMAGFIELDTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,20 +24,18 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the field of the imposed magnetic field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class ImposedMagFieldTraits
+   class ImposedMagFieldTraits
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalTorPolCurl<TSimType, PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalTorPolCurl<PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the type of an inner core field
-         typedef PhysicalTorPolCurl<TSimType, PhysicalTorPolCurlBase> ICFieldType;
+         typedef PhysicalTorPolCurl<PhysicalTorPolCurlBase> ICFieldType;
 
          /// Typedef for the type of an outer core field
-         typedef PhysicalTorPolCurl<TSimType, ImposedTorPolCurl> OCFieldType;
+         typedef PhysicalTorPolCurl<ImposedTorPolCurl> OCFieldType;
    };
 
 }

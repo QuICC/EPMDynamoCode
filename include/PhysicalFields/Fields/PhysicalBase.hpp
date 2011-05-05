@@ -5,6 +5,10 @@
 #ifndef PHYSICALBASE_HPP
 #define PHYSICALBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -14,20 +18,17 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Base of the implementation of the physical fields
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalBase
+   class PhysicalBase
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
          * @brief Construct the general shared information for a physical variable
@@ -98,12 +99,7 @@ namespace EPMDynamo {
          SmartTruncation   mpTrunc;
    };
 
-   template<typename TSimType> inline PhysicalBase<TSimType>::PhysicalBase(SmartTruncation pTrunc, typename PhysicalBase<TSimType>::TransformType &transform)
-      : mrTransform(transform), mNeedTransform(0), mpTrunc(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const SmartTruncation PhysicalBase<TSimType>::trunc() const
+   inline const SmartTruncation PhysicalBase::trunc() const
    {
       return this->mpTrunc;
    }

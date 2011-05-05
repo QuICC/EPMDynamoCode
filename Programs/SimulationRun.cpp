@@ -32,7 +32,7 @@ namespace epm = EPMDynamo;
 int runProgram()
 {
    // Create the simulation object
-   epm::Simulation<epm::WSHSimulation, SIMULATION>   sim;
+   epm::Simulation<SIMULATION>   sim;
 
    // Exception handling during the initialisation part
    try

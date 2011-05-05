@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "Domain/Truncation.hpp"
 
 #include "boost/static_assert.hpp"
@@ -30,7 +30,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
           * @brief Constructor

@@ -5,6 +5,10 @@
 #ifndef PHYSICALQSTCURL_HPP
 #define PHYSICALQSTCURL_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/QSTField.hpp"
 
@@ -25,20 +28,19 @@ namespace EPMDynamo {
     * The used spectral expansion is an QST expansion as it is a completely general
     * expansion
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> class TBase> class PhysicalQSTCurl : public TBase<TSimType>
+   template <typename TBase> class PhysicalQSTCurl : public TBase
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef QSTField<TSimType>  SpectralFieldType;
+         typedef QSTField  SpectralFieldType;
 
          /**
          * @brief Constructs underlying rtp and spectral fields
@@ -92,12 +94,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType, template <typename> class TBase> PhysicalQSTCurl<TSimType, TBase>::PhysicalQSTCurl(SmartTruncation pTrunc, typename PhysicalQSTCurl<TSimType, TBase>::TransformType &transform)
-      : TBase<TSimType>(pTrunc, transform)
+   template<typename TBase> PhysicalQSTCurl<TBase>::PhysicalQSTCurl(SmartTruncation pTrunc, typename PhysicalQSTCurl<TBase>::TransformType &transform)
+      : TBase(pTrunc, transform)
    {
    }
 
-   template<typename TSimType, template <typename> class TBase> inline void PhysicalQSTCurl<TSimType, TBase>::transform(const int step)
+   template<typename TBase> inline void PhysicalQSTCurl<TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -109,7 +111,7 @@ namespace EPMDynamo {
       }
    }
 
-   template<typename TSimType, template <typename> class TBase> inline void PhysicalQSTCurl<TSimType, TBase>::curlTransform(const int step)
+   template<typename TBase> inline void PhysicalQSTCurl<TBase>::curlTransform(const int step)
    {
       if(step == this->mNeedCurlTransform)
       {
@@ -121,7 +123,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalQSTCurl<TSimType, TBase>::updateSpectra()
+   template <typename TBase> inline void PhysicalQSTCurl<TBase>::updateSpectra()
    {
       this->rPerturbation().computeQSpectra(this->mrTransform.radBasis());
 
@@ -130,7 +132,7 @@ namespace EPMDynamo {
       this->rPerturbation().computeTSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Array PhysicalQSTCurl<TSimType, TBase>::energy() const
+   template <typename TBase> inline Array PhysicalQSTCurl<TBase>::energy() const
    {
       // Q Energy
       Array qE = this->perturbation().q().Energy();
@@ -150,7 +152,7 @@ namespace EPMDynamo {
       return energy;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalQSTCurl<TSimType, TBase>::spectrumL() const
+   template <typename TBase> inline Matrix PhysicalQSTCurl<TBase>::spectrumL() const
    {
       // QST Q Energy spectrum
       Array qE = this->perturbation().q().SpectrumL();
@@ -172,7 +174,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalQSTCurl<TSimType, TBase>::spectrumM() const
+   template <typename TBase> inline Matrix PhysicalQSTCurl<TBase>::spectrumM() const
    {
       // QST Q Energy spectrum
       Array qE = this->perturbation().q().SpectrumM();

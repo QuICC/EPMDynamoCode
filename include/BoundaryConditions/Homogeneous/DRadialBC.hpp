@@ -5,6 +5,10 @@
 #ifndef DRADIALBC_HPP
 #define DRADIALBC_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -21,14 +25,12 @@ namespace EPMDynamo {
    /**
     * @brief This class defines the homogeneous boundary condition on the first radial
     *    derivative
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class DRadialBC: public HomogeneousBC
+   class DRadialBC: public HomogeneousBC
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /**
           * @brief Constructor
@@ -53,22 +55,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> DRadialBC<TSimType>::DRadialBC(const typename DRadialBC<TSimType>::BasisType &basis)
-      : HomogeneousBC(basis.basisN(), basis.polyN())
-   {
-      // Fill Operator BC values
-      this->fillLHSBCValues(basis);
-   }
-
-   template <typename TSimType> void DRadialBC<TSimType>::fillLHSBCValues(const typename DRadialBC<TSimType>::BasisType &basis)
-   {
-      int nL = this->nL();
-      for(int l = 0; l < nL; ++l)
-      {
-         this->rLHSBCValues(l) = basis.at(l).bdiff(1);
-      }
-   }
 }
 
 #endif // DRADIALBC_HPP

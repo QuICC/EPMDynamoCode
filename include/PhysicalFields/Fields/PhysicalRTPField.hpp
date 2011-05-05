@@ -5,6 +5,10 @@
 #ifndef PHYSICALRTPFIELD_HPP
 #define PHYSICALRTPFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalBase.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/RTPField.hpp"
@@ -25,14 +28,12 @@ namespace EPMDynamo {
     *
     * This class contains the different element and representation that are required
     * for a generic physical field.
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalRTPField : public PhysicalBase<TSimType>
+   class PhysicalRTPField : public PhysicalBase
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
          * @brief Constructs the field elements and representations for the given
@@ -73,24 +74,14 @@ namespace EPMDynamo {
          RTPField mRTP;
    };
 
-   template<typename TSimType> inline PhysicalRTPField<TSimType>::PhysicalRTPField(SmartTruncation pTrunc, typename PhysicalRTPField<TSimType>::TransformType &transform)
-      : PhysicalBase<TSimType>(pTrunc, transform), mRTP(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const RTPField&  PhysicalRTPField<TSimType>::rtp() const
+   inline const RTPField&  PhysicalRTPField::rtp() const
    {
       return this->mRTP;
    }
 
-   template<typename TSimType> inline RTPField&  PhysicalRTPField<TSimType>::rRTP()
+   inline RTPField&  PhysicalRTPField::rRTP()
    {
       return this->mRTP;
-   }
-
-   template<typename TSimType> void PhysicalRTPField<TSimType>::initialiseZeros()
-   {
-      this->mRTP.initialiseZeros();
    }
 }
 

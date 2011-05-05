@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/Parallelisation.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -21,24 +22,22 @@
 #include "General/EPMTypedefs.hpp"
 #include "General/ExecutionTimer.hpp"
 #include "Domain/Truncation.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief Implements the implementation independent part of a simulation
     *
-    * \tparam TSimType General simulation type
     * \tparam TIOType IOSystem type
     */
-   template <typename TSimType, typename TIOType> class ComputationBase
+   template <typename TIOType> class ComputationBase
    {
       public:
          /// Typedef for the transform type
-         typedef  typename SimulationTraits<TSimType>::TransformType  TransformType;
+         typedef SimulationConfig::TransformType  TransformType;
 
          /// Typedef for the EquationParameters type
-         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+         typedef SimulationConfig::EquationParametersType EquationParametersType;
 
          /**
           * @brief Simple empty destructor
@@ -167,14 +166,14 @@ namespace EPMDynamo {
          int mSHBPacks;
    };
 
-   template <typename TSimType, typename TIOType> ComputationBase<TSimType, TIOType>::ComputationBase()
-      : mExecTimer(true), mIOSys(EquationParametersType::id), mpTrunc(TSimType::createTrunc(mIOSys.cfg()->aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.cfg()->aEquation()), mTransformSteps(0), mSSHFPacks(0), mSSHBPacks(0), mSHFPacks(0), mSHBPacks(0)
+   template <typename TIOType> ComputationBase<TIOType>::ComputationBase()
+      : mExecTimer(true), mIOSys(EquationParametersType::id), mpTrunc(SimulationConfig::NumericalScheme::createTrunc(mIOSys.cfg()->aTrunc())), mTransform(mpTrunc), mEqParams(mIOSys.cfg()->aEquation()), mTransformSteps(0), mSSHFPacks(0), mSSHBPacks(0), mSHFPacks(0), mSHBPacks(0)
    {
       // Finish initialisation of the truncation object by setting the physical grid values
       this->mTransform.initRTPDomains(this->mpTrunc);
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::combineRTPTransforms(const int entry)
+   template <typename TIOType> void ComputationBase<TIOType>::combineRTPTransforms(const int entry)
    {
       #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
          this->mTransform.sshManipulator().initiateGroupedBSend(entry);
@@ -188,7 +187,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::combineSpectralTransforms(const int entry)
+   template <typename TIOType> void ComputationBase<TIOType>::combineSpectralTransforms(const int entry)
    {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
          #ifndef EPMDYNAMO_RADIAL_GROUPEDCOMM
@@ -202,7 +201,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::registerSSHPacks(const int maxFPacks, const int maxBPacks)
+   template <typename TIOType> void ComputationBase<TIOType>::registerSSHPacks(const int maxFPacks, const int maxBPacks)
    {
       #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
          this->mSSHFPacks += maxFPacks; 
@@ -213,7 +212,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::registerSHPacks(const int maxFPacks, const int maxBPacks)
+   template <typename TIOType> void ComputationBase<TIOType>::registerSHPacks(const int maxFPacks, const int maxBPacks)
    {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
          this->mSHFPacks += maxFPacks; 
@@ -224,7 +223,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::configureSSHManipulator()
+   template <typename TIOType> void ComputationBase<TIOType>::configureSSHManipulator()
    {
       bool state;
 
@@ -249,7 +248,7 @@ namespace EPMDynamo {
       this->mTransform.sshManipulator().setup();
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::configureSHManipulator()
+   template <typename TIOType> void ComputationBase<TIOType>::configureSHManipulator()
    {
       bool state;
 
@@ -274,7 +273,7 @@ namespace EPMDynamo {
       this->mTransform.shManipulator().setup();
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::configureTransformNesting()
+   template <typename TIOType> void ComputationBase<TIOType>::configureTransformNesting()
    {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
          // Set the SpectralSH manipulator to be aware of nested grouped communication
@@ -286,25 +285,25 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::preRun()
+   template <typename TIOType> void ComputationBase<TIOType>::preRun()
    {
       // Synchronize CPUs
       EPMDYNAMO_SYNCHRONIZE;
 
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::postRun()
+   template <typename TIOType> void ComputationBase<TIOType>::postRun()
    {
       // Synchronize CPUs
       EPMDYNAMO_SYNCHRONIZE;
 
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
    }
 
-   template <typename TSimType, typename TIOType> void ComputationBase<TSimType, TIOType>::configureTransforms()
+   template <typename TIOType> void ComputationBase<TIOType>::configureTransforms()
    {
-      BOOST_STATIC_ASSERT(sizeof(TSimType) == 0); 
+      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
    }
 
 }

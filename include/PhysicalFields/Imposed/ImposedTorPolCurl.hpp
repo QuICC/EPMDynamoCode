@@ -5,6 +5,10 @@
 #ifndef IMPOSEDTORPOLCURL_HPP
 #define IMPOSEDTORPOLCURL_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,27 +17,24 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalTorPolCurlBase.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of Toroidal/Poloidal expanded imposed field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ImposedTorPolCurl : public PhysicalTorPolCurlBase<TSimType>
+   class ImposedTorPolCurl : public PhysicalTorPolCurlBase
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef TorPolField<TSimType>  SpectralFieldType;
+         typedef TorPolField  SpectralFieldType;
 
          /**
           * @brief Constructs the underlying rtp and spectral fields
@@ -87,27 +88,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType> ImposedTorPolCurl<TSimType>::ImposedTorPolCurl(SmartTruncation pTrunc, typename ImposedTorPolCurl<TSimType>::TransformType &transform)
-      : PhysicalTorPolCurlBase<TSimType>(pTrunc, transform), mTotalField(pTrunc), mImposedField(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline const typename ImposedTorPolCurl<TSimType>::SpectralFieldType& ImposedTorPolCurl<TSimType>::totalField() const
+   inline const ImposedTorPolCurl::SpectralFieldType& ImposedTorPolCurl::totalField() const
    {
       return this->mTotalField;
    }
 
-   template<typename TSimType> inline const typename ImposedTorPolCurl<TSimType>::SpectralFieldType& ImposedTorPolCurl<TSimType>::imposed() const
+   inline const ImposedTorPolCurl::SpectralFieldType& ImposedTorPolCurl::imposed() const
    {
       return this->mImposedField;
    }
 
-   template<typename TSimType> inline typename ImposedTorPolCurl<TSimType>::SpectralFieldType& ImposedTorPolCurl<TSimType>::rImposed()
+   inline ImposedTorPolCurl::SpectralFieldType& ImposedTorPolCurl::rImposed()
    {
       return this->mImposedField;
    }
 
-   template<typename TSimType> inline void ImposedTorPolCurl<TSimType>::updateTotalField()
+   inline void ImposedTorPolCurl::updateTotalField()
    {
       if(this->needAnyTransform())
       {
@@ -125,13 +121,6 @@ namespace EPMDynamo {
             this->mTotalField.rPol().rLShell(l) = this->perturbation().pol().lshell(l) + this->imposed().pol().lshell(l);
          }
       }
-   }
-
-   template<typename TSimType> void ImposedTorPolCurl<TSimType>::initialiseZeros()
-   {
-      PhysicalTorPolCurlBase<TSimType>::initialiseZeros();
-
-      this->mImposedField.initialiseZeros();
    }
 
 }

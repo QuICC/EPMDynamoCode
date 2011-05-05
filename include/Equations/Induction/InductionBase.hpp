@@ -7,13 +7,16 @@
 
 // System includes
 //
+#include "Config/SimulationConfig.hpp"
+
+// System includes
+//
 
 // External includes
 //
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
 
@@ -29,10 +32,10 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the EquationParameters type
-         typedef typename SimulationTraits<TSimType>::EquationParametersType EquationParametersType;
+         typedef SimulationConfig::EquationParametersType EquationParametersType;
 
          /**
           * @brief Constructor

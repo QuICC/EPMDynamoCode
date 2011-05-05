@@ -18,7 +18,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "Simulations/ComputationBase.hpp"
 #include "IO/IOBaseSystem.hpp"
 #include "IO/HDF5/HDF5Reader.hpp"
@@ -37,7 +37,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the transform type
-         typedef  typename SimulationTraits<TSimType>::TransformType   TransformType;
+         typedef  SimulationConfig::TransformType   TransformType;
 
          /**
           * @brief Constructor

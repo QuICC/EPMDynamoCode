@@ -47,7 +47,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class DynamoSimulation: public SimulationBase<TSimType>
+   template <typename TSimType> class DynamoSimulation: public SimulationBase
    {
       public:
          /**

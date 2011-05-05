@@ -5,6 +5,10 @@
 #ifndef SIMULATIONCONTROL_HPP
 #define SIMULATIONCONTROL_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -14,21 +18,18 @@
 // Project includes
 //
 #include "Equations/Parameters/EquationParameters.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Simulations/SimulationControlBase.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief Implementation of simulation controller
-    *
-    * \tparam TSimType Type of simulation
     */
-   template <typename TSimType> class SimulationControl: public SimulationControlBase
+   class SimulationControl: public SimulationControlBase
    {
       public:
          /// Typedef for the Timestep control type
-         typedef  typename SimulationTraits<TSimType>::TimestepTraits::TimestepControl   TimestepControl;
+         typedef  SimulationConfig::TimestepTraits::TimestepControl   TimestepControl;
 
          /**
           * @brief Constructor
@@ -79,46 +80,9 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> inline typename SimulationControl<TSimType>::TimestepControl& SimulationControl<TSimType>::tsControl()
+   inline SimulationControl::TimestepControl& SimulationControl::tsControl()
    {
       return this->mTSControl;
-   }
-
-   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(EPMFloat t, EPMFloat dt, const EquationParameters& eqParams, int maxtstep, int aRate, int sRate, EPMFloat wall, EPMFloat maxtime)
-      : SimulationControlBase(t, dt, maxtstep, aRate, sRate, wall, maxtime), mTSControl(mTSParams, eqParams)
-   {
-   }
-
-   template <typename TSimType> SimulationControl<TSimType>::SimulationControl(const Array& time, const EquationParameters& eqParams, const ArrayI& runI, const Array& run)
-      : SimulationControlBase(time, runI, run), mTSControl(mTSParams, eqParams)
-   {
-   }
-
-   template <typename TSimType> void SimulationControl<TSimType>::update()
-   {
-      // Check convergence of time integration
-      this->tsControl().checkConvergence(this->tsCounter().steps());
-
-      if(this->tsParams().isNextStep())
-      {
-         // Update simulation time
-         this->tsParams().updateTime();
-
-         // increment the number of performed timesteps
-         this->tsCounter().increment();
-
-         // Update runtime
-         this->runControl().update(this->tsParams().time());
-      }
-
-      // Keep running simulation?
-      if(this->mUseWall)
-      {
-         this->mKeepRunning = this->tsControl().keepRunning() && this->runControl().keepRunning() && this->ctrlIface().keepRunning();
-      } else
-      {
-         this->mKeepRunning = this->tsControl().keepRunning() && this->tsCounter().keepRunning() && this->ctrlIface().keepRunning();
-      }
    }
 }
 

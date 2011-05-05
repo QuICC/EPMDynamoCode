@@ -5,6 +5,9 @@
 #ifndef DEFAULTCODDOMAINTRAITS_HPP
 #define DEFAULTCODDOMAINTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,17 +23,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the Domain of the default codensity scalar field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class DefaultCodDomainTraits
+   class DefaultCodDomainTraits
    {
       public:
          /// Typedef for the spectral field type
-         typedef typename DefaultCodFieldTraits<TSimType>::SpectralFieldType  SpectralFieldType;
+         typedef DefaultCodFieldTraits::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the domain type
-         typedef FullSphereField<TSimType, DefaultCodFieldTraits> DomainType;
+         typedef FullSphereField<DefaultCodFieldTraits> DomainType;
    };
 
 }

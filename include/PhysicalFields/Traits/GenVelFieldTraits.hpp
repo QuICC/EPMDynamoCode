@@ -5,6 +5,9 @@
 #ifndef GENVELFIELDTRAITS_HPP
 #define GENVELFIELDTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,20 +24,18 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the field of the generators velocity field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenVelFieldTraits
+   class GenVelFieldTraits
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalTorPolCurl<TSimType, PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
+         typedef typename PhysicalTorPolCurl<PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the type of an inner core field
-         typedef PhysicalTorPolCurl<TSimType, PhysicalTorPolCurlBase> ICFieldType;
+         typedef PhysicalTorPolCurl<PhysicalTorPolCurlBase> ICFieldType;
 
          /// Typedef for the type of an outer core field
-         typedef PhysicalTorPolCurl<TSimType, ImposedTorPol> OCFieldType;
+         typedef PhysicalTorPolCurl<ImposedTorPol> OCFieldType;
    };
 
 }

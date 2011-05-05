@@ -19,7 +19,7 @@
 //
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 

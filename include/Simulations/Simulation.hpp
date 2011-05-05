@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/Parallelisation.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -27,10 +28,9 @@ namespace EPMDynamo {
     *
     * The setup and actual definition of the different steps are done in the TSimImpl object.
     *
-    * \tparam TSimType Type of simulation
     * \tparam TSimImpl Actual implementation of the simulation
     */
-   template <typename TSimType, template<typename > class TSimImpl> class Simulation: public TSimImpl<TSimType>
+   template <template<typename > class TSimImpl> class Simulation: public TSimImpl<SimulationConfig::NumericalScheme>
    {
       public:
          /**
@@ -65,8 +65,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template<typename > class TSimImpl> Simulation<TSimType, TSimImpl>::Simulation()
-      : TSimImpl<TSimType>()
+   template <template<typename > class TSimImpl> Simulation<TSimImpl>::Simulation()
+      : TSimImpl<SimulationConfig::NumericalScheme>()
    {
       // Stop timer for construction time
       this->mExecTimer.stop();
@@ -83,7 +83,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::init()
+   template <template<typename > class TSimImpl> void Simulation<TSimImpl>::init()
    {
       // Start timer
       this->mExecTimer.start();
@@ -131,7 +131,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::run()
+   template <template<typename > class TSimImpl> void Simulation<TSimImpl>::run()
    {
       // Start timer
       this->mExecTimer.start();
@@ -207,7 +207,7 @@ namespace EPMDynamo {
       this->mExecTimer.update(5);
    }
 
-   template <typename TSimType, template<typename > class TSimImpl> void Simulation<TSimType, TSimImpl>::finalise()
+   template <template<typename > class TSimImpl> void Simulation<TSimImpl>::finalise()
    {
       // Print timestepping infos
       this->mSimControl.printInfo();

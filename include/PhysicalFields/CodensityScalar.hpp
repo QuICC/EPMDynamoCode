@@ -13,7 +13,7 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
 #include "PhysicalFields/Traits/DefaultCodTraits.hpp"
 #include "PhysicalFields/Traits/ScalarNTermsTraits.hpp"
@@ -30,7 +30,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the type of the required non-linear terms
          typedef PhysicalVariable<TSimType,ScalarNTermsTraits>    NTermsType;

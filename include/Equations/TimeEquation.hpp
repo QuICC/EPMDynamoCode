@@ -5,6 +5,10 @@
 #ifndef TIMEEQUATION_HPP
 #define TIMEEQUATION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -23,14 +27,13 @@ namespace EPMDynamo {
     *
     * It provides the minimal required methods to use it in a simulation
     *
-    * \tparam TSimTypeType Type of the simulation
     * \tparam TFieldType Type of the field (scalar, toroidal/poloidal, QST)
     */
-   template <typename TSimType, typename TFieldType > class TimeEquation
+   template <typename TFieldType > class TimeEquation
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /**
           *
@@ -110,12 +113,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType> TimeEquation<TSimType, TFieldType>::TimeEquation(TFieldType &unknown, typename TimeEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps)
+   template <typename TFieldType> TimeEquation<TFieldType>::TimeEquation(TFieldType &unknown, typename TimeEquation<TFieldType>::TransformType &transform, TimestepParameters& tsteps)
       : mBCCounter(-1), mrX(unknown), mNTerms(mrX.oc().trunc(), transform), mrTransform(transform), mrTStepParams(tsteps)
    {
    }
 
-   template < typename TSimType, typename TFieldType> bool TimeEquation<TSimType, TFieldType>::hasAllBCs() const
+   template <typename TFieldType> bool TimeEquation<TFieldType>::hasAllBCs() const
    {
       // Check that the boundary conditions counter reached zero
       if(this->mBCCounter == 0)

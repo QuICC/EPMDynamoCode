@@ -5,6 +5,9 @@
 #ifndef GENCODTRAITS_HPP
 #define GENCODTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the generators codensity scalar field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenCodTraits
+   class GenCodTraits
    {
       public:
          /// Typedef for the variable type
-         typedef OuterCoreSource<TSimType, GenCodDomainTraits> VariableType;
+         typedef OuterCoreSource<GenCodDomainTraits> VariableType;
    };
 
 }

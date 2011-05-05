@@ -5,6 +5,9 @@
 #ifndef DEFAULTCODTRAITS_HPP
 #define DEFAULTCODTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the default codensity scalar field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class DefaultCodTraits
+   class DefaultCodTraits
    {
       public:
          /// Typedef for the variable type
-         typedef OuterCoreSource<TSimType, DefaultCodDomainTraits> VariableType;
+         typedef OuterCoreSource<DefaultCodDomainTraits> VariableType;
    };
 
 }

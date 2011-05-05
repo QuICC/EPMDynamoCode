@@ -5,6 +5,10 @@
 #ifndef PHYSICALTORPOLBASE_HPP
 #define PHYSICALTORPOLBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalRTPField.hpp"
 #include "GeneralFields/TorPolField.hpp"
 
@@ -24,20 +27,18 @@ namespace EPMDynamo {
     *
     * The used spectral expansion is a Toroidal/Poloidal expansion to take advantage of
     * the divergence free aspect of the field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalTorPolBase : public PhysicalRTPField<TSimType>
+   class PhysicalTorPolBase : public PhysicalRTPField
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef TorPolField<TSimType>  SpectralFieldType;
+         typedef TorPolField  SpectralFieldType;
 
          /**
           * @brief Constructs the underlying rtp and spectral fields
@@ -55,17 +56,17 @@ namespace EPMDynamo {
          /**
           * @brief Get Toroidal/Poloidal decomposition of the field (perturbation part)
           */
-         const TorPolField<TSimType>&  perturbation() const;
+         const TorPolField&  perturbation() const;
 
          /**
           * @brief Get Toroidal/Poloidal decomposition of the field (total field)
           */
-         const TorPolField<TSimType>&  totalField() const;
+         const TorPolField&  totalField() const;
 
          /**
           * @brief Set Toroidal/Poloidal decomposition of the field (perturbation part)
           */
-         TorPolField<TSimType>&  rPerturbation();
+         TorPolField&  rPerturbation();
 
          /**
           * @brief initialise to zeros
@@ -83,43 +84,31 @@ namespace EPMDynamo {
          /**
           * @brief Spectral toroidal/poloidal decomposition of the field
           */
-         TorPolField<TSimType>    mPerturbation;
+         TorPolField    mPerturbation;
 
       private:
    };
 
-   template<typename TSimType> PhysicalTorPolBase<TSimType>::PhysicalTorPolBase(SmartTruncation pTrunc, typename PhysicalTorPolBase<TSimType>::TransformType &transform)
-      : PhysicalRTPField<TSimType>(pTrunc, transform), mPerturbation(pTrunc)
-   {
-   }
-
-   template<typename TSimType> inline bool PhysicalTorPolBase<TSimType>::needAnyTransform() const
+   inline bool PhysicalTorPolBase::needAnyTransform() const
    {
       return (this->mNeedTransform == 0);
    }
 
-   template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolBase<TSimType>::perturbation() const
+   inline const TorPolField& PhysicalTorPolBase::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   template<typename TSimType> inline const TorPolField<TSimType>& PhysicalTorPolBase<TSimType>::totalField() const
+   inline const TorPolField& PhysicalTorPolBase::totalField() const
    {
       return this->mPerturbation;
    }
 
-   template<typename TSimType> inline TorPolField<TSimType>& PhysicalTorPolBase<TSimType>::rPerturbation()
+   inline TorPolField& PhysicalTorPolBase::rPerturbation()
    {
       this->mNeedTransform = 0;
 
       return this->mPerturbation;
-   }
-
-   template<typename TSimType> void PhysicalTorPolBase<TSimType>::initialiseZeros()
-   {
-      PhysicalRTPField<TSimType>::initialiseZeros();
-
-      this->mPerturbation.initialiseZeros();
    }
 
 }

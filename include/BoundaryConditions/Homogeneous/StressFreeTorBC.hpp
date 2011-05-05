@@ -5,6 +5,10 @@
 #ifndef STRESSFREETORBC_HPP
 #define STRESSFREETORBC_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -21,14 +25,12 @@ namespace EPMDynamo {
    /**
     * @brief This class defines the stress free homogeneous boundary condition on a
     *    toroidal scalar
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class StressFreeTorBC: public HomogeneousBC
+   class StressFreeTorBC: public HomogeneousBC
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /**
           * @brief Constructor
@@ -53,23 +55,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> StressFreeTorBC<TSimType>::StressFreeTorBC(const typename StressFreeTorBC<TSimType>::BasisType &basis)
-      : HomogeneousBC(basis.basisN(), basis.polyN())
-   {
-      // Fill Operator BC values
-      this->fillLHSBCValues(basis);
-   }
-
-   template <typename TSimType> void StressFreeTorBC<TSimType>::fillLHSBCValues(const typename StressFreeTorBC<TSimType>::BasisType &basis)
-   {
-      int nL = this->nL();
-      for(int l = 0; l < nL; ++l)
-      {
-         this->rLHSBCValues(l) = basis.at(l).bdiff(1) - basis.at(l).bpoly();
-      }
-   }
-
 }
 
 #endif // STRESSFREETORBC_HPP

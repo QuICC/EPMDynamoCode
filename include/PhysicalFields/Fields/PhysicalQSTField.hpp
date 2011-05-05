@@ -5,6 +5,10 @@
 #ifndef PHYSICALQSTFIELD_HPP
 #define PHYSICALQSTFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/QSTField.hpp"
 
@@ -25,20 +28,19 @@ namespace EPMDynamo {
     * The used spectral expansion is an QST expansion as it is a completely general
     * expansion
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> class TBase> class PhysicalQSTField : public TBase<TSimType>
+   template <typename TBase> class PhysicalQSTField : public TBase
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the spectral field type
-         typedef QSTField<TSimType>  SpectralFieldType;
+         typedef QSTField  SpectralFieldType;
 
          /**
          * @brief Constructs underlying rtp and spectral fields
@@ -85,12 +87,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template<typename TSimType, template <typename> class TBase> PhysicalQSTField<TSimType, TBase>::PhysicalQSTField(SmartTruncation pTrunc, typename PhysicalQSTField<TSimType, TBase>::TransformType &transform)
-      : TBase<TSimType>(pTrunc, transform)
+   template<typename TBase> PhysicalQSTField<TBase>::PhysicalQSTField(SmartTruncation pTrunc, typename PhysicalQSTField<TBase>::TransformType &transform)
+      : TBase(pTrunc, transform)
    {
    }
 
-   template<typename TSimType, template <typename> class TBase> inline void PhysicalQSTField<TSimType, TBase>::transform(const int step)
+   template<typename TBase> inline void PhysicalQSTField<TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -102,7 +104,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalQSTField<TSimType, TBase>::updateSpectra()
+   template <typename TBase> inline void PhysicalQSTField<TBase>::updateSpectra()
    {
       this->rPerturbation().computeQSpectra(this->mrTransform.radBasis());
 
@@ -111,7 +113,7 @@ namespace EPMDynamo {
       this->rPerturbation().computeTSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Array PhysicalQSTField<TSimType, TBase>::energy() const
+   template <typename TBase> inline Array PhysicalQSTField<TBase>::energy() const
    {
       // Q Energy
       Array qE = this->perturbation().q().Energy();
@@ -131,7 +133,7 @@ namespace EPMDynamo {
       return energy;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalQSTField<TSimType, TBase>::spectrumL() const
+   template <typename TBase> inline Matrix PhysicalQSTField<TBase>::spectrumL() const
    {
       // QST Q Energy spectrum
       Array qE = this->perturbation().q().SpectrumL();
@@ -153,7 +155,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalQSTField<TSimType, TBase>::spectrumM() const
+   template <typename TBase> inline Matrix PhysicalQSTField<TBase>::spectrumM() const
    {
       // QST Q Energy spectrum
       Array qE = this->perturbation().q().SpectrumM();

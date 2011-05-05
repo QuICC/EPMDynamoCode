@@ -5,9 +5,13 @@
 #ifndef QSTFIELD_HPP
 #define QSTFIELD_HPP
 
-// System includes
+// Configuration includes
 //
 #include "Config/Parallelisation.h"
+#include "Config/SimulationConfig.hpp"
+
+// System includes
+//
 
 // External includes
 //
@@ -17,23 +21,20 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "GeneralFields/SpectralFieldBase.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/MathConstants.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the QST field decomposition
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class QSTField: public SpectralFieldBase
+   class QSTField: public SpectralFieldBase
    {
       /// Typedef from Simulation trait to local truncation type
-      typedef typename TSimType::ScalarType    ScalarType;
+      typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
       /// Typedef from Simulation trait to local truncation type
-      typedef typename TSimType::RadialBasisType    RadialBasisType;
+      typedef SimulationConfig::NumericalScheme::RadialBasisType    RadialBasisType;
 
       public:
          /**
@@ -137,255 +138,34 @@ namespace EPMDynamo {
          ScalarType   mT;
    };
 
-   template <typename TSimType> inline QSTField<TSimType>::QSTField(SmartTruncation pTrunc)
-      :SpectralFieldBase(pTrunc), mQ(pTrunc), mS(pTrunc), mT(pTrunc)
-   {
-   }
-
-   template <typename TSimType> inline const typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::q() const
+   inline const typename QSTField::ScalarType& QSTField::q() const
    {
       return this->mQ;
    }
 
-   template <typename TSimType> inline  typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::rQ()
+   inline  typename QSTField::ScalarType& QSTField::rQ()
    {
       return this->mQ;
    }
 
-   template <typename TSimType> inline const  typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::s() const
+   inline const  typename QSTField::ScalarType& QSTField::s() const
    {
       return this->mS;
    }
 
-   template <typename TSimType> inline  typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::rS()
+   inline  typename QSTField::ScalarType& QSTField::rS()
    {
       return this->mS;
    }
 
-   template <typename TSimType> inline const  typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::t() const
+   inline const  typename QSTField::ScalarType& QSTField::t() const
    {
       return this->mT;
    }
 
-   template <typename TSimType> inline  typename QSTField<TSimType>::ScalarType& QSTField<TSimType>::rT()
+   inline  typename QSTField::ScalarType& QSTField::rT()
    {
       return this->mT;
-   }
-
-   template <typename TSimType> void QSTField<TSimType>::rescale(const EPMFloat scale)
-   {
-      // Rescale Q component
-      this->mQ.rescale(scale);
-
-      // Rescale S component
-      this->mS.rescale(scale);
-
-      // Rescale T component
-      this->mT.rescale(scale);
-   }
-
-   template <typename TSimType> void QSTField<TSimType>::computeQSpectra(const typename QSTField<TSimType>::RadialBasisType &radBasis)
-   {
-      this->rQ().rSpectrumL().setConstant(0.0);
-      this->rQ().rSpectrumM().setConstant(0.0);
-
-      int l0 = this->q().minL();
-      int nL = this->nL();
-      int nN = this->nN();
-      ArrayI   ls = this->trunc()->local()->spec()->lArray();
-      ArrayI   ms;
-      Array    tmpSpectrum(this->trunc()->sim()->hoz()->nM());
-      tmpSpectrum.setConstant(0.0);
-
-      EPMFloat tmpEnergy;
-      EPMFloat shWeight;
-      EPMFloat shFactor;
-      int l_;
-      for(int l = l0; l < nL; ++l)
-      {
-         l_ = ls(l);
-         ms = this->trunc()->local()->spec()->mArray(l);
-         shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
-
-         for(int m = 0; m < this->nM(l); ++m)
-         {
-            tmpEnergy = 0.0;
-            for(int n = 0; n < nN; ++n)
-            {
-               for(int k = 0; k < nN; ++k)
-               {
-                  tmpEnergy += radBasis.at(l).qsEWeights()(k,n) * (this->q().lshell(l)(n,m).real()*this->q().lshell(l)(k,m).real()+this->q().lshell(l)(n,m).imag()*this->q().lshell(l)(k,m).imag());
-               }
-            }
-
-            if(ms(m) != 0)
-            {
-               shFactor = 4.0*shWeight;
-            } else
-            {
-               shFactor = shWeight;
-            }
-
-            tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
-            this->rQ().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
-         }
-
-         // Compute energy in L spectrum
-         for(int i = 0; i < ms.size(); ++i)
-         {
-            this->rQ().rSpectrumL()(l_) += tmpSpectrum(ms(i));
-         }
-      }
-
-      // Get the "global" spectra for MPI code
-      #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, this->rQ().rSpectrumL().data(), this->q().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-         MPI_Allreduce(MPI_IN_PLACE, this->rQ().rSpectrumM().data(), this->q().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-      #endif // EPMDYNAMO_MPI
-   }
-
-   template <typename TSimType> void QSTField<TSimType>::computeSSpectra(const typename QSTField<TSimType>::RadialBasisType &radBasis)
-   {
-      this->rS().rSpectrumL().setConstant(0.0);
-      this->rS().rSpectrumM().setConstant(0.0);
-
-      int l0 = this->s().minL();
-      int nL = this->nL();
-      int nN = this->nN();
-      ArrayI   ls = this->trunc()->local()->spec()->lArray();
-      ArrayI   ms;
-      Array    tmpSpectrum(this->trunc()->sim()->hoz()->nM());
-      tmpSpectrum.setConstant(0.0);
-
-      EPMFloat tmpEnergy;
-      EPMFloat shWeight;
-      EPMFloat shFactor;
-      int l_;
-      for(int l = l0; l < nL; ++l)
-      {
-         l_ = ls(l);
-         ms = this->trunc()->local()->spec()->mArray(l);
-         shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
-
-         for(int m = 0; m < this->nM(l); ++m)
-         {
-            tmpEnergy = 0.0;
-            for(int n = 0; n < nN; ++n)
-            {
-               for(int k = 0; k < nN; ++k)
-               {
-                  tmpEnergy += radBasis.at(l).qsEWeights()(k,n) * (this->s().lshell(l)(n,m).real()*this->s().lshell(l)(k,m).real()+this->s().lshell(l)(n,m).imag()*this->s().lshell(l)(k,m).imag());
-               }
-            }
-
-            if(ms(m) != 0)
-            {
-               shFactor = 4.0*shWeight;
-            } else
-            {
-               shFactor = shWeight;
-            }
-
-            tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
-            this->rS().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
-         }
-
-         // Compute energy in L spectrum
-         for(int i = 0; i < ms.size(); ++i)
-         {
-            this->rS().rSpectrumL()(l_) += tmpSpectrum(ms(i));
-         }
-      }
-
-      // Get the "global" spectra for MPI code
-      #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, this->rS().rSpectrumL().data(), this->s().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-         MPI_Allreduce(MPI_IN_PLACE, this->rS().rSpectrumM().data(), this->s().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-      #endif // EPMDYNAMO_MPI
-   }
-
-   template <typename TSimType> void QSTField<TSimType>::computeTSpectra(const typename QSTField<TSimType>::RadialBasisType &radBasis)
-   {
-      this->rT().rSpectrumL().setConstant(0.0);
-      this->rT().rSpectrumM().setConstant(0.0);
-
-      int l0 = this->t().minL();
-      int nL = this->nL();
-      int nN = this->nN();
-      ArrayI   ls = this->trunc()->local()->spec()->lArray();
-      ArrayI   ms;
-      Array    tmpSpectrum(this->trunc()->sim()->hoz()->nM());
-      tmpSpectrum.setConstant(0.0);
-
-      EPMFloat tmpEnergy;
-      EPMFloat shWeight;
-      EPMFloat shFactor;
-      int l_;
-      for(int l = l0; l < nL; ++l)
-      {
-         l_ = ls(l);
-         ms = this->trunc()->local()->spec()->mArray(l);
-         shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
-
-         for(int m = 0; m < this->nM(l); ++m)
-         {
-            tmpEnergy = 0.0;
-            for(int n = 0; n < nN; ++n)
-            {
-               for(int k = 0; k < nN; ++k)
-               {
-                  tmpEnergy += radBasis.at(l).eWeights()(k,n) * (this->t().lshell(l)(n,m).real()*this->t().lshell(l)(k,m).real()+this->t().lshell(l)(n,m).imag()*this->t().lshell(l)(k,m).imag());
-               }
-            }
-
-            if(ms(m) != 0)
-            {
-               shFactor = 4.0*shWeight;
-            } else
-            {
-               shFactor = shWeight;
-            }
-
-            tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
-            this->rT().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
-         }
-
-         // Compute energy in L spectrum
-         for(int i = 0; i < ms.size(); ++i)
-         {
-            this->rT().rSpectrumL()(l_) += tmpSpectrum(ms(i));
-         }
-      }
-
-      // Get the "global" spectra for MPI code
-      #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, this->rT().rSpectrumL().data(), this->t().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-         MPI_Allreduce(MPI_IN_PLACE, this->rT().rSpectrumM().data(), this->t().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-      #endif // EPMDYNAMO_MPI
-   }
-
-   template <typename TSimType> void QSTField<TSimType>::setEnergyScale(const EPMFloat& eFactor)
-   {
-      // Set normalisation for the Q component
-      this->rQ().setEnergyScale(eFactor);
-
-      // Set normalisation for the S component
-      this->rS().setEnergyScale(eFactor);
-
-      // Set normalisation for the T component
-      this->rT().setEnergyScale(eFactor);
-   }
-
-   template <typename TSimType> void QSTField<TSimType>::initialiseZeros()
-   {
-      // initialise Q component to zeros
-      this->rQ().initialiseZeros();
-
-      // initialise S component to zeros
-      this->rS().initialiseZeros();
-
-      // initialise T component to zeros
-      this->rT().initialiseZeros();
    }
 }
 

@@ -5,6 +5,10 @@
 #ifndef PHYSICALSCALARBASE_HPP
 #define PHYSICALSCALARBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "PhysicalFields/Fields/PhysicalRTPScalar.hpp"
 #include "General/EPMTypedefs.hpp"
 
@@ -21,17 +24,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Implementation of physical scalar base
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PhysicalScalarBase: public PhysicalRTPScalar<TSimType>
+   class PhysicalScalarBase: public PhysicalRTPScalar
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType  ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType  ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType  TransformType;
+         typedef SimulationConfig::TransformType  TransformType;
 
          /// Typedef for the spectral field type
          typedef ScalarType SpectralFieldType;
@@ -82,39 +83,27 @@ namespace EPMDynamo {
 
       private:
    };
-   
-   template <typename TSimType> PhysicalScalarBase<TSimType>::PhysicalScalarBase(SmartTruncation pTrunc, typename PhysicalScalarBase<TSimType>::TransformType &transform)
-      : PhysicalRTPScalar<TSimType>(pTrunc, transform), mPerturbation(pTrunc, true)
-   {
-   }
 
-   template <typename TSimType> inline bool PhysicalScalarBase<TSimType>::needAnyTransform() const
+   inline bool PhysicalScalarBase::needAnyTransform() const
    {
       return (this->mNeedTransform == 0);
    }
 
-   template <typename TSimType> inline const typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::perturbation() const
+   inline const typename PhysicalScalarBase::ScalarType& PhysicalScalarBase::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   template <typename TSimType> inline const typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::totalField() const
+   inline const typename PhysicalScalarBase::ScalarType& PhysicalScalarBase::totalField() const
    {
       return this->mPerturbation;
    }
 
-   template <typename TSimType> inline typename PhysicalScalarBase<TSimType>::ScalarType& PhysicalScalarBase<TSimType>::rPerturbation()
+   inline typename PhysicalScalarBase::ScalarType& PhysicalScalarBase::rPerturbation()
    {
       this->mNeedTransform = 0;
 
       return this->mPerturbation;
-   }
-
-   template <typename TSimType> void PhysicalScalarBase<TSimType>::initialiseZeros()
-   {
-      PhysicalRTPScalar<TSimType>::initialiseZeros();
-
-      this->mPerturbation.initialiseZeros();
    }
 
 }

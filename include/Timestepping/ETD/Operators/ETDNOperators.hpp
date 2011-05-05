@@ -19,7 +19,7 @@
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
 #include "Timestepping/ETD/ETDSchemeTraits.hpp"
-#include "Simulations/Traits/SimulationTraits.hpp"
+#include "Config/SimulationConfig.hpp"
 #include "LAPACK_Iface.hpp"
 
 namespace EPMDynamo {

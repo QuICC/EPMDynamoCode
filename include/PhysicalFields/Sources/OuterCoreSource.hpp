@@ -5,6 +5,10 @@
 #ifndef OUTERCORESOURCE_HPP
 #define OUTERCORESOURCE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a field with a source term in outer core
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSourceTraits Traits describing the field
     */
-   template <typename TSimType, template <typename> class TSourceTraits> class OuterCoreSource: public TSourceTraits<TSimType>::DomainType
+   template <typename TSourceTraits> class OuterCoreSource: public TSourceTraits::DomainType
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from the spectral field from field traits
-         typedef typename TSourceTraits<TSimType>::SpectralFieldType    SpectralFieldType;
+         typedef typename TSourceTraits::SpectralFieldType    SpectralFieldType;
 
          /**
           * @brief Constructor
@@ -71,24 +73,24 @@ namespace EPMDynamo {
 
    };
 
-   template <typename TSimType, template <typename>  class TSourceTraits> OuterCoreSource<TSimType, TSourceTraits>::OuterCoreSource(SmartTruncation pTrunc, typename OuterCoreSource<TSimType,TSourceTraits>::TransformType &transform)
-      : TSourceTraits<TSimType>::DomainType(pTrunc, transform), mOcSrc(pTrunc, true)
+   template <typename TSourceTraits> OuterCoreSource<TSourceTraits>::OuterCoreSource(SmartTruncation pTrunc, typename OuterCoreSource<TSourceTraits>::TransformType &transform)
+      : TSourceTraits::DomainType(pTrunc, transform), mOcSrc(pTrunc, true)
    {
    }
 
-   template <typename TSimType, template <typename>  class TSourceTraits> const typename OuterCoreSource<TSimType, TSourceTraits>::SpectralFieldType& OuterCoreSource<TSimType, TSourceTraits>::ocSrc() const
+   template <typename TSourceTraits> const typename OuterCoreSource<TSourceTraits>::SpectralFieldType& OuterCoreSource<TSourceTraits>::ocSrc() const
    {
       return this->mOcSrc;
    }
 
-   template <typename TSimType, template <typename>  class TSourceTraits> typename OuterCoreSource<TSimType, TSourceTraits>::SpectralFieldType& OuterCoreSource<TSimType, TSourceTraits>::rOcSrc()
+   template <typename TSourceTraits> typename OuterCoreSource<TSourceTraits>::SpectralFieldType& OuterCoreSource<TSourceTraits>::rOcSrc()
    {
       return this->mOcSrc;
    }
 
-   template <typename TSimType, template <typename>  class TSourceTraits> void OuterCoreSource<TSimType, TSourceTraits>::initialiseZeros()
+   template <typename TSourceTraits> void OuterCoreSource<TSourceTraits>::initialiseZeros()
    {
-      TSourceTraits<TSimType>::DomainType::initialiseZeros();
+      TSourceTraits::DomainType::initialiseZeros();
 
       this->mOcSrc.initialiseZeros();
    }

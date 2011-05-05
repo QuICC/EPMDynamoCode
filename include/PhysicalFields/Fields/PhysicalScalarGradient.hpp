@@ -5,6 +5,10 @@
 #ifndef PHYSICALSCALARGRADIENT_HPP
 #define PHYSICALSCALARGRADIENT_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of physical scalar
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> class TBase> class PhysicalScalarGradient: public TBase<TSimType>
+   template <typename TBase> class PhysicalScalarGradient: public TBase
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType  ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType  ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType  TransformType;
+         typedef SimulationConfig::TransformType  TransformType;
 
          /// Typedef for the spectral field type
          typedef ScalarType SpectralFieldType;
@@ -88,12 +90,12 @@ namespace EPMDynamo {
       private:
    };
    
-   template <typename TSimType, template <typename> class TBase> PhysicalScalarGradient<TSimType, TBase>::PhysicalScalarGradient(SmartTruncation pTrunc, typename PhysicalScalarGradient<TSimType, TBase>::TransformType &transform)
-      : TBase<TSimType>(pTrunc, transform)
+   template <typename TBase> PhysicalScalarGradient<TBase>::PhysicalScalarGradient(SmartTruncation pTrunc, typename PhysicalScalarGradient<TBase>::TransformType &transform)
+      : TBase(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalScalarGradient<TSimType, TBase>::transform(const int step)
+   template <typename TBase> inline void PhysicalScalarGradient<TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -105,7 +107,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalScalarGradient<TSimType, TBase>::gradTransform(const int step)
+   template <typename TBase> inline void PhysicalScalarGradient<TBase>::gradTransform(const int step)
    {
       if(step == this->mNeedGradTransform)
       {
@@ -117,19 +119,19 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalScalarGradient<TSimType, TBase>::updateSpectra()
+   template <typename TBase> inline void PhysicalScalarGradient<TBase>::updateSpectra()
    {
       this->rPerturbation().computeSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Array PhysicalScalarGradient<TSimType, TBase>::energy() const
+   template <typename TBase> inline Array PhysicalScalarGradient<TBase>::energy() const
    {
       Array energy = this->perturbation().energy();
 
       return energy;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalScalarGradient<TSimType, TBase>::spectrumL() const
+   template <typename TBase> inline Matrix PhysicalScalarGradient<TBase>::spectrumL() const
    {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nL(),2); 
 
@@ -142,7 +144,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalScalarGradient<TSimType, TBase>::spectrumM() const
+   template <typename TBase> inline Matrix PhysicalScalarGradient<TBase>::spectrumM() const
    {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nM(),2); 
       

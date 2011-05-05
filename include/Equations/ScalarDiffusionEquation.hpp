@@ -5,6 +5,10 @@
 #ifndef SCALARDIFFUSIONEQUATION_HPP
 #define SCALARDIFFUSIONEQUATION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TimeEquation.hpp"
 #include "BoundaryConditions/BoundaryCondition.hpp"
@@ -25,20 +28,19 @@ namespace EPMDynamo {
     * @brief This class specialises the TimeEquation class to the case where the unknown
     *        is a scalar field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldType Type of the field
     */
-   template <typename TSimType, typename TFieldType> class ScalarDiffusionEquation: public TimeEquation<TSimType, TFieldType>
+   template <typename TFieldType> class ScalarDiffusionEquation: public TimeEquation<TFieldType>
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from the simulation trait to local timestepping scheme
-         typedef typename SimulationTraits<TSimType>::TimestepTraits  TimeTraits;
+         typedef SimulationConfig::TimestepTraits  TimeTraits;
 
          /**
           * \brief Constructs the Time equation from the given general Scalar, the transform reference and the timestepping parameters
@@ -129,24 +131,24 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType> inline int ScalarDiffusionEquation<TSimType,TFieldType>::nFSSHPacks() const
+   template <typename TFieldType> inline int ScalarDiffusionEquation<TFieldType>::nFSSHPacks() const
    {
       return 1;
    }
 
-   template <typename TSimType, typename TFieldType> inline int ScalarDiffusionEquation<TSimType,TFieldType>::nFSHPacks() const
+   template <typename TFieldType> inline int ScalarDiffusionEquation<TFieldType>::nFSHPacks() const
    {
       return 1;
    }
 
-   template <typename TSimType, typename TFieldType> ScalarDiffusionEquation<TSimType,TFieldType>::ScalarDiffusionEquation(TFieldType &rC, typename ScalarDiffusionEquation<TSimType, TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBC, EPMFloat a, EPMFloat b)
-      : TimeEquation<TSimType, TFieldType>(rC, transform, tsteps), mTStepper(a, b, transform.radBasis(), tsteps, rC.oc().trunc(), true)
+   template <typename TFieldType> ScalarDiffusionEquation<TFieldType>::ScalarDiffusionEquation(TFieldType &rC, typename ScalarDiffusionEquation<TFieldType>::TransformType &transform, TimestepParameters& tsteps, int nBC, EPMFloat a, EPMFloat b)
+      : TimeEquation<TFieldType>(rC, transform, tsteps), mTStepper(a, b, transform.radBasis(), tsteps, rC.oc().trunc(), true)
    {
       // Set the boundary condition counter
       this->mBCCounter = nBC;
    }
 
-   template <typename TSimType, typename TFieldType> void ScalarDiffusionEquation<TSimType, TFieldType>::addBC(SmartBC pBC)
+   template <typename TFieldType> void ScalarDiffusionEquation<TFieldType>::addBC(SmartBC pBC)
    {
       // Add boundary condition to list
       this->mBCs.push_back(pBC);
@@ -155,7 +157,7 @@ namespace EPMDynamo {
       --this->mBCCounter;
    }
 
-   template <typename TSimType, typename TFieldType> inline void ScalarDiffusionEquation<TSimType, TFieldType>::initTStepper()
+   template <typename TFieldType> inline void ScalarDiffusionEquation<TFieldType>::initTStepper()
    {
       // Set Boundary condition of timestepper
       for(unsigned int i=0; i < this->mBCs.size(); ++i)
@@ -170,13 +172,13 @@ namespace EPMDynamo {
       this->mBCs.clear();
    }
 
-   template <typename TSimType, typename TFieldType> inline void ScalarDiffusionEquation<TSimType, TFieldType>::transformNTerms()
+   template <typename TFieldType> inline void ScalarDiffusionEquation<TFieldType>::transformNTerms()
    {
       // Transform the real space non linear terms to spectral space
       this->mrTransform.transformRTP2Spec(this->mNTerms.rOc().rPerturbation(), this->mNTerms.oc().rtp());
    }
 
-   template <typename TSimType, typename TFieldType> inline void ScalarDiffusionEquation<TSimType, TFieldType>::timestep()
+   template <typename TFieldType> inline void ScalarDiffusionEquation<TFieldType>::timestep()
    {
       // Timestep equation
       this->mTStepper.timestep(this->mrX.rOc().rPerturbation(), this->mNTerms.rOc().rPerturbation());

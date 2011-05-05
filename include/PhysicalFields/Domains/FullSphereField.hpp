@@ -5,6 +5,10 @@
 #ifndef FULLSPHEREFIELD_HPP
 #define FULLSPHEREFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation for a full sphere field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldTraits Traits to describe the field
     */
-   template <typename TSimType, template <typename> class TFieldTraits> class FullSphereField
+   template <typename TFieldTraits> class FullSphereField
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the Field type
-         typedef typename TFieldTraits<TSimType>::OCFieldType  OCFieldType;
+         typedef typename TFieldTraits::OCFieldType  OCFieldType;
 
          /**
           * @brief Constructor
@@ -70,22 +72,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TFieldTraits> FullSphereField<TSimType, TFieldTraits>::FullSphereField(SmartTruncation pTrunc, typename FullSphereField<TSimType, TFieldTraits>::TransformType &transform)
+   template <typename TFieldTraits> FullSphereField<TFieldTraits>::FullSphereField(SmartTruncation pTrunc, typename FullSphereField<TFieldTraits>::TransformType &transform)
       : mOCVar(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename> class TFieldTraits> const typename FullSphereField<TSimType, TFieldTraits>::OCFieldType& FullSphereField<TSimType, TFieldTraits>::oc() const
+   template <typename TFieldTraits> const typename FullSphereField<TFieldTraits>::OCFieldType& FullSphereField<TFieldTraits>::oc() const
    {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename> class TFieldTraits> typename FullSphereField<TSimType, TFieldTraits>::OCFieldType& FullSphereField<TSimType, TFieldTraits>::rOc()
+   template <typename TFieldTraits> typename FullSphereField<TFieldTraits>::OCFieldType& FullSphereField<TFieldTraits>::rOc()
    {
       return this->mOCVar;
    }
 
-   template <typename TSimType, template <typename> class TFieldTraits> void  FullSphereField<TSimType, TFieldTraits>::initialiseZeros()
+   template <typename TFieldTraits> void  FullSphereField<TFieldTraits>::initialiseZeros()
    {
       this->mOCVar.initialiseZeros();
    }

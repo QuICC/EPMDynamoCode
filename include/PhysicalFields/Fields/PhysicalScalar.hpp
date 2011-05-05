@@ -5,6 +5,10 @@
 #ifndef PHYSICALSCALAR_HPP
 #define PHYSICALSCALAR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of physical scalar
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TBase  Base of the field (used to include imposed field)
     */
-   template <typename TSimType, template <typename> class TBase> class PhysicalScalar: public TBase<TSimType>
+   template <typename TBase> class PhysicalScalar: public TBase
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType  ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType  ScalarType;
 
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType  TransformType;
+         typedef SimulationConfig::TransformType  TransformType;
 
          /// Typedef for the spectral field type
          typedef ScalarType SpectralFieldType;
@@ -81,12 +83,12 @@ namespace EPMDynamo {
       private:
    };
    
-   template <typename TSimType, template <typename> class TBase> PhysicalScalar<TSimType, TBase>::PhysicalScalar(SmartTruncation pTrunc, typename PhysicalScalar<TSimType, TBase>::TransformType &transform)
-      : TBase<TSimType>(pTrunc, transform)
+   template <typename TBase> PhysicalScalar<TBase>::PhysicalScalar(SmartTruncation pTrunc, typename PhysicalScalar<TBase>::TransformType &transform)
+      : TBase(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalScalar<TSimType, TBase>::transform(const int step)
+   template <typename TBase> inline void PhysicalScalar<TBase>::transform(const int step)
    {
       if(step == this->mNeedTransform)
       {
@@ -98,19 +100,19 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TBase> inline void PhysicalScalar<TSimType, TBase>::updateSpectra()
+   template <typename TBase> inline void PhysicalScalar<TBase>::updateSpectra()
    {
       this->rPerturbation().computeSpectra(this->mrTransform.radBasis());
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Array PhysicalScalar<TSimType, TBase>::energy() const
+   template <typename TBase> inline Array PhysicalScalar<TBase>::energy() const
    {
       Array energy = this->perturbation().energy();
 
       return energy;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalScalar<TSimType, TBase>::spectrumL() const
+   template <typename TBase> inline Matrix PhysicalScalar<TBase>::spectrumL() const
    {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nL(),2); 
 
@@ -123,7 +125,7 @@ namespace EPMDynamo {
       return spectrum;
    }
 
-   template <typename TSimType, template <typename> class TBase> inline Matrix PhysicalScalar<TSimType, TBase>::spectrumM() const
+   template <typename TBase> inline Matrix PhysicalScalar<TBase>::spectrumM() const
    {
       Matrix   spectrum(this->trunc()->sim()->hoz()->nM(),2); 
       

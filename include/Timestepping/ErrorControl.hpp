@@ -5,6 +5,10 @@
 #ifndef ERRORCONTROL_HPP
 #define ERRORCONTROL_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Timestepping/ErrorNorms/ErrorL2.hpp"
 #include "Timestepping/ErrorNorms/ErrorCoeffL2Summed.hpp"
 #include "Timestepping/ErrorNorms/ErrorModeL2Summed.hpp"
@@ -35,7 +38,7 @@ namespace EPMDynamo {
          typedef typename TSimType::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename SimulationTraits<TSimType>::TimestepTraits::MethodTraits::ErrorNormType    ErrorNormType;
+         typedef SimulationConfig::TimestepTraits::MethodTraits::ErrorNormType    ErrorNormType;
 
          /**
           * @brief Compute the error norm

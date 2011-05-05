@@ -5,6 +5,10 @@
 #ifndef INNERCOREFIELD_HPP
 #define INNERCOREFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "Domain/Truncation.hpp"
 
 namespace EPMDynamo {
@@ -21,17 +24,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation for an inner core field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TFieldTraits> class InnerCoreField
+   template <typename TFieldTraits> class InnerCoreField
    {
       public:
          /// Typedef from Simulation trait to local transform type
-         typedef typename SimulationTraits<TSimType>::TransformType    TransformType;
+         typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the inner core field type
-         typedef typename TFieldTraits<TSimType>::ICFieldType  ICFieldType;
+         typedef typename TFieldTraits::ICFieldType  ICFieldType;
 
          /**
           * @brief Constructor
@@ -70,22 +72,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename>  class TFieldTraits> InnerCoreField<TSimType, TFieldTraits>::InnerCoreField(SmartTruncation pTrunc, typename InnerCoreField<TSimType,TFieldTraits>::TransformType &transform)
+   template <typename TFieldTraits> InnerCoreField<TFieldTraits>::InnerCoreField(SmartTruncation pTrunc, typename InnerCoreField<TFieldTraits>::TransformType &transform)
       : mICVar(pTrunc, transform)
    {
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> const InnerCoreField<TSimType, TFieldTraits>::ICFieldType<TSimType>& InnerCoreField<TSimType, TFieldTraits>::ic() const
+   template <typename TFieldTraits> const InnerCoreField<TFieldTraits>::ICFieldType& InnerCoreField<TFieldTraits>::ic() const
    {
       return this->mICVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> InnerCoreField<TSimType, TFieldTraits>::ICFieldType<TSimType>& InnerCoreField<TSimType, TFieldTraits>::rIc()
+   template <typename TFieldTraits> InnerCoreField<TFieldTraits>::ICFieldType& InnerCoreField<TFieldTraits>::rIc()
    {
       return this->mICVar;
    }
 
-   template <typename TSimType, template <typename>  class TFieldTraits> void InnerCoreField<TSimType, TFieldTraits>::initialiseZeros()
+   template <typename TFieldTraits> void InnerCoreField<TFieldTraits>::initialiseZeros()
    {
       this->mICVar.initialiseZeros();
    }

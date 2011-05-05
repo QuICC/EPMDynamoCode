@@ -5,6 +5,10 @@
 #ifndef INSULATINGBC_HPP
 #define INSULATINGBC_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -20,14 +24,12 @@ namespace EPMDynamo {
 
    /**
     * @brief This class defines the insulating homogeneous boundary condition
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class InsulatingBC: public HomogeneousBC
+   class InsulatingBC: public HomogeneousBC
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /**
           * @brief Constructor
@@ -52,22 +54,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> InsulatingBC<TSimType>::InsulatingBC(const typename InsulatingBC<TSimType>::BasisType &basis)
-      : HomogeneousBC(basis.basisN(), basis.polyN())
-   {
-      // Fill Operator BC values
-      this->fillLHSBCValues(basis);
-   }
-
-   template <typename TSimType> void InsulatingBC<TSimType>::fillLHSBCValues(const typename InsulatingBC<TSimType>::BasisType &basis)
-   {
-      int nL = this->nL();
-      for(int l = 0; l < nL; ++l)
-      {
-         this->rLHSBCValues(l) = basis.at(l).bdiff(1) + static_cast<EPMFloat>(basis.at(l).l()+1)*basis.at(l).bpoly();
-      }
-   }
 
 }
 

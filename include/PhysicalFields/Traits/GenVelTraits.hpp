@@ -5,6 +5,9 @@
 #ifndef GENVELTRAITS_HPP
 #define GENVELTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the generators velocity field
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType>  class GenVelTraits
+   class GenVelTraits
    {
       public:
          /// Typedef for the variable type
-         typedef OuterCoreSource<TSimType, GenVelDomainTraits> VariableType;
+         typedef OuterCoreSource<GenVelDomainTraits> VariableType;
    };
 
 }

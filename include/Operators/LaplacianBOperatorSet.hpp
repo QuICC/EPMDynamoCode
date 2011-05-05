@@ -5,6 +5,10 @@
 #ifndef LAPLACIANBOPERATORSET_HPP
 #define LAPLACIANBOPERATORSET_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Simulations/Traits/SimulationTraits.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
@@ -23,14 +26,13 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a set of Laplacian operators
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TOpType Type of the operator
     */
-   template <typename TSimType, typename TOpType> class LaplacianBOperatorSet: public BoundedOperatorSet<TOpType>
+   template <typename TOpType> class LaplacianBOperatorSet: public BoundedOperatorSet<TOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType  BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType  BasisType;
 
          /**
           * @brief Constructor
@@ -62,12 +64,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TOpType> LaplacianBOperatorSet<TSimType, TOpType>::LaplacianBOperatorSet(const typename LaplacianBOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
+   template <typename TOpType> LaplacianBOperatorSet<TOpType>::LaplacianBOperatorSet(const typename LaplacianBOperatorSet<TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
       : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mrBasis(basis)
    {
    }
 
-   template <typename TSimType, typename TOpType> void LaplacianBOperatorSet<TSimType, TOpType>::createOperators(const EPMFloat factor)
+   template <typename TOpType> void LaplacianBOperatorSet<TOpType>::createOperators(const EPMFloat factor)
    {
       // Storage for "id" of operator
       int l;
