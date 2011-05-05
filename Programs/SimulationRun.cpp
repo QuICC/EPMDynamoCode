@@ -1,6 +1,11 @@
-/** \file ThermalNLConvectionRun.cpp
- *  \brief Thermal convection simulation executable
+/** \file SimulationRun.cpp
+ *  \brief General simulation executable. Depending on preprocessor flag a different simulation will be built.
  */
+#define SIMPATH Simulations/Implementations/IMPLEMENTATION.hpp
+#define MAKE_STR_X( _P ) # _P
+#define MAKE_STR( _P ) MAKE_STR_X( _P )
+#define SIMULATIONHEADER MAKE_STR( SIMPATH )
+#define SIMULATION epm::IMPLEMENTATION
 
 // Configuration includes
 //
@@ -13,20 +18,21 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "General/EPMException.hpp"
 #include "Simulations/Simulation.hpp"
-#include "Simulations/Implementations/ThermalNLConvectionSimulation.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
+#include SIMULATIONHEADER
 #include "Simulations/Types/WSHSimInc.hpp"
+#include "Simulations/Types/WSHSimulation.hpp"
 
 namespace epm = EPMDynamo;
 
 /**
- * @brief Thermal convection simulation
+ * @brief General setup for a simulation
  */
 int runProgram()
 {
    // Create the simulation object
-   epm::Simulation<epm::WSHSimulation, epm::ThermalNLConvectionSimulation>   sim;
+   epm::Simulation<epm::WSHSimulation, SIMULATION>   sim;
 
    // Exception handling during the initialisation part
    try
