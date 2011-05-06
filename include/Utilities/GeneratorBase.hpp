@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SmartPointer.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -18,7 +19,6 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Config/SimulationConfig.hpp"
 #include "Simulations/ComputationBase.hpp"
 #include "IO/IOBaseSystem.hpp"
 #include "IO/HDF5/HDF5Reader.hpp"
@@ -30,10 +30,9 @@ namespace EPMDynamo {
    /**
     * \brief Base of the implementation of a file generator
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits for the generator
     */
-   template <typename TSimType, template <typename> class TSimTraits> class GeneratorBase: public ComputationBase<TSimType, IOBaseSystem>
+   template <typename TSimTraits> class GeneratorBase: public ComputationBase<IOBaseSystem>
    {
       public:
          /// Typedef for the transform type
@@ -52,17 +51,17 @@ namespace EPMDynamo {
          /**
           * @brief Get the codensity
           */
-         typename TSimTraits<TSimType>::CodType&   codC();
+         typename TSimTraits::CodType&   codC();
 
          /**
           * @brief Get the codensity
           */
-         typename TSimTraits<TSimType>::MagType&   magB();
+         typename TSimTraits::MagType&   magB();
 
          /**
           * @brief Get the codensity
           */
-         typename TSimTraits<TSimType>::VelType&   velV();
+         typename TSimTraits::VelType&   velV();
 
          /**
           * @brief Configure the transform manipulators
@@ -98,23 +97,23 @@ namespace EPMDynamo {
          /**
           * @brief Smart pointer of Codensity type
           */
-         EPMSHARED_PTR<typename TSimTraits<TSimType>::CodType> mpCodC;
+         EPMSHARED_PTR<typename TSimTraits::CodType> mpCodC;
 
          /**
           * @brief Smart pointer of Codensity type
           */
-         EPMSHARED_PTR<typename TSimTraits<TSimType>::MagType> mpMagB;
+         EPMSHARED_PTR<typename TSimTraits::MagType> mpMagB;
 
          /**
           * @brief Smart pointer of Codensity type
           */
-         EPMSHARED_PTR<typename TSimTraits<TSimType>::VelType> mpVelV;
+         EPMSHARED_PTR<typename TSimTraits::VelType> mpVelV;
 
       private:
 
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> inline typename TSimTraits<TSimType>::CodType& GeneratorBase<TSimType, TSimTraits>::codC()
+   template <typename TSimTraits> inline typename TSimTraits::CodType& GeneratorBase<TSimTraits>::codC()
    {
       // Protect call with an assert
       assert(this->mpCodC != NULL);
@@ -122,7 +121,7 @@ namespace EPMDynamo {
       return (*this->mpCodC);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> inline typename TSimTraits<TSimType>::MagType& GeneratorBase<TSimType, TSimTraits>::magB()
+   template <typename TSimTraits> inline typename TSimTraits::MagType& GeneratorBase<TSimTraits>::magB()
    {
       // Protect call with an assert
       assert(this->mpMagB != NULL);
@@ -130,7 +129,7 @@ namespace EPMDynamo {
       return (*this->mpMagB);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> inline typename TSimTraits<TSimType>::VelType& GeneratorBase<TSimType, TSimTraits>::velV()
+   template <typename TSimTraits> inline typename TSimTraits::VelType& GeneratorBase<TSimTraits>::velV()
    {
       // Protect call with an assert
       assert(this->mpVelV != NULL);
@@ -140,44 +139,44 @@ namespace EPMDynamo {
 
 
 
-   template <typename TSimType, template <typename> class TSimTraits> GeneratorBase<TSimType, TSimTraits>::GeneratorBase()
-      : ComputationBase<TSimType, IOBaseSystem>(), mTSParams(this->mIOSys.cfg()->aTStep()(0), this->mIOSys.cfg()->aTStep()(1))
+   template <typename TSimTraits> GeneratorBase<TSimTraits>::GeneratorBase()
+      : ComputationBase<IOBaseSystem>(), mTSParams(this->mIOSys.cfg()->aTStep()(0), this->mIOSys.cfg()->aTStep()(1))
    {
       // Initialise fields
       this->initFields();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void GeneratorBase<TSimType, TSimTraits>::initFields()
+   template <typename TSimTraits> void GeneratorBase<TSimTraits>::initFields()
    {
       // Create codensity field storage
-      if(TSimTraits<TSimType>::NeedCodensity)
+      if(TSimTraits::NeedCodensity)
       {
-         this->mpCodC.reset(new typename TSimTraits<TSimType>::CodType(this->mpTrunc, this->mTransform));
+         this->mpCodC.reset(new typename TSimTraits::CodType(this->mpTrunc, this->mTransform));
 
          // Initialise to zero spectral values
         this->mpCodC->initialiseZeros();
       }
 
       // Create magnetic field storage
-      if(TSimTraits<TSimType>::NeedMagnetic)
+      if(TSimTraits::NeedMagnetic)
       {
-         this->mpMagB.reset(new typename TSimTraits<TSimType>::MagType(this->mpTrunc, this->mTransform));
+         this->mpMagB.reset(new typename TSimTraits::MagType(this->mpTrunc, this->mTransform));
 
          // Initialise to zero spectral values
          this->mpMagB->initialiseZeros();
       }
 
       // Create velocity field storage
-      if(TSimTraits<TSimType>::NeedVelocity)
+      if(TSimTraits::NeedVelocity)
       {
-         this->mpVelV.reset(new typename TSimTraits<TSimType>::VelType(this->mpTrunc, this->mTransform));
+         this->mpVelV.reset(new typename TSimTraits::VelType(this->mpTrunc, this->mTransform));
 
          // Initialise to zero
          this->mpVelV->initialiseZeros();
       }
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> template <typename TGenTraits> void GeneratorBase<TSimType, TSimTraits>::configureTransform()
+   template <typename TSimTraits> template <typename TGenTraits> void GeneratorBase<TSimTraits>::configureTransform()
    {
       //
       // Setup the SSH and SH transform data manipulator
@@ -195,7 +194,7 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
 
       // Register transform data packs of codensity scalar for SSH
-      if(TSimTraits<TSimType>::NeedCodensity && TGenTraits::UseRTPCodensity)
+      if(TSimTraits::NeedCodensity && TGenTraits::UseRTPCodensity)
       {
          // Register SSH packs
          this->registerSSHPacks(1, 0);
@@ -205,7 +204,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of codensity scalar for SSH
-      if(TSimTraits<TSimType>::NeedCodensity && TGenTraits::UseSpecCodensity)
+      if(TSimTraits::NeedCodensity && TGenTraits::UseSpecCodensity)
       {
          // Register SSH packs
          this->registerSSHPacks(0, 1);
@@ -215,7 +214,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of codensity gradient for SSH
-      if(TSimTraits<TSimType>::NeedCodensity && TGenTraits::UseCodensityGrad)
+      if(TSimTraits::NeedCodensity && TGenTraits::UseCodensityGrad)
       {
          // Register SSH packs
          this->registerSSHPacks(0, 1);
@@ -225,7 +224,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of magnetic field for SSH
-      if(TSimTraits<TSimType>::NeedMagnetic && TGenTraits::UseRTPMagnetic)
+      if(TSimTraits::NeedMagnetic && TGenTraits::UseRTPMagnetic)
       {
          // Register SSH packs
          this->registerSSHPacks(3, 0);
@@ -235,7 +234,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of magnetic field for SSH
-      if(TSimTraits<TSimType>::NeedMagnetic && TGenTraits::UseSpecMagnetic)
+      if(TSimTraits::NeedMagnetic && TGenTraits::UseSpecMagnetic)
       {
          // Register SSH packs
          this->registerSSHPacks(0, 3);
@@ -245,7 +244,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of magnetic curl for SSH
-      if(TSimTraits<TSimType>::NeedMagnetic && TGenTraits::UseMagneticCurl)
+      if(TSimTraits::NeedMagnetic && TGenTraits::UseMagneticCurl)
       {
          // Register SSH packs
          this->registerSSHPacks(0, 3);
@@ -255,7 +254,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of velocity field for SSH
-      if(TSimTraits<TSimType>::NeedVelocity && TGenTraits::UseRTPVelocity)
+      if(TSimTraits::NeedVelocity && TGenTraits::UseRTPVelocity)
       {
          // Register SSH packs
          this->registerSSHPacks(3, 0);
@@ -265,7 +264,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of velocity field for SSH
-      if(TSimTraits<TSimType>::NeedVelocity && TGenTraits::UseSpecVelocity)
+      if(TSimTraits::NeedVelocity && TGenTraits::UseSpecVelocity)
       {
          // Register SSH packs
          this->registerSSHPacks(0, 3);
@@ -275,7 +274,7 @@ namespace EPMDynamo {
       }
 
       // Register transform data packs of velocity curl for SSH
-      if(TSimTraits<TSimType>::NeedVelocity && TGenTraits::UseVelocityCurl)
+      if(TSimTraits::NeedVelocity && TGenTraits::UseVelocityCurl)
       {
          // Register SSH packs
          this->registerSSHPacks(0, 3);
@@ -298,7 +297,7 @@ namespace EPMDynamo {
       this->configureTransformNesting();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits>  template <typename TGenTraits> void GeneratorBase<TSimType, TSimTraits>::transformRTP()
+   template <typename TSimTraits>  template <typename TGenTraits> void GeneratorBase<TSimTraits>::transformRTP()
    {
       for(int i=0; i < this->mTransformSteps; ++i)
       {
@@ -306,19 +305,19 @@ namespace EPMDynamo {
          this->combineSpectralTransforms(i);
 
          // Transform the codensity field
-         if(TSimTraits<TSimType>::NeedCodensity && TGenTraits::UseRTPCodensity)
+         if(TSimTraits::NeedCodensity && TGenTraits::UseRTPCodensity)
          {
             this->mTransform.transformRTP2Spec(this->codC().rOc().rPerturbation(), this->codC().oc().rtp());
          }
 
          // Transform the codensity field
-         if(TSimTraits<TSimType>::NeedMagnetic && TGenTraits::UseRTPMagnetic)
+         if(TSimTraits::NeedMagnetic && TGenTraits::UseRTPMagnetic)
          {
             this->mTransform.transformRTP2TorPol(this->magB().rOc().rPerturbation(), this->magB().oc().rtp());
          }
 
          // Transform the codensity field
-         if(TSimTraits<TSimType>::NeedVelocity && TGenTraits::UseRTPVelocity)
+         if(TSimTraits::NeedVelocity && TGenTraits::UseRTPVelocity)
          {
             this->mTransform.transformRTP2TorPol(this->velV().rOc().rPerturbation(), this->velV().oc().rtp());
          }
@@ -326,7 +325,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSimTraits>  template <typename TGenTraits> void GeneratorBase<TSimType, TSimTraits>::transformSpectral()
+   template <typename TSimTraits>  template <typename TGenTraits> void GeneratorBase<TSimTraits>::transformSpectral()
    {
       for(int i=0; i < this->mTransformSteps; ++i)
       {
@@ -334,44 +333,44 @@ namespace EPMDynamo {
          this->combineRTPTransforms(i);
 
          // Transform the codensity scalar
-         if(TSimTraits<TSimType>::NeedCodensity && TGenTraits::UseSpecCodensity)
+         if(TSimTraits::NeedCodensity && TGenTraits::UseSpecCodensity)
          {
             this->codC().rOc().transform(i);
          }
 
          // Transform the codensity gradient
-         if(TSimTraits<TSimType>::NeedCodensity && TGenTraits::UseCodensityGrad)
+         if(TSimTraits::NeedCodensity && TGenTraits::UseCodensityGrad)
          {
             this->codC().rOc().gradTransform(i);
          }
 
          // Transform the magnetic field
-         if(TSimTraits<TSimType>::NeedMagnetic && TGenTraits::UseSpecMagnetic)
+         if(TSimTraits::NeedMagnetic && TGenTraits::UseSpecMagnetic)
          {
             this->magB().rOc().transform(i);
          }
 
          // Transform the magnetic curl
-         if(TSimTraits<TSimType>::NeedMagnetic && TGenTraits::UseMagneticCurl)
+         if(TSimTraits::NeedMagnetic && TGenTraits::UseMagneticCurl)
          {
             this->magB().rOc().curlTransform(i);
          }
 
          // Transform the velocity field
-         if(TSimTraits<TSimType>::NeedVelocity && TGenTraits::UseSpecVelocity)
+         if(TSimTraits::NeedVelocity && TGenTraits::UseSpecVelocity)
          {
             this->velV().rOc().transform(i);
          }
 
          // Transform the velocity curl
-         if(TSimTraits<TSimType>::NeedVelocity && TGenTraits::UseVelocityCurl)
+         if(TSimTraits::NeedVelocity && TGenTraits::UseVelocityCurl)
          {
             this->velV().rOc().curlTransform(i);
          }
       }
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void GeneratorBase<TSimType, TSimTraits>::finalise()
+   template <typename TSimTraits> void GeneratorBase<TSimTraits>::finalise()
    {
       // Finalise IOBaseSystem
       this->mIOSys.finaliseBase();

@@ -26,14 +26,13 @@ namespace EPMDynamo {
    /**
     * @brief This class implements a few methods for easier implementation of an initial state generator
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits for the generator
     */
-   template <typename TSimType, template <typename> class TSimTraits> class SourceGenerator: public GeneratorBase<TSimType, TSimTraits>
+   template <typename TSimTraits> class SourceGenerator: public GeneratorBase<TSimTraits>
    {
       public:
          /// Typedef for a smart state file
-         typedef  EPMSHARED_PTR<SourceFileWriter<TSimType, TSimTraits> >   SmartSourceWriter; 
+         typedef  EPMSHARED_PTR<SourceFileWriter<TSimTraits> >   SmartSourceWriter; 
 
          /**
           * @brief Constructor
@@ -78,44 +77,44 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceGenerator<TSimType, TSimTraits>::SourceGenerator()
-      : GeneratorBase<TSimType, TSimTraits>()
+   template <typename TSimTraits> SourceGenerator<TSimTraits>::SourceGenerator()
+      : GeneratorBase<TSimTraits>()
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void SourceGenerator<TSimType, TSimTraits>::setupOutput(std::string name)
+   template <typename TSimTraits> void SourceGenerator<TSimTraits>::setupOutput(std::string name)
    {
       SmartSourceWriter pOutFile;
 
       // Create state with all fields
-      if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
+      if(TSimTraits::NeedCodensity && TSimTraits::NeedMagnetic && TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new SourceFileWriter<TSimType, TSimTraits>(this->codC(), this->magB(), this->velV()));
+         pOutFile.reset(new SourceFileWriter<TSimTraits>(this->codC(), this->magB(), this->velV()));
 
       // Create state with Codensity and Velocity fields
-      } else if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits::NeedCodensity && TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new SourceFileWriter<TSimType, TSimTraits>(this->codC(), this->velV()));
+         pOutFile.reset(new SourceFileWriter<TSimTraits>(this->codC(), this->velV()));
 
       // Create state with Magnetic and Velocity fields
-      } else if(TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits::NeedMagnetic && TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new SourceFileWriter<TSimType, TSimTraits>(this->magB(), this->velV()));
+         pOutFile.reset(new SourceFileWriter<TSimTraits>(this->magB(), this->velV()));
 
       // Create state with only codensity field
-      } else if(TSimTraits<TSimType>::NeedCodensity)
+      } else if(TSimTraits::NeedCodensity)
       {
-         pOutFile.reset(new SourceFileWriter<TSimType, TSimTraits>(this->codC()));
+         pOutFile.reset(new SourceFileWriter<TSimTraits>(this->codC()));
 
       // Create state with only magnetic field
-      } else if(TSimTraits<TSimType>::NeedMagnetic)
+      } else if(TSimTraits::NeedMagnetic)
       {
-         pOutFile.reset(new SourceFileWriter<TSimType, TSimTraits>(this->magB()));
+         pOutFile.reset(new SourceFileWriter<TSimTraits>(this->magB()));
 
       // Create state with only velocity field
-      } else if(TSimTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new SourceFileWriter<TSimType, TSimTraits>(this->velV()));
+         pOutFile.reset(new SourceFileWriter<TSimTraits>(this->velV()));
       }
 
       // Change the base name
@@ -125,24 +124,24 @@ namespace EPMDynamo {
       this->initSourceFile(pOutFile);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void SourceGenerator<TSimType, TSimTraits>::initSourceFile(typename SourceGenerator<TSimType, TSimTraits>::SmartSourceWriter pFile)
+   template <typename TSimTraits> void SourceGenerator<TSimTraits>::initSourceFile(typename SourceGenerator<TSimTraits>::SmartSourceWriter pFile)
    {
       // Set output file
       this->mpOutFile = pFile;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void SourceGenerator<TSimType, TSimTraits>::writeSourceFile()
+   template <typename TSimTraits> void SourceGenerator<TSimTraits>::writeSourceFile()
    {
       this->mpOutFile->write();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void SourceGenerator<TSimType, TSimTraits>::finalise()
+   template <typename TSimTraits> void SourceGenerator<TSimTraits>::finalise()
    {
       // Finalise output file
       this->mpOutFile->finalise();
 
       // Finalise generator
-      GeneratorBase<TSimType, TSimTraits>::finalise();
+      GeneratorBase<TSimTraits>::finalise();
    }
 
 }

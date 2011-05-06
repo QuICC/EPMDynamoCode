@@ -26,14 +26,13 @@ namespace EPMDynamo {
    /**
     * @brief This class implements a few methods for easier implementation of an initial state generator
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits for the generator
     */
-   template <typename TSimType, template <typename> class TSimTraits> class InitialStateGenerator: public GeneratorBase<TSimType, TSimTraits>
+   template <typename TSimTraits> class InitialStateGenerator: public GeneratorBase<TSimTraits>
    {
       public:
          /// Typedef for a smart state file
-         typedef EPMSHARED_PTR<StateFileWriter<TSimType, TSimTraits> > SmartStateWriter; 
+         typedef EPMSHARED_PTR<StateFileWriter<TSimTraits> > SmartStateWriter; 
 
          /**
           * @brief Constructor
@@ -79,44 +78,44 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> InitialStateGenerator<TSimType, TSimTraits>::InitialStateGenerator()
-      : GeneratorBase<TSimType, TSimTraits>()
+   template <typename TSimTraits> InitialStateGenerator<TSimTraits>::InitialStateGenerator()
+      : GeneratorBase<TSimTraits>()
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::setupOutput(std::string name)
+   template <typename TSimTraits> void InitialStateGenerator<TSimTraits>::setupOutput(std::string name)
    {
       SmartStateWriter  pOutFile;
 
       // Create state with all fields
-      if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
+      if(TSimTraits::NeedCodensity && TSimTraits::NeedMagnetic && TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->codC(), this->magB(), this->velV(), this->mEqParams, this->mTSParams));
+         pOutFile.reset(new StateFileWriter<TSimTraits>(this->codC(), this->magB(), this->velV(), this->mEqParams, this->mTSParams));
 
       // Create state with Codensity and Velocity fields
-      } else if(TSimTraits<TSimType>::NeedCodensity && TSimTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits::NeedCodensity && TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->codC(), this->velV(), this->mEqParams, this->mTSParams));
+         pOutFile.reset(new StateFileWriter<TSimTraits>(this->codC(), this->velV(), this->mEqParams, this->mTSParams));
 
       // Create state with Magnetic and Velocity fields
-      } else if(TSimTraits<TSimType>::NeedMagnetic && TSimTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits::NeedMagnetic && TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->magB(), this->velV(), this->mEqParams, this->mTSParams));
+         pOutFile.reset(new StateFileWriter<TSimTraits>(this->magB(), this->velV(), this->mEqParams, this->mTSParams));
 
       // Create state with only codensity field
-      } else if(TSimTraits<TSimType>::NeedCodensity)
+      } else if(TSimTraits::NeedCodensity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->codC(), this->mEqParams, this->mTSParams));
+         pOutFile.reset(new StateFileWriter<TSimTraits>(this->codC(), this->mEqParams, this->mTSParams));
 
       // Create state with only magnetic field
-      } else if(TSimTraits<TSimType>::NeedMagnetic)
+      } else if(TSimTraits::NeedMagnetic)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->magB(), this->mEqParams, this->mTSParams));
+         pOutFile.reset(new StateFileWriter<TSimTraits>(this->magB(), this->mEqParams, this->mTSParams));
 
       // Create state with only velocity field
-      } else if(TSimTraits<TSimType>::NeedVelocity)
+      } else if(TSimTraits::NeedVelocity)
       {
-         pOutFile.reset(new StateFileWriter<TSimType, TSimTraits>(this->velV(), this->mEqParams, this->mTSParams));
+         pOutFile.reset(new StateFileWriter<TSimTraits>(this->velV(), this->mEqParams, this->mTSParams));
       }
 
       // Change the base name
@@ -126,24 +125,24 @@ namespace EPMDynamo {
       this->initStateFile(pOutFile);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::initStateFile(typename InitialStateGenerator<TSimType, TSimTraits>::SmartStateWriter pFile)
+   template <typename TSimTraits> void InitialStateGenerator<TSimTraits>::initStateFile(typename InitialStateGenerator<TSimTraits>::SmartStateWriter pFile)
    {
       // Set output file
       this->mpOutFile = pFile;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::writeStateFile()
+   template <typename TSimTraits> void InitialStateGenerator<TSimTraits>::writeStateFile()
    {
       this->mpOutFile->write();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InitialStateGenerator<TSimType, TSimTraits>::finalise()
+   template <typename TSimTraits> void InitialStateGenerator<TSimTraits>::finalise()
    {
       // Finalise output file
       this->mpOutFile->finalise();
 
       // Finalise generator
-      GeneratorBase<TSimType, TSimTraits>::finalise();
+      GeneratorBase<TSimTraits>::finalise();
    }
 
 }
