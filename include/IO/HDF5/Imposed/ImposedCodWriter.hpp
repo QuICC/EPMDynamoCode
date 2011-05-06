@@ -5,6 +5,9 @@
 #ifndef IMPOSEDCODWRITER_HPP
 #define IMPOSEDCODWRITER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field writer for the codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     * \tparam TOCImposed Has an OC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodWriter: public ImposedFieldWriterBase
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodWriter: public ImposedFieldWriterBase
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the condensity variable
           */
-         const typename TSimTraits<TSimType>::CodType*  mpCodC;
+         const typename TSimTraits::CodType*  mpCodC;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodWriter<TSimType, TSimTraits, TICImposed, TOCImposed>::ImposedCodWriter(std::string name, SmartTruncation pTrunc)
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodWriter<TSimTraits, TICImposed, TOCImposed>::ImposedCodWriter(std::string name, SmartTruncation pTrunc)
       : ImposedFieldWriterBase(name, pTrunc), mpCodC(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodWriter<TSimType, TSimTraits, TICImposed, TOCImposed>::writeCod()
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodWriter<TSimTraits, TICImposed, TOCImposed>::writeCod()
    {
       // Write codensity coefficients
       if(this->mpCodC != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field writer for the codensity field. Specialisation for no OC imposed field.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> class ImposedCodWriter<TSimType, TSimTraits, TICImposed, false>: public ImposedFieldWriterBase
+   template <typename TSimTraits, bool TICImposed> class ImposedCodWriter<TSimTraits, TICImposed, false>: public ImposedFieldWriterBase
    {
       public:
          
@@ -103,7 +104,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> ImposedCodWriter<TSimType, TSimTraits, TICImposed, false>::ImposedCodWriter(std::string name, SmartTruncation pTrunc)
+   template <typename TSimTraits, bool TICImposed> ImposedCodWriter<TSimTraits, TICImposed, false>::ImposedCodWriter(std::string name, SmartTruncation pTrunc)
       : ImposedFieldWriterBase(name, pTrunc)
    {
    }

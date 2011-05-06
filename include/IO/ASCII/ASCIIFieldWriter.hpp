@@ -5,6 +5,9 @@
 #ifndef ASCIIFIELDWRITER_HPP
 #define ASCIIFIELDWRITER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 #include <fstream>
@@ -20,11 +23,10 @@ namespace EPMDynamo {
    /**
     * @brief Small ASCII file writing class for field values
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TFieldType Type of the field
     * \tparam TWriterType Type of the writer
     */
-   template <typename TSimType, typename TFieldType, typename TWriterType> class ASCIIFieldWriter: public TWriterType
+   template <typename TFieldType, typename TWriterType> class ASCIIFieldWriter: public TWriterType
    {
       public:
          /**
@@ -53,7 +55,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType, typename TWriterType> ASCIIFieldWriter<TSimType, TFieldType, TWriterType>::ASCIIFieldWriter(TFieldType &var, std::string name, std::string ext, std::string header, std::string version)
+   template <typename TFieldType, typename TWriterType> ASCIIFieldWriter<TFieldType, TWriterType>::ASCIIFieldWriter(TFieldType &var, std::string name, std::string ext, std::string header, std::string version)
       : TWriterType(name, ext, header, version), mrVar(var)
    {
    }

@@ -5,6 +5,9 @@
 #ifndef IMPOSEDCODREADER_HPP
 #define IMPOSEDCODREADER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field reader for the codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     * \tparam TOCImposed Has an OC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodReader: public ImposedFieldReaderBase
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodReader: public ImposedFieldReaderBase
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the condensity variable
           */
-         typename TSimTraits<TSimType>::CodType*  mpCodC;
+         typename TSimTraits::CodType*  mpCodC;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodReader<TSimType, TSimTraits, TICImposed, TOCImposed>::ImposedCodReader(std::string name, SmartTruncation pTrunc)
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodReader<TSimTraits, TICImposed, TOCImposed>::ImposedCodReader(std::string name, SmartTruncation pTrunc)
       : ImposedFieldReaderBase(name, pTrunc), mpCodC(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodReader<TSimType, TSimTraits, TICImposed, TOCImposed>::readCod()
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodReader<TSimTraits, TICImposed, TOCImposed>::readCod()
    {
       // Read codensity coefficients
       if(this->mpCodC != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field reader for the codensity field. Specialisation for no OC imposed field.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImpose Has an IC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> class ImposedCodReader<TSimType, TSimTraits, TICImposed, false>: public ImposedFieldReaderBase
+   template <typename TSimTraits, bool TICImposed> class ImposedCodReader<TSimTraits, TICImposed, false>: public ImposedFieldReaderBase
    {
       public:
          
@@ -103,7 +104,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> ImposedCodReader<TSimType, TSimTraits, TICImposed, false>::ImposedCodReader(std::string name, SmartTruncation pTrunc)
+   template <typename TSimTraits, bool TICImposed> ImposedCodReader<TSimTraits, TICImposed, false>::ImposedCodReader(std::string name, SmartTruncation pTrunc)
       : ImposedFieldReaderBase(name, pTrunc)
    {
    }

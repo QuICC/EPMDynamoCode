@@ -5,6 +5,9 @@
 #ifndef IMPOSEDFIELDREADER_HPP
 #define IMPOSEDFIELDREADER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,10 +23,9 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of HDF5 imposed field reader
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class ImposedFieldReader: public ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>
+   template <typename TSimTraits> class ImposedFieldReader: public ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>
    {
       public:
          /**
@@ -33,7 +35,7 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param velV Velocity variable
          */
-         ImposedFieldReader(typename TSimTraits<TSimType>::CodType& codC, typename TSimTraits<TSimType>::MagType& magB, typename TSimTraits<TSimType>::VelType& velV);
+         ImposedFieldReader(typename TSimTraits::CodType& codC, typename TSimTraits::MagType& magB, typename TSimTraits::VelType& velV);
 
          /**
          * @brief Constructor for thermal convection
@@ -41,7 +43,7 @@ namespace EPMDynamo {
          * @param codC Codensity variable
          * @param velV Velocity variable
          */
-         ImposedFieldReader(typename TSimTraits<TSimType>::CodType& codC, typename TSimTraits<TSimType>::VelType& velV);
+         ImposedFieldReader(typename TSimTraits::CodType& codC, typename TSimTraits::VelType& velV);
 
          /**
          * @brief Constructor for magneto-convection
@@ -49,28 +51,28 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param velV Velocity variable
          */
-         ImposedFieldReader(typename TSimTraits<TSimType>::MagType& magB, typename TSimTraits<TSimType>::VelType& velV);
+         ImposedFieldReader(typename TSimTraits::MagType& magB, typename TSimTraits::VelType& velV);
 
          /**
          * @brief Constructor with only codensity
          *
          * @param codC Codensity variable
          */
-         ImposedFieldReader(typename TSimTraits<TSimType>::CodType& codC);
+         ImposedFieldReader(typename TSimTraits::CodType& codC);
 
          /**
          * @brief Constructor with only magnetic field
          *
          * @param magB Magnetic variable
          */
-         ImposedFieldReader(typename TSimTraits<TSimType>::MagType& magB);
+         ImposedFieldReader(typename TSimTraits::MagType& magB);
 
          /**
          * @brief Constructor for cases with all three fields
          *
          * @param velV Velocity variable
          */
-         ImposedFieldReader(typename TSimTraits<TSimType>::VelType& velV);
+         ImposedFieldReader(typename TSimTraits::VelType& velV);
 
          /**
          * @brief Destructor
@@ -87,8 +89,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("full", codC.oc().trunc())
+   template <typename TSimTraits> ImposedFieldReader<TSimTraits>::ImposedFieldReader(typename TSimTraits::CodType &codC, typename TSimTraits::MagType &magB, typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("full", codC.oc().trunc())
    {
       this->mpCodC = &codC;
 
@@ -97,41 +99,41 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("codVel", codC.oc().trunc())
+   template <typename TSimTraits> ImposedFieldReader<TSimTraits>::ImposedFieldReader(typename TSimTraits::CodType &codC, typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("codVel", codC.oc().trunc())
    {
       this->mpCodC = &codC;
 
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("magVel", magB.oc().trunc())
+   template <typename TSimTraits> ImposedFieldReader<TSimTraits>::ImposedFieldReader(typename TSimTraits::MagType &magB, typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("magVel", magB.oc().trunc())
    {
       this->mpMagB = &magB;
 
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::CodType &codC)
-      : ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("cod", codC.oc().trunc())
+   template <typename TSimTraits> ImposedFieldReader<TSimTraits>::ImposedFieldReader(typename TSimTraits::CodType &codC)
+      : ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("cod", codC.oc().trunc())
    {
       this->mpCodC = &codC;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::MagType &magB)
-      : ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("mag", magB.oc().trunc())
+   template <typename TSimTraits> ImposedFieldReader<TSimTraits>::ImposedFieldReader(typename TSimTraits::MagType &magB)
+      : ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("mag", magB.oc().trunc())
    {
       this->mpMagB = &magB;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldReader<TSimType, TSimTraits>::ImposedFieldReader(typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("vel", velV.oc().trunc())
+   template <typename TSimTraits> ImposedFieldReader<TSimTraits>::ImposedFieldReader(typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelReader<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("vel", velV.oc().trunc())
    {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void ImposedFieldReader<TSimType, TSimTraits>::read()
+   template <typename TSimTraits> void ImposedFieldReader<TSimTraits>::read()
    {
       // Read the truncation information
       this->readTruncation();

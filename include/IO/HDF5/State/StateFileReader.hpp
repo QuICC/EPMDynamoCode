@@ -5,6 +5,9 @@
 #ifndef STATEFILEREADER_HPP
 #define STATEFILEREADER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,10 +24,9 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of HDF5 state file reader
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class StateFileReader: public StateFileReaderBase
+   template <typename TSimTraits> class StateFileReader: public StateFileReaderBase
    {
       public:
          /**
@@ -35,7 +37,7 @@ namespace EPMDynamo {
          * @param velV Velocity variable
          * @param name file name
          */
-         StateFileReader(typename TSimTraits<TSimType>::CodType& codC, typename TSimTraits<TSimType>::MagType& magB, typename TSimTraits<TSimType>::VelType& velV, std::string name);
+         StateFileReader(typename TSimTraits::CodType& codC, typename TSimTraits::MagType& magB, typename TSimTraits::VelType& velV, std::string name);
 
          /**
          * @brief Constructor for thermal convection
@@ -44,7 +46,7 @@ namespace EPMDynamo {
          * @param velV Velocity variable
          * @param name file name
          */
-         StateFileReader(typename TSimTraits<TSimType>::CodType& codC, typename TSimTraits<TSimType>::VelType& velV, std::string name);
+         StateFileReader(typename TSimTraits::CodType& codC, typename TSimTraits::VelType& velV, std::string name);
 
          /**
          * @brief Constructor for magneto-convection
@@ -53,7 +55,7 @@ namespace EPMDynamo {
          * @param velV Velocity variable
          * @param name file name
          */
-         StateFileReader(typename TSimTraits<TSimType>::MagType& magB, typename TSimTraits<TSimType>::VelType& velV, std::string name);
+         StateFileReader(typename TSimTraits::MagType& magB, typename TSimTraits::VelType& velV, std::string name);
 
          /**
          * @brief Constructor with only codensity
@@ -61,7 +63,7 @@ namespace EPMDynamo {
          * @param codC Codensity variable
          * @param name file name
          */
-         StateFileReader(typename TSimTraits<TSimType>::CodType& codC, std::string name);
+         StateFileReader(typename TSimTraits::CodType& codC, std::string name);
 
          /**
          * @brief Constructor with only magnetic field
@@ -69,7 +71,7 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param name file name
          */
-         StateFileReader(typename TSimTraits<TSimType>::MagType& magB, std::string name);
+         StateFileReader(typename TSimTraits::MagType& magB, std::string name);
 
          /**
          * @brief Constructor for cases with all three fields
@@ -77,7 +79,7 @@ namespace EPMDynamo {
          * @param velV Velocity variable
          * @param name file name
          */
-         StateFileReader(typename TSimTraits<TSimType>::VelType& velV, std::string name);
+         StateFileReader(typename TSimTraits::VelType& velV, std::string name);
 
          /**
          * @brief Destructor
@@ -103,22 +105,22 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the condensity variable
           */
-         typename TSimTraits<TSimType>::CodType*  mpCodC;
+         typename TSimTraits::CodType*  mpCodC;
 
          /**
           * @brief Pointer to the magnetic variable
           */
-         typename TSimTraits<TSimType>::MagType*  mpMagB;
+         typename TSimTraits::MagType*  mpMagB;
 
          /**
           * @brief Pointer to the velocity variable
           */
-         typename TSimTraits<TSimType>::VelType*  mpVelV;
+         typename TSimTraits::VelType*  mpVelV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
+   template <typename TSimTraits> StateFileReader<TSimTraits>::StateFileReader(typename TSimTraits::CodType &codC, typename TSimTraits::MagType &magB, typename TSimTraits::VelType &velV, std::string name)
       : StateFileReaderBase(name, codC.oc().trunc()), mpCodC(&codC), mpMagB(&magB), mpVelV(&velV)
    {
       // Make sur the extra terms are zero
@@ -131,7 +133,7 @@ namespace EPMDynamo {
       this->mpVelV->initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, typename TSimTraits<TSimType>::VelType &velV, std::string name)
+   template <typename TSimTraits> StateFileReader<TSimTraits>::StateFileReader(typename TSimTraits::CodType &codC, typename TSimTraits::VelType &velV, std::string name)
       : StateFileReaderBase(name, codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(&velV)
    {
       // Make sur the extra terms are zero
@@ -141,7 +143,7 @@ namespace EPMDynamo {
       this->mpVelV->initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::MagType &magB, typename TSimTraits<TSimType>::VelType &velV, std::string name)
+   template <typename TSimTraits> StateFileReader<TSimTraits>::StateFileReader(typename TSimTraits::MagType &magB, typename TSimTraits::VelType &velV, std::string name)
       : StateFileReaderBase(name, magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(&velV)
    {
       // Make sur the extra terms are zero
@@ -151,28 +153,28 @@ namespace EPMDynamo {
       this->mpVelV->initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::CodType &codC, std::string name)
+   template <typename TSimTraits> StateFileReader<TSimTraits>::StateFileReader(typename TSimTraits::CodType &codC, std::string name)
       : StateFileReaderBase(name, codC.oc().trunc()), mpCodC(&codC), mpMagB(NULL), mpVelV(NULL)
    {
       // Make sur the extra terms are zero
       this->mpCodC->initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::MagType &magB, std::string name)
+   template <typename TSimTraits> StateFileReader<TSimTraits>::StateFileReader(typename TSimTraits::MagType &magB, std::string name)
       : StateFileReaderBase(name, magB.oc().trunc()), mpCodC(NULL), mpMagB(&magB), mpVelV(NULL)
    {
       // Make sur the extra terms are zero
       this->mpMagB->initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> StateFileReader<TSimType, TSimTraits>::StateFileReader(typename TSimTraits<TSimType>::VelType &velV, std::string name)
+   template <typename TSimTraits> StateFileReader<TSimTraits>::StateFileReader(typename TSimTraits::VelType &velV, std::string name)
       : StateFileReaderBase(name, velV.oc().trunc()), mpCodC(NULL), mpMagB(NULL), mpVelV(&velV)
    {
       // Make sur the extra terms are zero
       this->mpVelV->initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void StateFileReader<TSimType, TSimTraits>::read()
+   template <typename TSimTraits> void StateFileReader<TSimTraits>::read()
    {
       // THIS IS NOT GENERAL ENOUGH ANYMORE, BUT ALSO NOT USEFUL IN THE CURRENT STATE
       // Read the Physical parameters
@@ -192,25 +194,25 @@ namespace EPMDynamo {
       this->readRun();
 
       // Read codensity coefficients
-      if(TSimTraits<TSimType>::NeedCodensity)
+      if(TSimTraits::NeedCodensity)
       {
          this->readScalarField(StateFileDefs::CODENSITYTAG, this->mpCodC->rOc().rPerturbation().data());
       }
 
       // Read magnetic coefficients
-      if(TSimTraits<TSimType>::NeedMagnetic)
+      if(TSimTraits::NeedMagnetic)
       {
          this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
       }
       
       // Read velocity coefficients
-      if(TSimTraits<TSimType>::NeedVelocity)
+      if(TSimTraits::NeedVelocity)
       {
          this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
       }
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void StateFileReader<TSimType, TSimTraits>::readSetup()
+   template <typename TSimTraits> void StateFileReader<TSimTraits>::readSetup()
    {
       // THIS IS NOT GENERAL ENOUGH ANYMORE, BUT ALSO NOT USEFUL IN THE CURRENT STATE
       // Read the Physical parameters
@@ -230,19 +232,19 @@ namespace EPMDynamo {
       this->readRun();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> template <typename TFilter> void StateFileReader<TSimType, TSimTraits>::readPartial()
+   template <typename TSimTraits> template <typename TFilter> void StateFileReader<TSimTraits>::readPartial()
    {
       // Read requested codensity coefficients
-      if(TSimTraits<TSimType>::NeedCodensity && TFilter::ReadCodensity == StateFileDefs::FullField)
+      if(TSimTraits::NeedCodensity && TFilter::ReadCodensity == StateFileDefs::FullField)
       {
          this->readScalarField(StateFileDefs::CODENSITYTAG, this->mpCodC->rOc().rPerturbation().data());
       }
 
       // Read requested magnetic coefficients
-      if(TSimTraits<TSimType>::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::FullField)
+      if(TSimTraits::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::FullField)
       {
          this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
-      } else if(TSimTraits<TSimType>::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::ToroidalOnly)
+      } else if(TSimTraits::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::ToroidalOnly)
       {
          // Read Toroidal component
          this->readTorField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data());
@@ -250,7 +252,7 @@ namespace EPMDynamo {
          // Set poloidal component to zero
          this->setZero(this->mpMagB->rOc().rPerturbation().rPol().data());
 
-      } else if(TSimTraits<TSimType>::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::PoloidalOnly)
+      } else if(TSimTraits::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::PoloidalOnly)
       {
          // Read poloidal component
          this->readPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rPol().data());
@@ -260,17 +262,17 @@ namespace EPMDynamo {
       }
       
       // Read requested velocity coefficients
-      if(TSimTraits<TSimType>::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::FullField)
+      if(TSimTraits::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::FullField)
       {
          this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
-      } else if(TSimTraits<TSimType>::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::ToroidalOnly)
+      } else if(TSimTraits::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::ToroidalOnly)
       {
          // Read toroidal component
          this->readTorField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data());
 
          // Set poloidal component to zero
          this->setZero(this->mpVelV->rOc().rPerturbation().rPol().data());
-      } else if(TSimTraits<TSimType>::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::PoloidalOnly)
+      } else if(TSimTraits::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::PoloidalOnly)
       {
          // Read poloidal component
          this->readPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rPol().data());

@@ -5,6 +5,9 @@
 #ifndef ENERGYFILE_HPP
 #define ENERGYFILE_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 #include <string>
@@ -23,10 +26,9 @@ namespace EPMDynamo {
    /**
     * @brief Implementation of ASCIIFile for a general Energy ASCII file
     *
-    * \param TSimType Type of the simulation
     * \param TFieldType Type of the field
     */
-   template <typename TSimType, typename TFieldType> class EnergyFile: public ASCIIFieldWriter<TSimType, TFieldType, ASCIIEWriter>
+   template <typename TFieldType> class EnergyFile: public ASCIIFieldWriter<TFieldType, ASCIIEWriter>
    {
       public:
          /**
@@ -63,12 +65,12 @@ namespace EPMDynamo {
          const int mFormat;
    };
 
-   template <typename TSimType, typename TFieldType> EnergyFile<TSimType, TFieldType>::EnergyFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, int format)
-      : ASCIIFieldWriter<TSimType, TFieldType, ASCIIEWriter>(var, name + EnergyFileDefs::BASENAME, EnergyFileDefs::EXTENSION, EnergyFileDefs::HEADER, EnergyFileDefs::VERSION), mrTSParams(tsParams), mFormat(format)
+   template <typename typename TFieldType> EnergyFile<TFieldType>::EnergyFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, int format)
+      : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + EnergyFileDefs::BASENAME, EnergyFileDefs::EXTENSION, EnergyFileDefs::HEADER, EnergyFileDefs::VERSION), mrTSParams(tsParams), mFormat(format)
    {
    }
 
-   template <typename TSimType, typename TFieldType> void EnergyFile<TSimType, TFieldType>::write()
+   template <typename TFieldType> void EnergyFile<TFieldType>::write()
    {
       this->mrVar.rOc().updateSpectra();
 

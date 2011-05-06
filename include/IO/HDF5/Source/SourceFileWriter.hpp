@@ -5,6 +5,9 @@
 #ifndef SOURCEFILEWRITER_HPP
 #define SOURCEFILEWRITER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,10 +24,9 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the HDF5 source field writer
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class SourceFileWriter: public SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>
+   template <typename TSimTraits> class SourceFileWriter: public SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>
    {
       public:
          /**
@@ -34,7 +36,7 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param velV Velocity variable
          */
-         SourceFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV);
+         SourceFileWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Constructor for thermal convection
@@ -42,7 +44,7 @@ namespace EPMDynamo {
          * @param codC Codensity variable
          * @param velV Velocity variable
          */
-         SourceFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV);
+         SourceFileWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Constructor for magneto-convection
@@ -50,28 +52,28 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param velV Velocity variable
          */
-         SourceFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV);
+         SourceFileWriter(const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Constructor with only codensity
          *
          * @param codC Codensity variable
          */
-         SourceFileWriter(const typename TSimTraits<TSimType>::CodType &codC);
+         SourceFileWriter(const typename TSimTraits::CodType &codC);
 
          /**
          * @brief Constructor with only magnetic field
          *
          * @param magB Magnetic variable
          */
-         SourceFileWriter(const typename TSimTraits<TSimType>::MagType &magB);
+         SourceFileWriter(const typename TSimTraits::MagType &magB);
 
          /**
          * @brief Constructor for cases with all three fields
          *
          * @param velV Velocity variable
          */
-         SourceFileWriter(const typename TSimTraits<TSimType>::VelType &velV);
+         SourceFileWriter(const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Destructor
@@ -92,8 +94,8 @@ namespace EPMDynamo {
          ArrayI   mTrunc;
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceFileWriter<TSimType, TSimTraits>::SourceFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV)
-      : SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("full", codC.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> SourceFileWriter<TSimTraits>::SourceFileWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV)
+      : SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>("full", codC.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -107,8 +109,8 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceFileWriter<TSimType, TSimTraits>::SourceFileWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV)
-      : SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("codVel", codC.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> SourceFileWriter<TSimTraits>::SourceFileWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::VelType &velV)
+      : SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>("codVel", codC.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -120,8 +122,8 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceFileWriter<TSimType, TSimTraits>::SourceFileWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV)
-      : SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("magVel", magB.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> SourceFileWriter<TSimTraits>::SourceFileWriter(const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV)
+      : SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>("magVel", magB.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -133,8 +135,8 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceFileWriter<TSimType, TSimTraits>::SourceFileWriter(const typename TSimTraits<TSimType>::CodType &codC)
-      : SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("cod", codC.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> SourceFileWriter<TSimTraits>::SourceFileWriter(const typename TSimTraits::CodType &codC)
+      : SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>("cod", codC.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -144,8 +146,8 @@ namespace EPMDynamo {
       this->mpCodC = &codC;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceFileWriter<TSimType, TSimTraits>::SourceFileWriter(const typename TSimTraits<TSimType>::MagType &magB)
-      : SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("mag", magB.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> SourceFileWriter<TSimTraits>::SourceFileWriter(const typename TSimTraits::MagType &magB)
+      : SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>("mag", magB.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -155,8 +157,8 @@ namespace EPMDynamo {
       this->mpMagB = &magB;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> SourceFileWriter<TSimType, TSimTraits>::SourceFileWriter(const typename TSimTraits<TSimType>::VelType &velV)
-      : SourceCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICSource, TSimTraits<TSimType>::HasVelOCSource>("vel", velV.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> SourceFileWriter<TSimTraits>::SourceFileWriter(const typename TSimTraits::VelType &velV)
+      : SourceCodMagVelWriter<TSimTraits, TSimTraits::HasVelICSource, TSimTraits::HasVelOCSource>("vel", velV.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -166,7 +168,7 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void SourceFileWriter<TSimType, TSimTraits>::write()
+   template <typename TSimTraits> void SourceFileWriter<TSimTraits>::write()
    {
       // Create file
       this->preWrite();

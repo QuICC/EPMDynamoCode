@@ -5,6 +5,9 @@
 #ifndef SPECTRUMFILE_HPP
 #define SPECTRUMFILE_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 #include <string>
@@ -23,10 +26,9 @@ namespace EPMDynamo {
    /**
     * @brief Implementation of ASCIIFile for a general spectrum ASCII file
     *
-    * \param TSimType Type of the simulation
     * \param TFieldType Type of the field
     */
-   template <typename TSimType, typename TFieldType> class SpectrumFile: public ASCIIFieldWriter<TSimType, TFieldType, ASCIIRWriter>
+   template <typename TFieldType> class SpectrumFile: public ASCIIFieldWriter<TFieldType, ASCIIRWriter>
    {
       public:
          /**
@@ -52,12 +54,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TFieldType> SpectrumFile<TSimType, TFieldType>::SpectrumFile(TFieldType &var, std::string name)
-      : ASCIIFieldWriter<TSimType, TFieldType, ASCIIRWriter>(var, name + SpectrumFileDefs::BASENAME, SpectrumFileDefs::EXTENSION, SpectrumFileDefs::HEADER, SpectrumFileDefs::VERSION)
+   template <typename TFieldType> SpectrumFile<TFieldType>::SpectrumFile(TFieldType &var, std::string name)
+      : ASCIIFieldWriter<TFieldType, ASCIIRWriter>(var, name + SpectrumFileDefs::BASENAME, SpectrumFileDefs::EXTENSION, SpectrumFileDefs::HEADER, SpectrumFileDefs::VERSION)
    {
    }
 
-   template <typename TSimType, typename TFieldType> void SpectrumFile<TSimType, TFieldType>::write()
+   template <typename TFieldType> void SpectrumFile<TFieldType>::write()
    {
       this->mrVar.rOc().updateSpectra();
 

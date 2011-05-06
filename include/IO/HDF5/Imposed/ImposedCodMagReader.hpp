@@ -5,6 +5,9 @@
 #ifndef IMPOSEDCODMAGREADER_HPP
 #define IMPOSEDCODMAGREADER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field reader for the magnetic and codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     * \tparam TOCImposed Has an OC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodMagReader: public ImposedCodReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasCodICImposed, TSimTraits<TSimType>::HasCodOCImposed>
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodMagReader: public ImposedCodReader<TSimTraits, TSimTraits::HasCodICImposed, TSimTraits::HasCodOCImposed>
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the magnetic variable
           */
-         typename TSimTraits<TSimType>::MagType*  mpMagB;
+         typename TSimTraits::MagType*  mpMagB;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodMagReader<TSimType, TSimTraits, TICImposed, TOCImposed>::ImposedCodMagReader(std::string name, SmartTruncation pTrunc)
-      : ImposedCodReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasCodICImposed, TSimTraits<TSimType>::HasCodOCImposed>(name, pTrunc), mpMagB(NULL)
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodMagReader<TSimTraits, TICImposed, TOCImposed>::ImposedCodMagReader(std::string name, SmartTruncation pTrunc)
+      : ImposedCodReader<TSimTraits, TSimTraits::HasCodICImposed, TSimTraits::HasCodOCImposed>(name, pTrunc), mpMagB(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodMagReader<TSimType, TSimTraits, TICImposed, TOCImposed>::readMag()
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodMagReader<TSimTraits, TICImposed, TOCImposed>::readMag()
    {
       // Read magnetic coefficients
       if(this->mpMagB != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field reader for the magnetic and codensity field. Specialisation for no OC imposed field.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> class ImposedCodMagReader<TSimType, TSimTraits, TICImposed, false>: public ImposedCodReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasCodICImposed, TSimTraits<TSimType>::HasCodOCImposed>
+   template <typename TSimTraits, bool TICImposed> class ImposedCodMagReader<TSimTraits, TICImposed, false>: public ImposedCodReader<TSimTraits, TSimTraits::HasCodICImposed, TSimTraits::HasCodOCImposed>
    {
       public:
          
@@ -103,8 +104,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> ImposedCodMagReader<TSimType, TSimTraits, TICImposed, false>::ImposedCodMagReader(std::string name, SmartTruncation pTrunc)
-      : ImposedCodReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasCodICImposed, TSimTraits<TSimType>::HasCodOCImposed>(name, pTrunc)
+   template <typename TSimTraits, bool TICImposed> ImposedCodMagReader<TSimTraits, TICImposed, false>::ImposedCodMagReader(std::string name, SmartTruncation pTrunc)
+      : ImposedCodReader<TSimTraits, TSimTraits::HasCodICImposed, TSimTraits::HasCodOCImposed>(name, pTrunc)
    {
    }
 

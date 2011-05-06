@@ -5,6 +5,9 @@
 #ifndef SOURCECODMAGVELREADER_HPP
 #define SOURCECODMAGVELREADER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the source reader for the velocity and magnetic and codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICSrc Has an IC source?
     * \tparam TOCSrc Has an OC source?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> class SourceCodMagVelReader: public SourceCodMagReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> class SourceCodMagVelReader: public SourceCodMagReader<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the velocity variable
           */
-         typename TSimTraits<TSimType>::VelType*  mpVelV;
+         typename TSimTraits::VelType*  mpVelV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> SourceCodMagVelReader<TSimType, TSimTraits, TICSrc, TOCSrc>::SourceCodMagVelReader(std::string name, SmartTruncation pTrunc)
-      : SourceCodMagReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>(name, pTrunc), mpVelV(NULL)
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> SourceCodMagVelReader<TSimTraits, TICSrc, TOCSrc>::SourceCodMagVelReader(std::string name, SmartTruncation pTrunc)
+      : SourceCodMagReader<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>(name, pTrunc), mpVelV(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> void SourceCodMagVelReader<TSimType, TSimTraits, TICSrc, TOCSrc>::readVel()
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> void SourceCodMagVelReader<TSimTraits, TICSrc, TOCSrc>::readVel()
    {
       // Read velocity coefficients
       if(this->mpVelV != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the source reader for the magnetic and codensity field. Specialisation for no OC source.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICSrc Has an IC source?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc> class SourceCodMagVelReader<TSimType, TSimTraits, TICSrc, false>: public SourceCodMagReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>
+   template <typename TSimTraits, bool TICSrc> class SourceCodMagVelReader<TSimTraits, TICSrc, false>: public SourceCodMagReader<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>
    {
       public:
          
@@ -103,8 +104,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc> SourceCodMagVelReader<TSimType, TSimTraits, TICSrc, false>::SourceCodMagVelReader(std::string name, SmartTruncation pTrunc)
-      : SourceCodMagReader<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>(name, pTrunc)
+   template <typename TSimTraits, bool TICSrc> SourceCodMagVelReader<TSimTraits, TICSrc, false>::SourceCodMagVelReader(std::string name, SmartTruncation pTrunc)
+      : SourceCodMagReader<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>(name, pTrunc)
    {
    }
 

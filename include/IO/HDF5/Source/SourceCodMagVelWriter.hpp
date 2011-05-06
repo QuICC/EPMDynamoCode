@@ -5,6 +5,9 @@
 #ifndef SOURCECODMAGVELWRITER_HPP
 #define SOURCECODMAGVELWRITER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the source writer for the velocity and magnetic and codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICSrc Has an IC source?
     * \tparam TOCSrc Has an OC source?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> class SourceCodMagVelWriter: public SourceCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> class SourceCodMagVelWriter: public SourceCodMagWriter<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the velocity variable
           */
-         const typename TSimTraits<TSimType>::VelType*  mpVelV;
+         const typename TSimTraits::VelType*  mpVelV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> SourceCodMagVelWriter<TSimType, TSimTraits, TICSrc, TOCSrc>::SourceCodMagVelWriter(std::string name, SmartTruncation pTrunc)
-      : SourceCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>(name, pTrunc), mpVelV(NULL)
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> SourceCodMagVelWriter<TSimTraits, TICSrc, TOCSrc>::SourceCodMagVelWriter(std::string name, SmartTruncation pTrunc)
+      : SourceCodMagWriter<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>(name, pTrunc), mpVelV(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> void SourceCodMagVelWriter<TSimType, TSimTraits, TICSrc, TOCSrc>::writeVel()
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> void SourceCodMagVelWriter<TSimTraits, TICSrc, TOCSrc>::writeVel()
    {
       // Write velocity coefficients
       if(this->mpVelV != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the source writer for the velocity and magnetic and codensity field. Specialisation for no OC source.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICSrc Has an IC source?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc> class SourceCodMagVelWriter<TSimType, TSimTraits, TICSrc, false>: public SourceCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>
+   template <typename TSimTraits, bool TICSrc> class SourceCodMagVelWriter<TSimTraits, TICSrc, false>: public SourceCodMagWriter<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>
    {
       public:
          
@@ -103,13 +104,13 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the velocity variable
           */
-         const typename TSimTraits<TSimType>::VelType*  mpVelV;
+         const typename TSimTraits::VelType*  mpVelV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc> SourceCodMagVelWriter<TSimType, TSimTraits, TICSrc, false>::SourceCodMagVelWriter(std::string name, SmartTruncation pTrunc)
-      : SourceCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICSource, TSimTraits<TSimType>::HasMagOCSource>(name, pTrunc)
+   template <typename TSimTraits, bool TICSrc> SourceCodMagVelWriter<TSimTraits, TICSrc, false>::SourceCodMagVelWriter(std::string name, SmartTruncation pTrunc)
+      : SourceCodMagWriter<TSimTraits, TSimTraits::HasMagICSource, TSimTraits::HasMagOCSource>(name, pTrunc)
    {
    }
 

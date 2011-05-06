@@ -5,6 +5,9 @@
 #ifndef IMPOSEDFIELDWRITER_HPP
 #define IMPOSEDFIELDWRITER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,10 +24,9 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the HDF5 imposed field writer
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class ImposedFieldWriter: public ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>
+   template <typename TSimTraits> class ImposedFieldWriter: public ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>
    {
       public:
          /**
@@ -34,7 +36,7 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param velV Velocity variable
          */
-         ImposedFieldWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV);
+         ImposedFieldWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Constructor for thermal convection
@@ -42,7 +44,7 @@ namespace EPMDynamo {
          * @param codC Codensity variable
          * @param velV Velocity variable
          */
-         ImposedFieldWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV);
+         ImposedFieldWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Constructor for magneto-convection
@@ -50,28 +52,28 @@ namespace EPMDynamo {
          * @param magB Magnetic variable
          * @param velV Velocity variable
          */
-         ImposedFieldWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV);
+         ImposedFieldWriter(const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Constructor with only codensity
          *
          * @param codC Codensity variable
          */
-         ImposedFieldWriter(const typename TSimTraits<TSimType>::CodType &codC);
+         ImposedFieldWriter(const typename TSimTraits::CodType &codC);
 
          /**
          * @brief Constructor with only magnetic field
          *
          * @param magB Magnetic variable
          */
-         ImposedFieldWriter(const typename TSimTraits<TSimType>::MagType &magB);
+         ImposedFieldWriter(const typename TSimTraits::MagType &magB);
 
          /**
          * @brief Constructor for cases with all three fields
          *
          * @param velV Velocity variable
          */
-         ImposedFieldWriter(const typename TSimTraits<TSimType>::VelType &velV);
+         ImposedFieldWriter(const typename TSimTraits::VelType &velV);
 
          /**
          * @brief Destructor
@@ -92,8 +94,8 @@ namespace EPMDynamo {
          ArrayI   mTrunc;
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldWriter<TSimType, TSimTraits>::ImposedFieldWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("full", codC.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> ImposedFieldWriter<TSimTraits>::ImposedFieldWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("full", codC.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -107,8 +109,8 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldWriter<TSimType, TSimTraits>::ImposedFieldWriter(const typename TSimTraits<TSimType>::CodType &codC, const typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("codVel", codC.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> ImposedFieldWriter<TSimTraits>::ImposedFieldWriter(const typename TSimTraits::CodType &codC, const typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("codVel", codC.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -120,8 +122,8 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldWriter<TSimType, TSimTraits>::ImposedFieldWriter(const typename TSimTraits<TSimType>::MagType &magB, const typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("magVel", magB.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> ImposedFieldWriter<TSimTraits>::ImposedFieldWriter(const typename TSimTraits::MagType &magB, const typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("magVel", magB.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -133,8 +135,8 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldWriter<TSimType, TSimTraits>::ImposedFieldWriter(const typename TSimTraits<TSimType>::CodType &codC)
-      : ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("cod", codC.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> ImposedFieldWriter<TSimTraits>::ImposedFieldWriter(const typename TSimTraits::CodType &codC)
+      : ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("cod", codC.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -144,8 +146,8 @@ namespace EPMDynamo {
       this->mpCodC = &codC;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldWriter<TSimType, TSimTraits>::ImposedFieldWriter(const typename TSimTraits<TSimType>::MagType &magB)
-      : ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("mag", magB.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> ImposedFieldWriter<TSimTraits>::ImposedFieldWriter(const typename TSimTraits::MagType &magB)
+      : ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("mag", magB.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -155,8 +157,8 @@ namespace EPMDynamo {
       this->mpMagB = &magB;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> ImposedFieldWriter<TSimType, TSimTraits>::ImposedFieldWriter(const typename TSimTraits<TSimType>::VelType &velV)
-      : ImposedCodMagVelWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasVelICImposed, TSimTraits<TSimType>::HasVelOCImposed>("vel", velV.oc().trunc()), mTrunc(4)
+   template <typename TSimTraits> ImposedFieldWriter<TSimTraits>::ImposedFieldWriter(const typename TSimTraits::VelType &velV)
+      : ImposedCodMagVelWriter<TSimTraits, TSimTraits::HasVelICImposed, TSimTraits::HasVelOCImposed>("vel", velV.oc().trunc()), mTrunc(4)
    {
       this->mTrunc(0) = this->mpTrunc->sim()->rad()->maxN();
       this->mTrunc(1) = this->mpTrunc->sim()->hoz()->maxL();
@@ -166,7 +168,7 @@ namespace EPMDynamo {
       this->mpVelV = &velV;
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void ImposedFieldWriter<TSimType, TSimTraits>::write()
+   template <typename TSimTraits> void ImposedFieldWriter<TSimTraits>::write()
    {
       // Create file
       this->preWrite();

@@ -5,6 +5,9 @@
 #ifndef SOURCECODREADER_HPP
 #define SOURCECODREADER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the source reader for the codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICSrc Has an IC source?
     * \tparam TOCSrc Has an OC source?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> class SourceCodReader: public SourceFileReaderBase
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> class SourceCodReader: public SourceFileReaderBase
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the condensity variable
           */
-         typename TSimTraits<TSimType>::CodType*  mpCodC;
+         typename TSimTraits::CodType*  mpCodC;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> SourceCodReader<TSimType, TSimTraits, TICSrc, TOCSrc>::SourceCodReader(std::string name, SmartTruncation pTrunc)
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> SourceCodReader<TSimTraits, TICSrc, TOCSrc>::SourceCodReader(std::string name, SmartTruncation pTrunc)
       : SourceFileReaderBase(name, pTrunc), mpCodC(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc, bool TOCSrc> void SourceCodReader<TSimType, TSimTraits, TICSrc, TOCSrc>::readCod()
+   template <typename TSimTraits, bool TICSrc, bool TOCSrc> void SourceCodReader<TSimTraits, TICSrc, TOCSrc>::readCod()
    {
       // Read codensity coefficients
       if(this->mpCodC != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the source reader for the codensity field. Specialisation for no OC source.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICSrc Has an IC source?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc> class SourceCodReader<TSimType, TSimTraits, TICSrc, false>: public SourceFileReaderBase
+   template <typename TSimTraits, bool TICSrc> class SourceCodReader<TSimTraits, TICSrc, false>: public SourceFileReaderBase
    {
       public:
          
@@ -103,7 +104,7 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICSrc> SourceCodReader<TSimType, TSimTraits, TICSrc, false>::SourceCodReader(std::string name, SmartTruncation pTrunc)
+   template <typename TSimTraits, bool TICSrc> SourceCodReader<TSimTraits, TICSrc, false>::SourceCodReader(std::string name, SmartTruncation pTrunc)
       : SourceFileReaderBase(name, pTrunc)
    {
    }

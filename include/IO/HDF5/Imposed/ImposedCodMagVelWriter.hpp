@@ -5,6 +5,9 @@
 #ifndef IMPOSEDCODMAGVELWRITER_HPP
 #define IMPOSEDCODMAGVELWRITER_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -20,12 +23,11 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field writer for the velocity and magnetic and codensity field 
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     * \tparam TOCImposed Has an OC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodMagVelWriter: public ImposedCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICImposed, TSimTraits<TSimType>::HasMagOCImposed>
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> class ImposedCodMagVelWriter: public ImposedCodMagWriter<TSimTraits, TSimTraits::HasMagICImposed, TSimTraits::HasMagOCImposed>
    {
       public:
          
@@ -51,17 +53,17 @@ namespace EPMDynamo {
          /**
           * @brief Pointer to the velocity variable
           */
-         const typename TSimTraits<TSimType>::VelType*  mpVelV;
+         const typename TSimTraits::VelType*  mpVelV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodMagVelWriter<TSimType, TSimTraits, TICImposed, TOCImposed>::ImposedCodMagVelWriter(std::string name, SmartTruncation pTrunc)
-      : ImposedCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICImposed, TSimTraits<TSimType>::HasMagOCImposed>(name, pTrunc), mpVelV(NULL)
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> ImposedCodMagVelWriter<TSimTraits, TICImposed, TOCImposed>::ImposedCodMagVelWriter(std::string name, SmartTruncation pTrunc)
+      : ImposedCodMagWriter<TSimTraits, TSimTraits::HasMagICImposed, TSimTraits::HasMagOCImposed>(name, pTrunc), mpVelV(NULL)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodMagVelWriter<TSimType, TSimTraits, TICImposed, TOCImposed>::writeVel()
+   template <typename TSimTraits, bool TICImposed, bool TOCImposed> void ImposedCodMagVelWriter<TSimTraits, TICImposed, TOCImposed>::writeVel()
    {
       // Write velocity coefficients
       if(this->mpVelV != NULL)
@@ -73,11 +75,10 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the imposed field writer for the velocity and magnetic and codensity field. Specialisation for no OC imposed field.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the implementation
     * \tparam TICImposed Has an IC imposed field?
     */
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> class ImposedCodMagVelWriter<TSimType, TSimTraits, TICImposed, false>: public ImposedCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICImposed, TSimTraits<TSimType>::HasMagOCImposed>
+   template <typename TSimTraits, bool TICImposed> class ImposedCodMagVelWriter<TSimTraits, TICImposed, false>: public ImposedCodMagWriter<TSimTraits, TSimTraits::HasMagICImposed, TSimTraits::HasMagOCImposed>
    {
       public:
          
@@ -103,8 +104,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, bool TICImposed> ImposedCodMagVelWriter<TSimType, TSimTraits, TICImposed, false>::ImposedCodMagVelWriter(std::string name, SmartTruncation pTrunc)
-      : ImposedCodMagWriter<TSimType, TSimTraits, TSimTraits<TSimType>::HasMagICImposed, TSimTraits<TSimType>::HasMagOCImposed>(name, pTrunc)
+   template <typename TSimTraits, bool TICImposed> ImposedCodMagVelWriter<TSimTraits, TICImposed, false>::ImposedCodMagVelWriter(std::string name, SmartTruncation pTrunc)
+      : ImposedCodMagWriter<TSimTraits, TSimTraits::HasMagICImposed, TSimTraits::HasMagOCImposed>(name, pTrunc)
    {
    }
 
