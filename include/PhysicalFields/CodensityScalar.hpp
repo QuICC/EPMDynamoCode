@@ -5,6 +5,10 @@
 #ifndef CODENSITYSCALAR_HPP
 #define CODENSITYSCALAR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
 #include "PhysicalFields/Traits/DefaultCodTraits.hpp"
 #include "PhysicalFields/Traits/ScalarNTermsTraits.hpp"
@@ -23,17 +26,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the Codensity scalar
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TCodTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TCodTraits = DefaultCodTraits> class CodensityScalar: public PhysicalVariable<TSimType, TCodTraits>
+   template <typename TCodTraits = DefaultCodTraits> class CodensityScalar: public PhysicalVariable<TCodTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the type of the required non-linear terms
-         typedef PhysicalVariable<TSimType,ScalarNTermsTraits>    NTermsType;
+         typedef PhysicalVariable<ScalarNTermsTraits>    NTermsType;
 
          /**
           * @brief Constructor
@@ -55,8 +57,8 @@ namespace EPMDynamo {
    };
 
 
-   template <typename TSimType, template <typename> class TCodTraits> CodensityScalar<TSimType, TCodTraits>::CodensityScalar(SmartTruncation pTrunc, typename CodensityScalar<TSimType, TCodTraits>::TransformType &transform)
-      : PhysicalVariable<TSimType, TCodTraits>(pTrunc, transform)
+   template <typename TCodTraits> CodensityScalar<TCodTraits>::CodensityScalar(SmartTruncation pTrunc, typename CodensityScalar<TCodTraits>::TransformType &transform)
+      : PhysicalVariable<TCodTraits>(pTrunc, transform)
    {
    }
 

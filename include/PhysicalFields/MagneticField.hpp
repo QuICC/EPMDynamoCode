@@ -5,6 +5,10 @@
 #ifndef MAGNETICFIELD_HPP
 #define MAGNETICFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
 #include "PhysicalFields/Traits/DefaultMagTraits.hpp"
 #include "PhysicalFields/Traits/FieldNTermsTraits.hpp"
@@ -23,17 +26,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the Magnetic vector field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TMagTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TMagTraits = DefaultMagTraits> class MagneticField: public PhysicalVariable<TSimType, TMagTraits>
+   template <typename TMagTraits = DefaultMagTraits> class MagneticField: public PhysicalVariable<TMagTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the type of the required non-linear terms
-         typedef PhysicalVariable<TSimType,FieldNTermsTraits>    NTermsType;
+         typedef PhysicalVariable<FieldNTermsTraits>    NTermsType;
 
          /**
           * @brief Constructor
@@ -53,8 +55,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TMagTraits> MagneticField<TSimType, TMagTraits>::MagneticField(SmartTruncation pTrunc, typename MagneticField<TSimType, TMagTraits>::TransformType &transform)
-      : PhysicalVariable<TSimType, TMagTraits>(pTrunc, transform)
+   template <typename TMagTraits> MagneticField<TMagTraits>::MagneticField(SmartTruncation pTrunc, typename MagneticField<TMagTraits>::TransformType &transform)
+      : PhysicalVariable<TMagTraits>(pTrunc, transform)
    {
    }
 }

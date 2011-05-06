@@ -5,6 +5,9 @@
 #ifndef THERMALCONVECTIONTRAITS_HPP
 #define THERMALCONVECTIONTRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -22,14 +25,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for the thermal convection simulation implementation
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThermalConvectionTraits
+   class ThermalConvectionTraits
    {
       public:
          /// Typedef for the codensity scalar type
-         typedef CodensityScalar<TSimType>  CodType;
+         typedef CodensityScalar<>  CodType;
 
          /// Does the codensity field have an IC source ?
          static const bool HasCodICSource = false;
@@ -52,7 +53,7 @@ namespace EPMDynamo {
 
 
          /// Typedef for the magnetic field type
-         typedef MagneticField<TSimType>  MagType;
+         typedef MagneticField<>  MagType;
 
          /// Does the magnetic field have an IC source ?
          static const bool HasMagICSource = false;
@@ -75,7 +76,7 @@ namespace EPMDynamo {
 
 
          /// Typedef for the velocity field type
-         typedef VelocityField<TSimType>   VelType; 
+         typedef VelocityField<>   VelType; 
 
          /// Does the velocity field have an IC source ?
          static const bool HasVelICSource = false;

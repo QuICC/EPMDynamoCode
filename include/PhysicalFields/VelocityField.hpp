@@ -5,6 +5,10 @@
 #ifndef VELOCITYFIELD_HPP
 #define VELOCITYFIELD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "PhysicalFields/Traits/DefaultVelTraits.hpp"
 #include "PhysicalFields/Traits/FieldNTermsTraits.hpp"
 #include "PhysicalFields/PhysicalVariable.hpp"
@@ -23,17 +26,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the Velocity vector field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TVelTraits Type of the field
     */
-   template <typename TSimType, template <typename> class TVelTraits = DefaultVelTraits> class VelocityField: public PhysicalVariable<TSimType, TVelTraits>
+   template <typename TVelTraits = DefaultVelTraits> class VelocityField: public PhysicalVariable<TVelTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef for the type of the required non-linear terms
-         typedef PhysicalVariable<TSimType,FieldNTermsTraits>    NTermsType;
+         typedef PhysicalVariable<FieldNTermsTraits>    NTermsType;
 
          /**
           * @brief Constructor
@@ -53,8 +55,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TVelTraits> VelocityField<TSimType, TVelTraits>::VelocityField(SmartTruncation pTrunc, typename VelocityField<TSimType, TVelTraits>::TransformType &transform)
-      : PhysicalVariable<TSimType, TVelTraits>(pTrunc, transform)
+   template <typename TVelTraits> VelocityField<TVelTraits>::VelocityField(SmartTruncation pTrunc, typename VelocityField<TVelTraits>::TransformType &transform)
+      : PhysicalVariable<TVelTraits>(pTrunc, transform)
    {
    }
 

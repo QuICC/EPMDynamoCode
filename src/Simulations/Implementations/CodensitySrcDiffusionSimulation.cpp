@@ -1,0 +1,141 @@
+/** \file CodensitySrcDiffusionSimulation.cpp
+ *  \brief Implementation of a codensity diffusion simulation
+ */
+
+// Configuration includes
+//
+
+// System includes
+//
+
+// External includes
+//
+
+// Class include
+//
+#include "Simulations/Implementations/CodensitySrcDiffusionSimulation.hpp"
+
+// Project includes
+//
+
+namespace EPMDynamo {
+
+   CodensitySrcDiffusionSimulation::CodensitySrcDiffusionSimulation()
+      : mCodC(this->mpTrunc, this->mTransform), mTransport(mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+   {
+   }
+
+   void CodensitySrcDiffusionSimulation::initEquations()
+   {
+      // Set boundary condition to the transport equation
+      SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
+      this->mTransport.addBC(pZeroBC);
+
+      // Initialise the transport equation
+      this->mTransport.init();
+   }
+
+   void CodensitySrcDiffusionSimulation::configureTransforms()
+   {
+      //
+      // Setup the SSH transform data manipulator
+      //
+
+      // Register transform data packs of transport equation for SSH
+      this->registerSSHPacks(this->mTransport.nFSSHPacks(), this->mTransport.nSSHBPacks());
+
+      // Configure the SSH manipulator
+      this->configureSSHManipulator();
+
+      //
+      // Setup the SH transform data manipulator
+      //
+
+      // Register transform data packs of transport equation for SH
+      this->registerSHPacks(this->mTransport.nFSHPacks(), this->mTransport.nSHBPacks());
+
+      // Configure the SSH manipulator
+      this->configureSHManipulator();
+
+      //
+      // Configure transform nesting
+      //
+
+      // Configure the transforms' nesting setup
+      this->configureTransformNesting();
+   }
+
+   void CodensitySrcDiffusionSimulation::updateEquationsRTP(const int step)
+   {
+      // Update RTP values of the transport equation
+      this->mTransport.updateRTP(step);
+   }
+
+   void CodensitySrcDiffusionSimulation::updateEquationsRHS()
+   {
+      // Update RHS of the transport equation
+      this->mTransport.updateRHS();
+   }
+
+   void CodensitySrcDiffusionSimulation::transformEquationsRHS(const int step)
+   {
+      // Update RHS of the transport equation
+      this->mTransport.transformRHS(step);
+   }
+
+   void CodensitySrcDiffusionSimulation::addExternalInfluence()
+   {
+   }
+
+   void CodensitySrcDiffusionSimulation::timestepEquations()
+   {
+      // Timestep the transport equation
+      this->mTransport.timestep();
+   }
+
+   void CodensitySrcDiffusionSimulation::initFields()
+   {
+      // Create a state file reader for the initial state
+      EPMSHARED_PTR<StateFileReader<CodensitySrcDiffusionTraits> > pInState(new StateFileReader<CodensitySrcDiffusionTraits>(this->mCodC,  "_initial"));
+
+      // Read in initial state
+      this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
+
+      // Create a source file reader for the codensity source
+      EPMSHARED_PTR<SourceFileReader<CodensitySrcDiffusionTraits> > pSource(new SourceFileReader<CodensitySrcDiffusionTraits>(this->mCodC));
+
+      // Read in source state
+      this->mIOSys.useSource(pSource);
+
+      // Rescale the source term to correct parameter related value
+      this->mCodC.rOcSrc().rescale(this->mEqParams.codSourceScale());
+   }
+
+   void CodensitySrcDiffusionSimulation::addHDF5Output()
+   {
+      EPMSHARED_PTR<StateFileWriter<CodensitySrcDiffusionTraits> >  pOutState(new StateFileWriter<CodensitySrcDiffusionTraits>(this->mCodC, this->mEqParams, this->mSimControl.tsParams()));
+
+      this->mIOSys.addHDF5Writer(pOutState);
+   }
+
+   void CodensitySrcDiffusionSimulation::addASCIIOutput()
+   {
+      // Create a timestep ASCII logging file
+      EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
+      // Add time file to ASCII output
+      this->mIOSys.addASCIIWriter(pTimeFile);
+
+      // Create a energy ASCII diagnostic file for the codensity field
+      EPMSHARED_PTR<EnergyFile<CodensitySrcDiffusionTraits::CodType> > pCodEnergy(new EnergyFile<CodensitySrcDiffusionTraits::CodType>(mCodC, "cod", this->mSimControl.tsParams()));
+
+      // Add kinetic energy to ASCII output
+      this->mIOSys.addASCIIWriter(pCodEnergy);
+
+      // Create a energy spectrum ASCII diagnostic file for the codensity field
+      EPMSHARED_PTR<SpectrumFile<CodensitySrcDiffusionTraits::CodType> > pCodSpectrum(new SpectrumFile<CodensitySrcDiffusionTraits::CodType>(this->mCodC, "cod"));
+
+      // Add kinetic energy spectrum to ASCII output
+      this->mIOSys.addASCIIWriter(pCodSpectrum);
+   }
+
+}

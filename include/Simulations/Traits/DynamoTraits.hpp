@@ -5,6 +5,10 @@
 #ifndef DYNAMOTRAITS_HPP
 #define DYNAMOTRAITS_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -20,11 +24,11 @@
 
 namespace EPMDynamo {
 
-   template <typename TSimType> class DynamoCodTraits
+   class DynamoCodTraits
    {
       public:
          /// Typedef for the simulation type
-         typedef TSimType  SimulationType;
+         typedef SimulationConfig::NumericalScheme  SimulationType;
 
          /// Does the codensity field have an IC imposed field ? 
          static const bool HasICImposed = false; 
@@ -55,14 +59,12 @@ namespace EPMDynamo {
 
    /**
     * @brief Dynamo traits class
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class DynamoTraits
+   class DynamoTraits
    {
       public:
          /// Typedef for the codensity scalar type
-         typedef CodensityScalar<TSimType>  CodType;
+         typedef CodensityScalar<>  CodType;
 
          /// Does the codensity field have an IC source ?
          static const bool HasCodICSource = false;
@@ -85,7 +87,7 @@ namespace EPMDynamo {
 
 
          /// Typedef for the magnetic field type
-         typedef MagneticField<TSimType>  MagType;
+         typedef MagneticField<>  MagType;
 
          /// Does the magnetic field have an IC source ?
          static const bool HasMagICSource = false;
@@ -108,7 +110,7 @@ namespace EPMDynamo {
 
 
          /// Typedef for the velocity field type
-         typedef VelocityField<TSimType>   VelType; 
+         typedef VelocityField<>   VelType; 
 
          /// Does the velocity field have an IC source ?
          static const bool HasVelICSource = false;

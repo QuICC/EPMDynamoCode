@@ -5,6 +5,10 @@
 #ifndef PHYSICALVARIABLE_HPP
 #define PHYSICALVARIABLE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,20 +17,16 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "Domain/Truncation.hpp"
-
-#include "boost/static_assert.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief This class implements the abstract concept of a physical variable, independently of it being a vector field or a scalar field
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TVariableTraits Traits describing properties of field (domain, sources, imposed, ...)
     */
-   template <typename TSimType, template <typename> class TVariableTraits> class PhysicalVariable : public TVariableTraits<TSimType>::VariableType
+   template <typename TVariableTraits> class PhysicalVariable : public TVariableTraits::VariableType
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -50,8 +50,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename>  class TVariableTraits> PhysicalVariable<TSimType, TVariableTraits>::PhysicalVariable(SmartTruncation pTrunc, typename PhysicalVariable<TSimType,TVariableTraits>::TransformType &transform)
-      : TVariableTraits<TSimType>::VariableType(pTrunc, transform)
+   template <typename TVariableTraits> PhysicalVariable<TVariableTraits>::PhysicalVariable(SmartTruncation pTrunc, typename PhysicalVariable<TVariableTraits>::TransformType &transform)
+      : TVariableTraits::VariableType(pTrunc, transform)
    {
    }
 
