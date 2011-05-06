@@ -5,6 +5,9 @@
 #ifndef ETDOPERATORS_HPP
 #define ETDOPERATORS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,10 +24,9 @@ namespace EPMDynamo {
    /**
     * \brief General implementation of a set of ETDOperators
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TOpType Type of the operator
     */
-   template <typename TSimType, typename TOpType> class ETDOperators: public BoundedOperatorSet<TOpType>
+   template <typename TOpType> class ETDOperators: public BoundedOperatorSet<TOpType>
    {
       public:
          /**
@@ -67,7 +69,7 @@ namespace EPMDynamo {
          EPMFloat mH;
    };
 
-   template <typename TSimType, typename TOpType> inline EPMFloat ETDOperators<TSimType, TOpType>::h() const
+   template <typename TOpType> inline EPMFloat ETDOperators<TOpType>::h() const
    {
       // Guard from uninitialised timestep length
       assert(this->mH > 0.0);
@@ -75,12 +77,12 @@ namespace EPMDynamo {
       return this->mH;
    }
 
-   template <typename TSimType, typename TOpType> ETDOperators<TSimType, TOpType>::ETDOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
+   template <typename TOpType> ETDOperators<TOpType>::ETDOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
       : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mC(c), mH(-1)
    {
    }
 
-   template <typename TSimType, typename TOpType> void ETDOperators<TSimType, TOpType>::updateTimestep(EPMFloat h)
+   template <typename TOpType> void ETDOperators<TOpType>::updateTimestep(EPMFloat h)
    {
       // Guard from uninitialised timestep length
       assert(h > 0.0);

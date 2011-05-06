@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SmartPointer.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -19,20 +20,17 @@
 //
 #include "Domain/Truncation.hpp"
 #include "Timestepping/TimestepParameters.hpp"
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Base for any implementation of timestep scheme
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class TimestepSchemeBase
+   class TimestepSchemeBase
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local scalar type
          typedef EPMSHARED_PTR<ScalarType>  SmartScalarType;
@@ -120,81 +118,41 @@ namespace EPMDynamo {
          ScalarType& rOldNTerms();
    };
 
-   template <typename TSimType> inline TimestepParameters& TimestepSchemeBase<TSimType>::rTSParams()
+   inline TimestepParameters& TimestepSchemeBase::rTSParams()
    {
       return this->mrTStepParams;
    }
 
-   template <typename TSimType> inline typename TimestepSchemeBase<TSimType>::SmartScalarType TimestepSchemeBase<TSimType>::pOldVar() const
+   inline TimestepSchemeBase::SmartScalarType TimestepSchemeBase::pOldVar() const
    {
       return this->mpOldVar;
    }
 
-   template <typename TSimType> inline const typename TimestepSchemeBase<TSimType>::ScalarType& TimestepSchemeBase<TSimType>::oldVar() const
+   inline const TimestepSchemeBase::ScalarType& TimestepSchemeBase::oldVar() const
    {
       return (*this->mpOldVar);
    }
 
-   template <typename TSimType> inline typename TimestepSchemeBase<TSimType>::ScalarType& TimestepSchemeBase<TSimType>::rOldVar()
+   inline TimestepSchemeBase::ScalarType& TimestepSchemeBase::rOldVar()
    {
       return (*this->mpOldVar);
    }
 
-   template <typename TSimType> inline typename TimestepSchemeBase<TSimType>::SmartScalarType TimestepSchemeBase<TSimType>::pOldNTerms() const
+   inline TimestepSchemeBase::SmartScalarType TimestepSchemeBase::pOldNTerms() const
    {
       return this->mpOldNTerms;
    }
 
-   template <typename TSimType> inline const typename TimestepSchemeBase<TSimType>::ScalarType& TimestepSchemeBase<TSimType>::oldNTerms() const
+   inline const TimestepSchemeBase::ScalarType& TimestepSchemeBase::oldNTerms() const
    {
       return (*this->mpOldNTerms);
    }
 
-   template <typename TSimType> inline typename TimestepSchemeBase<TSimType>::ScalarType& TimestepSchemeBase<TSimType>::rOldNTerms()
+   inline TimestepSchemeBase::ScalarType& TimestepSchemeBase::rOldNTerms()
    {
       return (*this->mpOldNTerms);
    }
 
-   template <typename TSimType> TimestepSchemeBase<TSimType>::TimestepSchemeBase(TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : mrTStepParams(tsteps), mpOldVar(new ScalarType(pTrunc, hasL0)), mpOldNTerms(new ScalarType(pTrunc, hasL0)) 
-   {
-   }
-
-   template <typename TSimType> void TimestepSchemeBase<TSimType>::storeOld(const typename TimestepSchemeBase<TSimType>::ScalarType& var, const typename TimestepSchemeBase<TSimType>::ScalarType& nTerms)
-   {
-      // Get number of harmonic degrees
-      int nL = this->oldNTerms().nL();
-      // Get minimum harmonic degrees
-      const int l0 = this->oldNTerms().minL();
-
-      // Loop over degrees
-      for(int l = l0; l < nL; ++l)
-      {
-         // Store previous timestep variables
-         this->rOldVar().rLShell(l) = var.lshell(l);
-
-         // Store previous timestep nterms
-         this->rOldNTerms().rLShell(l) = nTerms.lshell(l);
-      }
-   }
-
-   template <typename TSimType> void TimestepSchemeBase<TSimType>::restoreOld(typename TimestepSchemeBase<TSimType>::ScalarType& rVar, typename TimestepSchemeBase<TSimType>::ScalarType& nTerms)
-   {
-      // Get number of harmonic degrees
-      int nL = this->oldNTerms().nL();
-      // Get minimu harmonic degrees
-      const int l0 = this->oldNTerms().minL();
-
-      // Loop over degrees
-      for(int l = l0; l < nL; ++l)
-      {
-         // Recover previous timestep variables
-         rVar.rLShell(l) = this->oldVar().lshell(l);
-
-         // Recover previous timestep nterms
-         nTerms.rLShell(l) = this->oldNTerms().lshell(l);
-      }
-   }
 }
 
 #endif // TIMESTEPSCHEMEBASE_HPP

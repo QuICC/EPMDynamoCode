@@ -17,22 +17,17 @@
 
 namespace EPMDynamo {
 
-   // Forward declarations
-   template <typename> class ErrorModeL2Max;
-
    /**
     * \brief Traits to some global aspects of the theta scheme
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaTraits
+   class ThetaTraits
    {
       public:
          /// Implicitness value of the theta scheme
          static const EPMFloat theta;
 
          /// Typedef for the error norm type
-         typedef ErrorModeL2Max<TSimType>   ErrorNormType;
+         typedef ErrorModeL2Max   ErrorNormType;
 
          /// Type of timestep controller to use
          static const TimestepCtrlTypes  CtrlType = H211BCtrl;
@@ -43,19 +38,6 @@ namespace EPMDynamo {
          /// Use windowes adaptive timestep
          static const bool useWindowed = false;
    };
-
-   template <typename TSimType> const EPMFloat ThetaTraits<TSimType>::theta = 0.5; 
-
-   template <typename TSimType> int ThetaTraits<TSimType>::order()
-   {
-      if(ThetaTraits<TSimType>::theta == 0.5)
-      {
-         return 2;
-      } else
-      {
-         return 1;
-      }
-   }; 
 
 }
 

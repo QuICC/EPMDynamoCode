@@ -5,6 +5,9 @@
 #ifndef ETDSCHEMETRAITS_HPP
 #define ETDSCHEMETRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -21,37 +24,29 @@
 
 namespace EPMDynamo {
 
-   // Forward declaration
-   template <typename> class ETD1Method;
-   template <typename> class ETD1InfluenceMethod;
-   template <typename> class ETD2RKMethod;
-   template <typename> class ETD2RKInfluenceMethod;
-
    /**
     * \brief Traits to describe the requested ETD scheme
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETDSchemeTraits
+   class ETDSchemeTraits
    {
       public:
          /// Typedef for the "general" setup traits
-//         typedef ETD1Traits<TSimType>  MethodTraits;
-         typedef ETD2RKTraits<TSimType>  MethodTraits;
+//         typedef ETD1Traits  MethodTraits;
+         typedef ETD2RKTraits  MethodTraits;
 
          /// Typedef for the simple timestepper (without influence matrix step)
-//         typedef IterativeScheme<TSimType, ETD1Method>   Timestepper;  
-         typedef IterativeScheme<TSimType, ETD2RKMethod>   Timestepper;  
+//         typedef IterativeScheme<ETD1Method>   Timestepper;  
+         typedef IterativeScheme<ETD2RKMethod>   Timestepper;  
 
          /// Typedef for the timestepper with influence matrix step
-//         typedef IterativeScheme<TSimType, ETD1InfluenceMethod>   InfluenceTimestepper;  
-         typedef IterativeScheme<TSimType, ETD2RKInfluenceMethod>   InfluenceTimestepper;  
+//         typedef IterativeScheme<ETD1InfluenceMethod>   InfluenceTimestepper;  
+         typedef IterativeScheme<ETD2RKInfluenceMethod>   InfluenceTimestepper;  
 
          /// Typedef for the timestep control object
          typedef ETDTimestepControl<MethodTraits>   TimestepControl;
 
          /// Typedefs for the ETD operators
-         typedef ETDOperators<TSimType, DenseOperator>  Operators;
+         typedef ETDOperators<DenseOperator>  Operators;
    };
 
 }

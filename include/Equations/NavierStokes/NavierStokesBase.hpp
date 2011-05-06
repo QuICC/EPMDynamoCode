@@ -5,6 +5,10 @@
 #ifndef NAVIERSTOKESBASE_HPP
 #define NAVIERSTOKESBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/TorPolDiffusionEquation.hpp"
 
@@ -22,17 +25,16 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Navier-Stokes equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     * \tparam TInfluenceTraits Traits for the influence matrix step
     */
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> class NavierStokesBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>  {
+   template <typename TSimTraits, template <typename> class TInfluenceTraits> class NavierStokesBase : public TorPolDiffusionEquation<typename TSimTraits::VelType, TInfluenceTraits>  {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
          typedef SimulationConfig::EquationParametersType EquationParametersType;
@@ -45,7 +47,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesBase(typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -86,30 +88,30 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::nSSHBPacks() const
+   template <typename TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimTraits, TInfluenceTraits>::nSSHBPacks() const
    {
       #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
+         return 3*(TSimTraits::NeedVelocity + TSimTraits::NeedVelocityCurl);
       #else
-         return 3*(TSimTraits<TSimType>::NeedVelocity || TSimTraits<TSimType>::NeedVelocityCurl);
+         return 3*(TSimTraits::NeedVelocity || TSimTraits::NeedVelocityCurl);
       #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::nSHBPacks() const
+   template <typename TSimTraits, template <typename> class TInfluenceTraits> inline int NavierStokesBase<TSimTraits, TInfluenceTraits>::nSHBPacks() const
    {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         return 3*(TSimTraits<TSimType>::NeedVelocity + TSimTraits<TSimType>::NeedVelocityCurl);
+         return 3*(TSimTraits::NeedVelocity + TSimTraits::NeedVelocityCurl);
       #else
-         return (TSimTraits<TSimType>::NeedVelocity || TSimTraits<TSimType>::NeedVelocityCurl);
+         return (TSimTraits::NeedVelocity || TSimTraits::NeedVelocityCurl);
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::EquationParametersType &params)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 2, params.nsDt(), params.nsDiffusion()), mrParams(params)
+   template <typename TSimTraits, template <typename> class TInfluenceTraits> NavierStokesBase<TSimTraits, TInfluenceTraits>::NavierStokesBase(typename TSimTraits::VelType &rV, typename NavierStokesBase<TSimTraits, TInfluenceTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesBase<TSimTraits, TInfluenceTraits>::EquationParametersType &params)
+      : TorPolDiffusionEquation<typename TSimTraits::VelType, TInfluenceTraits>(rV, transform, tsteps, 1, 2, params.nsDt(), params.nsDiffusion()), mrParams(params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits, template <typename> class TInfluenceTraits> void NavierStokesBase<TSimType, TSimTraits, TInfluenceTraits>::init()
+   template <typename TSimTraits, template <typename> class TInfluenceTraits> void NavierStokesBase<TSimTraits, TInfluenceTraits>::init()
    {
       // Check that the right number of BCs have been provided
       if(this->hasAllBCs())

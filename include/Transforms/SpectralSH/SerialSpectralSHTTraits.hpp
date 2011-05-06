@@ -23,14 +23,12 @@ namespace EPMDynamo {
 
    /**
     * \brief Traits for a serial radial transform 
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class SerialSpectralSHTTraits
+   class SerialSpectralSHTTraits
    {
       public:
          /// Typedef for the Spectral Toroidal/Poloidal data type
-         typedef TorPolField<TSimType> TorPolFieldType;
+         typedef TorPolField TorPolFieldType;
 
          /// Typedef for the FDSH forward data type scalar data type
          typedef FDSHOrderScalar FDSHForwardType;

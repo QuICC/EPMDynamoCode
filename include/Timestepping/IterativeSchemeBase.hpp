@@ -5,6 +5,10 @@
 #ifndef ITERATIVESCHEMEBASE_HPP
 #define ITERATIVESCHEMEBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -18,29 +22,26 @@
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/TimestepSchemeBase.hpp"
 #include "Timestepping/SchemeIteration.hpp"
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Base of the implementation of an iterative timestep scheme
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class IterativeSchemeBase: public TimestepSchemeBase<TSimType>
+   class IterativeSchemeBase: public TimestepSchemeBase
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for a smart pointer to a scalar type
          typedef EPMSHARED_PTR<ScalarType>   SmartScalarType;
 
          /// Typedef for the smart pointer to an general iteration
-         typedef EPMSHARED_PTR<SchemeIteration<TSimType> >   SmartIteration;
+         typedef EPMSHARED_PTR<SchemeIteration >   SmartIteration;
 
          /**
           * @brief Constructor
@@ -70,7 +71,7 @@ namespace EPMDynamo {
          /**
           * @brief  Iterator to current iteration
           */
-         typename std::vector<SmartIteration>::iterator  mCurrentIt;
+         std::vector<SmartIteration>::iterator  mCurrentIt;
 
          /**
           * @brief \f$a\f$ coefficient of timestep operator
@@ -113,34 +114,6 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> IterativeSchemeBase<TSimType>::IterativeSchemeBase(EPMFloat a, EPMFloat b, const typename IterativeSchemeBase<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : TimestepSchemeBase<TSimType>(tsteps, pTrunc, hasL0), mA(a), mB(b), mrBasis(basis)
-   {
-   }
-
-   template <typename TSimType> void IterativeSchemeBase<TSimType>::resetIterations()
-   {
-      this->mCurrentIt = this->mSteps.begin();
-   }
-
-   template <typename TSimType> void IterativeSchemeBase<TSimType>::doIteration(typename IterativeSchemeBase<TSimType>::ScalarType& rVar, typename IterativeSchemeBase<TSimType>::ScalarType& rNTerms)
-   {
-      // Do step computation
-      (*this->mCurrentIt)->compute(rVar, rNTerms);
-
-      // Update the error from timestep
-      if((*this->mCurrentIt)->providesError())
-      {
-         this->rTSParams().updateError(ErrorControl<TSimType>::errorNorm(rNTerms, this->oldVar(), this->rTSParams().error()));
-      }
-
-      // Go one iteration further (this allows to stay on the same iteration several times)
-      if((*this->mCurrentIt)->doNextIteration())
-      {
-         // Go forward one step
-         ++this->mCurrentIt;
-      }
-   }
 }
 
 #endif // ITERATIVESCHEMEBASE_HPP

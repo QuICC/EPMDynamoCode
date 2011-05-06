@@ -5,6 +5,10 @@
 #ifndef NAVIERSTOKESNLDIFFUSION_HPP
 #define NAVIERSTOKESNLDIFFUSION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesDiffusion.hpp"
 
@@ -22,17 +25,16 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Navier-Stokes diffusion equation with non-linear term
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesNLDiffusion : public NavierStokesDiffusion<TSimType, TSimTraits>
+   template <typename TSimTraits> class NavierStokesNLDiffusion : public NavierStokesDiffusion<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
          typedef SimulationConfig::EquationParametersType EquationParametersType;
@@ -45,7 +47,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesNLDiffusion(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesNLDiffusion(typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -69,12 +71,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesNLDiffusion<TSimType, TSimTraits>::NavierStokesNLDiffusion(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesNLDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesNLDiffusion<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesDiffusion<TSimType, TSimTraits>(rV, transform, tsteps, params)
+   template <typename TSimTraits> NavierStokesNLDiffusion<TSimTraits>::NavierStokesNLDiffusion(typename TSimTraits::VelType &rV, typename NavierStokesNLDiffusion<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesNLDiffusion<TSimTraits>::EquationParametersType &params)
+      : NavierStokesDiffusion<TSimTraits>(rV, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesNLDiffusion<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void NavierStokesNLDiffusion<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
@@ -83,7 +85,7 @@ namespace EPMDynamo {
       this->mrX.rOc().curlTransform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesNLDiffusion<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void NavierStokesNLDiffusion<TSimTraits>::updateRHS()
    {
       // Compute \f$u\times (\nabla \times u) \f$
       this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());

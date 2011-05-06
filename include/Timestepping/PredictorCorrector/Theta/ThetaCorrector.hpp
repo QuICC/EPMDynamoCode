@@ -5,6 +5,10 @@
 #ifndef THETACORRECTOR_HPP
 #define THETACORRECTOR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -21,23 +25,21 @@ namespace EPMDynamo {
 
    /**
     * \brief Implemenation of the corrector step of the theta method
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaCorrector: public SchemeIteration<TSimType>
+   class ThetaCorrector: public SchemeIteration
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// typedef for a pointer to a scalar type
           typedef EPMSHARED_PTR<ScalarType> SmartScalarType;
 
          /// Typedef for a smart pointer to LHS operator set
-         typedef EPMSHARED_PTR<ThetaLHSTOperatorSet<TSimType> > SmartLHSOperators;
+         typedef EPMSHARED_PTR<ThetaLHSTOperatorSet > SmartLHSOperators;
 
          /// Typedef for a smart pointer to RHS operator set
-         typedef EPMSHARED_PTR<ThetaRHSTOperatorSet<TSimType> > SmartRHSOperators;
+         typedef EPMSHARED_PTR<ThetaRHSTOperatorSet > SmartRHSOperators;
 
          /**
           * @brief Constructor
@@ -116,71 +118,16 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaCorrector<TSimType>::ThetaCorrector(typename ThetaCorrector<TSimType>::SmartScalarType pPrevious, typename ThetaCorrector<TSimType>::SmartLHSOperators pOpLHS, typename ThetaCorrector<TSimType>::SmartRHSOperators pOpRHS)
-      : mpPreviousNTerms(pPrevious), mpOpLHS(pOpLHS), mpOpRHS(pOpRHS)
-   {
-   }
-
-   template <typename TSimType> inline bool ThetaCorrector<TSimType>::providesError() const
+   inline bool ThetaCorrector::providesError() const
    {
       return true;
    }
 
-   template <typename TSimType> inline bool ThetaCorrector<TSimType>::doNextIteration() const
+   inline bool ThetaCorrector::doNextIteration() const
    {
       return false;
    }
 
-   template <typename TSimType> void ThetaCorrector<TSimType>::compute(typename ThetaCorrector<TSimType>::ScalarType &rVar, typename ThetaCorrector<TSimType>::ScalarType &rNTerms)
-   {
-      // Set the RHS part of corrector step
-      this->setRHS(rNTerms);
-
-      // Solve corrector equations
-      this->solve(rNTerms);
-
-      // Use corrector solution
-      this->useCorrection(rVar, rNTerms);
-   }
-
-   template <typename TSimType> void ThetaCorrector<TSimType>::setRHS(typename ThetaCorrector<TSimType>::ScalarType& rNTerms)
-   {
-      // Get number of harmonic degrees
-      int nL = this->mpOpRHS->trunc()->local()->spec()->nL();
-      const int l0 = this->mpPreviousNTerms->minL();
-
-      // Loop over degrees
-      for(int l = l0; l < nL; ++l)
-      {
-         rNTerms.rLShell(l) = ThetaTraits<TSimType>::theta*(rNTerms.lshell(l) - this->mpPreviousNTerms->lshell(l));
-      }
-   }
-
-   template <typename TSimType> void ThetaCorrector<TSimType>::solve(typename ThetaCorrector<TSimType>::ScalarType& rNTerms)
-   {
-      // Get the correction to the unknown variable
-      this->mpOpLHS->solveZero(rNTerms);
-   }
-
-   template <typename TSimType> void ThetaCorrector<TSimType>::useCorrection(typename ThetaCorrector<TSimType>::ScalarType& rVar, const typename ThetaCorrector<TSimType>::ScalarType& nTerms)
-   {
-      // Add correction to unknown
-      this->addCorrection(rVar, nTerms);
-   }
-
-   template <typename TSimType> void ThetaCorrector<TSimType>::addCorrection(typename ThetaCorrector<TSimType>::ScalarType& rVar, const typename ThetaCorrector<TSimType>::ScalarType& corr) const
-   {
-      // Get number of harmonic degrees and minimal index
-      int nL = rVar.nL();
-      int l0 = rVar.minL();
-
-      // loop over degrees
-      for(int l = l0; l < nL; ++l)
-      {
-         // Add corrector correction to solution
-         rVar.rLShell(l) += corr.lshell(l);
-      }
-   }
 }
 
 #endif // THETACORRECTOR_HPP

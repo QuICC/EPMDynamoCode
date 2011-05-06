@@ -5,6 +5,10 @@
 #ifndef TRANSPORTSOURCE_HPP
 #define TRANSPORTSOURCE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Transport/TransportDiffusion.hpp"
 
@@ -22,10 +25,9 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Transport equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportSource: public TransportDiffusion<TSimType, TSimTraits>
+   template <typename TSimTraits> class TransportSource: public TransportDiffusion<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -42,7 +44,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportSource(typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
+         TransportSource(typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
 
          /**
          * @brief Simple empty destructor
@@ -59,12 +61,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportSource<TSimType, TSimTraits>::TransportSource(typename TSimTraits<TSimType>::CodType &rC, typename TransportSource<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportSource<TSimType, TSimTraits>::EquationParametersType &params)
-      : TransportDiffusion<TSimType, TSimTraits>(rC, transform, tsteps, params)
+   template <typename TSimTraits> TransportSource<TSimTraits>::TransportSource(typename TSimTraits::CodType &rC, typename TransportSource<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportSource<TSimTraits>::EquationParametersType &params)
+      : TransportDiffusion<TSimTraits>(rC, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportSource<TSimType, TSimTraits>::addSourceTerm()
+   template <typename TSimTraits> void TransportSource<TSimTraits>::addSourceTerm()
    {
       int nL = this->mrX.oc().perturbation().nL();
       const int l0 = this->mrX.oc().perturbation().minL();

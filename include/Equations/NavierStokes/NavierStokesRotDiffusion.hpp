@@ -5,6 +5,10 @@
 #ifndef NAVIERSTOKESROTDIFFUSION_HPP
 #define NAVIERSTOKESROTDIFFUSION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesDiffusion.hpp"
 
@@ -22,17 +25,16 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Navier-Stokes diffusion equation with coriolis term
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesRotDiffusion : public NavierStokesDiffusion<TSimType, TSimTraits>
+   template <typename TSimTraits> class NavierStokesRotDiffusion : public NavierStokesDiffusion<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
          typedef SimulationConfig::EquationParametersType EquationParametersType;
@@ -45,7 +47,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesRotDiffusion(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesRotDiffusion(typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -69,18 +71,18 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesRotDiffusion<TSimType, TSimTraits>::NavierStokesRotDiffusion(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesRotDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesRotDiffusion<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesDiffusion<TSimType, TSimTraits>(rV, transform, tsteps, params)
+   template <typename TSimTraits> NavierStokesRotDiffusion<TSimTraits>::NavierStokesRotDiffusion(typename TSimTraits::VelType &rV, typename NavierStokesRotDiffusion<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesRotDiffusion<TSimTraits>::EquationParametersType &params)
+      : NavierStokesDiffusion<TSimTraits>(rV, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotDiffusion<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void NavierStokesRotDiffusion<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesRotDiffusion<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void NavierStokesRotDiffusion<TSimTraits>::updateRHS()
    {
       // Compute \f$\hat{z}\times\vec{u}\f$
       this->mrX.oc().rtp().template crossZVect<0>(this->mNTerms.rOc().rRTP(), -this->mrParams.nsCoriolis());

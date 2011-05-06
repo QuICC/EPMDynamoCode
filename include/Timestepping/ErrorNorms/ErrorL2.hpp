@@ -5,6 +5,10 @@
 #ifndef ERRORL2_HPP
 #define ERRORL2_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,20 +17,18 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the L2 error norm computation
     *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ErrorL2
+   class ErrorL2
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Compute the L2 error norm
@@ -58,7 +60,7 @@ namespace EPMDynamo {
          virtual ~ErrorL2() {};
    };
 
-   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::computeNorm(const typename ErrorL2<TSimType>::ScalarType& rVar, const typename ErrorL2<TSimType>::ScalarType& rRef)
+   inline EPMFloat ErrorL2::computeNorm(const ErrorL2::ScalarType& rVar, const ErrorL2::ScalarType& rRef)
    {
       // Create temporary storage
       EPMFloat norm = 0.0;
@@ -100,13 +102,9 @@ namespace EPMDynamo {
       return norm;
    }
 
-   template <typename TSimType> inline EPMFloat ErrorL2<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
+   inline EPMFloat ErrorL2::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
-   }
-
-   template <typename TSimType> ErrorL2<TSimType>::ErrorL2()
-   {
    }
 
 }

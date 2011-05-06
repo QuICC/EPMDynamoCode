@@ -5,6 +5,10 @@
 #ifndef TRANSPORTMHD_HPP
 #define TRANSPORTMHD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Transport/TransportSource.hpp"
 
@@ -22,10 +25,9 @@ namespace EPMDynamo {
    /**
     * @brief This class implements the full MHD Transport equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportMHD: public TransportSource<TSimType, TSimTraits>
+   template <typename TSimTraits> class TransportMHD: public TransportSource<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -43,7 +45,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportMHD(typename TSimTraits<TSimType>::CodType &rC, typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
+         TransportMHD(typename TSimTraits::CodType &rC, typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
 
          /**
          * @brief Simple empty destructor
@@ -67,17 +69,17 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the velocity field
           */
-         typename TSimTraits<TSimType>::VelType&  mrV;
+         typename TSimTraits::VelType&  mrV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportMHD<TSimType, TSimTraits>::TransportMHD(typename TSimTraits<TSimType>::CodType &rC, typename TSimTraits<TSimType>::VelType &rV, typename TransportMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportMHD<TSimType, TSimTraits>::EquationParametersType &params)
-      : TransportSource<TSimType, TSimTraits>(rC, transform, tsteps, params), mrV(rV)
+   template <typename TSimTraits> TransportMHD<TSimTraits>::TransportMHD(typename TSimTraits::CodType &rC, typename TSimTraits::VelType &rV, typename TransportMHD<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportMHD<TSimTraits>::EquationParametersType &params)
+      : TransportSource<TSimTraits>(rC, transform, tsteps, params), mrV(rV)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportMHD<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void TransportMHD<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of the gradient of codensity scalar
       this->mrX.rOc().gradTransform(step);
@@ -86,7 +88,7 @@ namespace EPMDynamo {
       this->mrV.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportMHD<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void TransportMHD<TSimTraits>::updateRHS()
    {
       // Compute \f$u\cdot\nabla C\f$
       this->mrV.oc().rtp().template dot<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().grad(), -this->mrParams.tptAdvection());

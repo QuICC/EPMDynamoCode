@@ -7,6 +7,10 @@
 #ifndef ITERATIVESCHEME_HPP
 #define ITERATIVESCHEME_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -16,7 +20,6 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Config/SimulationConfig.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 
 namespace EPMDynamo {
@@ -24,17 +27,16 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the high level representation of an iterative timestep scheme
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TMethod The actual timestep method in use
     */
-   template <typename TSimType, template <typename> class TMethod> class IterativeScheme: public TMethod<TSimType>
+   template <typename TMethod> class IterativeScheme: public TMethod
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -66,12 +68,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TMethod> IterativeScheme<TSimType, TMethod>::IterativeScheme(EPMFloat a, EPMFloat b, const typename IterativeScheme<TSimType, TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : TMethod<TSimType>(a, b, basis, tsteps, pTrunc, hasL0) 
+   template <typename TMethod> IterativeScheme<TMethod>::IterativeScheme(EPMFloat a, EPMFloat b, const typename IterativeScheme<TMethod>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
+      : TMethod(a, b, basis, tsteps, pTrunc, hasL0) 
    {
    }
 
-   template <typename TSimType, template <typename> class TMethod> void IterativeScheme<TSimType, TMethod>::timestep(typename IterativeScheme<TSimType, TMethod>::ScalarType& rVar, typename IterativeScheme<TSimType, TMethod>::ScalarType& nTerms)
+   template <typename TMethod> void IterativeScheme<TMethod>::timestep(typename IterativeScheme<TMethod>::ScalarType& rVar, typename IterativeScheme<TMethod>::ScalarType& nTerms)
    {
       // If the timestep has been rejected recover previous timestep values
       if(this->rTSParams().isRejected())

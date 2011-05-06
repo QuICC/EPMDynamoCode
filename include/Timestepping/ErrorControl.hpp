@@ -28,14 +28,12 @@ namespace EPMDynamo {
    /**
     * @brief This class is reponsible for providing the error norm computation routines
     *        How the norm is actually computed is defined in the timestep scheme traits
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ErrorControl
+   class ErrorControl
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef from Simulation trait to local truncation type
          typedef SimulationConfig::TimestepTraits::MethodTraits::ErrorNormType    ErrorNormType;
@@ -63,7 +61,7 @@ namespace EPMDynamo {
          virtual ~ErrorControl() {};
    };
 
-   template <typename TSimType> EPMFloat ErrorControl<TSimType>::errorNorm(const typename ErrorControl<TSimType>::ScalarType& rVar,const typename ErrorControl<TSimType>::ScalarType& rRef, const EPMFloat oldError)
+   EPMFloat ErrorControl::errorNorm(const ErrorControl::ScalarType& rVar,const ErrorControl::ScalarType& rRef, const EPMFloat oldError)
    {
       // Create temporary storage
       EPMFloat norm = 0.0;

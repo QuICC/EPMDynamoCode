@@ -5,6 +5,10 @@
 #ifndef THETALHSTOPERATORSET_HPP
 #define THETALHSTOPERATORSET_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 #include <vector>
@@ -14,7 +18,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
 
@@ -22,17 +25,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Implementation of the \f$\theta\f$-method LHS operator set
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaLHSTOperatorSet: public ThetaTOperatorSet<TSimType, SimulationConfig::FactoredOpType>
+   class ThetaLHSTOperatorSet: public ThetaTOperatorSet<SimulationConfig::FactoredOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -76,15 +77,10 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaLHSTOperatorSet<TSimType>::ThetaLHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaLHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
-      : ThetaTOperatorSet<TSimType, SimulationConfig::FactoredOpType>(a, b, basis, pTrunc, hasL0)
-   {
-   }
-
-   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::update(const EPMFloat dt)
+   inline void ThetaLHSTOperatorSet::update(const EPMFloat dt)
    {
       // Set Laplacian multiplicative factor
-      EPMFloat factor = -this->mB*ThetaTraits<TSimType>::theta;
+      EPMFloat factor = -this->mB*ThetaTraits::theta;
 
       // Set time matrix multiplicative factor
       EPMFloat timeDiff = this->mA/dt;
@@ -93,7 +89,7 @@ namespace EPMDynamo {
       this->updateOperators(factor, timeDiff);
    }
 
-   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::solve(typename ThetaLHSTOperatorSet<TSimType>::ScalarType &rVar)
+   inline void ThetaLHSTOperatorSet::solve(ThetaLHSTOperatorSet::ScalarType &rVar)
    {
       // Get number of harmonic degrees
       int nL = rVar.nL();
@@ -106,7 +102,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> inline void ThetaLHSTOperatorSet<TSimType>::solveZero(typename ThetaLHSTOperatorSet<TSimType>::ScalarType &rVar)
+   inline void ThetaLHSTOperatorSet::solveZero(ThetaLHSTOperatorSet::ScalarType &rVar)
    {
       // Get number of harmonic degrees
       int nL = rVar.nL();

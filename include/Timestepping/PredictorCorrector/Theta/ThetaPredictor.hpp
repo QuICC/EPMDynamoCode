@@ -5,6 +5,10 @@
 #ifndef THETAPREDICTOR_HPP
 #define THETAPREDICTOR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -22,20 +26,18 @@ namespace EPMDynamo {
 
    /**
     * \brief Implemenation of the predictor step of the theta method
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaPredictor: public SchemeIteration<TSimType>
+   class ThetaPredictor: public SchemeIteration
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for a smart pointer to LHS operator set
-         typedef EPMSHARED_PTR<ThetaLHSTOperatorSet<TSimType> > SmartLHSOperators;
+         typedef EPMSHARED_PTR<ThetaLHSTOperatorSet > SmartLHSOperators;
 
          /// Typedef for a smart pointer to RHS operator set
-         typedef EPMSHARED_PTR<ThetaRHSTOperatorSet<TSimType> > SmartRHSOperators;
+         typedef EPMSHARED_PTR<ThetaRHSTOperatorSet > SmartRHSOperators;
 
          /**
           * @brief Constructor
@@ -88,39 +90,6 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaPredictor<TSimType>::ThetaPredictor(SmartLHSOperators pOpLHS, SmartRHSOperators pOpRHS)
-      : mpOpLHS(pOpLHS), mpOpRHS(pOpRHS)
-   {
-   }
-
-   template <typename TSimType> void ThetaPredictor<TSimType>::compute(typename ThetaPredictor<TSimType>::ScalarType &rVar, typename ThetaPredictor<TSimType>::ScalarType &rNTerms)
-   {
-      // Set the RHS part of predictor step
-      this->setRHS(rVar, rVar, rNTerms);
-
-      // Solve predictor equations
-      this->solve(rVar);
-   }
-
-   template <typename TSimType> void ThetaPredictor<TSimType>::setRHS(typename ThetaPredictor<TSimType>::ScalarType& rVar, const typename ThetaPredictor<TSimType>::ScalarType& oldVar, const typename ThetaPredictor<TSimType>::ScalarType& nTerms)
-   {
-      // Get number of harmonic degrees
-      int nL = this->mpOpRHS->trunc()->local()->spec()->nL();
-      const int l0 = rVar.minL();
-
-      // Loop over degrees
-      for(int l = l0; l < nL; ++l)
-      {
-         // Compute RHS part of predictor timestep equation for given degree
-         this->mpOpRHS->affineOrders(rVar.rLShell(l), oldVar.lshell(l), nTerms.lshell(l), l);
-      }
-   }
-
-   template <typename TSimType> void ThetaPredictor<TSimType>::solve(typename ThetaPredictor<TSimType>::ScalarType& rVar)
-   {
-      // Solve for unknown variable
-      this->mpOpLHS->solve(rVar);
-   }
 }
 
 #endif // THETAPREDICTOR_HPP

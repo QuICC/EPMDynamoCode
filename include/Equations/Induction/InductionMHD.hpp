@@ -22,10 +22,9 @@ namespace EPMDynamo {
    /**
     * @brief Implementation of the full MHD Induction equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class InductionMHD : public InductionBase<TSimType, TSimTraits>
+   template <typename TSimTraits> class InductionMHD : public InductionBase<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -43,7 +42,7 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param params Equation parameters
           */
-         InductionMHD(typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         InductionMHD(typename TSimTraits::MagType &rB, typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -74,17 +73,17 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the velocity field
           */
-         typename TSimTraits<TSimType>::VelType&  mrV;
+         typename TSimTraits::VelType&  mrV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionMHD<TSimType, TSimTraits>::InductionMHD(typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::VelType &rV, typename InductionMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename InductionMHD<TSimType, TSimTraits>::EquationParametersType &params)
-      : InductionBase<TSimType, TSimTraits>(rB, transform, tsteps, params), mrV(rV)
+   template <typename TSimTraits> InductionMHD<TSimTraits>::InductionMHD(typename TSimTraits::MagType &rB, typename TSimTraits::VelType &rV, typename InductionMHD<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename InductionMHD<TSimTraits>::EquationParametersType &params)
+      : InductionBase<TSimTraits>(rB, transform, tsteps, params), mrV(rV)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionMHD<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void InductionMHD<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values for Magnetic field
       this->mrX.rOc().transform(step);
@@ -93,13 +92,13 @@ namespace EPMDynamo {
       this->mrV.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionMHD<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void InductionMHD<TSimTraits>::updateRHS()
    {
       // Compute cross product \f$\vec{u}\times\vec{B}\f$
       this->mrV.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().rtp(), this->mrParams.indAdvection());
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionMHD<TSimType, TSimTraits>::transformRHS(const int step)
+   template <typename TSimTraits> void InductionMHD<TSimTraits>::transformRHS(const int step)
    {
       // Transform Non Linear terms to spectral space from mNTerms values
       this->transformNTerms(this->mNTerms.rOc().rPerturbation().rPol(), this->mNTerms.rOc().rPerturbation().rTor());

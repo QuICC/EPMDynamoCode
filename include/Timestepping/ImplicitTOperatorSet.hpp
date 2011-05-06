@@ -5,6 +5,10 @@
 #ifndef IMPLICITTOPERATORSET_HPP
 #define IMPLICITTOPERATORSET_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
 
@@ -22,14 +25,13 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the general implicit diffusion operator timestep operator set
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TOpType Type of the operator
     */
-   template <typename TSimType, typename TOpType> class ImplicitTOperatorSet: public BoundedOperatorSet<TOpType>
+   template <typename TOpType> class ImplicitTOperatorSet: public BoundedOperatorSet<TOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType  BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType  BasisType;
 
          /**
           * @brief Constructor
@@ -57,12 +59,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, typename TOpType> ImplicitTOperatorSet<TSimType, TOpType>::ImplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0)
+   template <typename TOpType> ImplicitTOperatorSet<TOpType>::ImplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0)
       : BoundedOperatorSet<TOpType>(pTrunc, hasL0)
    {
    }
 
-   template <typename TSimType, typename TOpType> void ImplicitTOperatorSet<TSimType, TOpType>::createOperators(const EPMFloat factor, const EPMFloat timeDiff, const typename ImplicitTOperatorSet<TSimType, TOpType>::BasisType &basis)
+   template <typename TOpType> void ImplicitTOperatorSet<TOpType>::createOperators(const EPMFloat factor, const EPMFloat timeDiff, const typename ImplicitTOperatorSet<TOpType>::BasisType &basis)
    {
       // Storage for "id" of operator
       int l;

@@ -5,6 +5,9 @@
 #ifndef PCSCHEMETRAITS_HPP
 #define PCSCHEMETRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -19,26 +22,22 @@
 namespace EPMDynamo {
 
    // Forward declarations
-   template <typename, template <typename> class> class IterativeScheme;
-   template <typename> class ThetaMethod;
-   template <typename> class ThetaInfluenceMethod;
+   template <typename> class IterativeScheme;
 
    /**
     * \brief Traits to describe the request Predictor/Corrector scheme
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class PCSchemeTraits
+   class PCSchemeTraits
    {
       public:
          /// Typedef for the "general" setup traits
-         typedef ThetaTraits<TSimType>  MethodTraits;
+         typedef ThetaTraits  MethodTraits;
 
          /// Typedef for the simple timestepper (no influence matrix)
-         typedef IterativeScheme<TSimType, ThetaMethod>   Timestepper;  
+         typedef IterativeScheme<ThetaMethod>   Timestepper;  
 
          /// Typedef for the timestepper with influence matrix step
-         typedef IterativeScheme<TSimType, ThetaInfluenceMethod>   InfluenceTimestepper;  
+         typedef IterativeScheme<ThetaInfluenceMethod>   InfluenceTimestepper;  
 
          /// Typedef for the timestep control object type
          typedef PCTimestepControl<MethodTraits>   TimestepControl;

@@ -5,6 +5,9 @@
 #ifndef ETD1TRAITS_HPP
 #define ETD1TRAITS_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -17,19 +20,14 @@
 
 namespace EPMDynamo {
 
-   // Forward declarations
-   template <typename> class ErrorModeL2Max;
-
    /**
     * \brief Traits to some global aspects of the ETD1 scheme
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD1Traits
+   class ETD1Traits
    {
       public:
          /// Typedef for the error norm type
-         typedef ErrorModeL2Max<TSimType>   ErrorNormType;
+         typedef ErrorModeL2Max   ErrorNormType;
 
          /// Type of timestep controller to use
          static const TimestepCtrlTypes  CtrlType = H211BCtrl;
@@ -43,11 +41,6 @@ namespace EPMDynamo {
          /// Number of intermediate states
          static const int INTERMEDIATE_STATES = 0;
    };
-
-   template <typename TSimType> int ETD1Traits<TSimType>::order()
-   {
-      return 1;
-   }; 
 
 }
 

@@ -5,6 +5,10 @@
 #ifndef TRANSPORTBASE_HPP
 #define TRANSPORTBASE_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "General/EPMException.hpp"
 #include "Equations/ScalarDiffusionEquation.hpp"
@@ -23,10 +26,9 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Transport equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportBase: public ScalarDiffusionEquation<TSimType, typename TSimTraits<TSimType>::CodType >
+   template <typename TSimTraits> class TransportBase: public ScalarDiffusionEquation<typename TSimTraits::CodType >
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -43,7 +45,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportBase(typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
+         TransportBase(typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
 
          /**
          * @brief Simple empty destructor
@@ -84,30 +86,30 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> inline int TransportBase<TSimType, TSimTraits>::nSSHBPacks() const
+   template <typename TSimTraits> inline int TransportBase<TSimTraits>::nSSHBPacks() const
    {
       #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         return TSimTraits<TSimType>::NeedCodensity + 2*TSimTraits<TSimType>::NeedCodensityGrad;
+         return TSimTraits::NeedCodensity + 2*TSimTraits::NeedCodensityGrad;
       #else
-         return std::max(static_cast<int>(TSimTraits<TSimType>::NeedCodensity), static_cast<int>(2*TSimTraits<TSimType>::NeedCodensityGrad));
+         return std::max(static_cast<int>(TSimTraits::NeedCodensity), static_cast<int>(2*TSimTraits::NeedCodensityGrad));
       #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> inline int TransportBase<TSimType, TSimTraits>::nSHBPacks() const
+   template <typename TSimTraits> inline int TransportBase<TSimTraits>::nSHBPacks() const
    {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         return TSimTraits<TSimType>::NeedCodensity + 3*TSimTraits<TSimType>::NeedCodensityGrad;
+         return TSimTraits::NeedCodensity + 3*TSimTraits::NeedCodensityGrad;
       #else
-         return std::max(static_cast<int>(TSimTraits<TSimType>::NeedCodensity), static_cast<int>(2*TSimTraits<TSimType>::NeedCodensityGrad));
+         return std::max(static_cast<int>(TSimTraits::NeedCodensity), static_cast<int>(2*TSimTraits::NeedCodensityGrad));
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportBase<TSimType, TSimTraits>::TransportBase(typename TSimTraits<TSimType>::CodType &rC, typename TransportBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportBase<TSimType, TSimTraits>::EquationParametersType &params)
-      : ScalarDiffusionEquation<TSimType, typename TSimTraits<TSimType>::CodType >(rC, transform, tsteps, 1, params.tptDt(), params.tptDiffusion()), mrParams(params)
+   template <typename TSimTraits> TransportBase<TSimTraits>::TransportBase(typename TSimTraits::CodType &rC, typename TransportBase<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportBase<TSimTraits>::EquationParametersType &params)
+      : ScalarDiffusionEquation<typename TSimTraits::CodType >(rC, transform, tsteps, 1, params.tptDt(), params.tptDiffusion()), mrParams(params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportBase<TSimType, TSimTraits>::init()
+   template <typename TSimTraits> void TransportBase<TSimTraits>::init()
    {
       // Check that the right number of BCs have been provided
       if(this->hasAllBCs())

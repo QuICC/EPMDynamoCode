@@ -22,10 +22,9 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Induction equation with only diffusion included
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class InductionDiffusion : public InductionBase<TSimType, TSimTraits>
+   template <typename TSimTraits> class InductionDiffusion : public InductionBase<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -42,7 +41,7 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param params Equation parameters
           */
-         InductionDiffusion(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         InductionDiffusion(typename TSimTraits::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -73,20 +72,20 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionDiffusion<TSimType, TSimTraits>::InductionDiffusion(typename TSimTraits<TSimType>::MagType &rB, typename InductionDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, typename InductionDiffusion<TSimType, TSimTraits>::EquationParametersType &params)
-      : InductionBase<TSimType, TSimTraits>(rB, transform, tsteps, params)
+   template <typename TSimTraits> InductionDiffusion<TSimTraits>::InductionDiffusion(typename TSimTraits::MagType &rB, typename InductionDiffusion<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, typename InductionDiffusion<TSimTraits>::EquationParametersType &params)
+      : InductionBase<TSimTraits>(rB, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionDiffusion<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void InductionDiffusion<TSimTraits>::updateRTP(const int step)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionDiffusion<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void InductionDiffusion<TSimTraits>::updateRHS()
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionDiffusion<TSimType, TSimTraits>::transformRHS(const int step)
+   template <typename TSimTraits> void InductionDiffusion<TSimTraits>::transformRHS(const int step)
    {
       if(step == 0)
       {

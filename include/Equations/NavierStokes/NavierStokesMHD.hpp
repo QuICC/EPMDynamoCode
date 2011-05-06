@@ -5,6 +5,10 @@
 #ifndef NAVIERSTOKESMHD_HPP
 #define NAVIERSTOKESMHD_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesConvection.hpp"
 
@@ -22,17 +25,16 @@ namespace EPMDynamo {
    /**
     * @brief This class implements the full MHD Navierr-Stokes equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesMHD : public NavierStokesConvection<TSimType, TSimTraits>
+   template <typename TSimTraits> class NavierStokesMHD : public NavierStokesConvection<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
          typedef SimulationConfig::EquationParametersType EquationParametersType;
@@ -47,7 +49,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesMHD(typename TSimTraits::VelType &rV, typename TSimTraits::MagType &rB, typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -71,17 +73,17 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the magnetic field
           */
-         typename TSimTraits<TSimType>::MagType&  mrB;
+         typename TSimTraits::MagType&  mrB;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesMHD<TSimType, TSimTraits>::NavierStokesMHD(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::MagType &rB, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesMHD<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesMHD<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesConvection<TSimType, TSimTraits>(rV, rC, transform, tsteps, params), mrB(rB)
+   template <typename TSimTraits> NavierStokesMHD<TSimTraits>::NavierStokesMHD(typename TSimTraits::VelType &rV, typename TSimTraits::MagType &rB, typename TSimTraits::CodType &rC, typename NavierStokesMHD<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesMHD<TSimTraits>::EquationParametersType &params)
+      : NavierStokesConvection<TSimTraits>(rV, rC, transform, tsteps, params), mrB(rB)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesMHD<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void NavierStokesMHD<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
@@ -99,7 +101,7 @@ namespace EPMDynamo {
       this->mrC.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesMHD<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void NavierStokesMHD<TSimTraits>::updateRHS()
    {
       // Compute \f$u\times (\nabla \times u) \f$
       this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());

@@ -5,6 +5,10 @@
 #ifndef NAVIERSTOKESDIFFUSION_HPP
 #define NAVIERSTOKESDIFFUSION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/NavierStokes/NavierStokesBase.hpp"
 #include "Timestepping/Traits/InfluenceTTraits.hpp"
@@ -23,17 +26,16 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Navier-Stokes equation with only diffusion
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesDiffusion : public NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>
+   template <typename TSimTraits> class NavierStokesDiffusion : public NavierStokesBase<TSimTraits, InfluenceTTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
          typedef SimulationConfig::EquationParametersType EquationParametersType;
@@ -46,7 +48,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesDiffusion(typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesDiffusion(typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -77,22 +79,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesDiffusion<TSimType, TSimTraits>::NavierStokesDiffusion(typename TSimTraits<TSimType>::VelType &rV, typename NavierStokesDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesDiffusion<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesBase<TSimType, TSimTraits, InfluenceTTraits>(rV, transform, tsteps, params)
+   template <typename TSimTraits> NavierStokesDiffusion<TSimTraits>::NavierStokesDiffusion(typename TSimTraits::VelType &rV, typename NavierStokesDiffusion<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesDiffusion<TSimTraits>::EquationParametersType &params)
+      : NavierStokesBase<TSimTraits, InfluenceTTraits>(rV, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesDiffusion<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void NavierStokesDiffusion<TSimTraits>::updateRTP(const int step)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesDiffusion<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void NavierStokesDiffusion<TSimTraits>::updateRHS()
    {
       // Set the RTP non linear terms to zero
       this->mNTerms.rOc().rRTP().initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesDiffusion<TSimType, TSimTraits>::transformRHS(const int step)
+   template <typename TSimTraits> void NavierStokesDiffusion<TSimTraits>::transformRHS(const int step)
    {
       // Transform non linear terms to spectral space from mNTerms values
       this->transformNTerms(this->mNTerms.rOc().rPerturbation().rTor(), this->mNTerms.rOc().rPerturbation().rPol());

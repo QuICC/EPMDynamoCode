@@ -5,6 +5,10 @@
 #ifndef ETD2RKTIMESTEP_HPP
 #define ETD2RKTIMESTEP_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -23,20 +27,18 @@ namespace EPMDynamo {
     *
     * This class performs the actual timestep comuputation after the intermediate
     * computations are performed.
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD2RKTimestep: public SchemeIteration<TSimType>
+   class ETD2RKTimestep: public SchemeIteration
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// typedef for a pointer to a scalar type
          typedef EPMSHARED_PTR<ScalarType> SmartScalarType;
 
          /// Typedef for a smart pointer to ETDOperators
-         typedef EPMSHARED_PTR<typename ETDSchemeTraits<TSimType>::Operators> SmartETDOperators;
+         typedef EPMSHARED_PTR<ETDSchemeTraits::Operators> SmartETDOperators;
 
          /**
           * @brief Constructor
@@ -86,44 +88,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> ETD2RKTimestep<TSimType>::ETD2RKTimestep(EPMFloat nFactor, typename ETD2RKTimestep<TSimType>::SmartScalarType pOldN, typename ETD2RKTimestep<TSimType>::SmartETDOperators pOpM2)
-      : mNFactor(nFactor), mpOldN(pOldN), mpOpM2(pOpM2)
-   {
-   }
-
-   template <typename TSimType> void ETD2RKTimestep<TSimType>::prepare(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
-   {
-      // Get number of harmonic degrees
-      int nL = rVar.trunc()->local()->spec()->nL();
-
-      // Get minimal degree index (not l=0)
-      int l0 = rVar.minL();
-
-      // loop over degrees 
-      for(int l = l0; l < nL; ++l)
-      {
-         rNTerms.rLShell(l) -= this->mpOldN->lshell(l);
-         rNTerms.rLShell(l) *= this->mNFactor;
-      }
-   }
-
-   template <typename TSimType> void ETD2RKTimestep<TSimType>::compute(typename ETD2RKTimestep<TSimType>::ScalarType &rVar, typename ETD2RKTimestep<TSimType>::ScalarType &rNTerms)
-   {
-      // Get number of harmonic degrees
-      int nL = rVar.trunc()->local()->spec()->nL();
-
-      // Get minimal degree index (not l=0)
-      int l0 = rVar.minL();
-
-      // loop over degrees 
-      for(int l = l0; l < nL; ++l)
-      {
-         this->mpOpM2->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l), l);
-         rVar.rLShell(l) += rNTerms.lshell(l);
-         this->mpOpM2->extendOrders(rVar.rLShell(l), l);
-      }
-   }
 
 }
 

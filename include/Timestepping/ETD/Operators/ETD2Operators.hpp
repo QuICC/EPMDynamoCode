@@ -5,6 +5,10 @@
 #ifndef ETD2OPERATORS_HPP
 #define ETD2OPERATORS_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -17,7 +21,6 @@
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/ETD/ETDOperators.hpp"
 #include "Timestepping/ETD/Operators/ETDNOperators.hpp"
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
@@ -25,14 +28,14 @@ namespace EPMDynamo {
     * \brief Implementation of the ETD2 operators
     *
     */
-   template <typename TSimType> class ETD2Operators: public ETDNOperators<TSimType, 3>
+   class ETD2Operators: public ETDNOperators<3>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -70,54 +73,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> ETD2Operators<TSimType>::ETD2Operators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
-      : ETDNOperators<TSimType, 3>(c, pTrunc, hasL0)
-   {
-   }
-
-   template <typename TSimType> void ETD2Operators<TSimType>::update(const EPMFloat dt, const typename ETD2Operators<TSimType>::BasisType &basis)
-   {
-      this->createOperators(dt, basis);
-   }
-
-   template <typename TSimType> void ETD2Operators<TSimType>::createOperators(const EPMFloat h, const typename ETD2Operators<TSimType>::BasisType &basis)
-   {
-      // Update the required scaling power
-      this->updateScalings(h);
-
-      // Loop over all degrees
-      for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
-      {
-         // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(l).constructBOperator(h*this->c(), basis.at(l).specLaplacian());
-
-         // Compute the taylor expansion of the Fk functionals of the created operator
-         this->computeScaledF2(l);
-
-         // Compute the unscaled values
-         this->computeSquaredF2(l);
-
-         // Include the missing h factor
-         this->rEtdF(1).rHarmOp(l).rOp() *= h;
-
-         // Include the missing h factor
-         this->rEtdF(2).rHarmOp(l).rOp() *= h;
-
-         // Correct the results for zero eigenvalues
-         if(!this->isFullRank(l))
-         { 
-            this->rEtdF(1).rHarmOp(l).rOp().topRows(1) += h*this->etdF(0).harmOp(l).op().leftCols(1).transpose();
-
-            this->rEtdF(2).rHarmOp(l).rOp().topRows(1) += 0.5*h*this->etdF(0).harmOp(l).op().leftCols(1).transpose();
-         }
-
-         // Do finalisation step
-         this->rEtdF(0).rHarmOp(l).finaliseOp();
-         this->rEtdF(1).rHarmOp(l).finaliseOp();
-         this->rEtdF(2).rHarmOp(l).finaliseOp();
-      }
-   }
 
 }
 

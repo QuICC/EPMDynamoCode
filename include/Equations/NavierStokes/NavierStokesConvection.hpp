@@ -5,6 +5,9 @@
 #ifndef NAVIERSTOKESCONVECTION_HPP
 #define NAVIERSTOKESCONVECTION_HPP
 
+// Configuration includes
+//
+
 // System includes
 //
 
@@ -22,17 +25,16 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Navier-Stokes equation with rotating convection
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class NavierStokesConvection : public NavierStokesDiffusion<TSimType, TSimTraits>
+   template <typename TSimTraits> class NavierStokesConvection : public NavierStokesDiffusion<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
          typedef SimulationConfig::TransformType    TransformType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericaScheme::ScalarType    ScalarType;
 
          /// Typedef for the EquationParameters type
          typedef SimulationConfig::EquationParametersType EquationParametersType;
@@ -46,7 +48,7 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesConvection(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesConvection(typename TSimTraits::VelType &rV, typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -70,23 +72,23 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the codensity scalar
           */
-         typename TSimTraits<TSimType>::CodType&  mrC;
+         typename TSimTraits::CodType&  mrC;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> NavierStokesConvection<TSimType, TSimTraits>::NavierStokesConvection(typename TSimTraits<TSimType>::VelType &rV, typename TSimTraits<TSimType>::CodType &rC, typename NavierStokesConvection<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesConvection<TSimType, TSimTraits>::EquationParametersType &params)
-      : NavierStokesDiffusion<TSimType, TSimTraits>(rV, transform, tsteps, params), mrC(rC)
+   template <typename TSimTraits> NavierStokesConvection<TSimTraits>::NavierStokesConvection(typename TSimTraits::VelType &rV, typename TSimTraits::CodType &rC, typename NavierStokesConvection<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesConvection<TSimTraits>::EquationParametersType &params)
+      : NavierStokesDiffusion<TSimTraits>(rV, transform, tsteps, params), mrC(rC)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesConvection<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void NavierStokesConvection<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of codensity scalar
       this->mrC.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void NavierStokesConvection<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void NavierStokesConvection<TSimTraits>::updateRHS()
    {
       // Compute \f$C \vec{r}\f$
       this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());

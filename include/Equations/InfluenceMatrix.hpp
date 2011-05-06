@@ -5,6 +5,10 @@
 #ifndef INFLUENCEMATRIX_HPP
 #define INFLUENCEMATRIX_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 #include <vector>
@@ -15,7 +19,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Operators/LaplacianBOperatorSet.hpp"
@@ -24,17 +27,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Implementation of the influence matrix approach for the 4th order Navier-Stokes equation
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class InfluenceMatrix: public LaplacianBOperatorSet<TSimType, SimulationConfig::FactoredOpType>
+   class InfluenceMatrix: public LaplacianBOperatorSet<SimulationConfig::FactoredOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -112,36 +113,12 @@ namespace EPMDynamo {
          void initSolutions();
    };
 
-   template <typename TSimType> InfluenceMatrix<TSimType>::InfluenceMatrix(SmartTruncation pTrunc, const typename InfluenceMatrix<TSimType>::BasisType &basis, bool hasL0)
-      : LaplacianBOperatorSet<TSimType, SimulationConfig::FactoredOpType>(basis, pTrunc, hasL0), mOpBCs(-2)
-   {
-      this->initSolutions();
-   }
-
-   template <typename TSimType> void InfluenceMatrix<TSimType>::initSolutions()
-   {
-      int nN = this->trunc()->sim()->rad()->nN();
-      int nL = this->trunc()->local()->spec()->nL();
-
-      for(int l = 0; l < nL; ++l)
-      {
-         this->mSolutions.push_back(Array(nN));
-         this->mSolutions.at(l).setConstant(0.0);
-      }
-   }
-
-   template <typename TSimType> void InfluenceMatrix<TSimType>::computeOperators()
-   {
-      // Create the laplacian operators
-      this->createOperators(-1.0);
-   }
-
-   template <typename TSimType> inline void InfluenceMatrix<TSimType>::addBC(SmartBC pBC)
+   inline void InfluenceMatrix::addBC(SmartBC pBC)
    {
       // The first boundary conditions is implemented into the laplacian
       if(this->mOpBCs == -2)
       {
-         LaplacianBOperatorSet<TSimType, SimulationConfig::FactoredOpType>::addBC(pBC);
+         LaplacianBOperatorSet<SimulationConfig::FactoredOpType>::addBC(pBC);
       }
       // Other boundary conditions are stored in the influence matrix object
       else
@@ -153,7 +130,7 @@ namespace EPMDynamo {
       ++this->mOpBCs;
    }
 
-   template <typename TSimType> inline void InfluenceMatrix<TSimType>::solve(typename InfluenceMatrix<TSimType>::ScalarType &rVar)
+   inline void InfluenceMatrix::solve(typename InfluenceMatrix::ScalarType &rVar)
    {
       int degrees = this->trunc()->local()->spec()->nL();
       const int l0 = rVar.minL();
@@ -164,7 +141,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType> inline void InfluenceMatrix<TSimType>::storeKernelBC(const Array& kernel, const int l)
+   inline void InfluenceMatrix::storeKernelBC(const Array& kernel, const int l)
    {
       // Current implementation only works with a total 2 two BCs
       assert(this->mOtherBCs.size() == 1);
@@ -179,7 +156,7 @@ namespace EPMDynamo {
       this->mSolutions.at(l) = kernel/bcVal;
    }
 
-   template <typename TSimType> inline void InfluenceMatrix<TSimType>::addKernel(typename InfluenceMatrix<TSimType>::ScalarType &rVar)
+   inline void InfluenceMatrix::addKernel(typename InfluenceMatrix::ScalarType &rVar)
    {
       // Get truncation information
       int nN = this->trunc()->sim()->rad()->nN();

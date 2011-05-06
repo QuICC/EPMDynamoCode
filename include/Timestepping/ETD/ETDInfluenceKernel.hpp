@@ -5,6 +5,10 @@
 #ifndef ETDINFLUENCEKERNEL_HPP
 #define ETDINFLUENCEKERNEL_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -19,17 +23,15 @@ namespace EPMDynamo {
 
    /**
     * \brief Implemenation of influence of the kernel solution
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETDInfluenceKernel
+   class ETDInfluenceKernel
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /// Typedef for a smart pointer to ETDOperators
-         typedef EPMSHARED_PTR<typename ETDSchemeTraits<TSimType>::Operators> SmartETDOperators;
+         typedef EPMSHARED_PTR<ETDSchemeTraits::Operators> SmartETDOperators;
 
          /**
           * @brief Constructor
@@ -66,18 +68,6 @@ namespace EPMDynamo {
 
       private:
    };
-
-   template <typename TSimType> ETDInfluenceKernel<TSimType>::ETDInfluenceKernel(EPMFloat nFactor, SmartETDOperators pOpM1)
-      : mNFactor(nFactor), mpOpM1(pOpM1)
-   {
-   }
-
-   template <typename TSimType> void ETDInfluenceKernel<TSimType>::computeInfluence(Array &rKernel, const int l)
-   {
-      int rows = this->mpOpM1->harmOp(l).op().rows();
-      rKernel.topRows(rows) = this->mNFactor*this->mpOpM1->harmOp(l).op() * rKernel.topRows(rows);
-      this->mpOpM1->extendOrders(rKernel, l);
-   }
 
 }
 

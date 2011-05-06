@@ -25,10 +25,9 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Induction equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class InductionBase : public TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>
+   template <typename TSimTraits> class InductionBase : public TorPolDiffusionEquation<typename TSimTraits::MagType>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -45,7 +44,7 @@ namespace EPMDynamo {
           * @param tsteps Timestep parameters
           * @param params Equation parameters
           */
-         InductionBase(typename TSimTraits<TSimType>::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         InductionBase(typename TSimTraits::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
@@ -86,30 +85,30 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> inline int InductionBase<TSimType, TSimTraits>::nSSHBPacks() const
+   template <typename TSimTraits> inline int InductionBase<TSimTraits>::nSSHBPacks() const
    {
       #ifdef EPMDYNAMO_RADIAL_GROUPEDCOMM
-         return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
+         return 3*(TSimTraits::NeedMagnetic + TSimTraits::NeedMagneticCurl);
       #else
-         return 3*(TSimTraits<TSimType>::NeedMagnetic || TSimTraits<TSimType>::NeedMagneticCurl);
+         return 3*(TSimTraits::NeedMagnetic || TSimTraits::NeedMagneticCurl);
       #endif // EPMDYNAMO_RADIAL_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> inline int InductionBase<TSimType, TSimTraits>::nSHBPacks() const
+   template <typename TSimTraits> inline int InductionBase<TSimTraits>::nSHBPacks() const
    {
       #ifdef EPMDYNAMO_SH_GROUPEDCOMM
-         return 3*(TSimTraits<TSimType>::NeedMagnetic + TSimTraits<TSimType>::NeedMagneticCurl);
+         return 3*(TSimTraits::NeedMagnetic + TSimTraits::NeedMagneticCurl);
       #else
-         return (TSimTraits<TSimType>::NeedMagnetic || TSimTraits<TSimType>::NeedMagneticCurl);
+         return (TSimTraits::NeedMagnetic || TSimTraits::NeedMagneticCurl);
       #endif // EPMDYNAMO_SH_GROUPEDCOMM
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> InductionBase<TSimType, TSimTraits>::InductionBase(typename TSimTraits<TSimType>::MagType &rB, typename InductionBase<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, typename InductionBase<TSimType, TSimTraits>::EquationParametersType &params)
-      : TorPolDiffusionEquation<TSimType, typename TSimTraits<TSimType>::MagType>(rB, transform, tsteps, 1, 1, params.indDt(), params.indDiffusion()), mrParams(params)
+   template <typename TSimTraits> InductionBase<TSimTraits>::InductionBase(typename TSimTraits::MagType &rB, typename InductionBase<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, typename InductionBase<TSimTraits>::EquationParametersType &params)
+      : TorPolDiffusionEquation<typename TSimTraits::MagType>(rB, transform, tsteps, 1, 1, params.indDt(), params.indDiffusion()), mrParams(params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void InductionBase<TSimType, TSimTraits>::init()
+   template <typename TSimTraits> void InductionBase<TSimTraits>::init()
    {
       // Check that the right number of BCs have been provided
       if(this->hasAllBCs())

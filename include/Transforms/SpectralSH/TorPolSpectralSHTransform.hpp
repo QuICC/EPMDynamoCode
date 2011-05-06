@@ -5,6 +5,10 @@
 #ifndef TORPOLSPECTRALSHTRANSFORM_HPP
 #define TORPOLSPECTRALSHTRANSFORM_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -29,27 +33,26 @@ namespace EPMDynamo {
     * The spherical harmonics expansion is dealt with by the SHTransform class. This
     * extension is responsible for doing the radial expansion on the worland polynomials.
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSpectralSHTraits Traits for radial expansion transforms
     * \tparam TSHTraits Traits for the spherical harmonics transforms
     */
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> class TorPolSpectralSHTransform : public TorPolSHTransform<TSHTraits>
+   template <typename TSpectralSHTraits, typename TSHTraits> class TorPolSpectralSHTransform : public TorPolSHTransform<TSHTraits>
    {
       public:
          /// Typedef for the Spectral SH scalar data type
-         typedef typename TSimType::ScalarType  SpectralSHScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType  SpectralSHScalarType;
 
          /// Typedef for the Spectral radial Transform data type
-         typedef typename TSimType::RadialTransformType RadialTransformType;
+         typedef SimulationConfig::NumericalScheme::RadialTransformType RadialTransformType;
 
          /// Typedef for the FDSH forward data type scalar data type
-         typedef typename TSpectralSHTraits<TSimType>::FDSHForwardType  FDSHForwardType;
+         typedef typename TSpectralSHTraits::FDSHForwardType  FDSHForwardType;
 
          /// Typedef for the FDSH backward data type
-         typedef typename TSpectralSHTraits<TSimType>::FDSHBackwardType FDSHBackwardType;
+         typedef typename TSpectralSHTraits::FDSHBackwardType FDSHBackwardType;
 
          /// Typedef for the DataManipulator data type
-         typedef typename TSpectralSHTraits<TSimType>::DataManipulatorType   DataManipulatorType;
+         typedef typename TSpectralSHTraits::DataManipulatorType   DataManipulatorType;
 
          /// Typedef for the Spectral radial Transform data type
          typedef typename RadialTransformType::PolynomialBasis RadialBasisType;
@@ -58,7 +61,7 @@ namespace EPMDynamo {
          typedef typename RadialBasisType::PolynomialType  PolynomialType;
 
          /// Typedef for the Spectral Toroidal/Poloidal data type
-         typedef typename TSpectralSHTraits<TSimType>::TorPolFieldType TorPolFieldType;
+         typedef typename TSpectralSHTraits::TorPolFieldType TorPolFieldType;
 
          /// Typedef for the SH Transform data type
          typedef TorPolSHTransform<TSHTraits> SHTransform;
@@ -201,32 +204,32 @@ namespace EPMDynamo {
          RadialTransformType&  spectralT();
    };
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::DataManipulatorType& TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::sshManipulator()
+   template <typename TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::DataManipulatorType& TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::sshManipulator()
    {
       return this->mSpectralSHManipulator;
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::RadialBasisType& TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::radBasis()
+   template <typename TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::RadialBasisType& TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::radBasis()
    {
       return this->spectralT().basis();
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> inline const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::RadialBasisType& TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::radBasis() const
+   template <typename TSpectralSHTraits, typename TSHTraits> inline const typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::RadialBasisType& TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::radBasis() const
    {
       return this->mSpectralTransform.basis();
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::RadialTransformType& TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::spectralT()
+   template <typename TSpectralSHTraits, typename TSHTraits> inline typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::RadialTransformType& TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::spectralT()
    {
       return this->mSpectralTransform;
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::TorPolSpectralSHTransform(const SmartTruncation pTrunc)
+   template <typename TSpectralSHTraits, typename TSHTraits> TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::TorPolSpectralSHTransform(const SmartTruncation pTrunc)
       : TorPolSHTransform<TSHTraits>(pTrunc), mSpectralTransform(pTrunc), mSpectralSHManipulator(pTrunc)
    {
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformRTP2Spec(typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rSSHValues, const RTPScalar &rtpValues)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformRTP2Spec(typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rSSHValues, const RTPScalar &rtpValues)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -267,7 +270,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformSpec2RTP(RTPScalar &rRTPValues, const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &sshValues)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformSpec2RTP(RTPScalar &rRTPValues, const typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &sshValues)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -308,7 +311,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformSpec2Grad(RTPField &rGradient, const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &sshValues)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformSpec2Grad(RTPField &rGradient, const typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &sshValues)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -370,7 +373,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformRTP2TorPol(TorPolFieldType &rToPoField, const RTPField &rtpField)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformRTP2TorPol(TorPolFieldType &rToPoField, const RTPField &rtpField)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -434,7 +437,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformRTP2TorPolNTerms(typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rCurl, typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rCurlCurl, const RTPField &rtpField)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformRTP2TorPolNTerms(typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rCurl, typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &rCurlCurl, const RTPField &rtpField)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -519,7 +522,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformTorPol2RTP(RTPField &rRTPField, const TorPolFieldType &topoField)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformTorPol2RTP(RTPField &rRTPField, const TorPolFieldType &topoField)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -588,7 +591,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformTorPol2Curl(RTPField &rCurl, const TorPolFieldType &topoField)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformTorPol2Curl(RTPField &rCurl, const TorPolFieldType &topoField)
    {
       if(this->sshManipulator().isFirstEntry())
       {
@@ -671,7 +674,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::initRTPDomains(SmartTruncation &rTrunc) const
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::initRTPDomains(SmartTruncation &rTrunc) const
    {
       // Fill in radial grid
       rTrunc->setRadialGrid(this->radBasis().at(0).pGrid());
@@ -680,13 +683,13 @@ namespace EPMDynamo {
       rTrunc->setThetaGrid(this->hozBasis().at(0).pTheta(), this->hozBasis().at(0).pCosTheta(), this->hozBasis().at(0).pSinTheta());
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformPol2R(RTPScalar &rRComp)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformPol2R(RTPScalar &rRComp)
    {
       // Extract real space values from the SH expansion
       SHTransform::transformSpec2RTP(rRComp);
    }
 
-   template <typename TSimType, template <typename> class TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::transformPol2R(RTPScalar &rRComp, const typename TorPolSpectralSHTransform<TSimType, TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &polComp)
+   template <typename TSpectralSHTraits, typename TSHTraits> void TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::transformPol2R(RTPScalar &rRComp, const typename TorPolSpectralSHTransform<TSpectralSHTraits, TSHTraits>::SpectralSHScalarType &polComp)
    {
       if(this->sshManipulator().atSendStage())
       {

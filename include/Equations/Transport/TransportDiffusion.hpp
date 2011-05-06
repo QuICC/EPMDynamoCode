@@ -5,6 +5,10 @@
 #ifndef TRANSPORTDIFFUSION_HPP
 #define TRANSPORTDIFFUSION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Transport/TransportBase.hpp"
 
@@ -22,10 +25,9 @@ namespace EPMDynamo {
    /**
     * @brief General representation of the Transport equation with only diffusion included
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportDiffusion: public TransportBase<TSimType, TSimTraits>
+   template <typename TSimTraits> class TransportDiffusion: public TransportBase<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -42,7 +44,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportDiffusion(typename TSimTraits<TSimType>::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
+         TransportDiffusion(typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
 
          /**
          * @brief Simple empty destructor
@@ -73,22 +75,22 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportDiffusion<TSimType, TSimTraits>::TransportDiffusion(typename TSimTraits<TSimType>::CodType &rC, typename TransportDiffusion<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportDiffusion<TSimType, TSimTraits>::EquationParametersType &params)
-      : TransportBase<TSimType, TSimTraits>(rC, transform, tsteps, params)
+   template <typename TSimTraits> TransportDiffusion<TSimTraits>::TransportDiffusion(typename TSimTraits::CodType &rC, typename TransportDiffusion<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportDiffusion<TSimTraits>::EquationParametersType &params)
+      : TransportBase<TSimTraits>(rC, transform, tsteps, params)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void TransportDiffusion<TSimTraits>::updateRTP(const int step)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void TransportDiffusion<TSimTraits>::updateRHS()
    {
       // Set the RTP non linear terms to zero
       this->mNTerms.rOc().rRTP().initialiseZeros();
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportDiffusion<TSimType, TSimTraits>::transformRHS(const int step)
+   template <typename TSimTraits> void TransportDiffusion<TSimTraits>::transformRHS(const int step)
    {
       // Transform Non Linear terms to spectral space from mNTerms values
       this->transformNTerms();

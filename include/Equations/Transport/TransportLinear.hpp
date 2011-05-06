@@ -5,6 +5,10 @@
 #ifndef TRANSPORTLINEAR_HPP
 #define TRANSPORTLINEAR_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -13,7 +17,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Equations/Transport/TransportSource.hpp"
 
@@ -22,10 +25,9 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of the linear transport equation
     *
-    * \tparam TSimType Type of the simulation
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimType, template <typename> class TSimTraits> class TransportLinear: public TransportSource<TSimType, TSimTraits>
+   template <typename TSimTraits> class TransportLinear: public TransportSource<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -43,7 +45,7 @@ namespace EPMDynamo {
          * \param tsteps Timestep parameters
          * @param params Simulation equation parameters
          */
-         TransportLinear(typename TSimTraits<TSimType>::CodType &rC, typename TSimTraits<TSimType>::VelType &rV, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
+         TransportLinear(typename TSimTraits::CodType &rC, typename TSimTraits::VelType &rV, TransformType &transform, TimestepParameters &tsteps, const EquationParametersType &params);
 
          /**
          * @brief Simple empty destructor
@@ -67,23 +69,23 @@ namespace EPMDynamo {
          /**
           * @brief Const Reference variable to the velocity field
           */
-         typename TSimTraits<TSimType>::VelType&  mrV;
+         typename TSimTraits::VelType&  mrV;
 
       private:
    };
 
-   template <typename TSimType, template <typename> class TSimTraits> TransportLinear<TSimType, TSimTraits>::TransportLinear(typename TSimTraits<TSimType>::CodType &rC, typename TSimTraits<TSimType>::VelType &rV, typename TransportLinear<TSimType, TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportLinear<TSimType, TSimTraits>::EquationParametersType &params)
-      : TransportSource<TSimType, TSimTraits>(rC, transform, tsteps, params), mrV(rV)
+   template <typename TSimTraits> TransportLinear<TSimTraits>::TransportLinear(typename TSimTraits::CodType &rC, typename TSimTraits::VelType &rV, typename TransportLinear<TSimTraits>::TransformType &transform, TimestepParameters &tsteps, const  typename TransportLinear<TSimTraits>::EquationParametersType &params)
+      : TransportSource<TSimTraits>(rC, transform, tsteps, params), mrV(rV)
    {
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportLinear<TSimType, TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void TransportLinear<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values for velocity field
       this->mrV.rOc().transform(step);
    }
 
-   template <typename TSimType, template <typename> class TSimTraits> void TransportLinear<TSimType, TSimTraits>::updateRHS()
+   template <typename TSimTraits> void TransportLinear<TSimTraits>::updateRHS()
    {
       // Compute \f$u\cdot\hat{r}\f$
       this->mrV.oc().rtp().r().template radVectProj<0>(this->mNTerms.rOc().rRTP(), -this->mrParams.tptAdvection());

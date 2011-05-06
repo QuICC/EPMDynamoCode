@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/Parallelisation.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -17,20 +18,17 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the L2 max error norm computation
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ErrorModeL2Summed
+   class ErrorModeL2Summed
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Compute the Max error norm
@@ -62,55 +60,9 @@ namespace EPMDynamo {
          virtual ~ErrorModeL2Summed() {}; 
    };
 
-   template <typename TSimType> EPMFloat ErrorModeL2Summed<TSimType>::computeNorm(const typename ErrorModeL2Summed<TSimType>::ScalarType& rVar, const typename ErrorModeL2Summed<TSimType>::ScalarType& rRef)
-   {
-      // Create temporary storage
-      EPMFloat norm = 0.0;
-      EPMFloat refVal = 0.0;
-      EPMFloat tmp = 0.0;
-
-      // Get truncation information
-      const int l0 = rVar.minL();
-      int nL = rVar.nL();
-      int nM;
-
-      // Loop over harmonic modes
-      for(int l = l0; l < nL; ++l)
-      {
-         nM = rVar.nM(l);
-         for(int m=0; m < nM; ++m)
-         {
-            // Compute error norm
-            tmp = rVar.lshell(l).col(m).real().dot(rVar.lshell(l).col(m).real()) + rVar.lshell(l).col(m).imag().dot(rVar.lshell(l).col(m).imag());
-            tmp = std::sqrt(tmp);
-
-            // Compute vector norm
-            refVal = rRef.lshell(l).col(m).real().dot(rRef.lshell(l).col(m).real()) + rRef.lshell(l).col(m).imag().dot(rRef.lshell(l).col(m).imag());
-            refVal = std::sqrt(refVal);
-
-            // Compute mixed absolute-relative error (|err|/(|v|+eta))
-            tmp /= refVal + TimestepConfig::TIMESTEP_RELERROR_SCALING;
-
-            // Get summed norm
-            norm += tmp;
-         }
-      }
-
-      // Get the "global" norm for MPI code
-      #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, &norm, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-      #endif // EPMDYNAMO_MPI
-
-      return norm;
-   }
-
-   template <typename TSimType> inline EPMFloat ErrorModeL2Summed<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
+   inline EPMFloat ErrorModeL2Summed::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
-   }
-
-   template <typename TSimType> ErrorModeL2Summed<TSimType>::ErrorModeL2Summed()
-   {
    }
 
 }

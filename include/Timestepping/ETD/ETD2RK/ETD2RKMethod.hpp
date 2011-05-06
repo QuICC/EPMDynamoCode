@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SmartPointer.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -23,23 +24,20 @@
 #include "Timestepping/ETD/Operators/ETD2Operators.hpp"
 #include "Timestepping/ETD/Iterations/ETD1Iteration.hpp"
 #include "Timestepping/ETD/Iterations/ETD2RKTimestep.hpp"
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the theta method (without influence matrix)
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ETD2RKMethod: public IterativeSchemeBase<TSimType>
+   class ETD2RKMethod: public IterativeSchemeBase
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -75,7 +73,7 @@ namespace EPMDynamo {
          /**
           * @brief The set of ETD2 operators
           */
-         ETD2Operators<TSimType>  mETD2;
+         ETD2Operators  mETD2;
 
          /**
           * @brief Update the timestep matrices after a timestep change
@@ -94,53 +92,6 @@ namespace EPMDynamo {
           */
          void initStorage();
    };
-
-   template <typename TSimType> ETD2RKMethod<TSimType>::ETD2RKMethod(EPMFloat a, EPMFloat b, const typename ETD2RKMethod<TSimType>::BasisType &basis, TimestepParameters &tsteps, SmartTruncation pTrunc, bool hasL0)
-      : IterativeSchemeBase<TSimType>(a, b, basis, tsteps, pTrunc, hasL0), mETD2(b/a, pTrunc, hasL0)
-   {
-   }
-
-   template <typename TSimType> void ETD2RKMethod<TSimType>::addBC(SmartBC pBC)
-   {
-      // add boundary condition to operators
-      this->mETD2.addBC(pBC);
-   }
-
-   template <typename TSimType> void ETD2RKMethod<TSimType>::init()
-   {
-      // initialise pointers
-      this->initStorage();
-
-      // Initialise the operators
-      this->initOperators();
-   }
-
-   template <typename TSimType> void ETD2RKMethod<TSimType>::initOperators()
-   {
-      // initialise the operators
-      this->mETD2.initOperators(this->mrBasis);
-   }
-
-   template <typename TSimType> void ETD2RKMethod<TSimType>::updateTimeMatrices()
-   {
-      // Update the time depended matrices
-      this->mETD2.update(this->rTSParams().dt(), this->mrBasis);
-   }
-
-   template <typename TSimType> void ETD2RKMethod<TSimType>::initStorage()
-   {
-      // Create intermediate value a computation step
-      EPMSHARED_PTR<ETD1Iteration<TSimType> > pItA(new ETD1Iteration<TSimType> (1.0/this->mA, this->mETD2.pEtdF(0), this->mETD2.pEtdF(1)));
-
-      // Create timestep computation step
-      EPMSHARED_PTR<ETD2RKTimestep<TSimType> > pItTimestep(new ETD2RKTimestep<TSimType> (1.0/this->mA, this->pOldNTerms(), this->mETD2.pEtdF(2)));
-
-      // Add required ETD steps
-         // Add intermediate value A computation
-      this->mSteps.push_back(pItA);
-         // Add timestep step
-      this->mSteps.push_back(pItTimestep);
-   }
 
 }
 

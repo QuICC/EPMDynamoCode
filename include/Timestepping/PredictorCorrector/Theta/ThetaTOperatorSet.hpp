@@ -5,6 +5,10 @@
 #ifndef THETATOPERATORSET_HPP
 #define THETATOPERATORSET_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 #include <vector>
@@ -14,7 +18,6 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 #include "General/EPMTypedefs.hpp"
 #include "Timestepping/ImplicitTOperatorSet.hpp"
 
@@ -23,11 +26,11 @@ namespace EPMDynamo {
    /**
     * \brief General implementation of the \f$\theta\f$-method operator set
     */
-   template <typename TSimType, typename TOpType> class ThetaTOperatorSet: public ImplicitTOperatorSet<TSimType, TOpType>
+   template <typename TOpType> class ThetaTOperatorSet: public ImplicitTOperatorSet<TOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::RadialBasisType  BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType  BasisType;
 
          /**
           * @brief Constructor
@@ -90,21 +93,21 @@ namespace EPMDynamo {
          bool mIsThetaLocked;
    };
 
-   template <typename TSimType, typename TOpType> ThetaTOperatorSet<TSimType, TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TSimType, TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
-      : ImplicitTOperatorSet<TSimType, TOpType>(pTrunc, hasL0), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
+   template <typename TOpType> ThetaTOperatorSet<TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
+      : ImplicitTOperatorSet<TOpType>(pTrunc, hasL0), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
    {
    }
 
-   template<typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::initOperators()
+   template<typename TOpType> void ThetaTOperatorSet<TOpType>::initOperators()
    {
       // Forbid any further call to setTheta!
       this->mIsThetaLocked = true;
 
       // Call inherited initOperators method
-      ImplicitTOperatorSet<TSimType, TOpType>::initOperators();
+      ImplicitTOperatorSet<TOpType>::initOperators();
    }
 
-   template <typename TSimType, typename TOpType> void ThetaTOperatorSet<TSimType, TOpType>::updateOperators(const EPMFloat factor, const EPMFloat timeDiff)
+   template <typename TOpType> void ThetaTOperatorSet<TOpType>::updateOperators(const EPMFloat factor, const EPMFloat timeDiff)
    {
       this->createOperators(factor, timeDiff, this->mrBasis);
    }

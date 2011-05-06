@@ -5,6 +5,10 @@
 #ifndef THETARHSTOPERATORSET_HPP
 #define THETARHSTOPERATORSET_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -14,24 +18,21 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Config/SimulationConfig.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the \f$\theta\f$ method RHS operator set
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ThetaRHSTOperatorSet: public ThetaTOperatorSet<TSimType, SimulationConfig::OperatorType>
+   class ThetaRHSTOperatorSet: public ThetaTOperatorSet<SimulationConfig::OperatorType>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef typename TSimType::RadialBasisType    BasisType;
+         typedef SimulationConfig::Numericalscheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::Numericalscheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -61,15 +62,10 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> ThetaRHSTOperatorSet<TSimType>::ThetaRHSTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaRHSTOperatorSet<TSimType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
-      : ThetaTOperatorSet<TSimType, SimulationConfig::OperatorType>(a, b, basis, pTrunc, hasL0)
-   {
-   }
-
-   template <typename TSimType> inline void ThetaRHSTOperatorSet<TSimType>::update(const EPMFloat dt)
+   inline void ThetaRHSTOperatorSet::update(const EPMFloat dt)
    {
       // Set multiplicative factor for Laplacian
-      EPMFloat factor = this->mB*(1.0-ThetaTraits<TSimType>::theta);
+      EPMFloat factor = this->mB*(1.0-ThetaTraits::theta);
 
       // Set multiplicative factor for time matrix
       EPMFloat timeDiff = this->mA/dt;

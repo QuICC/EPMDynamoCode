@@ -5,6 +5,10 @@
 #ifndef SCHEMEITERATION_HPP
 #define SCHEMEITERATION_HPP
 
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
 // System includes
 //
 
@@ -18,14 +22,12 @@ namespace EPMDynamo {
 
    /**
     * \brief General implementation of an iterative scheme iteration (step)
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class SchemeIteration
+   class SchemeIteration
    {
       public:
          /// Typedef from Simulation trait to local scalar type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor
@@ -68,16 +70,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimType> SchemeIteration<TSimType>::SchemeIteration()
-   {
-   }
-
-   template <typename TSimType> inline bool SchemeIteration<TSimType>::providesError() const
+   inline bool SchemeIteration::providesError() const
    {
       return false;
    }
 
-   template <typename TSimType> inline bool SchemeIteration<TSimType>::doNextIteration() const
+   inline bool SchemeIteration::doNextIteration() const
    {
       return true;
    }

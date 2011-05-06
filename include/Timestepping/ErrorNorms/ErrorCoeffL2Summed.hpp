@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/Parallelisation.h"
+#include "Config/SimulationConfig.hpp"
 
 // System includes
 //
@@ -17,20 +18,17 @@
 
 // Project includes
 //
-#include "Config/SimulationConfig.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the L2 max error norm computation
-    *
-    * \tparam TSimType Type of the simulation
     */
-   template <typename TSimType> class ErrorCoeffL2Summed
+   class ErrorCoeffL2Summed
    {
       public:
          /// Typedef from Simulation trait to local truncation type
-         typedef typename TSimType::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Compute the Max error norm
@@ -62,60 +60,9 @@ namespace EPMDynamo {
          virtual ~ErrorCoeffL2Summed() {}; 
    };
 
-   template <typename TSimType> EPMFloat ErrorCoeffL2Summed<TSimType>::computeNorm(const typename ErrorCoeffL2Summed<TSimType>::ScalarType& rVar, const typename ErrorCoeffL2Summed<TSimType>::ScalarType& rRef)
-   {
-      // Create temporary storage
-      EPMFloat norm = 0.0;
-      EPMFloat refVal = 0.0;
-      EPMFloat tmp = 0.0;
-
-      // Get truncation information
-      const int l0 = rVar.minL();
-      int nL = rVar.nL();
-      int nN = rVar.nN();
-      int nM;
-
-      // Loop over harmonic modes
-      for(int l = l0; l < nL; ++l)
-      {
-         nM = rVar.nM(l);
-         for(int m=0; m < nM; ++m)
-         {
-            // Compute L2 norm
-            for(int n=0; n < nN; ++n)
-            {
-               // Compute error norm
-               tmp = rVar.lshell(l)(n,m).real()*rVar.lshell(l)(n,m).real() + rVar.lshell(l)(n,m).imag()*rVar.lshell(l)(n,m).imag();
-               tmp = std::sqrt(tmp);
-
-               // Compute vector norm
-               refVal = rRef.lshell(l)(n,m).real()*rRef.lshell(l)(n,m).real() + rRef.lshell(l)(n,m).imag()*rRef.lshell(l)(n,m).imag();
-               refVal = std::sqrt(refVal);
-
-               // Compute mixed absolute-relative error (|err|/(|v|+eta))
-               tmp /= refVal + TimestepConfig::TIMESTEP_RELERROR_SCALING;
-
-               // Get summed norm
-               norm += tmp;
-            }
-         }
-      }
-
-      // Get the "global" norm for MPI code
-      #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, &norm, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-      #endif // EPMDYNAMO_MPI
-
-      return norm;
-   }
-
-   template <typename TSimType> inline EPMFloat ErrorCoeffL2Summed<TSimType>::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
+   inline EPMFloat ErrorCoeffL2Summed::updateNorm(const EPMFloat newNorm, const EPMFloat oldNorm)
    {
       return std::max(newNorm, oldNorm);
-   }
-
-   template <typename TSimType> ErrorCoeffL2Summed<TSimType>::ErrorCoeffL2Summed()
-   {
    }
 
 }
