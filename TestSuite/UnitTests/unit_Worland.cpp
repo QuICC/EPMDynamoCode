@@ -19,8 +19,6 @@
 #include "Domain/Truncation.hpp"
 #include "Polynomials/RadialBasis.hpp"
 #include "Polynomials/WorlandPolynomial.hpp"
-#include "Simulations/Types/WSHSimInc.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
 
 namespace epm = EPMDynamo;
 

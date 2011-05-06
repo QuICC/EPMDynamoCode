@@ -65,7 +65,7 @@ namespace EPMDynamo {
          const int mFormat;
    };
 
-   template <typename typename TFieldType> EnergyFile<TFieldType>::EnergyFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, int format)
+   template <typename TFieldType> EnergyFile<TFieldType>::EnergyFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, int format)
       : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + EnergyFileDefs::BASENAME, EnergyFileDefs::EXTENSION, EnergyFileDefs::HEADER, EnergyFileDefs::VERSION), mrTSParams(tsParams), mFormat(format)
    {
    }

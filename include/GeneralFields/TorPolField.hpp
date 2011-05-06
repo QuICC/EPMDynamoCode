@@ -9,6 +9,7 @@
 //
 #include "Config/Parallelisation.h"
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -147,22 +148,22 @@ namespace EPMDynamo {
          ScalarType   mPol;
    };
 
-   inline const typename TorPolField::ScalarType& TorPolField::tor() const
+   inline const TorPolField::ScalarType& TorPolField::tor() const
    {
       return this->mTor;
    }
 
-   inline  typename TorPolField::ScalarType& TorPolField::rTor()
+   inline TorPolField::ScalarType& TorPolField::rTor()
    {
       return this->mTor;
    }
 
-   inline const  typename TorPolField::ScalarType& TorPolField::pol() const
+   inline const TorPolField::ScalarType& TorPolField::pol() const
    {
       return this->mPol;
    }
 
-   inline  typename TorPolField::ScalarType& TorPolField::rPol()
+   inline TorPolField::ScalarType& TorPolField::rPol()
    {
       return this->mPol;
    }

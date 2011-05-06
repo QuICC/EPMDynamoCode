@@ -16,13 +16,13 @@
 
 // Project includes
 //
-#include "Timestepping/PredictorCorrector/PCTimestepControl.hpp"
+#include "Timestepping/IterativeScheme.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaMethod.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaInfluenceMethod.hpp"
+#include "Timestepping/PredictorCorrector/PCTimestepControl.hpp"
 
 namespace EPMDynamo {
-
-   // Forward declarations
-   template <typename> class IterativeScheme;
 
    /**
     * \brief Traits to describe the request Predictor/Corrector scheme

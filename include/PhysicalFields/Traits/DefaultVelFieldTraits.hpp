@@ -28,7 +28,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalTorPolCurl<PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
+         typedef PhysicalTorPolCurl<PhysicalTorPolCurlBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the type of an inner core field
          typedef PhysicalTorPolCurl<PhysicalTorPolCurlBase> ICFieldType;

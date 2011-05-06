@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -89,17 +90,17 @@ namespace EPMDynamo {
       return (this->mNeedTransform == 0);
    }
 
-   inline const typename PhysicalScalarBase::ScalarType& PhysicalScalarBase::perturbation() const
+   inline const PhysicalScalarBase::ScalarType& PhysicalScalarBase::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   inline const typename PhysicalScalarBase::ScalarType& PhysicalScalarBase::totalField() const
+   inline const PhysicalScalarBase::ScalarType& PhysicalScalarBase::totalField() const
    {
       return this->mPerturbation;
    }
 
-   inline typename PhysicalScalarBase::ScalarType& PhysicalScalarBase::rPerturbation()
+   inline PhysicalScalarBase::ScalarType& PhysicalScalarBase::rPerturbation()
    {
       this->mNeedTransform = 0;
 

@@ -2,9 +2,6 @@
  *  \brief Implemenation of the corrector step of the theta method
  */
 
-#ifndef THETAINFLUENCECORRECTOR_HPP
-#define THETAINFLUENCECORRECTOR_HPP
-
 // Configuration includes
 //
 

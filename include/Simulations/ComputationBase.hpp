@@ -9,6 +9,9 @@
 //
 #include "Config/Parallelisation.h"
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
+#include "Config/ParametersInc.hpp"
+#include "Config/TransformsInc.hpp"
 
 // System includes
 //
@@ -290,7 +293,7 @@ namespace EPMDynamo {
       // Synchronize CPUs
       EPMDYNAMO_SYNCHRONIZE;
 
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      BOOST_STATIC_ASSERT(sizeof(TIOType) == 0); 
    }
 
    template <typename TIOType> void ComputationBase<TIOType>::postRun()
@@ -298,12 +301,12 @@ namespace EPMDynamo {
       // Synchronize CPUs
       EPMDYNAMO_SYNCHRONIZE;
 
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      BOOST_STATIC_ASSERT(sizeof(TIOType) == 0); 
    }
 
    template <typename TIOType> void ComputationBase<TIOType>::configureTransforms()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      BOOST_STATIC_ASSERT(sizeof(TIOType) == 0); 
    }
 
 }

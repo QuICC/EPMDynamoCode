@@ -690,6 +690,7 @@ set(SrcSubDirs
       IO
       Operators
       Parallelisers
+      PhysicalFields
       Polynomials
       Simulations
       Timestepping

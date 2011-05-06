@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -18,6 +19,7 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
+#include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 
 namespace EPMDynamo {
@@ -29,10 +31,10 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef from Simulation trait to local radial basis type
-         typedef SimulationConfig::Numericalscheme::RadialBasisType    BasisType;
+         typedef SimulationConfig::NumericalScheme::RadialBasisType    BasisType;
 
          /// Typedef from Simulation trait to local scalar type
-         typedef SimulationConfig::Numericalscheme::ScalarType    ScalarType;
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
 
          /**
           * @brief Constructor

@@ -17,20 +17,17 @@
 #include "Simulations/Simulation.hpp"
 #include "Utilities/Traits/ImposedMagneticTraits.hpp"
 #include "Utilities/ImposedFieldGenerator.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
-#include "Simulations/Types/WSHSimInc.hpp"
 
 #include "Utilities/Imposed/BasicImposed.hpp"
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::ImposedMagneticTraits
-#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
+#define SIMTRAITS epm::ImposedMagneticTraits
 
 typedef epm::BasicImposed<SIMTRAITS>  ImposedType;
 typedef ImposedType::ImposedTraits  ImposedTraits;
 
-typedef  epm::ImposedFieldGenerator<epm::WSHSimulation, TSIMTRAITS>  ImposedFieldGenerator;
+typedef  epm::ImposedFieldGenerator<SIMTRAITS>  ImposedFieldGenerator;
 
 /**
  * @brief Velocity diffusion simulation

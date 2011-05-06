@@ -13,10 +13,11 @@
 
 // Project includes
 //
-#include "Simulations/SimulationConstants.hpp"
 #include "GeneralScalars/SpectralSHScalar.hpp"
+#include "Polynomials/RadialBasis.hpp"
 #include "Polynomials/WorlandPolynomial.hpp"
 #include "Transforms/Polynomial/RadialTransform.hpp"
+#include "Simulations/SimulationConstants.hpp"
 
 namespace EPMDynamo {
 

@@ -11,12 +11,13 @@
 // External includes
 //
 
-// Project includes
+// Class includes
 //
 #include "Timestepping/IterativeSchemeBase.hpp"
 
 // Project includes
 //
+#include "Timestepping/ErrorControl.hpp"
 
 namespace EPMDynamo {
 

@@ -29,7 +29,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the type of the spectral field
-         typedef typename PhysicalScalarGradient<PhysicalScalarGradientBase>::SpectralFieldType  SpectralFieldType;
+         typedef PhysicalScalarGradient<PhysicalScalarGradientBase>::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the inner core field
          typedef PhysicalScalarGradient<PhysicalScalarGradientBase> ICFieldType;

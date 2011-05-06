@@ -3,8 +3,8 @@
 #
 set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       PhysicalBase.cpp
-      PhysicalQSTBase.cpp
-      PhysicalQSTCurlBase.cpp
+      # PhysicalQSTBase.cpp
+      # PhysicalQSTCurlBase.cpp
       PhysicalRTPField.cpp
       PhysicalRTPFieldCurl.cpp
       PhysicalRTPScalarGradient.cpp

@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -17,6 +18,7 @@
 
 // Project includes
 //
+#include "Timestepping/TimestepConfig.hpp"
 
 namespace EPMDynamo {
 

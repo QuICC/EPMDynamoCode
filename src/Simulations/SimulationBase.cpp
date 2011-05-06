@@ -78,47 +78,47 @@ namespace EPMDynamo {
 
    void SimulationBase::initFields()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::addHDF5Output()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::addASCIIOutput()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::initEquations()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::updateEquationsRTP(const int step)
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::updateEquationsRHS()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::transformEquationsRHS(const int step)
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::addExternalInfluence()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::timestepEquations()
    {
-      BOOST_STATIC_ASSERT(sizeof(SimulationConfig::NumericalScheme) == 0); 
+      assert(false); 
    }
 
    void SimulationBase::describeSplitting()

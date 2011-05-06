@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -96,17 +97,17 @@ namespace EPMDynamo {
       return ((this->mNeedTransform == 0) && (this->mNeedGradTransform == 0));
    }
 
-   inline const typename PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::perturbation() const
+   inline const PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::perturbation() const
    {
       return this->mPerturbation;
    }
 
-   inline const typename PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::totalField() const
+   inline const PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::totalField() const
    {
       return this->mPerturbation;
    }
 
-   inline typename PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::rPerturbation()
+   inline PhysicalScalarGradientBase::ScalarType& PhysicalScalarGradientBase::rPerturbation()
    {
       this->mNeedTransform = 0;
 

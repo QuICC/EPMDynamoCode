@@ -18,23 +18,20 @@
 #include "Simulations/Traits/DynamoTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Utilities/InitialStateGenerator.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
-#include "Simulations/Types/WSHSimInc.hpp"
 
 #include "Utilities/States/RandomState.hpp"
 #include "Utilities/States/SakurabaState.hpp"
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::ThermalRotConvectionTraits
-#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
+#define SIMTRAITS epm::ThermalRotConvectionTraits
 
 typedef epm::RandomState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;
 
 typedef StateType::StateTraits  StateTraits;
 
-typedef  epm::InitialStateGenerator<epm::WSHSimulation, TSIMTRAITS>  IStateGenerator;
+typedef  epm::InitialStateGenerator<SIMTRAITS>  IStateGenerator;
 
 /**
  * @brief Velocity diffusion simulation

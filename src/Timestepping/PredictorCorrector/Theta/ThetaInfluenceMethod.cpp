@@ -17,6 +17,7 @@
 
 // Project includes
 //
+#include "General/EPMException.hpp"
 
 namespace EPMDynamo {
 

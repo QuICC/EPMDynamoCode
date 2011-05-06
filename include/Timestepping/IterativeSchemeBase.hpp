@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -18,7 +19,7 @@
 // Project includes
 //
 #include "Domain/Truncation.hpp"
-#include "Timestepping/ErrorControl.hpp"
+#include "BoundaryConditions/BoundaryCondition.hpp"
 #include "Timestepping/TimestepParameters.hpp"
 #include "Timestepping/TimestepSchemeBase.hpp"
 #include "Timestepping/SchemeIteration.hpp"

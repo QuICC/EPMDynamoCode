@@ -9,6 +9,7 @@
 //
 #include "Config/Parallelisation.h"
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -40,9 +41,10 @@ namespace EPMDynamo {
          /**
          * @brief Constructs the field using the given spectral truncation information
          *
-         * @param pTrunc Truncation information pointer
+         * @param pTrunc Smart pointer to truncation information
+         * @param needsL0  Needs to consider L=0 mode ?
          */
-         QSTField(SmartTruncation pTrunc);
+         QSTField(SmartTruncation pTrunc, const bool needsL0 = false);
 
          /**
          * @brief Simple empty constructor
@@ -138,32 +140,32 @@ namespace EPMDynamo {
          ScalarType   mT;
    };
 
-   inline const typename QSTField::ScalarType& QSTField::q() const
+   inline const QSTField::ScalarType& QSTField::q() const
    {
       return this->mQ;
    }
 
-   inline  typename QSTField::ScalarType& QSTField::rQ()
+   inline QSTField::ScalarType& QSTField::rQ()
    {
       return this->mQ;
    }
 
-   inline const  typename QSTField::ScalarType& QSTField::s() const
+   inline const QSTField::ScalarType& QSTField::s() const
    {
       return this->mS;
    }
 
-   inline  typename QSTField::ScalarType& QSTField::rS()
+   inline QSTField::ScalarType& QSTField::rS()
    {
       return this->mS;
    }
 
-   inline const  typename QSTField::ScalarType& QSTField::t() const
+   inline const QSTField::ScalarType& QSTField::t() const
    {
       return this->mT;
    }
 
-   inline  typename QSTField::ScalarType& QSTField::rT()
+   inline QSTField::ScalarType& QSTField::rT()
    {
       return this->mT;
    }

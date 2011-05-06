@@ -25,5 +25,3 @@ namespace EPMDynamo {
    }
 
 }
-
-#endif // SCHEMEITERATION_HPP

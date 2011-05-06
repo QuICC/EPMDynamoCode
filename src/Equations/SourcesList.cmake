@@ -1,7 +1,7 @@
 #
 # Set list of source files
 #
-set(${SrcSubDir}_Src
+set(${SrcSubDir}_Srcs
       InfluenceMatrix.cpp
       )
 

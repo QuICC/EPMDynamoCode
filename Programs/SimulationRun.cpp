@@ -21,8 +21,8 @@
 #include "General/EPMException.hpp"
 #include "Simulations/Simulation.hpp"
 #include SIMULATIONHEADER
-#include "Simulations/Types/WSHSimInc.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
+#include "Config/NumericalSchemeInc.hpp"
+#include "Config/TransformsInc.hpp"
 
 namespace epm = EPMDynamo;
 

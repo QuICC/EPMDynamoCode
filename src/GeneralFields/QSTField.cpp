@@ -20,8 +20,8 @@
 
 namespace EPMDynamo {
 
-   QSTField::QSTField(SmartTruncation pTrunc)
-      :SpectralFieldBase(pTrunc), mQ(pTrunc), mS(pTrunc), mT(pTrunc)
+   QSTField::QSTField(SmartTruncation pTrunc, const bool needsL0)
+      :SpectralFieldBase(pTrunc), mQ(pTrunc, needsL0), mS(pTrunc, needsL0), mT(pTrunc, needsL0)
    {
    }
 

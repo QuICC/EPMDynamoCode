@@ -28,7 +28,7 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the spectral field type
-         typedef typename GenMagFieldTraits::SpectralFieldType  SpectralFieldType;
+         typedef GenMagFieldTraits::SpectralFieldType  SpectralFieldType;
 
          /// Typedef for the variable type
          typedef FullSphereField<GenMagFieldTraits> DomainType;

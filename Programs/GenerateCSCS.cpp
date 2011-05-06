@@ -18,15 +18,12 @@
 #include "Simulations/Traits/DynamoTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Utilities/CSCSParaviewGenerator.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
-#include "Simulations/Types/WSHSimInc.hpp"
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::ThermalRotConvectionTraits
-#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
+#define SIMTRAITS epm::ThermalRotConvectionTraits
 
-typedef  epm::CSCSParaviewGenerator<epm::WSHSimulation, TSIMTRAITS>  CSCSGenerator;
+typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
 /**
  * @brief Output traits for full field values

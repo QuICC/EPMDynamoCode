@@ -30,7 +30,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimImpl Actual implementation of the simulation
     */
-   template <template<typename > class TSimImpl> class Simulation: public TSimImpl<SimulationConfig::NumericalScheme>
+   template <typename TSimImpl> class Simulation: public TSimImpl
    {
       public:
          /**
@@ -65,8 +65,8 @@ namespace EPMDynamo {
       private:
    };
 
-   template <template<typename > class TSimImpl> Simulation<TSimImpl>::Simulation()
-      : TSimImpl<SimulationConfig::NumericalScheme>()
+   template <typename TSimImpl> Simulation<TSimImpl>::Simulation()
+      : TSimImpl()
    {
       // Stop timer for construction time
       this->mExecTimer.stop();
@@ -83,7 +83,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <template<typename > class TSimImpl> void Simulation<TSimImpl>::init()
+   template <typename TSimImpl> void Simulation<TSimImpl>::init()
    {
       // Start timer
       this->mExecTimer.start();
@@ -131,7 +131,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <template<typename > class TSimImpl> void Simulation<TSimImpl>::run()
+   template <typename TSimImpl> void Simulation<TSimImpl>::run()
    {
       // Start timer
       this->mExecTimer.start();
@@ -207,7 +207,7 @@ namespace EPMDynamo {
       this->mExecTimer.update(5);
    }
 
-   template <template<typename > class TSimImpl> void Simulation<TSimImpl>::finalise()
+   template <typename TSimImpl> void Simulation<TSimImpl>::finalise()
    {
       // Print timestepping infos
       this->mSimControl.printInfo();

@@ -9,6 +9,7 @@
 //
 #include "Config/Parallelisation.h"
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //

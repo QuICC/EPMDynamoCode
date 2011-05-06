@@ -9,6 +9,7 @@
 //
 #include "Config/SmartPointer.h"
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //

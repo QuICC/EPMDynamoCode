@@ -2,9 +2,6 @@
  *  \brief Implementation of scalar imposed field
  */
 
-#ifndef IMPOSEDSCALAR_HPP
-#define IMPOSEDSCALAR_HPP
-
 // Configuration includes
 //
 

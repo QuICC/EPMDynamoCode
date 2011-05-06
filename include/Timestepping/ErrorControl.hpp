@@ -8,6 +8,8 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
+#include "Config/TimesteppingInc.hpp"
 
 // System includes
 //
@@ -60,21 +62,6 @@ namespace EPMDynamo {
           */
          virtual ~ErrorControl() {};
    };
-
-   EPMFloat ErrorControl::errorNorm(const ErrorControl::ScalarType& rVar,const ErrorControl::ScalarType& rRef, const EPMFloat oldError)
-   {
-      // Create temporary storage
-      EPMFloat norm = 0.0;
-      EPMFloat error = 0.0;
-
-      // Compute error norm
-      norm = ErrorNormType::computeNorm(rVar, rRef);
-
-      // Update error norm
-      error = ErrorNormType::updateNorm(norm, oldError);
-
-      return error;
-   }
 
 }
 

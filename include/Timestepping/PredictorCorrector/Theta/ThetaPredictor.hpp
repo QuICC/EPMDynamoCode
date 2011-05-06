@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -18,7 +19,6 @@
 // Project includes
 //
 #include "Timestepping/SchemeIteration.hpp"
-#include "Timestepping/ErrorControl.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaLHSTOperatorSet.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaRHSTOperatorSet.hpp"
 

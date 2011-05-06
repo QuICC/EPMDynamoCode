@@ -14,6 +14,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
+#include "Timestepping/ErrorNorms/ErrorModeL2Max.hpp"
 
 namespace EPMDynamo {
 

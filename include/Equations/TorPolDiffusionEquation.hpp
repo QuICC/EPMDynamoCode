@@ -8,6 +8,7 @@
 // Configuration includes
 //
 #include "Config/SimulationConfig.hpp"
+#include "Config/TimesteppingInc.hpp"
 
 // System includes
 //

@@ -1,7 +1,7 @@
 #
 # Create sources list
 #
-set(${SrcSubSubDir}_${SrcSubSubSubDir}_Srcs
+set(${SrcSubDir}_${SrcSubSubDir}_${SrcSubSubSubDir}_Srcs
       ThetaCorrector.cpp
       ThetaInfluenceCorrector.cpp
       ThetaInfluenceMethod.cpp

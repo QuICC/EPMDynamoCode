@@ -18,8 +18,6 @@
 #include "Simulations/Traits/DynamoTraits.hpp"
 #include "Simulations/Traits/ThermalConvectionTraits.hpp"
 #include "Utilities/SourceGenerator.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
-#include "Simulations/Types/WSHSimInc.hpp"
 
 #include "Utilities/Sources/JonesSource.hpp"
 #include "Utilities/Sources/SakurabaSource.hpp"
@@ -27,13 +25,12 @@
 
 namespace epm = EPMDynamo;
 
-#define TSIMTRAITS epm::ThermalConvectionTraits
-#define SIMTRAITS TSIMTRAITS<epm::WSHSimulation>
+#define SIMTRAITS epm::ThermalConvectionTraits
 
 typedef epm::HomogeneousSource<SIMTRAITS>  SourceType;
 typedef SourceType::SourceTraits  SourceTraits;
 
-typedef  epm::SourceGenerator<epm::WSHSimulation, TSIMTRAITS>  SourceGenerator;
+typedef  epm::SourceGenerator<SIMTRAITS>  SourceGenerator;
 
 /**
  * @brief Velocity diffusion simulation

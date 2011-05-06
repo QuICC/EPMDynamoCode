@@ -15,28 +15,35 @@
 
 // Project includes
 //
-#include "General/EPMTypedefs.hpp"
-#include "Simulations/Types/WSHSimulation.hpp"
-#include "Simulations/Types/WSHSimInc.hpp"
-#include "Equations/Parameters/EquationParameters.hpp"
-#include "Equations/Parameters/EEkEmRaParameters.hpp"
-#include "Equations/Parameters/ELPmPrRaParameters.hpp"
-#include "Equations/Parameters/EPmPrRaParameters.hpp"
-#include "Equations/Parameters/EPmQRaParameters.hpp"
-#include "Equations/Parameters/EQRaRoParameters.hpp"
-#include "Timestepping/PredictorCorrector/PCSchemeTraits.hpp"
-#include "Timestepping/ETD/ETDSchemeTraits.hpp"
-#include "Transforms/SpectralSH/TorPolSpectralSHTransform.hpp"
-#include "Transforms/SpectralSH/SerialSpectralSHTTraits.hpp"
-#include "Transforms/SpectralSH/MPISpectralSHTTraits.hpp"
-#include "Transforms/SphericalHarmonics/SerialSHTTraits.hpp"
-#include "Transforms/SphericalHarmonics/MPISHTTraits.hpp"
 
 namespace EPMDynamo {
 
-   // Forward declaration of the Operators
+   //
+   // Forward declarations
+
+   // NumericalScheme
+   class WSHSimulation;
+
+   // Operators
    class DenseOperator;
    class DenseLUOperator;
+
+   // TimestepScheme
+   class PCSchemeTraits;
+
+   // Parameters
+   class EQRaRoParameters;
+   class EEkEmRaParameters;
+   class ELPmPrRaParameters;
+   class EPmPrRaParameters;
+   class EPmQRaParameters;
+
+   // Transforms
+   class MPISpectralSHTTraits;
+   class SerialSpectralSHTTraits;
+   class MPISHTTraits;
+   class SerialSHTTraits;
+   template <typename , typename > class TorPolSpectralSHTransform;
 
    /**
     * @brief Simulation traits class
@@ -50,15 +57,15 @@ namespace EPMDynamo {
          /// Typedef for the transform type
          #ifdef EPMDYNAMO_SPLIT_RADIAL
             #ifdef EPMDYNAMO_SPLIT_SH
-               typedef  TorPolSpectralSHTransform<NumericalScheme, MPISpectralSHTTraits, MPISHTTraits>   TransformType;
-            #else
-               typedef  TorPolSpectralSHTransform<NumericalScheme, MPISpectralSHTTraits, SerialSHTTraits>   TransformType;
+               typedef  TorPolSpectralSHTransform<MPISpectralSHTTraits, MPISHTTraits>   TransformType;
+            #els
+               typedef  TorPolSpectralSHTransform<MPISpectralSHTTraits, SerialSHTTraits>   TransformType;
             #endif //EPMDYNAMO_SPLIT_SH
          #else
             #ifdef EPMDYNAMO_SPLIT_SH
-               typedef  TorPolSpectralSHTransform<NumericalScheme, SerialSpectralSHTTraits, MPISHTTraits>   TransformType;
+               typedef  TorPolSpectralSHTransform<SerialSpectralSHTTraits, MPISHTTraits>   TransformType;
             #else
-               typedef  TorPolSpectralSHTransform<NumericalScheme, SerialSpectralSHTTraits, SerialSHTTraits>   TransformType;
+               typedef  TorPolSpectralSHTransform<SerialSpectralSHTTraits, SerialSHTTraits>   TransformType;
             #endif //EPMDYNAMO_SPLIT_SH
          #endif //EPMDYNAMO_SPLIT_RADIAL
 
@@ -69,8 +76,8 @@ namespace EPMDynamo {
          typedef  DenseLUOperator  FactoredOpType;
 
          /// Typedef for the timestepping scheme traits
-         typedef  PCSchemeTraits<NumericalScheme>  TimestepTraits;
-//         typedef  ETDSchemeTraits<NumericalScheme>  TimestepTraits;
+         typedef  PCSchemeTraits  TimestepTraits;
+//         typedef  ETDSchemeTraits  TimestepTraits;
          
          /// Typedef for the equation parameters
          typedef EQRaRoParameters  EquationParametersType;

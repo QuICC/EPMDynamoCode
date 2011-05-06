@@ -130,7 +130,7 @@ namespace EPMDynamo {
       ++this->mOpBCs;
    }
 
-   inline void InfluenceMatrix::solve(typename InfluenceMatrix::ScalarType &rVar)
+   inline void InfluenceMatrix::solve(InfluenceMatrix::ScalarType &rVar)
    {
       int degrees = this->trunc()->local()->spec()->nL();
       const int l0 = rVar.minL();
@@ -156,7 +156,7 @@ namespace EPMDynamo {
       this->mSolutions.at(l) = kernel/bcVal;
    }
 
-   inline void InfluenceMatrix::addKernel(typename InfluenceMatrix::ScalarType &rVar)
+   inline void InfluenceMatrix::addKernel(InfluenceMatrix::ScalarType &rVar)
    {
       // Get truncation information
       int nN = this->trunc()->sim()->rad()->nN();
