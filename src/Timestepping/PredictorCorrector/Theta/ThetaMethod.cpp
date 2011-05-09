@@ -65,14 +65,14 @@ namespace EPMDynamo {
    {
       //
       // Create intermediate storage
-      EPMSHARED_PTR<ScalarType > pPrevious(new ScalarType (this->mpLHS->trunc(), this->mpLHS->hasL0()));
+      EPMSHARED_PTR<ScalarType> pPrevious(new ScalarType (this->mpLHS->trunc(), this->mpLHS->hasL0()));
       this->mTmpScalars.push_back(pPrevious);
 
       // Create the predictor computation step
-      EPMSHARED_PTR<ThetaPredictor > pItP(new ThetaPredictor (this->mpLHS, this->mpRHS));
+      EPMSHARED_PTR<ThetaPredictor> pItP(new ThetaPredictor (this->mpLHS, this->mpRHS));
 
       // Create the corrector computation step
-      EPMSHARED_PTR<ThetaCorrector > pItC(new ThetaCorrector (pPrevious, this->mpLHS, this->mpRHS));
+      EPMSHARED_PTR<ThetaCorrector> pItC(new ThetaCorrector (pPrevious, this->mpLHS, this->mpRHS));
 
       //
       // Add the required computation steps

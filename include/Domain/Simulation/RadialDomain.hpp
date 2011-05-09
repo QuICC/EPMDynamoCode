@@ -58,7 +58,7 @@ namespace EPMDynamo {
          const Array&  radSll() const;
 
          /**
-          * @brief Set the radial spherical geometric factor to stringentest value
+          * @brief Set the radial spherical geometric factor
           *
           * \param maxL Maximum harmonic degree
           */
@@ -86,16 +86,6 @@ namespace EPMDynamo {
           * @brief Set specific values for the radial spherical geometric factor
           */
          void setRadSll();
-
-         /**
-          * @brief Compute the alpha parameter of the Jacobi polynomials
-          */
-         EPMFloat alpha() const;
-
-         /**
-          * @brief Compute the beta parameter of the Jacobi polynomials
-          */
-         EPMFloat beta(int l) const;
    };
 
    inline const Array& RadialDomain::radGrid() const

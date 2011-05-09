@@ -68,14 +68,14 @@ namespace EPMDynamo {
          const SmartCoreTrunc  remote(const int id) const;
 
          /**
-          * @brief Set the radial grid (isn't know at creation time)
+          * @brief Set the radial grid (isn't known at creation time)
           *
           * @param rad Radial grid
           */
          void setRadialGrid(SmartArray rad);
 
          /**
-          * @brief Set the theta grid (isn't know at creation time)
+          * @brief Set the theta grid (isn't known at creation time)
           *
           * @param theta Theta grid
           * @param cTh  Cos Theta grid
