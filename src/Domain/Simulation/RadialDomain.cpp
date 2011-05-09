@@ -21,13 +21,13 @@
 namespace EPMDynamo {
 
    RadialDomain::RadialDomain(const int maxN, const int nR)
-      : RadialTruncation(maxN, nR), mMaxL(0)
+      : RadialTruncation(maxN, nR), mMaxL(0), mpRSll(new Array(nR))
    {
    }
 
    void RadialDomain::setRadSll()
    {
-      this->mpRSll = SimulationConfig::NumericalScheme::createRadSll(this->maxN(), this->mMaxL, this->radGrid());
+      SimulationConfig::NumericalScheme::createRadSll(this->maxN(), this->mMaxL, this->radGrid(), this->mpRSll);
    }
 
 }

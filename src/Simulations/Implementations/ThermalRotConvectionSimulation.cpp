@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    ThermalRotConvectionSimulation::ThermalRotConvectionSimulation()
-      : mCodC(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mTransport(mCodC, mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(mVelV, mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCodC(this->mpTrunc, this->mTransform), mVelV(this->mpTrunc, this->mTransform), mTransport(this->mCodC, this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mNavierStokes(this->mVelV, this->mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 

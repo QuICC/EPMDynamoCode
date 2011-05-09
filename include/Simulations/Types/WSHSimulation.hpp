@@ -68,7 +68,7 @@ namespace EPMDynamo {
          /**
           * @brief Create radial spherical geometry factors
           */
-         static SmartArray createRadSll(const int maxN, const int maxL, const Array& radGrid);
+         static void createRadSll(const int maxN, const int maxL, const Array& radGrid, SmartArray pRadSll);
          
       protected:
 
@@ -107,7 +107,7 @@ namespace EPMDynamo {
       return WSHSimulation::createTrunc(arr(0), arr(1), arr(2), arr(3), arr(4));
    }
 
-   inline SmartArray WSHSimulation::createRadSll(const int maxN, const int maxL, const Array& radGrid)
+   inline void WSHSimulation::createRadSll(const int maxN, const int maxL, const Array& radGrid, SmartArray pRadSll)
    {
       // Create the grid generator
       int gridN = static_cast<int>(std::ceil(static_cast<EPMFloat>(3*(maxN+1))/2.0));
@@ -117,9 +117,6 @@ namespace EPMDynamo {
 
       // Create storage for the jacobi grid
       Array jacobiGrid(maxN + 1);
-
-      // Create the radSll smart array
-      SmartArray  pRadSll = SmartArray(new Array(WSHSimulation::radialGridSize(maxN, maxL)));
 
       // Loop over all harmonic degrees starting from the highest
       for(int l = maxL; l > 0; --l)
@@ -141,8 +138,6 @@ namespace EPMDynamo {
          // Special case for l=0
          (*pRadSll)(0) = std::sqrt(2.0);
       }
-
-      return pRadSll;
    }
 }
 

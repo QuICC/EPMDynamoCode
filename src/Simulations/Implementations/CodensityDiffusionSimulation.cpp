@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    CodensityDiffusionSimulation::CodensityDiffusionSimulation()
-      : mCodC(this->mpTrunc, this->mTransform), mTransport(mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mCodC(this->mpTrunc, this->mTransform), mTransport(this->mCodC, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 

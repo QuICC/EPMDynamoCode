@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    MagneticDiffusionSimulation::MagneticDiffusionSimulation()
-      : mMagB(this->mpTrunc, this->mTransform), mInduction(mMagB, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mMagB(this->mpTrunc, this->mTransform), mInduction(this->mMagB, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 

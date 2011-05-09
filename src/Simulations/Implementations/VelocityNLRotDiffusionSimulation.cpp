@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    VelocityNLRotDiffusionSimulation::VelocityNLRotDiffusionSimulation()
-      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 
