@@ -5,7 +5,7 @@ file(GLOB SimImplementations
    ${IncludeDir}/Simulations/Implementations/*Simulation.hpp)
 foreach(SimFile ${SimImplementations})
    get_filename_component(SimName ${SimFile} NAME_WE)
-   set(SrcsList SimulationRun ${All_Srcs})
+   set(SrcsList SimulationRun ${SrcDir}/Simulations/Implementations/${SimName}.cpp ${All_Srcs})
    add_executable(${SimName} ${SrcsList})
    set_target_properties(${SimName} PROPERTIES OUTPUT_NAME ${SimName}
       COMPILE_FLAGS "-D IMPLEMENTATION=${SimName}")
