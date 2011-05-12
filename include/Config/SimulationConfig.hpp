@@ -58,7 +58,7 @@ namespace EPMDynamo {
          #ifdef EPMDYNAMO_SPLIT_RADIAL
             #ifdef EPMDYNAMO_SPLIT_SH
                typedef  TorPolSpectralSHTransform<MPISpectralSHTTraits, MPISHTTraits>   TransformType;
-            #els
+            #else
                typedef  TorPolSpectralSHTransform<MPISpectralSHTTraits, SerialSHTTraits>   TransformType;
             #endif //EPMDYNAMO_SPLIT_SH
          #else
