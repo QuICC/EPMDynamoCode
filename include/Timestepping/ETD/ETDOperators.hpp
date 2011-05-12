@@ -18,6 +18,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
+#include "Operators/RestrictedOperator.hpp"
 
 namespace EPMDynamo {
 
@@ -26,7 +27,7 @@ namespace EPMDynamo {
     *
     * \tparam TOpType Type of the operator
     */
-   template <typename TOpType> class ETDOperators: public BoundedOperatorSet<TOpType>
+   template <typename TOpType> class ETDOperators: public BoundedOperatorSet<TOpType, RestrictedOperator>
    {
       public:
          /**
@@ -78,7 +79,7 @@ namespace EPMDynamo {
    }
 
    template <typename TOpType> ETDOperators<TOpType>::ETDOperators(EPMFloat c, SmartTruncation pTrunc, bool hasL0)
-      : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mC(c), mH(-1)
+      : BoundedOperatorSet<TOpType, RestrictedOperator>(pTrunc, hasL0), mC(c), mH(-1)
    {
    }
 

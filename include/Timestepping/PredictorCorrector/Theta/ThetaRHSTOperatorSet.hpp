@@ -21,13 +21,14 @@
 #include "Domain/Truncation.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
+#include "Timestepping/ExplicitTOperatorSet.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the \f$\theta\f$ method RHS operator set
     */
-   class ThetaRHSTOperatorSet: public ThetaTOperatorSet<SimulationConfig::OperatorType>
+   class ThetaRHSTOperatorSet: public ThetaTOperatorSet<SimulationConfig::OperatorType, ExplicitTOperatorSet>
    {
       public:
          /// Typedef from Simulation trait to local radial basis type

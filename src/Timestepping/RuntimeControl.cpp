@@ -19,7 +19,7 @@
 namespace EPMDynamo {
 
    RuntimeControl::RuntimeControl(EPMFloat wall, EPMFloat maxtime)
-      : mWallTime(wall), mRuntime(0.0), mMaxtime(maxtime), mTime(0.0)
+      : mWallTime(wall), mMaxtime(maxtime), mRuntime(0.0), mTime(0.0)
    {
    }
 

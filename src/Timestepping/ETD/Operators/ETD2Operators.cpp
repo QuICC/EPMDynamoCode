@@ -39,7 +39,10 @@ namespace EPMDynamo {
       for(int l = this->etdF(0).minL(); l < this->etdF(0).nOp(); ++l)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(l).constructBOperator(h*this->c(), basis.at(l).specLaplacian());
+         this->rEtdF(0).rHarmOp(l).setOperator(h*this->c(), basis.at(l).specLaplacian().op());
+
+         // Restrict the operator
+         this->rEtdF(0).rHarmOp(l).constructBoundedOperator();
 
          // Compute the taylor expansion of the Fk functionals of the created operator
          this->computeScaledF2(l);

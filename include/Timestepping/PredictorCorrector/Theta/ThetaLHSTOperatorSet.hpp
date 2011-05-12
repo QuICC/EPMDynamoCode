@@ -21,13 +21,14 @@
 //
 #include "Timestepping/PredictorCorrector/Theta/ThetaTOperatorSet.hpp"
 #include "Timestepping/PredictorCorrector/Theta/ThetaTraits.hpp"
+#include "Timestepping/ImplicitTOperatorSet.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief Implementation of the \f$\theta\f$-method LHS operator set
     */
-   class ThetaLHSTOperatorSet: public ThetaTOperatorSet<SimulationConfig::FactoredOpType>
+   class ThetaLHSTOperatorSet: public ThetaTOperatorSet<SimulationConfig::FactoredOpType, ImplicitTOperatorSet>
    {
       public:
          /// Typedef from Simulation trait to local truncation type

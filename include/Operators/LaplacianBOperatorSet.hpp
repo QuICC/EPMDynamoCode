@@ -21,6 +21,8 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
+#include "Operators/RestrictedOperator.hpp"
+#include "Operators/BCRowOperator.hpp"
 
 namespace EPMDynamo {
 
@@ -29,7 +31,7 @@ namespace EPMDynamo {
     *
     * \tparam TOpType Type of the operator
     */
-   template <typename TOpType> class LaplacianBOperatorSet: public BoundedOperatorSet<TOpType>
+   template <typename TOpType> class LaplacianBOperatorSet: public BoundedOperatorSet<TOpType, BCRowOperator>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -66,7 +68,7 @@ namespace EPMDynamo {
    };
 
    template <typename TOpType> LaplacianBOperatorSet<TOpType>::LaplacianBOperatorSet(const typename LaplacianBOperatorSet<TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
-      : BoundedOperatorSet<TOpType>(pTrunc, hasL0), mrBasis(basis)
+      : BoundedOperatorSet<TOpType, BCRowOperator>(pTrunc, hasL0), mrBasis(basis)
    {
    }
 
@@ -81,8 +83,11 @@ namespace EPMDynamo {
          // Get degree of the current operator
          l = this->harmOp(i).id();
 
-         // Construct the bounded operator
-         this->rHarmOp(i).constructBOperator(factor, this->mrBasis.at(l).specLaplacian());
+         // Set the Laplacian component
+         this->rHarmOp(i).setOperator(factor, this->mrBasis.at(l).specLaplacian().op());
+
+         // Restrict the operator by including the boundary conditions
+         this->rHarmOp(i).constructBoundedOperator();
 
          // Do finalisation step (for example factorisation)
          this->rHarmOp(i).finaliseOp();

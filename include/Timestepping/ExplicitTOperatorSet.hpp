@@ -1,9 +1,9 @@
-/** \file ImplicitTOperatorSet.hpp
+/** \file ExplicitTOperatorSet.hpp
  *  \brief Implementation of the general implicit diffusion operator timestep operator set
  */
 
-#ifndef IMPLICITTOPERATORSET_HPP
-#define IMPLICITTOPERATORSET_HPP
+#ifndef EXPLICITTOPERATORSET_HPP
+#define EXPLICITTOPERATORSET_HPP
 
 // Configuration includes
 //
@@ -19,10 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Operators/BoundedOperatorSet.hpp"
-#include "Operators/RestrictedOperator.hpp"
 #include "Operators/BCRowOperator.hpp"
-
-#define BCOPERATORTYPE BCRowOperator
 
 namespace EPMDynamo {
 
@@ -31,7 +28,7 @@ namespace EPMDynamo {
     *
     * \tparam TOpType Type of the operator
     */
-   template <typename TOpType> class ImplicitTOperatorSet: public BoundedOperatorSet<TOpType, BCOPERATORTYPE>
+   template <typename TOpType> class ExplicitTOperatorSet: public BoundedOperatorSet<TOpType, BCRowOperator>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -43,12 +40,12 @@ namespace EPMDynamo {
           * @param pTrunc Truncation information
           * @param hasL0 Is the l=0 mode required?
           */
-         ImplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0);
+         ExplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0);
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~ImplicitTOperatorSet() {};
+         virtual ~ExplicitTOperatorSet() {};
          
       protected:
          /**
@@ -63,12 +60,12 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TOpType> ImplicitTOperatorSet<TOpType>::ImplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0)
-      : BoundedOperatorSet<TOpType, BCOPERATORTYPE>(pTrunc, hasL0)
+   template <typename TOpType> ExplicitTOperatorSet<TOpType>::ExplicitTOperatorSet(SmartTruncation pTrunc, bool hasL0)
+      : BoundedOperatorSet<TOpType, BCRowOperator>(pTrunc, hasL0)
    {
    }
 
-   template <typename TOpType> void ImplicitTOperatorSet<TOpType>::createOperators(const EPMFloat factor, const EPMFloat timeDiff, const typename ImplicitTOperatorSet<TOpType>::BasisType &basis)
+   template <typename TOpType> void ExplicitTOperatorSet<TOpType>::createOperators(const EPMFloat factor, const EPMFloat timeDiff, const typename ExplicitTOperatorSet<TOpType>::BasisType &basis)
    {
       // Storage for "id" of operator
       int l;
@@ -80,13 +77,10 @@ namespace EPMDynamo {
          l = this->harmOp(i).id();
 
          // Set the Laplacian component
-         this->rHarmOp(i).setOperator(factor, basis.at(l).specLaplacian().op());
+         this->rHarmOp(i).rOp() = factor * basis.at(l).specLaplacian().op();
 
          // Add time derivative to diagonal
-         this->rHarmOp(i).addOperator(timeDiff);
-
-         // Restrict the operator by including the boundary conditions
-         this->rHarmOp(i).constructBoundedOperator();
+         this->rHarmOp(i).rOp().diagonal().array() += timeDiff;
 
          // Do finalisation step (for example factorisation)
          this->rHarmOp(i).finaliseOp();
@@ -94,4 +88,4 @@ namespace EPMDynamo {
    }
 }
 
-#endif // IMPLICITTOPERATORSET_HPP
+#endif // EXPLICITTOPERATORSET_HPP

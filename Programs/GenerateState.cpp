@@ -24,7 +24,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::ThermalRotConvectionTraits
+#define SIMTRAITS epm::DynamoTraits
 
 typedef epm::RandomState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;

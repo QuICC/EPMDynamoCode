@@ -54,7 +54,7 @@ namespace EPMDynamo {
       {
          this->mpOpM2->multiplyOrders(rNTerms.rLShell(l), rNTerms.lshell(l), l);
          rVar.rLShell(l) += rNTerms.lshell(l);
-         this->mpOpM2->extendOrders(rVar.rLShell(l), l);
+         this->mpOpM2->harmOp(l).extend(rVar.rLShell(l));
       }
    }
 

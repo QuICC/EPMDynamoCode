@@ -348,7 +348,10 @@ namespace EPMDynamo {
       for(int i = this->etdF(0).minL(); i < this->etdF(0).nOp(); ++i)
       {
          // Define homogeneous operator
-         this->rEtdF(0).rHarmOp(i).constructBOperator(1.0, basis.at(i).specLaplacian());
+         this->rEtdF(0).rHarmOp(i).setOperator(1.0, basis.at(i).specLaplacian().op());
+
+         // Restrict the operator
+         this->rEtdF(0).rHarmOp(i).constructBoundedOperator();
 
          char jobu = 'N';
          char jobvt = 'N';

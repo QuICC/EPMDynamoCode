@@ -19,14 +19,13 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Timestepping/ImplicitTOperatorSet.hpp"
 
 namespace EPMDynamo {
 
    /**
     * \brief General implementation of the \f$\theta\f$-method operator set
     */
-   template <typename TOpType> class ThetaTOperatorSet: public ImplicitTOperatorSet<TOpType>
+   template <typename TOpType, template <typename> class TSetType> class ThetaTOperatorSet: public TSetType<TOpType>
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -93,21 +92,21 @@ namespace EPMDynamo {
          bool mIsThetaLocked;
    };
 
-   template <typename TOpType> ThetaTOperatorSet<TOpType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TOpType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
-      : ImplicitTOperatorSet<TOpType>(pTrunc, hasL0), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
+   template <typename TOpType, template <typename> class TSetType> ThetaTOperatorSet<TOpType, TSetType>::ThetaTOperatorSet(EPMFloat a, EPMFloat b, const typename ThetaTOperatorSet<TOpType, TSetType>::BasisType &basis, SmartTruncation pTrunc, bool hasL0)
+      : TSetType<TOpType>(pTrunc, hasL0), mA(a), mB(b), mrBasis(basis), mIsThetaLocked(false)
    {
    }
 
-   template<typename TOpType> void ThetaTOperatorSet<TOpType>::initOperators()
+   template<typename TOpType, template <typename> class TSetType> void ThetaTOperatorSet<TOpType, TSetType>::initOperators()
    {
       // Forbid any further call to setTheta!
       this->mIsThetaLocked = true;
 
       // Call inherited initOperators method
-      ImplicitTOperatorSet<TOpType>::initOperators();
+      TSetType<TOpType>::initOperators();
    }
 
-   template <typename TOpType> void ThetaTOperatorSet<TOpType>::updateOperators(const EPMFloat factor, const EPMFloat timeDiff)
+   template <typename TOpType, template <typename> class TSetType> void ThetaTOperatorSet<TOpType, TSetType>::updateOperators(const EPMFloat factor, const EPMFloat timeDiff)
    {
       this->createOperators(factor, timeDiff, this->mrBasis);
    }

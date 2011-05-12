@@ -111,9 +111,14 @@ namespace EPMDynamo {
       rMat.bottomRows(this->mNBCs) = this->G() * rMat.topRows(this->mNBOp) + this->H() * rMat.bottomRows(this->mNBCs);
    }
 
-   void ExtensionMatrix::restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
+   void ExtensionMatrix::setRestrictedOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
    {
       rOp = factor*(fullOp.topLeftCorner(this->mNBOp, this->mNBOp) + fullOp.topRightCorner(this->mNBOp, this->mNBCs) * this->G());
+   }
+
+   void ExtensionMatrix::addRestrictedOperator(Matrix &rOp, const EPMFloat factor, const Matrix &fullOp)
+   {
+      rOp += factor*(fullOp.topLeftCorner(this->mNBOp, this->mNBOp) + fullOp.topRightCorner(this->mNBOp, this->mNBCs) * this->G());
    }
 
    void ExtensionMatrix::buildNHMatrix(const EPMFloat factor, const Matrix &fullOp)

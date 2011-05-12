@@ -30,7 +30,7 @@ namespace EPMDynamo {
    {
       int rows = this->mpOpM1->harmOp(l).op().rows();
       rKernel.topRows(rows) = this->mNFactor*this->mpOpM1->harmOp(l).op() * rKernel.topRows(rows);
-      this->mpOpM1->extendOrders(rKernel, l);
+      this->mpOpM1->harmOp(l).extend(rKernel);
    }
 
 }

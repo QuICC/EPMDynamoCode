@@ -77,13 +77,22 @@ namespace EPMDynamo {
          void prepareRHS(Array& rVector);
 
          /**
-          * @brief Restrict operator
+          * @brief Set the restricted operator
           *
           * @param rOp Restricted operator storage
           * @param factor Multiplicative factor
           * @param fullOp Complete operator
           */
-         void restrictOperator(Matrix &rOp, const EPMFloat factor, const Matrix& fullOp);
+         void setRestrictedOperator(Matrix &rOp, const EPMFloat factor, const Matrix& fullOp);
+
+         /**
+          * @brief Add the restricted operator
+          *
+          * @param rOp Restricted operator storage
+          * @param factor Multiplicative factor
+          * @param fullOp Complete operator
+          */
+         void addRestrictedOperator(Matrix &rOp, const EPMFloat factor, const Matrix& fullOp);
 
          /**
           * @brief Build the NH value imposing matrix

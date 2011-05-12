@@ -45,25 +45,41 @@ namespace EPMDynamo {
           * @brief Implement the boundary conditions
           *
           * @param bcRows Matrix of the boundary imposing row values
-          * @param needNHMatrix Needs the NH imposing matrix ?
           */
-         virtual void implementBCs(const Matrix& bcRows, bool needNHMatrix) = 0;
+         virtual void implementBCs(const Matrix& bcRows) = 0;
 
          /**
-          * @brief Compute the operator the bounded operator based on input
-          *
-          * @param factor Multiplicative factor
-          * @param polyOp Polynomial operator defining the operator
+          * @brief Set operator's diagonal value
           */
-         virtual void constructBOperator(const EPMFloat factor, const PolynomialOperator<POperator>& polyOp) = 0; 
+         virtual void setOperator(const EPMFloat factor) = 0;
 
          /**
-          * @brief Solve linear equation
+          * @brief Set operator value
+          */
+         virtual void setOperator(const EPMFloat factor, const Matrix& mat) = 0;
+
+         /**
+          * @brief Add operator's diagonal value
+          */
+         virtual void addOperator(const EPMFloat factor) = 0;
+
+         /**
+          * @brief Add operator value
+          */
+         virtual void addOperator(const EPMFloat factor, const Matrix& mat) = 0;
+
+         /**
+          * @brief Restrict the operator by including the boundary conditions
+          */
+         virtual void constructBoundedOperator() = 0; 
+
+         /**
+          * @brief Solve linear equation for a homogeneous BC
           *
           * @param vector RHS of the linear equation
           * @param isHomogeneous Is boundary condition homogeneous?
           */
-         virtual void solve(Array& vector, bool isHomogeneous) = 0;
+         virtual void solveZero(Array& vector) = 0;
          
          /**
           * @brief Get size of the bounded operator
