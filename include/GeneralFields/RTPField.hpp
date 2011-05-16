@@ -166,7 +166,7 @@ namespace EPMDynamo {
       {
          RTPOperators::addCross(rCross, *this, right, coeff);
       }
-      else if(TOp < 1)
+      else if(TOp < 0)
       {
          RTPOperators::subCross(rCross, *this, right, coeff);
       }
@@ -182,7 +182,7 @@ namespace EPMDynamo {
       {
          RTPOperators::addDot(rDot, *this, right, coeff);
       }
-      else if(TOp < 1)
+      else if(TOp < 0)
       {
          RTPOperators::subDot(rDot, *this, right, coeff);
       }
