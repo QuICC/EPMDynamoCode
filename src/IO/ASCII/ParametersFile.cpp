@@ -51,6 +51,10 @@ namespace EPMDynamo {
       {
          // Resize equation array to correct size
          this->mEqArray.resize(4);
+      } else if(this->mType == "PrRa")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(2);
       }
 
    }
@@ -249,6 +253,13 @@ namespace EPMDynamo {
 
                // Read the Rayleigh number
                this->readValue(this->mEqArray(3), node, ParametersFileDefs::PHYSRAYLEIGHXML);
+            } else if(this->mType == "PrRa")
+            {
+               // Read the Prandtl number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSPRANDTLXML);
+
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSRAYLEIGHXML);
             } else
             {
                throw EPMException("ParametersFile::readPhysical", "The requested type is not implemented! (yet?)");

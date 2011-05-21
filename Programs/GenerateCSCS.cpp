@@ -21,7 +21,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::ThermalRotConvectionTraits
+#define SIMTRAITS epm::DynamoTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 

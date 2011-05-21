@@ -8,4 +8,6 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       ELPmPrRaParameters.cpp
       EPmQRaParameters.cpp
       EEkEmRaParameters.cpp
+      PrRaParameters.cpp
+      InvPrRaParameters.cpp
       )

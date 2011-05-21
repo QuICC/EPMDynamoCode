@@ -113,7 +113,7 @@ jacobiNorm[\[Alpha]_,\[Beta]_,n_]:=If[n==0 && \[Beta]==-1/2,N[\[Pi]/2, highPreci
 
 
 (*****************  Setup Worland normalisation *******************)
-wNorm[l_,n_] := jacobiNorm[-1/2, l - 1/2, n]
+wNorm[l_,n_] := Sqrt[jacobiNorm[-1/2, l - 1/2, n]]
 
 
 (*****************  Create private polynomials and derivatives computations *******************)
@@ -224,8 +224,8 @@ EPMWorlandProjLaplacian[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGr
 
 
 (*****************  Compute EPM precision Worland spectral laplacian *******************)
-EPMWorlandSpecLaplacian[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Transpose[EPMWorlandIntg[n,l]].Transpose[Table[wProjLaplacian[i,k,grid[[j]]], {k, 0, l},{i, 0, n},{j, 1, gridN}]], epmPrecision]];
-EPMWorlandSpecLaplacian[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Transpose[EPMWorlandIntg[n,lmax,l]].Transpose[Table[wProjLaplacian[i,l,grid[[j]]],{i, 0, n},{j, 1, gridN}]], epmPrecision]];
+EPMWorlandSpecLaplacian[n_,l_] := Module[{grid =wGrid[n,l], gridN = wGridN[n,l]},N[Transpose[EPMWorlandIntg[n,l]].Transpose[Table[wProjLaplacian[i,k,grid[[j]]]/wNorm[k,i], {k, 0, l},{i, 0, n},{j, 1, gridN}]], epmPrecision]];
+EPMWorlandSpecLaplacian[n_,lmax_,l_] := Module[{grid =wGrid[n,lmax], gridN = wGridN[n,lmax]},N[Transpose[EPMWorlandIntg[n,lmax,l]].Transpose[Table[wProjLaplacian[i,l,grid[[j]]]/wNorm[l,i],{i, 0, n},{j, 1, gridN}]], epmPrecision]];
 
 
 (*****************  Compute EPM precision Worland intg integrator *******************)

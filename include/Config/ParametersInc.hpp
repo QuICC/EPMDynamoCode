@@ -19,6 +19,8 @@
 #include "Equations/Parameters/EPmPrRaParameters.hpp"
 #include "Equations/Parameters/EPmQRaParameters.hpp"
 #include "Equations/Parameters/EQRaRoParameters.hpp"
+#include "Equations/Parameters/PrRaParameters.hpp"
+#include "Equations/Parameters/InvPrRaParameters.hpp"
 
 namespace EPMDynamo {
 }

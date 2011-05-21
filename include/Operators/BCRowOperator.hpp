@@ -144,7 +144,7 @@ namespace EPMDynamo {
    {
       // Imposed on the boundary condition on the last rows
       vector.bottomRows(this->nBC()).setConstant(0.0);
-      
+
       // Call basic solve
       this->solveEquation(vector);
    }
