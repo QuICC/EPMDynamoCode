@@ -1,9 +1,9 @@
-/** \file RandomState.hpp
- *  \brief Initial state definition function for a random perturbation state
+/** \file BenchmarkState.hpp
+ *  \brief Initial state definition(s) for the dynamo benchmark(s)
  */
 
-#ifndef RANDOMSTATE_HPP
-#define RANDOMSTATE_HPP
+#ifndef BENCHMARKSTATE_HPP
+#define BENCHMARKSTATE_HPP
 
 // Configuration includes
 //
@@ -20,9 +20,9 @@
 namespace EPMDynamo {
 
    /**
-    * @brief Traits of random perturbation state generator
+    * @brief Traits of benchmark intial state generator
     */
-   class RandomTraits
+   class BenchmarkTraits
    {
       public:
          /// Requires RTP Codensity computations
@@ -54,15 +54,20 @@ namespace EPMDynamo {
    };
 
    /**
-    * \brief Initial state definition function for a random perturbation state
+    * \brief Initial state definition(s) for the dynamo benchmark(s)
     *
     * \epmBug State generation is not aware of parallelisation
     */
-   template <typename TGenTraits> class RandomState
+   template <typename TGenTraits> class BenchmarkState
    {
       public:
          /// Typdef for the StateTraits type
-         typedef RandomTraits  StateTraits;
+         typedef BenchmarkTraits  StateTraits;
+
+         /**
+          * @brief Benchmark case state
+          */
+         static const int BENCHMARK_CASE;
 
          /**
           * @brief Perturbation amplitude
@@ -122,21 +127,23 @@ namespace EPMDynamo {
          /**
           * @brief Private constructor
           */
-         RandomState();
+         BenchmarkState();
 
          /**
           * @brief Destructor
           */
-         virtual ~RandomState() {};
+         virtual ~BenchmarkState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e0;
+   template <typename TGenTraits> const int BenchmarkState<TGenTraits>::BENCHMARK_CASE = 0;
 
-   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_LRATIO = 1;
+   template <typename TGenTraits> const EPMFloat BenchmarkState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
 
-   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_NRATIO = 2;
+   template <typename TGenTraits> const int BenchmarkState<TGenTraits>::PERTURBATION_LRATIO = 1;
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setRTPCodensity(typename RandomState<TGenTraits>::Codensity &codC)
+   template <typename TGenTraits> const int BenchmarkState<TGenTraits>::PERTURBATION_NRATIO = 2;
+
+   template <typename TGenTraits> void BenchmarkState<TGenTraits>::setRTPCodensity(typename BenchmarkState<TGenTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -146,7 +153,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setRTPMagnetic(typename RandomState<TGenTraits>::Magnetic &magB)
+   template <typename TGenTraits> void BenchmarkState<TGenTraits>::setRTPMagnetic(typename BenchmarkState<TGenTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
@@ -158,7 +165,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setRTPVelocity(typename RandomState<TGenTraits>::Velocity &velV)
+   template <typename TGenTraits> void BenchmarkState<TGenTraits>::setRTPVelocity(typename BenchmarkState<TGenTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
@@ -170,15 +177,15 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setSpecCodensity(typename RandomState<TGenTraits>::Codensity &codC)
+   template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecCodensity(typename BenchmarkState<TGenTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
       // Set some perturbation random energy
-      for(int l=0; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      for(int l=0; l < pTrunc->local()->spec()->nL()/BenchmarkState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
-         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/BenchmarkState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(BenchmarkState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -187,26 +194,26 @@ namespace EPMDynamo {
          }
       }
 
-      // Create basic state
-      //codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
+      // Create basic state to generate basic -b r gradient (including normalisation factors)
       codC.rOc().rPerturbation().rLShell(0)(0,0) += 0.313329;
-      //codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
       codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.221557;
+
+      // Create basic state to generate basic -b r gradient (without normalisation factors)
+      //codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
+      //codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setSpecMagnetic(typename RandomState<TGenTraits>::Magnetic &magB)
+   template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecMagnetic(typename BenchmarkState<TGenTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      for(int l=1; l < pTrunc->local()->spec()->nL(); ++l)
       {
          // Set some perturbation random energy in Toroidal component
-         magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         magB.rOc().rPerturbation().rTor().rLShell(l).setConstant(EPMComplex(0.0,0.0));
 
          // Set some perturbation random energy in Poloidal component
-         magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         magB.rOc().rPerturbation().rPol().rLShell(l).setConstant(EPMComplex(0.0,0.0));
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -217,19 +224,17 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setSpecVelocity(typename RandomState<TGenTraits>::Velocity &velV)
+   template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecVelocity(typename BenchmarkState<TGenTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      for(int l=1; l < pTrunc->local()->spec()->nL(); ++l)
       {
          // Set some perturbation random energy in Toroidal component
-         velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         velV.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         velV.rOc().rPerturbation().rTor().rLShell(l).setConstant(EPMComplex(0.0,0.0));
 
          // Set some perturbation random energy in Poloidal component
-         velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         velV.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE, 0.0);
+         velV.rOc().rPerturbation().rPol().rLShell(l).setConstant(EPMComplex(0.0,0.0));
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -240,9 +245,9 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> RandomState<TGenTraits>::RandomState()
+   template <typename TGenTraits> BenchmarkState<TGenTraits>::BenchmarkState()
    {
    }
 }
 
-#endif // RANDOMSTATE_HPP
+#endif // BENCHMARKSTATE_HPP
