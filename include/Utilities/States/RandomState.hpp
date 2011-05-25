@@ -69,6 +69,16 @@ namespace EPMDynamo {
           */
          static const EPMFloat PERTURBATION_AMPLITUDE;
 
+         /**
+          * @brief Ratio of L spectrum to be perturbed
+          */
+         static const int PERTURBATION_LRATIO;
+
+         /**
+          * @brief Ratio of radial spectrum to be perturbed
+          */
+         static const int PERTURBATION_NRATIO;
+
          /// Typedef for the codensity type
          typedef typename TGenTraits::CodType  Codensity;
 
@@ -120,7 +130,11 @@ namespace EPMDynamo {
          virtual ~RandomState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
+   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e0;
+
+   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_LRATIO = 1.0;
+
+   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_NRATIO = 2.0;
 
    template <typename TGenTraits> void RandomState<TGenTraits>::setRTPCodensity(typename RandomState<TGenTraits>::Codensity &codC)
    {
@@ -161,9 +175,9 @@ namespace EPMDynamo {
       SmartTruncation pTrunc = codC.oc().trunc();
 
       // Set some perturbation random energy
-      for(int l=0; l < pTrunc->local()->spec()->nL()/2; ++l)
+      for(int l=0; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
-         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
          codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
@@ -184,14 +198,14 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
+      for(int l=1; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
          // Set some perturbation random energy in Toroidal component
-         magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
          magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Set some perturbation random energy in Poloidal component
-         magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
          magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
@@ -207,14 +221,14 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/2; ++l)
+      for(int l=1; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
          // Set some perturbation random energy in Toroidal component
-         velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
          velV.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Set some perturbation random energy in Poloidal component
-         velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/2, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
          velV.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE, 0.0);
 
          // Make sure the m=0 imaginary part is zero!

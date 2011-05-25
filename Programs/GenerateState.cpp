@@ -16,17 +16,20 @@
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
+#include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Utilities/InitialStateGenerator.hpp"
 
 #include "Utilities/States/RandomState.hpp"
+#include "Utilities/States/MagneticDiffusionState.hpp"
 #include "Utilities/States/SakurabaState.hpp"
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::MagneticDiffusionTraits
 
-typedef epm::RandomState<SIMTRAITS>  StateType;
+//typedef epm::RandomState<SIMTRAITS>  StateType;
+typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;
 
 typedef StateType::StateTraits  StateTraits;

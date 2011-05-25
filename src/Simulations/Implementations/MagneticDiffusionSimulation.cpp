@@ -122,7 +122,7 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<EnergyFile<MagneticDiffusionTraits::MagType> > pMagEnergy(new EnergyFile<MagneticDiffusionTraits::MagType>(mMagB, "mag", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<MagneticDiffusionTraits::MagType> > pMagEnergy(new EnergyFile<MagneticDiffusionTraits::MagType>(mMagB, "mag", this->mSimControl.tsParams(),1));
 
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pMagEnergy);

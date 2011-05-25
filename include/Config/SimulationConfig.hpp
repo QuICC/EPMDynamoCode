@@ -82,9 +82,9 @@ namespace EPMDynamo {
 //         typedef  ETDSchemeTraits  TimestepTraits;
          
          /// Typedef for the equation parameters
-         //typedef EQRaRoParameters  EquationParametersType;
+         typedef EQRaRoParameters  EquationParametersType;
          //typedef PrRaParameters  EquationParametersType;
-         typedef InvPrRaParameters  EquationParametersType;
+         //typedef InvPrRaParameters  EquationParametersType;
 
          // Make sure the non finished parameters implementation are not used: EEkEmRa case
          BOOST_MPL_ASSERT_NOT(( boost::is_same< EquationParametersType,EEkEmRaParameters > ));

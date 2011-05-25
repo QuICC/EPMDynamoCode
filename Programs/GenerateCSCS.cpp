@@ -16,12 +16,13 @@
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
+#include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Utilities/CSCSParaviewGenerator.hpp"
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::MagneticDiffusionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -32,19 +33,19 @@ class FullFieldTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = true;
+      static const bool VisCodensity = false;
 
       /// Output Codensity gradient visualisation
-      static const bool VisCodensityGrad = true;
+      static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation
-      static const bool VisVelocity = true;
+      static const bool VisVelocity = false;
 
       /// Output Vorticity visualisation
-      static const bool VisVorticity = true;
+      static const bool VisVorticity = false;
 
       /// Output Helicity visualisation
-      static const bool VisHelicity = true;
+      static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation
       static const bool VisMagnetic = true;
@@ -66,7 +67,7 @@ class ToroidalTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation of toroidal component only
-      static const bool VisVelocity = true;
+      static const bool VisVelocity = false;
 
       /// Output Vorticity visualisation of toroidal component only
       static const bool VisVorticity = false;
@@ -94,7 +95,7 @@ class PoloidalTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation of poloidal component only
-      static const bool VisVelocity = true;
+      static const bool VisVelocity = false;
 
       /// Output Vorticity visualisation of poloidal component only
       static const bool VisVorticity = false;
