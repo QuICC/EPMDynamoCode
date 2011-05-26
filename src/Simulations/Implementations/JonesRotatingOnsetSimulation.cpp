@@ -183,7 +183,7 @@ namespace EPMDynamo {
       // Create a energy ASCII diagnostic file for the codensity scalar
       EPMSHARED_PTR<EnergyFile<LinearThermalConvectionTraits::CodType> > pCodEnergy(new EnergyFile<LinearThermalConvectionTraits::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<LinearThermalConvectionTraits::VelType> > pVelEnergy(new EnergyFile<LinearThermalConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(),1));
+      EPMSHARED_PTR<EnergyFile<LinearThermalConvectionTraits::VelType> > pVelEnergy(new EnergyFile<LinearThermalConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(),2));
 
       // Add codensity energy to ASCII output
       this->mIOSys.addASCIIWriter(pCodEnergy);

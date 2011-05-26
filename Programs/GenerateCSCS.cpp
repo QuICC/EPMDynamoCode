@@ -22,7 +22,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::MagneticDiffusionTraits
+#define SIMTRAITS epm::ThermalRotConvectionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -33,19 +33,19 @@ class FullFieldTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = false;
+      static const bool VisCodensity = true;
 
       /// Output Codensity gradient visualisation
-      static const bool VisCodensityGrad = false;
+      static const bool VisCodensityGrad = true;
 
       /// Output Velocity visualisation
-      static const bool VisVelocity = false;
+      static const bool VisVelocity = true;
 
       /// Output Vorticity visualisation
-      static const bool VisVorticity = false;
+      static const bool VisVorticity = true;
 
       /// Output Helicity visualisation
-      static const bool VisHelicity = false;
+      static const bool VisHelicity = true;
 
       /// Output Magnetic visualisation
       static const bool VisMagnetic = true;
@@ -67,7 +67,7 @@ class ToroidalTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation of toroidal component only
-      static const bool VisVelocity = false;
+      static const bool VisVelocity = true;
 
       /// Output Vorticity visualisation of toroidal component only
       static const bool VisVorticity = false;
@@ -95,7 +95,7 @@ class PoloidalTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation of poloidal component only
-      static const bool VisVelocity = false;
+      static const bool VisVelocity = true;
 
       /// Output Vorticity visualisation of poloidal component only
       static const bool VisVorticity = false;

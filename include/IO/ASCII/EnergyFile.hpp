@@ -90,6 +90,14 @@ namespace EPMDynamo {
                this->mFile << this->mrVar.oc().spectrumL().col(i).transpose();
             }
          }
+         // If format = 1 output the energy harmonic order spectrum evolution
+         else if(this->mFormat == 2)
+         {
+            for(int i = 1; i < this->mrVar.oc().spectrumM().cols(); ++i)
+            {
+               this->mFile << this->mrVar.oc().spectrumM().col(i).transpose();
+            }
+         }
 
          // Add newline at the end of ouput
          this->mFile << std::endl;
