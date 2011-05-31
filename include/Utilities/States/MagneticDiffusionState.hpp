@@ -157,7 +157,7 @@ namespace EPMDynamo {
 
    template <typename TGenTraits> const EPMFloat MagneticDiffusionState<TGenTraits>::INITIAL_AMPLITUDE = 1.0e0;
 
-   template <typename TGenTraits> const int MagneticDiffusionState<TGenTraits>::SPHBESSEL_MAXL = 4;
+   template <typename TGenTraits> const int MagneticDiffusionState<TGenTraits>::SPHBESSEL_MAXL = 15;
 
    template <typename TGenTraits> const int MagneticDiffusionState<TGenTraits>::SPHBESSEL_MAXN = 15;
 
@@ -220,8 +220,9 @@ namespace EPMDynamo {
 
       int maxNn;
       Array init;
+      int minNl = std::min(pTrunc->local()->spec()->nL(),MagneticDiffusionState<TGenTraits>::SPHBESSEL_MAXL+1);
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/MagneticDiffusionState<TGenTraits>::SPHBESSEL_MAXL+1; ++l)
+      for(int l=1; l < minNl; ++l)
       {
       //   
       // Set some initial spherical Bessel eigen state in Toroidal component
