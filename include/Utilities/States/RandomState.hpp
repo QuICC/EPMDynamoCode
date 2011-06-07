@@ -47,7 +47,7 @@ namespace EPMDynamo {
          static const bool UseRTPVelocity = false;
 
          /// Requires Velocity computations
-         static const bool UseSpecVelocity = false;
+         static const bool UseSpecVelocity = true;
 
          /// Requires Velocity curl computations
          static const bool UseVelocityCurl = false;
@@ -130,9 +130,9 @@ namespace EPMDynamo {
          virtual ~RandomState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-20;
+   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e0;
 
-   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_LRATIO = 1;
+   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_LRATIO = 2;
 
    template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_NRATIO = 4;
 

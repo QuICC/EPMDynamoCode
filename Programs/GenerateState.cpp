@@ -27,10 +27,10 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::MagneticDiffusionTraits
+#define SIMTRAITS epm::DynamoTraits
 
-//typedef epm::RandomState<SIMTRAITS>  StateType;
-typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
+typedef epm::RandomState<SIMTRAITS>  StateType;
+//typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
 //typedef epm::BenchmarkState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;
 

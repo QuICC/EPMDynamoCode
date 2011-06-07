@@ -150,7 +150,7 @@ namespace EPMDynamo {
    void ChandrasekharOnsetSimulation::restrictSolution()
    {
       // Lowest harmonic degree to keep in computation
-      int l0 = 11;
+      int l0 = 15;
 
       // Get the core store harmonic degrees
       ArrayI ls = this->mVelV.oc().trunc()->local()->spec()->lArray();
