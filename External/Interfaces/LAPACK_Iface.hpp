@@ -1,5 +1,5 @@
 /** \file LAPACK_Iface.hpp
- *  This file contains the declaration needed to use LAPACK routines in the code (until eigen has all needed things...)
+ *  This file contains the declarations needed to use LAPACK routines in the code
  */
 
 #ifndef LAPACK_IFACE_HPP
