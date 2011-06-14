@@ -28,8 +28,17 @@ namespace EPMDynamo {
    void CodensityDiffusionSimulation::initEquations()
    {
       // Set boundary condition to the transport equation
+      // Set constant temperature
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
-      this->mTransport.addBC(pZeroBC);
+      SmartBC  pFluxBC(new DRadialBC(this->mTransform.radBasis()));
+      if(this->mIOSys.cfg()->aBC()(0) == 0)
+      {
+         this->mTransport.addBC(pZeroBC);
+      // Set constant flux
+      } else if(this->mIOSys.cfg()->aBC()(0) == 1)
+      {
+         this->mTransport.addBC(pFluxBC);
+      }
 
       // Initialise the transport equation
       this->mTransport.init();

@@ -28,12 +28,19 @@ namespace EPMDynamo {
    void MagnetoConvectionSimulation::initEquations()
    {
       // Set boundary condition to the transport equation
-      SmartBC  pZeroBCC(new ZeroBC(this->mTransform.radBasis()));
-      //this->mTransport.addBC(pDiffHeatBC);
-      this->mTransport.addBC(pZeroBCC);
+      // Set constant temperature
+      SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
+      SmartBC  pFluxBC(new DRadialBC(this->mTransform.radBasis()));
+      if(this->mIOSys.cfg()->aBC()(0) == 0)
+      {
+         this->mTransport.addBC(pZeroBC);
+      // Set constant flux
+      } else if(this->mIOSys.cfg()->aBC()(0) == 1)
+      {
+         this->mTransport.addBC(pFluxBC);
+      }
 
       // Set boundary condition to the Induction equation
-      SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
       SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
       mInduction.addTorBC(pZeroBC);
       mInduction.addPolBC(pInsulatingBC);

@@ -297,7 +297,7 @@ namespace EPMDynamo {
       }
 
       // Check for defined BC values for codensity
-      if(this->mBCArray(0) != 0)
+      if(this->mBCArray(0) != 0 && this->mBCArray(0) != 1)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for codensity");
       }
@@ -423,7 +423,10 @@ namespace EPMDynamo {
          std::cout << "--------------------" << std::endl;
          if(this->mBCArray(0) == 0)
          {
-            std::cout << "  " << "Codensity: " << "Zero" << std::endl;
+            std::cout << "  " << "Codensity: " << "Constant temperature" << std::endl;
+         } else if(this->mBCArray(0) == 1)
+         {
+            std::cout << "  " << "Codensity: " << "Constant flux" << std::endl;
          }
          if(this->mBCArray(1) == 0)
          {
