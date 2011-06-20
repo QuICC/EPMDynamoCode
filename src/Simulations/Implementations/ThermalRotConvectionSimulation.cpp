@@ -17,6 +17,7 @@
 
 // Project includes
 //
+#include "BoundaryConditions/L0Harmonic/HeatFluxBC.hpp"
 
 namespace EPMDynamo {
 
@@ -28,8 +29,17 @@ namespace EPMDynamo {
    void ThermalRotConvectionSimulation::initEquations()
    {
       // Set boundary condition to the transport equation
+      // Set constant temperature
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
-      this->mTransport.addBC(pZeroBC);
+      SmartBC  pFluxBC(new HeatFluxBC(-1.0, this->mTransform.radBasis()));
+      if(this->mIOSys.cfg()->aBC()(0) == 0)
+      {
+         this->mTransport.addBC(pZeroBC);
+      // Set constant flux
+      } else if(this->mIOSys.cfg()->aBC()(0) == 1)
+      {
+         this->mTransport.addBC(pFluxBC);
+      }
 
       // Set boundary condition to the Navier-Stokes equation
       if(this->mIOSys.cfg()->aBC()(1) == 1)

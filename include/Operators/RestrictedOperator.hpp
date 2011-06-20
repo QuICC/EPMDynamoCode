@@ -49,7 +49,7 @@ namespace EPMDynamo {
           *
           * @param bcRows Matrix of the boundary imposing row values
           */
-         virtual void implementBCs(const Matrix& bcRows);
+         virtual void implementBCs(const Matrix& bcRows, const ArrayZ& bcVals);
 
          /**
           * @brief Set operator's diagonal value
@@ -94,6 +94,15 @@ namespace EPMDynamo {
          virtual void solveZero(Array& vector);
 
          /**
+          * @brief Solve linear equation
+          *
+          * @param vector RHS of the linear equation
+          *
+          * \epmBug THIS IMPLEMENTATION IS WRONG
+          */
+         virtual void solve(Array& vector, const bool isReal);
+
+         /**
           * @brief Extend solution to full truncation
           */
          void extendZero(MatrixZ& rMat) const;
@@ -117,7 +126,7 @@ namespace EPMDynamo {
    {
    }
 
-   template <typename TOpType> inline void RestrictedOperator<TOpType>::implementBCs(const Matrix& bcRows)
+   template <typename TOpType> inline void RestrictedOperator<TOpType>::implementBCs(const Matrix& bcRows, const ArrayZ& bcVals)
    {
       // Build the extension matrices
       this->mExt.build(bcRows);
@@ -148,6 +157,15 @@ namespace EPMDynamo {
    }
 
    template <typename TOpType> void RestrictedOperator<TOpType>::solveZero(Array& vector)
+   {
+      // Call basic solve
+      this->solveEquation(vector);
+
+      // Extend solution to full truncation
+      this->mExt.extendZero(vector);
+   }
+
+   template <typename TOpType> void RestrictedOperator<TOpType>::solve(Array& vector, const bool isReal)
    {
       // Call basic solve
       this->solveEquation(vector);

@@ -46,7 +46,7 @@ namespace EPMDynamo {
           *
           * @param bcRows Matrix of the boundary imposing row values
           */
-         virtual void implementBCs(const Matrix& bcRows) = 0;
+         virtual void implementBCs(const Matrix& bcRows, const ArrayZ& bcVals) = 0;
 
          /**
           * @brief Set operator's diagonal value
@@ -77,9 +77,16 @@ namespace EPMDynamo {
           * @brief Solve linear equation for a homogeneous BC
           *
           * @param vector RHS of the linear equation
-          * @param isHomogeneous Is boundary condition homogeneous?
           */
          virtual void solveZero(Array& vector) = 0;
+
+         /**
+          * @brief Solve linear equation
+          *
+          * @param vector RHS of the linear equation
+          * @param isReal Is real component of equation?
+          */
+         virtual void solve(Array& vector, const bool isReal) = 0;
          
          /**
           * @brief Get size of the bounded operator

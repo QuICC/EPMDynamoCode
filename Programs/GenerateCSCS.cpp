@@ -16,13 +16,14 @@
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
+#include "Simulations/Traits/CodensityDiffusionTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Utilities/CSCSParaviewGenerator.hpp"
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::ThermalRotConvectionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -48,10 +49,10 @@ class FullFieldTraits
       static const bool VisHelicity = true;
 
       /// Output Magnetic visualisation
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation
-      static const bool VisLorentz = true;
+      static const bool VisLorentz = false;
 };
 
 /**

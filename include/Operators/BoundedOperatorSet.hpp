@@ -91,6 +91,14 @@ namespace EPMDynamo {
           * @param l Harmonic degree l
           */
          void solveZeroVector(Array&  rhs, const int l);
+
+         /**
+          * @brief Solve single equation with degree l operator with zero BC value
+          *
+          * @param rhs RHS and solution of equation
+          * @param l Harmonic degree l
+          */
+         void solveVector(Array&  rhs, const int l, const bool isReal);
          
 //      protected:
          /**
@@ -262,6 +270,9 @@ namespace EPMDynamo {
        // Create BC rows matrix
       Matrix   bcRows(this->nBC(), opSize);
 
+       // Create BC values array
+      ArrayZ   bcVals(this->nBC());
+
       // Get number of harmonic degrees
       int nL = this->trunc()->local()->spec()->nL();
 
@@ -275,6 +286,8 @@ namespace EPMDynamo {
          for(int k=0; k < this->nBC(); ++k)
          {
             bcRows.row(k) = this->mBCs.at(k)->getLHSBC(l).transpose();
+
+            bcVals(k) = this->mBCs.at(k)->getRHSBC(l,0);
          }
 
          // Create smart pointer
@@ -284,7 +297,7 @@ namespace EPMDynamo {
          this->mpOperators.push_back(pBOp);
 
          // implement boundary condition of newly created operator
-         this->mpOperators.back()->implementBCs(bcRows);
+         this->mpOperators.back()->implementBCs(bcRows, bcVals);
       }
 
       // Set the total number of operators
@@ -307,41 +320,6 @@ namespace EPMDynamo {
       int nM = this->trunc()->local()->spec()->nM(l);
 
       rhs.topLeftCorner(rows, nM) = this->harmOp(l).op()*old.topLeftCorner(rows,nM) + cTerms.topLeftCorner(rows, nM);
-   }
-
-   template <typename TOpType, template <typename> class TBOpType> void BoundedOperatorSet<TOpType, TBOpType>::solveOrders(MatrixZ& rhs, const int l)
-   {
-      // Get size of the matrix
-      int nVar = rhs.rows();
-      int nM = this->trunc()->local()->spec()->nM(l);
-
-      // Loop over the orders
-      for(int m = 0; m < nM; ++m)
-      {
-         // Set tmp variable to real part
-         this->mTmp = rhs.col(m).real();
-
-         // Solve real equation
-         this->rHarmOp(l).solveZero(this->mTmp);
-
-         // Copy solution into field
-         for(int j = 0; j < nVar; ++j)
-         {
-            rhs(j,m).real() = this->mTmp(j);
-         }
-
-         // Set tmp variable to imaginary part
-         this->mTmp = rhs.col(m).imag();
-
-         // Solve imaginary equation
-         this->rHarmOp(l).solveZero(this->mTmp);
-
-         // Copy solution into field
-         for(int j = 0; j < nVar; ++j)
-         {
-            rhs(j,m).imag() = this->mTmp(j);
-         }
-      }
    }
 
    template <typename TOpType, template <typename> class TBOpType> inline void BoundedOperatorSet<TOpType, TBOpType>::solveZeroOrders(MatrixZ& rhs, const int l)
@@ -379,9 +357,49 @@ namespace EPMDynamo {
       }
    }
 
+   template <typename TOpType, template <typename> class TBOpType> inline void BoundedOperatorSet<TOpType, TBOpType>::solveOrders(MatrixZ& rhs, const int l)
+   {
+      // Get size of the matrix
+      int nVar = rhs.rows();
+      int nM = this->trunc()->local()->spec()->nM(l);
+
+      // Loop over the orders
+      for(int m = 0; m < nM; ++m)
+      {
+         // Set tmp variable to real part
+         this->mTmp = rhs.col(m).real();
+
+         // Solve real equation
+         this->rHarmOp(l).solve(this->mTmp, true);
+
+         // Copy solution into field
+         for(int j = 0; j < nVar; ++j)
+         {
+            rhs(j,m).real() = this->mTmp(j);
+         }
+
+         // Set tmp variable to imaginary part
+         this->mTmp = rhs.col(m).imag();
+
+         // Solve imaginary equation
+         this->rHarmOp(l).solve(this->mTmp, false);
+
+         // Copy solution into field
+         for(int j = 0; j < nVar; ++j)
+         {
+            rhs(j,m).imag() = this->mTmp(j);
+         }
+      }
+   }
+
    template <typename TOpType, template <typename> class TBOpType> inline void BoundedOperatorSet<TOpType, TBOpType>::solveZeroVector(Array& rhs, const int l)
    {
       this->rHarmOp(l).solveZero(rhs);
+   }
+
+   template <typename TOpType, template <typename> class TBOpType> inline void BoundedOperatorSet<TOpType, TBOpType>::solveVector(Array& rhs, const int l, const bool isReal)
+   {
+      this->rHarmOp(l).solve(rhs, isReal);
    }
 }
 

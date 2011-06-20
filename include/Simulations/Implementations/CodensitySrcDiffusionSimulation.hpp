@@ -30,8 +30,6 @@
 
 #include "Equations/Transport/TransportSource.hpp"
 
-#include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-
 namespace EPMDynamo {
 
    /**

@@ -48,7 +48,7 @@ namespace EPMDynamo {
           *
           * @param bcRows Matrix of the boundary imposing row values
           */
-         virtual void implementBCs(const Matrix& bcRows);
+         virtual void implementBCs(const Matrix& bcRows, const ArrayZ& bcVals);
 
          /**
           * @brief Set operator's diagonal value
@@ -92,20 +92,40 @@ namespace EPMDynamo {
           */
          virtual void solveZero(Array& vector);
 
+         /**
+          * @brief Solve linear equation
+          *
+          * @param vector RHS of the linear equation
+          * @param isReal Is real component of equation?
+          */
+         virtual void solve(Array& vector, const bool isReal);
+
       protected:
+         /**
+          * @brief Boundary condition rows
+          */
          Matrix   mBCRows;
+
+         /**
+          * @brief Boundary condition values
+          */
+         ArrayZ   mBCValues;
 
       private:
    };
 
    template <typename TOpType> BCRowOperator<TOpType>::BCRowOperator(const int nBC, const int nTau, const int id)
-      : BoundedOperatorBase<TOpType>(nBC, nTau, id), mBCRows(nBC, nTau)
+      : BoundedOperatorBase<TOpType>(nBC, nTau, id), mBCRows(nBC, nTau), mBCValues(nBC)
    {
    }
 
-   template <typename TOpType> inline void BCRowOperator<TOpType>::implementBCs(const Matrix& bcRows)
+   template <typename TOpType> inline void BCRowOperator<TOpType>::implementBCs(const Matrix& bcRows, const ArrayZ& bcVals)
    {
+      // Set bounddary condition rows
       this->mBCRows = bcRows;
+
+      // Set boundary condition values
+      this->mBCValues = bcVals;
    }
 
    template <typename TOpType> inline void BCRowOperator<TOpType>::setOperator(const EPMFloat factor)
@@ -142,8 +162,24 @@ namespace EPMDynamo {
 
    template <typename TOpType> void BCRowOperator<TOpType>::solveZero(Array& vector)
    {
-      // Imposed on the boundary condition on the last rows
+      // Impose homogeneous boundary condition on the last rows
       vector.bottomRows(this->nBC()).setConstant(0.0);
+
+      // Call basic solve
+      this->solveEquation(vector);
+   }
+
+   template <typename TOpType> void BCRowOperator<TOpType>::solve(Array& vector, const bool isReal)
+   {
+      if(isReal)
+      {
+         // Impose inhomogeneous real component boundary condition on the last rows
+         vector.bottomRows(this->nBC()) = this->mBCValues.real();
+      } else
+      {
+         // Impose inhomogeneous real component boundary condition on the last rows
+         vector.bottomRows(this->nBC()) = this->mBCValues.imag();
+      }
 
       // Call basic solve
       this->solveEquation(vector);

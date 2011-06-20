@@ -17,6 +17,7 @@
 // Project includes
 //
 #include "Simulations/Implementations/ThermalNLConvectionSimulation.hpp"
+#include "BoundaryConditions/L0Harmonic/HeatFluxBC.hpp"
 
 namespace EPMDynamo {
 
@@ -30,7 +31,7 @@ namespace EPMDynamo {
       // Set boundary condition to the transport equation
       // Set constant temperature
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
-      SmartBC  pFluxBC(new DRadialBC(this->mTransform.radBasis()));
+      SmartBC  pFluxBC(new HeatFluxBC(-1.0, this->mTransform.radBasis()));
       if(this->mIOSys.cfg()->aBC()(0) == 0)
       {
          this->mTransport.addBC(pZeroBC);

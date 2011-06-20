@@ -38,7 +38,7 @@ namespace EPMDynamo {
          static const bool UseRTPMagnetic = false;
 
          /// Requires spectral Magnetic computations
-         static const bool UseSpecMagnetic = true;
+         static const bool UseSpecMagnetic = false;
 
          /// Requires Magnetic curl computations
          static const bool UseMagneticCurl = false;
@@ -130,7 +130,7 @@ namespace EPMDynamo {
          virtual ~RandomState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e0;
+   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
 
    template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_LRATIO = 2;
 
