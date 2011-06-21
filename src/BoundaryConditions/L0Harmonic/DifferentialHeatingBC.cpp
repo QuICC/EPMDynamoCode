@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    DifferentialHeatingBC::DifferentialHeatingBC(const EPMFloat bcValue, const DifferentialHeatingBC::BasisType &basis)
-      : L0HarmonicBC(basis.basisN(), basis.polyN())
+      : L0HarmonicBC(basis.basisN(), basis.polyN(), (basis.parameters()(0)==0))
    {
       // Fill Operator BC values
       this->fillLHSBCValues(basis);

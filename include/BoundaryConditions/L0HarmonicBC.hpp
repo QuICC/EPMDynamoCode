@@ -32,8 +32,9 @@ namespace EPMDynamo {
           *
           * @param nL Number of harmonic degrees
           * @param nX Number of BC values
+          * @param hasL0 CPU computes l=0 mode
           */
-         L0HarmonicBC(const int nL, const int nX);
+         L0HarmonicBC(const int nL, const int nX, const bool hasL0);
 
          /**
           * @brief Destructor
@@ -66,6 +67,11 @@ namespace EPMDynamo {
          
       protected:
          /**
+          * @brief Flag used in parallel version to check if l=0 is stored locally
+          */
+         const bool mHasL0;
+
+         /**
           * @brief Value of the l=0 mode
           */
          EPMFloat mValue;
@@ -75,7 +81,7 @@ namespace EPMDynamo {
 
    inline EPMFloat L0HarmonicBC::getRealRHSBC(const int l, const int m) const
    {
-      if(l != 0)
+      if(!this->mHasL0 || l != 0)
       {
          return 0.0;
       } else
@@ -91,7 +97,7 @@ namespace EPMDynamo {
 
    inline EPMComplex L0HarmonicBC::getRHSBC(const int l, const int m) const
    {
-      if(l != 0)
+      if(!this->mHasL0 || l != 0)
       {
          return EPMComplex(0.0);
       } else
