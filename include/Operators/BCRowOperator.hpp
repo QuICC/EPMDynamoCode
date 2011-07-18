@@ -174,11 +174,13 @@ namespace EPMDynamo {
       if(isReal)
       {
          // Impose inhomogeneous real component boundary condition on the last rows
-         vector.bottomRows(this->nBC()) = this->mBCValues.real();
+         vector.bottomRows(this->nBC()).setConstant(0.0);
+         vector.bottomRows(this->nBC()).col(0) = this->mBCValues.real();
       } else
       {
          // Impose inhomogeneous real component boundary condition on the last rows
-         vector.bottomRows(this->nBC()) = this->mBCValues.imag();
+         vector.bottomRows(this->nBC()).setConstant(0.0);
+         vector.bottomRows(this->nBC()).col(0) = this->mBCValues.imag();
       }
 
       // Call basic solve

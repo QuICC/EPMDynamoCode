@@ -396,4 +396,133 @@ namespace EPMDynamo {
          }
       }
    }
+         
+   void RTPOperators::precession(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
+   {
+      EPMFloat epsi=-0.3;
+      EPMFloat cosalpha=0.5;
+      EPMFloat sinalpha=std::sqrt(3.0)/2.0;
+      Array sph = inField.trunc()->sim()->hoz()->phGrid().array().sin();
+      Array cph = inField.trunc()->sim()->hoz()->phGrid().array().cos();
+
+      int nR = inField.nR();
+      int nTh;
+      if(coeff == 1.0)
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            nTh = inField.nTh(n);
+            for(int j=0; j < nTh; ++j)
+            {
+               // Compute R component
+               rField.rR().rShell(n).col(j) = -2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
+               // Compute Theta component
+               rField.rTheta().rShell(n).col(j) = -2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
+               // Compute Phi component
+               rField.rPhi().rShell(n).col(j) = 2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
+            }
+         }
+      } else
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            nTh = inField.nTh(n);
+            for(int j=0; j < nTh; ++j)
+            {
+               // Compute R component
+               rField.rR().rShell(n).col(j) = coeff*(-2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
+               // Compute Theta component
+               rField.rTheta().rShell(n).col(j) = coeff*(-2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
+               // Compute Phi component
+               rField.rPhi().rShell(n).col(j) = coeff*(2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
+            }
+         }
+      }
+   }
+         
+   void RTPOperators::addPrecession(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
+   {
+      EPMFloat epsi=-0.3;
+      EPMFloat cosalpha=0.5;
+      EPMFloat sinalpha=std::sqrt(3.0)/2.0;
+      Array sph = inField.trunc()->sim()->hoz()->phGrid().array().sin();
+      Array cph = inField.trunc()->sim()->hoz()->phGrid().array().cos();
+
+      int nR = inField.nR();
+      int nTh;
+      if(coeff == 1.0)
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            nTh = inField.nTh(n);
+            for(int j=0; j < nTh; ++j)
+            {
+               // Compute R component
+               rField.rR().rShell(n).col(j) += -2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
+               // Compute Theta component
+               rField.rTheta().rShell(n).col(j) += -2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
+               // Compute Phi component
+               rField.rPhi().rShell(n).col(j) += 2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
+            }
+         }
+      } else
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            nTh = inField.nTh(n);
+            for(int j=0; j < nTh; ++j)
+            {
+               // Compute R component
+               rField.rR().rShell(n).col(j) += coeff*(-2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
+               // Compute Theta component
+               rField.rTheta().rShell(n).col(j) += coeff*(-2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
+               // Compute Phi component
+               rField.rPhi().rShell(n).col(j) += coeff*(2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
+            }
+         }
+      }
+   }
+         
+   void RTPOperators::subPrecession(RTPField &rField, const RTPField &inField, const EPMFloat coeff)
+   {
+      EPMFloat epsi=-0.3;
+      EPMFloat cosalpha=0.5;
+      EPMFloat sinalpha=std::sqrt(3.0)/2.0;
+      Array sph = inField.trunc()->sim()->hoz()->phGrid().array().sin();
+      Array cph = inField.trunc()->sim()->hoz()->phGrid().array().cos();
+
+      int nR = inField.nR();
+      int nTh;
+      if(coeff == 1.0)
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            nTh = inField.nTh(n);
+            for(int j=0; j < nTh; ++j)
+            {
+               // Compute R component
+               rField.rR().rShell(n).col(j) -= -2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
+               // Compute Theta component
+               rField.rTheta().rShell(n).col(j) -= -2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
+               // Compute Phi component
+               rField.rPhi().rShell(n).col(j) -= 2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
+            }
+         }
+      } else
+      {
+         for(int n=0; n < nR; ++n)
+         {
+            nTh = inField.nTh(n);
+            for(int j=0; j < nTh; ++j)
+            {
+               // Compute R component
+               rField.rR().rShell(n).col(j) -= coeff*(-2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
+               // Compute Theta component
+               rField.rTheta().rShell(n).col(j) -= coeff*(-2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
+               // Compute Phi component
+               rField.rPhi().rShell(n).col(j) -= coeff*(2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
+            }
+         }
+      }
+   }
 }

@@ -12,6 +12,7 @@ set(${SrcSubDir}_Srcs
 #
 set(SrcSubSubDirs
       Homogeneous
+      Inhomogeneous
       L0Harmonic
       )
 

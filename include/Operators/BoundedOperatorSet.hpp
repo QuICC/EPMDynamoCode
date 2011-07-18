@@ -287,7 +287,7 @@ namespace EPMDynamo {
          {
             bcRows.row(k) = this->mBCs.at(k)->getLHSBC(l).transpose();
 
-            bcVals(k) = this->mBCs.at(k)->getRHSBC(l,0);
+            bcVals(k) = this->mBCs.at(k)->getRHSBC(l,this->trunc()->local()->spec()->m(0,l));
          }
 
          // Create smart pointer

@@ -174,6 +174,33 @@ namespace EPMDynamo {
           */
          static void subCrossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
 
+         /**
+          * @brief Precession forcing of given field with \f$\Omega_p\f$ vector
+          *
+          * @param rField Resulting vector field
+          * @param inField Input field
+          * @param coeff Multiplicative coefficient
+          */
+         static void precession(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Add precession forcing of given field with \f$\Omega_p\f$ vector
+          *
+          * @param rField Resulting vector field
+          * @param inField Input field
+          * @param coeff Multiplicative coefficient
+          */
+         static void addPrecession(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Substract precession forcing of given field with \f$\Omega_p\f$ vector
+          *
+          * @param rField Resulting vector field
+          * @param inField Input field
+          * @param coeff Multiplicative coefficient
+          */
+         static void subPrecession(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
+
       protected:
 
       private:

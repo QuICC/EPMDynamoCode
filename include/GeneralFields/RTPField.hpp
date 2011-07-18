@@ -103,6 +103,16 @@ namespace EPMDynamo {
          template <int TOp> void crossZVect(RTPField &rField, const EPMFloat coeff = 1.0) const;
 
          /**
+          * @brief Compute the precession forcing with \f$\Omega_p\f$
+          *
+          * @param rField Resulting field
+          * @param coeff Multiplicative coefficient (with default value at 1.0)
+          *
+          * \tparam TOp Type of operation: (0) Set result, (1) Add result, (-1) Substract result
+          */
+         template <int TOp> void precession(RTPField &rField, const EPMFloat coeff = 1.0) const;
+
+         /**
           * @brief Initialise field to zeros
           */
          void initialiseZeros();
