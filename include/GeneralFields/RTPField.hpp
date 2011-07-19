@@ -213,6 +213,22 @@ namespace EPMDynamo {
          RTPOperators::subCrossZVect(rField, *this, coeff);
       }
    }
+
+   template <int TOp> inline void RTPField::precession(RTPField &rField, const EPMFloat coeff) const
+   {
+      if(TOp == 0)
+      {
+         RTPOperators::precession(rField, *this, coeff);
+      }
+      else if(TOp > 0)
+      {
+         RTPOperators::addPrecession(rField, *this, coeff);
+      }
+      else if(TOp < 0)
+      {
+         RTPOperators::subPrecession(rField, *this, coeff);
+      }
+   }
 }
 
 #endif // RTPFIELD_HPP
