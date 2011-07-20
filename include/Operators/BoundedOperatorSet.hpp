@@ -275,6 +275,7 @@ namespace EPMDynamo {
 
       // Get number of harmonic degrees
       int nL = this->trunc()->local()->spec()->nL();
+      ArrayI ls = this->trunc()->local()->spec()->lArray();
 
       // Pointers to homogeneous operators
       SmartBOperator   pBOp;
@@ -287,7 +288,7 @@ namespace EPMDynamo {
          {
             bcRows.row(k) = this->mBCs.at(k)->getLHSBC(l).transpose();
 
-            bcVals(k) = this->mBCs.at(k)->getRHSBC(l,this->trunc()->local()->spec()->m(0,l));
+            bcVals(k) = this->mBCs.at(k)->getRHSBC(ls(l),this->trunc()->local()->spec()->m(0,l));
          }
 
          // Create smart pointer
