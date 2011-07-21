@@ -2,8 +2,8 @@
  *  General representation of the Navier-Stokes diffusion equation with non-linear and precession term
  */
 
-#ifndef NAVIERSTOKESNLPrecession_HPP
-#define NAVIERSTOKESNLPrecession_HPP
+#ifndef NAVIERSTOKESNLPRECESSION_HPP
+#define NAVIERSTOKESNLPRECESSION_HPP
 
 // Configuration includes
 //
@@ -96,4 +96,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // NAVIERSTOKESNLPrecession_HPP
+#endif // NAVIERSTOKESNLPRECESSION_HPP
