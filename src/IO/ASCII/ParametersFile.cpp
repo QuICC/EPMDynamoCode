@@ -297,19 +297,19 @@ namespace EPMDynamo {
       }
 
       // Check for defined BC values for codensity
-      if(this->mBCArray(0) != 0 && this->mBCArray(0) != 1)
+      if(this->mBCArray(0) < 0 || this->mBCArray(0) > 1)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for codensity");
       }
 
       // Check for defined BC values for velocity
-      if(this->mBCArray(1) != 0 && this->mBCArray(1) != 1 && this->mBCArray(1) != 2)
+      if(this->mBCArray(1) < 0 || this->mBCArray(1) > 4)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for velocity");
       }
 
       // Check for defined BC values for magnetic
-      if(this->mBCArray(2) != 0)
+      if(this->mBCArray(2) < 0 || this->mBCArray(2) > 0)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for magnetic");
       }

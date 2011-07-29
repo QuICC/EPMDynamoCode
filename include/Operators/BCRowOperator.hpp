@@ -35,8 +35,9 @@ namespace EPMDynamo {
           * @param nBC Number of boundary conditions
           * @param nTau Size of the bounded operator
           * @param id ID of the operator (for example harmonic degree l)
+          * @param simID Simulation wide ID of the operator (for example harmonic degree l)
           */
-         BCRowOperator(const int nBC, const int nTau, const int id);
+         BCRowOperator(const int nBC, const int nTau, const int id, const int simID);
 
          /**
           * @brief Destructor
@@ -45,10 +46,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Implement the boundary conditions
-          *
-          * @param bcRows Matrix of the boundary imposing row values
           */
-         virtual void implementBCs(const Matrix& bcRows, const ArrayZ& bcVals);
+         virtual void implementBCs();
 
          /**
           * @brief Set operator's diagonal value
@@ -96,36 +95,23 @@ namespace EPMDynamo {
           * @brief Solve linear equation
           *
           * @param vector RHS of the linear equation
+          * @param simM   Simulation wide order
           * @param isReal Is real component of equation?
           */
-         virtual void solve(Array& vector, const bool isReal);
+         virtual void solve(Array& vector, const int simM, const bool isReal);
 
       protected:
-         /**
-          * @brief Boundary condition rows
-          */
-         Matrix   mBCRows;
-
-         /**
-          * @brief Boundary condition values
-          */
-         ArrayZ   mBCValues;
 
       private:
    };
 
-   template <typename TOpType> BCRowOperator<TOpType>::BCRowOperator(const int nBC, const int nTau, const int id)
-      : BoundedOperatorBase<TOpType>(nBC, nTau, id), mBCRows(nBC, nTau), mBCValues(nBC)
+   template <typename TOpType> BCRowOperator<TOpType>::BCRowOperator(const int nBC, const int nTau, const int id, const int simID)
+      : BoundedOperatorBase<TOpType>(nBC, nTau, id, simID)
    {
    }
 
-   template <typename TOpType> inline void BCRowOperator<TOpType>::implementBCs(const Matrix& bcRows, const ArrayZ& bcVals)
+   template <typename TOpType> inline void BCRowOperator<TOpType>::implementBCs()
    {
-      // Set bounddary condition rows
-      this->mBCRows = bcRows;
-
-      // Set boundary condition values
-      this->mBCValues = bcVals;
    }
 
    template <typename TOpType> inline void BCRowOperator<TOpType>::setOperator(const EPMFloat factor)
@@ -156,7 +142,7 @@ namespace EPMDynamo {
       // Loop over all the boundary conditions
       for(int i = 0; i < this->nBC(); ++i)
       {
-         this->rOp().row(start + i) = this->mBCRows.row(i);
+         this->rOp().row(start + i) = this->mBCs.at(i)->getLHSBC(this->id()).transpose();
       }
    }
 
@@ -169,18 +155,28 @@ namespace EPMDynamo {
       this->solveEquation(vector);
    }
 
-   template <typename TOpType> void BCRowOperator<TOpType>::solve(Array& vector, const bool isReal)
+   template <typename TOpType> void BCRowOperator<TOpType>::solve(Array& vector, const int simM, const bool isReal)
    {
+      // Impose the boundary condition on the last rows
+      int start = this->nTau() - this->nBC();
+
       if(isReal)
       {
-         // Impose inhomogeneous real component boundary condition on the last rows
-         vector.bottomRows(this->nBC()).setConstant(0.0);
-         vector.bottomRows(this->nBC()).col(0) = this->mBCValues.real();
+         // Loop over all the boundary conditions
+         for(int i = 0; i < this->nBC(); ++i)
+         {
+            // Impose inhomogeneous real component boundary condition on the last rows
+            vector(start + i) = this->mBCs.at(i)->getRealRHSBC(this->simId(),simM);
+         }
+         
       } else
       {
-         // Impose inhomogeneous real component boundary condition on the last rows
-         vector.bottomRows(this->nBC()).setConstant(0.0);
-         vector.bottomRows(this->nBC()).col(0) = this->mBCValues.imag();
+         // Loop over all the boundary conditions
+         for(int i = 0; i < this->nBC(); ++i)
+         {
+            // Impose inhomogeneous real component boundary condition on the last rows
+            vector(start + i) = this->mBCs.at(i)->getImagRHSBC(this->simId(), simM);
+         }
       }
 
       // Call basic solve

@@ -29,13 +29,13 @@ namespace EPMDynamo {
          static const bool UseRTPCodensity = false;
 
          /// Requires spectral Codensity computations
-         static const bool UseSpecCodensity = true;
+         static const bool UseSpecCodensity = false;
 
          /// Requires Codensity gradient computations
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = false;
+         static const bool UseRTPMagnetic = true;
 
          /// Requires spectral Magnetic computations
          static const bool UseSpecMagnetic = false;
@@ -44,10 +44,10 @@ namespace EPMDynamo {
          static const bool UseMagneticCurl = false;
 
          /// Requires RTP Velocity computations
-         static const bool UseRTPVelocity = false;
+         static const bool UseRTPVelocity = true;
 
          /// Requires Velocity computations
-         static const bool UseSpecVelocity = true;
+         static const bool UseSpecVelocity = false;
 
          /// Requires Velocity curl computations
          static const bool UseVelocityCurl = false;
@@ -155,18 +155,33 @@ namespace EPMDynamo {
          magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
+
+         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+         {
+            magB.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->sTh(th, n));
+         }
       }
    }
 
    template <typename TGenTraits> void RandomState<TGenTraits>::setRTPVelocity(typename RandomState<TGenTraits>::Velocity &velV)
    {
+
       SmartTruncation pTrunc = velV.oc().trunc();
+
+      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
+      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
-         velV.rOc().rRTP().rR().rShell(n).setConstant(0.);
-         velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.);
-         velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.);
+         velV.rOc().rRTP().rR().rShell(n).setConstant(0.0);
+         velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
+         velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
+
+         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+         {
+            velV.rOc().rRTP().rTheta().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*sPh;
+            velV.rOc().rRTP().rPhi().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n)*cPh;
+         }
       }
    }
 

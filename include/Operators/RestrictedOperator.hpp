@@ -36,8 +36,9 @@ namespace EPMDynamo {
           * @param nBC Number of boundary conditions
           * @param nBOp Size of the full operator
           * @param id ID of the operator (for example harmonic degree l)
+          * @param simID Simulation wide ID of the operator (for example harmonic degree l)
           */
-         RestrictedOperator(const int nBC, const int nNOp, const int id);
+         RestrictedOperator(const int nBC, const int nNOp, const int id, const int simID);
 
          /**
           * @brief Destructor
@@ -46,10 +47,8 @@ namespace EPMDynamo {
 
          /**
           * @brief Implement the boundary conditions
-          *
-          * @param bcRows Matrix of the boundary imposing row values
           */
-         virtual void implementBCs(const Matrix& bcRows, const ArrayZ& bcVals);
+         virtual void implementBCs();
 
          /**
           * @brief Set operator's diagonal value
@@ -100,7 +99,7 @@ namespace EPMDynamo {
           *
           * \epmBug THIS IMPLEMENTATION IS WRONG
           */
-         virtual void solve(Array& vector, const bool isReal);
+         virtual void solve(Array& vector, const int simM, const bool isReal);
 
          /**
           * @brief Extend solution to full truncation
@@ -121,13 +120,22 @@ namespace EPMDynamo {
          ExtensionMatrix  mExt;
    };
 
-   template <typename TOpType> RestrictedOperator<TOpType>::RestrictedOperator(const int nBC, const int nNOp, const int id)
-      : BoundedOperatorBase<TOpType>(nBC, nNOp-nBC, id), mExt()
+   template <typename TOpType> RestrictedOperator<TOpType>::RestrictedOperator(const int nBC, const int nNOp, const int id, const int simID)
+      : BoundedOperatorBase<TOpType>(nBC, nNOp-nBC, id, simID), mExt()
    {
    }
 
-   template <typename TOpType> inline void RestrictedOperator<TOpType>::implementBCs(const Matrix& bcRows, const ArrayZ& bcVals)
+   template <typename TOpType> inline void RestrictedOperator<TOpType>::implementBCs()
    {
+       // Create BC rows matrix
+      Matrix   bcRows(this->nBC(), this->nTau()+this->nBc());
+
+      // Create boundary rows from boundary conditions
+      for(int k = 0; k < this->nBC(); ++k)
+      {
+         bcRows.row(k) = this->mBCs.at(k)->getLHSBC(this->id()).transpose();
+      }
+
       // Build the extension matrices
       this->mExt.build(bcRows);
    }
@@ -165,7 +173,7 @@ namespace EPMDynamo {
       this->mExt.extendZero(vector);
    }
 
-   template <typename TOpType> void RestrictedOperator<TOpType>::solve(Array& vector, const bool isReal)
+   template <typename TOpType> void RestrictedOperator<TOpType>::solve(Array& vector, const int simM, const bool isReal)
    {
       // Call basic solve
       this->solveEquation(vector);

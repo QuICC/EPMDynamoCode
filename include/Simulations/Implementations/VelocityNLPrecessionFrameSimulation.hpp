@@ -1,9 +1,9 @@
-/** \file VelocityNLPrecessionSimulation.hpp
- *  \brief Implementation of a velocity precession simulation
+/** \file VelocityNLPrecessionFrameSimulation.hpp
+ *  \brief Implementation of a velocity precession frame simulation
  */
 
-#ifndef VELOCITYNLPRECESSIONSIMULATION_HPP
-#define VELOCITYNLPRECESSIONSIMULATION_HPP
+#ifndef VELOCITYNLPRECESSIONFRAMESIMULATION_HPP
+#define VELOCITYNLPRECESSIONFRAMESIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/VelocityNLPrecessionTraits.hpp"
+#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
@@ -31,7 +31,7 @@
 #include "Equations/NavierStokes/NavierStokesNLPrecession.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "BoundaryConditions/Inhomogeneous/PrecessionBC.hpp"
+#include "BoundaryConditions/Inhomogeneous/PrecessionFrameBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
@@ -41,19 +41,19 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a velocity diffusion simulation
     */
-   class VelocityNLPrecessionSimulation: public SimulationBase
+   class VelocityNLPrecessionFrameSimulation: public SimulationBase
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~VelocityNLPrecessionSimulation() {};
+         virtual ~VelocityNLPrecessionFrameSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         VelocityNLPrecessionSimulation();
+         VelocityNLPrecessionFrameSimulation();
 
          /**
           * @brief Initialise the fields
@@ -113,14 +113,14 @@ namespace EPMDynamo {
          /**
           * @brief Velocity field
           */
-         VelocityNLPrecessionTraits::VelType   mVelV;
+         VelocityNLRotDiffusionTraits::VelType   mVelV;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesNLPrecession<VelocityNLPrecessionTraits>    mNavierStokes;
+         NavierStokesNLPrecession<VelocityNLRotDiffusionTraits>    mNavierStokes;
    };
 
 }
 
-#endif // VELOCITYNLPRECESSIONSIMULATION_HPP
+#endif // VELOCITYNLPRECESSIONFRAMESIMULATION_HPP

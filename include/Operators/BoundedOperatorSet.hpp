@@ -267,12 +267,6 @@ namespace EPMDynamo {
       // Get operator size
       int opSize = this->trunc()->sim()->rad()->nN();
 
-       // Create BC rows matrix
-      Matrix   bcRows(this->nBC(), opSize);
-
-       // Create BC values array
-      ArrayZ   bcVals(this->nBC());
-
       // Get number of harmonic degrees
       int nL = this->trunc()->local()->spec()->nL();
       ArrayI ls = this->trunc()->local()->spec()->lArray();
@@ -283,22 +277,20 @@ namespace EPMDynamo {
       // Loop over degreees
       for(int l = 0; l < nL; ++l)
       {
-         // Get boundary rows
-         for(int k=0; k < this->nBC(); ++k)
-         {
-            bcRows.row(k) = this->mBCs.at(k)->getLHSBC(l).transpose();
-
-            bcVals(k) = this->mBCs.at(k)->getRHSBC(ls(l),this->trunc()->local()->spec()->m(0,l));
-         }
-
          // Create smart pointer
-         pBOp = SmartBOperator(new BOperator(this->nBC(), opSize, l));
+         pBOp = SmartBOperator(new BOperator(this->nBC(), opSize, l, ls(l)));
 
          // Add homogeneous operator
          this->mpOperators.push_back(pBOp);
 
-         // implement boundary condition of newly created operator
-         this->mpOperators.back()->implementBCs(bcRows, bcVals);
+         // add boundary conditions to newly created operator
+         for(int k=0; k < this->nBC(); ++k)
+         {
+            this->mpOperators.back()->addBC(this->mBCs.at(k));
+         }
+
+         // implement the boundary conditions into operator
+         this->mpOperators.back()->implementBCs();
       }
 
       // Set the total number of operators
@@ -363,6 +355,7 @@ namespace EPMDynamo {
       // Get size of the matrix
       int nVar = rhs.rows();
       int nM = this->trunc()->local()->spec()->nM(l);
+      ArrayI ms = this->trunc()->local()->spec()->mArray(l);
 
       // Loop over the orders
       for(int m = 0; m < nM; ++m)
@@ -371,7 +364,7 @@ namespace EPMDynamo {
          this->mTmp = rhs.col(m).real();
 
          // Solve real equation
-         this->rHarmOp(l).solve(this->mTmp, true);
+         this->rHarmOp(l).solve(this->mTmp, ms(m), true);
 
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
@@ -383,7 +376,7 @@ namespace EPMDynamo {
          this->mTmp = rhs.col(m).imag();
 
          // Solve imaginary equation
-         this->rHarmOp(l).solve(this->mTmp, false);
+         this->rHarmOp(l).solve(this->mTmp, ms(m), false);
 
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)

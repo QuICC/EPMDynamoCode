@@ -31,18 +31,10 @@ namespace EPMDynamo {
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
 
       // Set boundary condition to the Navier-Stokes equation
-      if(this->mIOSys.cfg()->aBC()(1) == 1)
-      {
-         SmartBC  pSFBC(new StressFreeTorBC(this->mTransform.radBasis()));
-         SmartBC  pDDBC(new DDRadialBC(this->mTransform.radBasis()));
+      //
 
-         // Toroidal velocity BC
-         this->mNavierStokes.addTorBC(pSFBC);
-
-         // Order of Poloidal BCs is important
-         this->mNavierStokes.addPolBC(pZeroBC);
-         this->mNavierStokes.addPolBC(pDDBC);
-      } else
+      // Set no-slip boundary condition
+      if(this->mIOSys.cfg()->aBC()(1) == 0)
       {
          SmartBC  pNSBC(new ZeroBC(this->mTransform.radBasis()));
          SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
@@ -53,6 +45,61 @@ namespace EPMDynamo {
          // Order of Poloidal BCs is important
          this->mNavierStokes.addPolBC(pZeroBC);
          this->mNavierStokes.addPolBC(pDBC);
+
+      // Set stress-free boundary condition
+      } else if(this->mIOSys.cfg()->aBC()(1) == 1)
+      {
+         SmartBC  pSFBC(new StressFreeTorBC(this->mTransform.radBasis()));
+         SmartBC  pDDBC(new DDRadialBC(this->mTransform.radBasis()));
+
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pSFBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDDBC);
+
+      // Set precession frame boundary condition
+      } else if(this->mIOSys.cfg()->aBC()(1) == 2)
+      {
+         SmartBC  pPrecBC(new PrecessionFrameBC(this->mTransform.radBasis()));
+         SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
+
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pPrecBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDBC);
+
+      // Set time dependent precession boundary condition
+      } else if(this->mIOSys.cfg()->aBC()(1) == 3)
+      {
+         SmartBC  pPrecBC(new PrecessionBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
+         SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
+
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pPrecBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDBC);
+
+      // Set time dependent libration boundary condition
+      } else if(this->mIOSys.cfg()->aBC()(1) == 4)
+      {
+         SmartBC  pPrecBC(new LibrationBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
+         SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
+
+         // Toroidal velocity BC
+         this->mNavierStokes.addTorBC(pPrecBC);
+
+         // Order of Poloidal BCs is important
+         this->mNavierStokes.addPolBC(pZeroBC);
+         this->mNavierStokes.addPolBC(pDBC);
+      } else
+      {
+         throw EPMException("VelocityNLRotDiffusionSimuation::initEquations", "Did not know what to do with Velocity BC");
       }
 
       // Initialise the Navier-Stokes equation

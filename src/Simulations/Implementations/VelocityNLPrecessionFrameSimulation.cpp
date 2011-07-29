@@ -1,4 +1,4 @@
-/** \file VelocityNLPrecessionSimulation.cpp
+/** \file VelocityNLPrecessionFrameSimulation.cpp
  *  \brief Implementation of a velocity diffusion simulation
  */
 
@@ -13,19 +13,19 @@
 
 // Class include
 //
-#include "Simulations/Implementations/VelocityNLPrecessionSimulation.hpp"
+#include "Simulations/Implementations/VelocityNLPrecessionFrameSimulation.hpp"
 
 // Project includes
 //
 
 namespace EPMDynamo {
 
-   VelocityNLPrecessionSimulation::VelocityNLPrecessionSimulation()
+   VelocityNLPrecessionFrameSimulation::VelocityNLPrecessionFrameSimulation()
       : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
    {
    }
 
-   void VelocityNLPrecessionSimulation::initEquations()
+   void VelocityNLPrecessionFrameSimulation::initEquations()
    {
       // Create Zero boundary condition pointer
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
@@ -44,7 +44,7 @@ namespace EPMDynamo {
          this->mNavierStokes.addPolBC(pDDBC);
       } else if(this->mIOSys.cfg()->aBC()(1) == 2)
       {
-         SmartBC  pPrecBC(new PrecessionBC(this->mTransform.radBasis()));
+         SmartBC  pPrecBC(new PrecessionFrameBC(this->mTransform.radBasis()));
          SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
 
          // Toroidal velocity BC
@@ -70,7 +70,7 @@ namespace EPMDynamo {
       this->mNavierStokes.init();
    }
 
-   void VelocityNLPrecessionSimulation::configureTransforms()
+   void VelocityNLPrecessionFrameSimulation::configureTransforms()
    {
       //
       // Setup the SSH transform data manipulator
@@ -100,13 +100,13 @@ namespace EPMDynamo {
       this->configureTransformNesting();
    }
 
-   void VelocityNLPrecessionSimulation::updateEquationsRTP(const int step)
+   void VelocityNLPrecessionFrameSimulation::updateEquationsRTP(const int step)
    {
       // Update RTP values of the Navier-Stokes equation
       this->mNavierStokes.updateRTP(step);
    }
 
-   void VelocityNLPrecessionSimulation::updateEquationsRHS()
+   void VelocityNLPrecessionFrameSimulation::updateEquationsRHS()
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.updateRHS();
@@ -115,39 +115,39 @@ namespace EPMDynamo {
       this->mSimControl.tsControl().updateRTPCFLTimestep(this->mVelV.oc().rtp());
    }
 
-   void VelocityNLPrecessionSimulation::transformEquationsRHS(const int step)
+   void VelocityNLPrecessionFrameSimulation::transformEquationsRHS(const int step)
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
    }
 
-   void VelocityNLPrecessionSimulation::addExternalInfluence()
+   void VelocityNLPrecessionFrameSimulation::addExternalInfluence()
    {
    }
 
-   void VelocityNLPrecessionSimulation::timestepEquations()
+   void VelocityNLPrecessionFrameSimulation::timestepEquations()
    {
       // Timestep the Navier-Stokes equation
       this->mNavierStokes.timestep();
    }
 
-   void VelocityNLPrecessionSimulation::initFields()
+   void VelocityNLPrecessionFrameSimulation::initFields()
    {
       // Create a state file reader for the initial state
-      EPMSHARED_PTR<StateFileReader<VelocityNLPrecessionTraits> > pInState(new StateFileReader<VelocityNLPrecessionTraits>(this->mVelV,  "_initial"));
+      EPMSHARED_PTR<StateFileReader<VelocityNLRotDiffusionTraits> > pInState(new StateFileReader<VelocityNLRotDiffusionTraits>(this->mVelV,  "_initial"));
 
       // Read in initial state
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
    }
 
-   void VelocityNLPrecessionSimulation::addHDF5Output()
+   void VelocityNLPrecessionFrameSimulation::addHDF5Output()
    {
-      EPMSHARED_PTR<StateFileWriter<VelocityNLPrecessionTraits> >  pOutState(new StateFileWriter<VelocityNLPrecessionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
+      EPMSHARED_PTR<StateFileWriter<VelocityNLRotDiffusionTraits> >  pOutState(new StateFileWriter<VelocityNLRotDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
    }
 
-   void VelocityNLPrecessionSimulation::addASCIIOutput()
+   void VelocityNLPrecessionFrameSimulation::addASCIIOutput()
    {
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
@@ -155,13 +155,13 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<VelocityNLPrecessionTraits::VelType> > pVelEnergy(new EnergyFile<VelocityNLPrecessionTraits::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<VelocityNLRotDiffusionTraits::VelType> > pVelEnergy(new EnergyFile<VelocityNLRotDiffusionTraits::VelType>(mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<VelocityNLPrecessionTraits::VelType> > pVelSpectrum(new SpectrumFile<VelocityNLPrecessionTraits::VelType>(this->mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<VelocityNLRotDiffusionTraits::VelType> > pVelSpectrum(new SpectrumFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel"));
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);

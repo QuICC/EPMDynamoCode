@@ -5,6 +5,7 @@ set(${SrcSubDir}_Srcs
       BoundaryCondition.cpp
       HomogeneousBC.cpp
       L0HarmonicBC.cpp
+      TimeDependentBC.cpp
       )
 
 #
@@ -14,6 +15,7 @@ set(SrcSubSubDirs
       Homogeneous
       Inhomogeneous
       L0Harmonic
+      TimeDependent
       )
 
 foreach(SrcSubSubDir ${SrcSubSubDirs})

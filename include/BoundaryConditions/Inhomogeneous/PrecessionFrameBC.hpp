@@ -1,9 +1,9 @@
-/** \file PrecessionBC.hpp
- *  \brief Implementation of the homogeneous first radial derivative boundary condition
+/** \file PrecessionFrameBC.hpp
+ *  \brief Implementation of toroidal BC for precession forcing
  */
 
-#ifndef PRECESSIONBC_HPP
-#define PRECESSIONBC_HPP
+#ifndef PRECESSIONFRAMEBC_HPP
+#define PRECESSIONFRAMEBC_HPP
 
 // Configuration includes
 //
@@ -24,10 +24,12 @@
 namespace EPMDynamo {
 
    /**
-    * @brief This class defines the homogeneous boundary condition on the first radial
-    *    derivative
+    *  \brief Implementation of toroidal BC for precession forcing
+    *
+    *  This boundary condition is not timedepent because the frame of reference is moved so as to be able to use
+    *  time independent BCs.
     */
-   class PrecessionBC: public BoundaryCondition
+   class PrecessionFrameBC: public BoundaryCondition
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -38,12 +40,12 @@ namespace EPMDynamo {
           *
           * @param basis   Radial basis
           */
-         PrecessionBC(const BasisType &basis);
+         PrecessionFrameBC(const BasisType &basis);
 
          /**
           * @brief Destructor
           */
-         virtual ~PrecessionBC() {};
+         virtual ~PrecessionFrameBC() {};
 
          /**
           * @brief Get boundary condition value RHS, real part
@@ -82,4 +84,4 @@ namespace EPMDynamo {
    };
 }
 
-#endif // PRECESSIONBC_HPP
+#endif // PRECESSIONFRAMEBC_HPP

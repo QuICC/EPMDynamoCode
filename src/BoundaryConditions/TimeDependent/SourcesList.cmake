@@ -2,5 +2,6 @@
 # Create sources list
 #
 set(${SrcSubDir}_${SrcSubSubDir}_Srcs
-      PrecessionFrameBC.cpp
+      PrecessionBC.cpp
+      LibrationBC.cpp
       )

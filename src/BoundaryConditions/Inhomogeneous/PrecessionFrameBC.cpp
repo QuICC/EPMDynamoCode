@@ -1,5 +1,5 @@
-/** \file PrecessionBC.cpp
- *  \brief Implementation of the homogeneous first radial derivative boundary condition
+/** \file PrecessionFrameBC.cpp
+ *  \brief Implementation of changed frame of referecen toroidal precession boundary condition
  */
 
 // Configuration includes
@@ -13,21 +13,21 @@
 
 // Class include
 //
-#include "BoundaryConditions/Inhomogeneous/PrecessionBC.hpp"
+#include "BoundaryConditions/Inhomogeneous/PrecessionFrameBC.hpp"
 
 // Project includes
 //
 
 namespace EPMDynamo {
 
-   PrecessionBC::PrecessionBC(const PrecessionBC::BasisType &basis)
+   PrecessionFrameBC::PrecessionFrameBC(const PrecessionFrameBC::BasisType &basis)
       : BoundaryCondition(basis.basisN(), basis.polyN())
    {
       // Fill Operator BC values
       this->fillLHSBCValues(basis);
    }
 
-   void PrecessionBC::fillLHSBCValues(const PrecessionBC::BasisType &basis)
+   void PrecessionFrameBC::fillLHSBCValues(const PrecessionFrameBC::BasisType &basis)
    {
       int nL = this->nL();
       for(int l = 0; l < nL; ++l)
@@ -36,7 +36,7 @@ namespace EPMDynamo {
       }
    }
 
-   EPMFloat PrecessionBC::getRealRHSBC(const int l, const int m) const
+   EPMFloat PrecessionFrameBC::getRealRHSBC(const int l, const int m) const
    {
       if(l == 1 && m == 0)
       {
@@ -47,22 +47,22 @@ namespace EPMDynamo {
       }
    }
 
-   EPMFloat PrecessionBC::getImagRHSBC(const int l, const int m) const
+   EPMFloat PrecessionFrameBC::getImagRHSBC(const int l, const int m) const
    {
       if(l == 1 && m == 0)
       {
-         return 1.0;
+         return 0.0;
       } else
       {
          return 0.0;
       }
    }
 
-   EPMComplex PrecessionBC::getRHSBC(const int l, const int m) const
+   EPMComplex PrecessionFrameBC::getRHSBC(const int l, const int m) const
    {
       if(l == 1 && m == 0)
       {
-         return EPMComplex(1.0);
+         return EPMComplex(1.0, 0.0);
       } else
       {
          return EPMComplex(0.0);

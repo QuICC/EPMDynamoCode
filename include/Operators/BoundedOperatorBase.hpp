@@ -16,6 +16,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Polynomials/PolynomialOperator.hpp"
 #include "Polynomials/PolyOps/POperator.hpp"
+#include "BoundaryConditions/BoundaryCondition.hpp"
 
 namespace EPMDynamo {
 
@@ -33,8 +34,9 @@ namespace EPMDynamo {
           * @param nBC Number of boundary conditions
           * @param nTau Size of the bounded operator
           * @param id ID of the operator (for example harmonic degree l)
+          * @param simId Simulation wide ID of the operator (for example harmonic degree l)
           */
-         BoundedOperatorBase(const int nBC, const int nTau, const int id);
+         BoundedOperatorBase(const int nBC, const int nTau, const int id, const int simID);
 
          /**
           * @brief Destructor
@@ -42,11 +44,16 @@ namespace EPMDynamo {
          virtual ~BoundedOperatorBase() {};
 
          /**
-          * @brief Implement the boundary conditions
-          *
-          * @param bcRows Matrix of the boundary imposing row values
+          * @brief Implement the boundary conditions into operator
           */
-         virtual void implementBCs(const Matrix& bcRows, const ArrayZ& bcVals) = 0;
+         virtual void implementBCs() = 0;
+
+         /**
+          * @brief Add a boundary condition to operator
+          *
+          * @param pBC Smart pointer to boundary condition
+          */
+         void addBC(SmartBC pBC);
 
          /**
           * @brief Set operator's diagonal value
@@ -86,7 +93,7 @@ namespace EPMDynamo {
           * @param vector RHS of the linear equation
           * @param isReal Is real component of equation?
           */
-         virtual void solve(Array& vector, const bool isReal) = 0;
+         virtual void solve(Array& vector, const int simM, const bool isReal) = 0;
          
          /**
           * @brief Get size of the bounded operator
@@ -97,12 +104,22 @@ namespace EPMDynamo {
           * @brief Get identification int
           */
          int id() const;
+         
+         /**
+          * @brief Simulation wide identification id
+          */
+         int simId() const;
 
       protected:
          /**
           * @brief Get number of boundary conditions
           */
          int nBC() const;
+
+         /**
+          * @brief Vector of BoundaryCondition
+          */
+         std::vector<SmartBC>    mBCs;
 
       private:
          /**
@@ -119,10 +136,15 @@ namespace EPMDynamo {
           * @brief Identification ID (will be and l index for example)
           */
          int mID;
+
+         /**
+          * @brief Simulation wide identification ID (will be and l index for example)
+          */
+         int mSimID;
    };
 
-   template <typename TOpType> BoundedOperatorBase<TOpType>::BoundedOperatorBase(const int nBC, const int nTau, const int id)
-      : TOpType(nTau), mNbc(nBC), mNTau(nTau), mID(id)
+   template <typename TOpType> BoundedOperatorBase<TOpType>::BoundedOperatorBase(const int nBC, const int nTau, const int id, const int simID)
+      : TOpType(nTau), mNbc(nBC), mNTau(nTau), mID(id), mSimID(simID)
    {
    }
 
@@ -139,6 +161,17 @@ namespace EPMDynamo {
    template <typename TOpType> int BoundedOperatorBase<TOpType>::id() const
    {
       return this->mID;
+   }
+
+   template <typename TOpType> int BoundedOperatorBase<TOpType>::simId() const
+   {
+      return this->mSimID;
+   }
+
+   template <typename TOpType> void BoundedOperatorBase<TOpType>::addBC(SmartBC pBC) 
+   {
+      // Add BC
+      this->mBCs.push_back(pBC);
    }
 
 }
