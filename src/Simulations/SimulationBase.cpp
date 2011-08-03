@@ -10,7 +10,6 @@
 
 // External includes
 //
-#include <boost/static_assert.hpp>
 
 // Class include
 //

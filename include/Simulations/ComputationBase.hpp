@@ -15,7 +15,6 @@
 
 // System includes
 //
-#include <boost/static_assert.hpp>
 
 // External includes
 //
@@ -292,21 +291,16 @@ namespace EPMDynamo {
    {
       // Synchronize CPUs
       EPMDYNAMO_SYNCHRONIZE;
-
-      BOOST_STATIC_ASSERT(sizeof(TIOType) == 0); 
    }
 
    template <typename TIOType> void ComputationBase<TIOType>::postRun()
    {
       // Synchronize CPUs
       EPMDYNAMO_SYNCHRONIZE;
-
-      BOOST_STATIC_ASSERT(sizeof(TIOType) == 0); 
    }
 
    template <typename TIOType> void ComputationBase<TIOType>::configureTransforms()
    {
-      BOOST_STATIC_ASSERT(sizeof(TIOType) == 0); 
    }
 
 }

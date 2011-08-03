@@ -7,8 +7,6 @@
 
 // System includes
 //
-#include <boost/mpl/assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 // External includes
 //
@@ -85,15 +83,6 @@ namespace EPMDynamo {
          typedef EQRaRoParameters  EquationParametersType;
          //typedef PrRaParameters  EquationParametersType;
          //typedef InvPrRaParameters  EquationParametersType;
-
-         // Make sure the non finished parameters implementation are not used: EEkEmRa case
-         BOOST_MPL_ASSERT_NOT(( boost::is_same< EquationParametersType,EEkEmRaParameters > ));
-         // Make sure the non finished parameters implementation are not used: ELPmPrRa case
-         BOOST_MPL_ASSERT_NOT(( boost::is_same< EquationParametersType,ELPmPrRaParameters > ));
-         // Make sure the non finished parameters implementation are not used: EPmPrRa case
-         BOOST_MPL_ASSERT_NOT(( boost::is_same< EquationParametersType,EPmPrRaParameters > ));
-         // Make sure the non finished parameters implementation are not used: EPmQRa case
-         BOOST_MPL_ASSERT_NOT(( boost::is_same< EquationParametersType,EPmQRaParameters > ));
    };
 
 }
