@@ -16,6 +16,8 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       FDSHSplittingFile.cpp
       ParametersFileDefs.cpp
       ParametersFile.cpp
+      ConfigurationFileDefs.cpp
+      ConfigurationFile.cpp
       PhysicalSplittingFile.cpp
       SpectrumFileDefs.cpp
       SpectralSplittingFile.cpp

@@ -80,6 +80,11 @@ namespace EPMDynamo {
          virtual EPMFloat evolvingImagFactor() const;
 
          /**
+          * @brief Setup the parametrisation
+          */
+         void setup();
+
+         /**
           * @brief Fill in values for the boundaries
           *
           * @param basis   Radial basis
@@ -87,6 +92,15 @@ namespace EPMDynamo {
          void fillLHSBCValues(const BasisType &basis);
 
       private:
+         /**
+          * @brief Epsilon parameter
+          */
+         EPMFloat mEpsilon;
+
+         /**
+          * @brief Frequency parameter
+          */
+         EPMFloat mFrequency;
    };
 }
 

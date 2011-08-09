@@ -17,22 +17,50 @@
 
 // Project includes
 //
+#include "IO/ASCII/ConfigurationFile.hpp"
 
 namespace EPMDynamo {
 
    LibrationBC::LibrationBC(const LibrationBC::BasisType &basis, const TimestepParameters &tsParams)
       : TimeDependentBC(basis.basisN(), basis.polyN(), tsParams)
    {
+      // Setup the parametrisation
+      this->setup();
+
       // Fill Operator BC values
       this->fillLHSBCValues(basis);
    }
 
+   void LibrationBC::setup()
+   {
+      std::vector<std::string>   integers;
+      std::vector<std::string>   floats;
+
+      floats.push_back("epsilon");
+      floats.push_back("frequency");
+
+      ConfigurationFile cfg("libration", integers, floats);
+
+      // Initialise configuration file
+      cfg.init();
+
+      // Read data
+      cfg.read();
+
+      // Finalise configuration file reader
+      cfg.finalise();
+
+      // Print information
+      cfg.printInfo();
+
+      // Store values for configuration file
+      this->mEpsilon = cfg.floats()(0);
+      this->mFrequency = cfg.floats()(1);
+   }
+
    EPMFloat LibrationBC::evolvingRealFactor() const
    {
-      EPMFloat epsilon = 0.001;
-      EPMFloat f = 0.99;
-
-      return epsilon*std::cos(f*this->mrTSParams.time());
+      return this->mEpsilon*std::cos(this->mFrequency*this->mrTSParams.time());
    }
 
    EPMFloat LibrationBC::evolvingImagFactor() const
