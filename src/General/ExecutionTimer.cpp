@@ -5,6 +5,7 @@
 // System includes
 //
 #include <iostream>
+#include <iomanip>
 
 // External includes
 //
@@ -22,9 +23,9 @@ namespace EPMDynamo {
       : TimerType(autostart), mMeanTimes(6), mMaxTimes(6), mMinTimes(6)
    {
       // initialise the times
-      this->mMeanTimes.setConstant(-1.0);
-      this->mMaxTimes.setConstant(-1.0);
-      this->mMinTimes.setConstant(-1.0);
+      this->mMeanTimes.setConstant(0.0);
+      this->mMaxTimes.setConstant(0.0);
+      this->mMinTimes.setConstant(0.0);
    }
 
    void ExecutionTimer::update(const int id)
@@ -62,19 +63,19 @@ namespace EPMDynamo {
       std::cout << std::endl;
       std::cout << "************* Execution time information *************" << std::endl;
 
-      std::cout << "     Construction time: " << static_cast<int>(std::ceil(this->mMeanTimes(1))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(1))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(1))) << " seconds" << std::endl;
+      std::cout << "     Construction time: " << std::fixed << std::setprecision(1) << this->mMeanTimes(1) << " / " << this->mMaxTimes(1) << " / " << this->mMinTimes(1) << " seconds" << std::endl;
 
-      std::cout << "     Initialisation time: " << static_cast<int>(std::ceil(this->mMeanTimes(2))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(2))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(2))) << " seconds" << std::endl;
+      std::cout << "     Initialisation time: " << this->mMeanTimes(2) << " / " << this->mMaxTimes(2) << " / " << this->mMinTimes(2) << " seconds" << std::endl;
 
-      std::cout << "     PreRun time: " << static_cast<int>(std::ceil(this->mMeanTimes(3))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(3))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(3))) << " seconds" << std::endl;
+      std::cout << "     PreRun time: " << this->mMeanTimes(3) << " / " << this->mMaxTimes(3) << " / " << this->mMinTimes(3) << " seconds" << std::endl;
 
-      std::cout << "     Computation time: " << static_cast<int>(std::ceil(this->mMeanTimes(4))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(4))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(4))) << " seconds" << std::endl;
+      std::cout << "     Computation time: " << this->mMeanTimes(4) << " / " << this->mMaxTimes(4) << " / " << this->mMinTimes(4) << " seconds" << std::endl;
 
-      std::cout << "     PostRun time: " << static_cast<int>(std::ceil(this->mMeanTimes(5))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(5))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(5))) << " seconds" << std::endl;
+      std::cout << "     PostRun time: " << this->mMeanTimes(5) << " / " << this->mMaxTimes(5) << " / " << this->mMinTimes(5) << " seconds" << std::endl;
 
       std::cout << "------------------------------------------------------" << std::endl;
 
-      std::cout << "     Total execution time: " << static_cast<int>(std::ceil(this->mMeanTimes(0))) << " / " << static_cast<int>(std::ceil(this->mMaxTimes(0))) << " / " << static_cast<int>(std::ceil(this->mMinTimes(0))) << " seconds" << std::endl;
+      std::cout << "     Total execution time: " << this->mMeanTimes(0) << " / " << this->mMaxTimes(0) << " / " << this->mMinTimes(0) << " seconds" << std::endl;
 
       std::cout << "******************************************************" << std::endl;
    }

@@ -11,4 +11,5 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       EPrRaParameters.cpp
       PrRaParameters.cpp
       InvPrRaParameters.cpp
+      EParameters.cpp
       )
