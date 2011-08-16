@@ -131,8 +131,18 @@ namespace EPMDynamo {
    void ConfigurationFile::spreadParameters()
    {
       #ifdef EPMDYNAMO_MPI
+      int nBlocks = 0;
 
-      int nBlocks = 2;
+      if(this->mIntegers.size() > 0)
+      {
+         nBlocks++;
+      }
+
+      if(this->mFloats.size() > 0)
+      {
+         nBlocks++;
+      }
+
       int idx = 0;
       MPI_Aint    displ[nBlocks];
       int         blocks[nBlocks];
@@ -141,18 +151,25 @@ namespace EPMDynamo {
       MPI_Aint    element;
 
       // Create integer part
-      MPI_Get_address(this->mIntegers.data(), &element);
-      displ[idx] = element;
-      blocks[idx] = this->mIntegers.size();
-      types[idx] = MPI_INT;
-      idx++;
+
+      if(this->mIntegers.size() > 0)
+      {
+         MPI_Get_address(this->mIntegers.data(), &element);
+         displ[idx] = element;
+         blocks[idx] = this->mIntegers.size();
+         types[idx] = MPI_INT;
+         idx++;
+      }
 
       // Create floats part
-      MPI_Get_address(this->mFloats.data(), &element);
-      displ[idx] = element;
-      blocks[idx] = this->mFloats.size();
-      types[idx] = MPI_DOUBLE;
-      idx++;
+      if(this->mFloats.size() > 0)
+      {
+         MPI_Get_address(this->mFloats.data(), &element);
+         displ[idx] = element;
+         blocks[idx] = this->mFloats.size();
+         types[idx] = MPI_DOUBLE;
+         idx++;
+      }
 
       MPI_Datatype   paramType;
 
