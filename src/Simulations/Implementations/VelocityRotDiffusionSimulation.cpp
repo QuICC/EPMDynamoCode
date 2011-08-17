@@ -174,6 +174,9 @@ namespace EPMDynamo {
 
       // Read in initial state
       this->mIOSys.useInitialState(pInState, this->mSimControl.tsParams());
+
+      // Set the energy scale for the magnetic field
+      this->mVelV.rOc().rPerturbation().setEnergyScale(this->mEqParams.keFactor());
    }
 
    void VelocityRotDiffusionSimulation::addHDF5Output()
