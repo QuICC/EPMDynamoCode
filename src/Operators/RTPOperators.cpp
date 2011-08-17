@@ -415,11 +415,11 @@ namespace EPMDynamo {
             for(int j=0; j < nTh; ++j)
             {
                // Compute R component
-               rField.rR().rShell(n).col(j) = -2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
+               rField.rR().rShell(n).col(j) = -epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
                // Compute Theta component
-               rField.rTheta().rShell(n).col(j) = -2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
+               rField.rTheta().rShell(n).col(j) = -epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
                // Compute Phi component
-               rField.rPhi().rShell(n).col(j) = 2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
+               rField.rPhi().rShell(n).col(j) = epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
             }
          }
       } else
@@ -430,11 +430,11 @@ namespace EPMDynamo {
             for(int j=0; j < nTh; ++j)
             {
                // Compute R component
-               rField.rR().rShell(n).col(j) = coeff*(-2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
+               rField.rR().rShell(n).col(j) = coeff*(-epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
                // Compute Theta component
-               rField.rTheta().rShell(n).col(j) = coeff*(-2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
+               rField.rTheta().rShell(n).col(j) = coeff*(-epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
                // Compute Phi component
-               rField.rPhi().rShell(n).col(j) = coeff*(2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
+               rField.rPhi().rShell(n).col(j) = coeff*(epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
             }
          }
       }
@@ -458,11 +458,11 @@ namespace EPMDynamo {
             for(int j=0; j < nTh; ++j)
             {
                // Compute R component
-               rField.rR().rShell(n).col(j) += -2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
+               rField.rR().rShell(n).col(j) += -epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
                // Compute Theta component
-               rField.rTheta().rShell(n).col(j) += -2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
+               rField.rTheta().rShell(n).col(j) += -epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
                // Compute Phi component
-               rField.rPhi().rShell(n).col(j) += 2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
+               rField.rPhi().rShell(n).col(j) += epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
             }
          }
       } else
@@ -473,11 +473,11 @@ namespace EPMDynamo {
             for(int j=0; j < nTh; ++j)
             {
                // Compute R component
-               rField.rR().rShell(n).col(j) += coeff*(-2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
+               rField.rR().rShell(n).col(j) += coeff*(-epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
                // Compute Theta component
-               rField.rTheta().rShell(n).col(j) += coeff*(-2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
+               rField.rTheta().rShell(n).col(j) += coeff*(-epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
                // Compute Phi component
-               rField.rPhi().rShell(n).col(j) += coeff*(2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
+               rField.rPhi().rShell(n).col(j) += coeff*(epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
             }
          }
       }
@@ -501,11 +501,11 @@ namespace EPMDynamo {
             for(int j=0; j < nTh; ++j)
             {
                // Compute R component
-               rField.rR().rShell(n).col(j) -= -2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
+               rField.rR().rShell(n).col(j) -= -epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix();
                // Compute Theta component
-               rField.rTheta().rShell(n).col(j) -= -2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
+               rField.rTheta().rShell(n).col(j) -= -epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix();
                // Compute Phi component
-               rField.rPhi().rShell(n).col(j) -= 2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
+               rField.rPhi().rShell(n).col(j) -= epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix();
             }
          }
       } else
@@ -516,11 +516,11 @@ namespace EPMDynamo {
             for(int j=0; j < nTh; ++j)
             {
                // Compute R component
-               rField.rR().rShell(n).col(j) -= coeff*(-2.0*epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + 2.0*epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
+               rField.rR().rShell(n).col(j) -= coeff*(-epsi*cosalpha*inField.sTh(j, n)*inField.phi().shell(n).col(j) + epsi*sinalpha*(sph.array()*inField.theta().shell(n).col(j).array()).matrix() + epsi*sinalpha*(inField.cTh(j, n)*cph.array()*inField.phi().shell(n).col(j).array()).matrix());
                // Compute Theta component
-               rField.rTheta().rShell(n).col(j) -= coeff*(-2.0*epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - 2.0*epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
+               rField.rTheta().rShell(n).col(j) -= coeff*(-epsi*cosalpha*inField.cTh(j, n)*inField.phi().shell(n).col(j) - epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.phi().shell(n).col(j).array()).matrix() - epsi*sinalpha*(sph.array()*inField.r().shell(n).col(j).array()).matrix());
                // Compute Phi component
-               rField.rPhi().rShell(n).col(j) -= coeff*(2.0*epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + 2.0*epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - 2.0*epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + 2.0*epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
+               rField.rPhi().rShell(n).col(j) -= coeff*(epsi*cosalpha*inField.sTh(j, n)*inField.r().shell(n).col(j) + epsi*cosalpha*inField.cTh(j, n)*inField.theta().shell(n).col(j) - epsi*sinalpha*inField.cTh(j, n)*(cph.array()*inField.r().shell(n).col(j).array()).matrix() + epsi*sinalpha*inField.sTh(j, n)*(cph.array()*inField.theta().shell(n).col(j).array()).matrix());
             }
          }
       }
