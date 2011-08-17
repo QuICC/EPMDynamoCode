@@ -1,0 +1,268 @@
+/** \file IntegralTests.hpp
+ *  \brief Initial state definition function for a random perturbation state
+ */
+
+#ifndef INTEGRALTESTS_HPP
+#define INTEGRALTESTS_HPP
+
+// Configuration includes
+//
+#include "Config/Parallelisation.h"
+
+// System includes
+//
+
+// Project includes
+//
+#include "General/EPMTypedefs.hpp"
+#include "Domain/Truncation.hpp"
+
+namespace EPMDynamo {
+
+   /**
+    * @brief Traits of random perturbation state generator
+    */
+   class TestsTraits
+   {
+      public:
+         /// Requires RTP Codensity computations
+         static const bool UseRTPCodensity = true;
+
+         /// Requires spectral Codensity computations
+         static const bool UseSpecCodensity = false;
+
+         /// Requires Codensity gradient computations
+         static const bool UseCodensityGrad = false;
+
+         /// Requires RTP Magnetic computations
+         static const bool UseRTPMagnetic = true;
+
+         /// Requires spectral Magnetic computations
+         static const bool UseSpecMagnetic = false;
+
+         /// Requires Magnetic curl computations
+         static const bool UseMagneticCurl = false;
+
+         /// Requires RTP Velocity computations
+         static const bool UseRTPVelocity = true;
+
+         /// Requires Velocity computations
+         static const bool UseSpecVelocity = false;
+
+         /// Requires Velocity curl computations
+         static const bool UseVelocityCurl = false;
+   };
+
+   /**
+    * \brief Initial state definition function for a random perturbation state
+    */
+   template <typename TGenTraits> class IntegralTests
+   {
+      public:
+         /// Typdef for the IntegralTraits type
+         typedef TestsTraits  IntegralTraits;
+
+         /**
+          * @brief Perturbation amplitude
+          */
+         static const EPMFloat PERTURBATION_AMPLITUDE;
+
+         /**
+          * @brief Ratio of L spectrum to be perturbed
+          */
+         static const int PERTURBATION_LRATIO;
+
+         /**
+          * @brief Ratio of radial spectrum to be perturbed
+          */
+         static const int PERTURBATION_NRATIO;
+
+         /// Typedef for the codensity type
+         typedef typename TGenTraits::CodType  Codensity;
+
+         /// Typedef for the magnetic type
+         typedef typename TGenTraits::MagType  Magnetic;
+
+         /// Typedef for the velocity type
+         typedef typename TGenTraits::VelType  Velocity;
+
+         /**
+          * @brief Set RTP value for the codensity scalar
+          */
+         static void setRTPCodensity(Codensity &codC);
+
+         /**
+          * @brief Set RTP value for the magnetic field
+          */
+         static void setRTPMagnetic(Magnetic &magB);
+
+         /**
+          * @brief Set RTP value for the velocity field
+          */
+         static void setRTPVelocity(Velocity &velV);
+
+         /**
+          * @brief Set spectral coefficients for the codensity scalar
+          */
+         static void setSpecCodensity(Codensity &codC);
+
+         /**
+          * @brief Set spectral coefficients for the velocity field
+          */
+         static void setSpecMagnetic(Magnetic &magB);
+
+         /**
+          * @brief Set spectral coefficients for the magnetic field
+          */
+         static void setSpecVelocity(Velocity &velV);
+
+      private:
+         /**
+          * @brief Private constructor
+          */
+         IntegralTests();
+
+         /**
+          * @brief Destructor
+          */
+         virtual ~IntegralTests() {};
+   };
+
+   template <typename TGenTraits> const EPMFloat IntegralTests<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
+
+   template <typename TGenTraits> const int IntegralTests<TGenTraits>::PERTURBATION_LRATIO = 2;
+
+   template <typename TGenTraits> const int IntegralTests<TGenTraits>::PERTURBATION_NRATIO = 4;
+
+   template <typename TGenTraits> void IntegralTests<TGenTraits>::setRTPCodensity(typename IntegralTests<TGenTraits>::Codensity &codC)
+   {
+      SmartTruncation pTrunc = codC.oc().trunc();
+
+      int rPow = 1;
+
+      for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
+      {
+         codC.rOc().rRTP().rShell(n).setConstant(std::pow(pTrunc->sim()->rad()->radGrid()(n), static_cast<EPMFloat>(rPow)/2.0));
+      }
+   }
+
+   template <typename TGenTraits> void IntegralTests<TGenTraits>::setRTPMagnetic(typename IntegralTests<TGenTraits>::Magnetic &magB)
+   {
+      SmartTruncation pTrunc = magB.oc().trunc();
+
+      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
+      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+
+      for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
+      {
+         magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
+         magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
+         magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
+
+         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+         {
+            magB.rOc().rRTP().rR().rShell(n).col(th).setConstant(2.0*pTrunc->local()->rtp()->cTh(th, n));
+            magB.rOc().rRTP().rTheta().rShell(n).col(th).setConstant(-2.0*pTrunc->local()->rtp()->sTh(th, n));
+         }
+      }
+   }
+
+   template <typename TGenTraits> void IntegralTests<TGenTraits>::setRTPVelocity(typename IntegralTests<TGenTraits>::Velocity &velV)
+   {
+
+      SmartTruncation pTrunc = velV.oc().trunc();
+
+      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
+      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+
+      for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
+      {
+         velV.rOc().rRTP().rR().rShell(n).setConstant(0.0);
+         velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
+         velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
+
+         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+         {
+            velV.rOc().rRTP().rR().rShell(n).col(th).setConstant(2.0*pTrunc->local()->rtp()->cTh(th, n));
+            velV.rOc().rRTP().rTheta().rShell(n).col(th).setConstant(-2.0*pTrunc->local()->rtp()->sTh(th, n));
+            velV.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->sTh(th, n));
+         }
+      }
+   }
+
+   template <typename TGenTraits> void IntegralTests<TGenTraits>::setSpecCodensity(typename IntegralTests<TGenTraits>::Codensity &codC)
+   {
+      SmartTruncation pTrunc = codC.oc().trunc();
+
+      // Set some perturbation random energy
+      for(int l=0; l < pTrunc->local()->spec()->nL()/IntegralTests<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      {
+         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/IntegralTests<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(IntegralTests<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+
+         // Make sure the m=0 imaginary part is zero!
+         for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
+         {
+            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag() = 0.0;
+         }
+      }
+
+      // Create basic state
+      //codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
+      codC.rOc().rPerturbation().rLShell(0)(0,0) += 0.313329;
+      //codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
+      codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.221557;
+   }
+
+   template <typename TGenTraits> void IntegralTests<TGenTraits>::setSpecMagnetic(typename IntegralTests<TGenTraits>::Magnetic &magB)
+   {
+      SmartTruncation pTrunc = magB.oc().trunc();
+
+      for(int l=1; l < pTrunc->local()->spec()->nL()/IntegralTests<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      {
+         // Set some perturbation random energy in Toroidal component
+         magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/IntegralTests<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(IntegralTests<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+
+         // Set some perturbation random energy in Poloidal component
+         magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/IntegralTests<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(IntegralTests<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+
+         // Make sure the m=0 imaginary part is zero!
+         for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
+         {
+            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
+            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
+         }
+      }
+   }
+
+   template <typename TGenTraits> void IntegralTests<TGenTraits>::setSpecVelocity(typename IntegralTests<TGenTraits>::Velocity &velV)
+   {
+      SmartTruncation pTrunc = velV.oc().trunc();
+
+      for(int l=1; l < pTrunc->local()->spec()->nL()/IntegralTests<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      {
+         // Set some perturbation random energy in Toroidal component
+         velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/IntegralTests<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         velV.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(IntegralTests<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+
+         // Set some perturbation random energy in Poloidal component
+         velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/IntegralTests<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         velV.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(IntegralTests<TGenTraits>::PERTURBATION_AMPLITUDE, 0.0);
+
+         // Make sure the m=0 imaginary part is zero!
+         for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
+         {
+            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
+            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
+         }
+      }
+   }
+
+   template <typename TGenTraits> IntegralTests<TGenTraits>::IntegralTests()
+   {
+   }
+}
+
+#endif // INTEGRALTESTS_HPP

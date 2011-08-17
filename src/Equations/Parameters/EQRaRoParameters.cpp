@@ -113,7 +113,7 @@ namespace EPMDynamo {
 
    EPMFloat EQRaRoParameters::keFactor() const
    {
-      return 1.0;
+      return 0.5;
    }
 
    EPMFloat EQRaRoParameters::meFactor() const

@@ -38,3 +38,10 @@ add_executable(${RunName} ${SrcsList})
 set(RunName GenerateState)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
+
+#
+# Compute field integral 
+#
+set(RunName ComputeIntegral)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})

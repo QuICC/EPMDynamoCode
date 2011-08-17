@@ -152,13 +152,19 @@ namespace EPMDynamo {
       Matrix   tmp(this->polyN(), ptsN);
 
       EPMFloat lfactor = static_cast<EPMFloat>(this->l()*(this->l()+1));
+      EPMFloat correctNorm;
+
       for(int n=0; n < this->polyN(); ++n)
       {
          for(int i=0; i < this->polyN(); ++i)
          {
+            correctNorm = this->normalisation()(i)*this->normalisation()(n)/(tmpPoly.normalisation()(i)*tmpPoly.normalisation()(n));
+
             this->mPolEWeights(i,n) = (lfactor*(lfactor+1.0))*(tmpPoly.poly().row(n).array()*tmpPoly.poly().row(i).array()).matrix().dot (*eWeights);
             this->mPolEWeights(i,n) += lfactor*2.0*(tmpPoly.poly().row(n).array()*tmpPoly.diff(1).row(i).array()).matrix().dot ((eGrid->array()*eWeights->array()).matrix());
             this->mPolEWeights(i,n) += lfactor*(tmpPoly.diff(1).row(n).array()*tmpPoly.diff(1).row(i).array()).matrix().dot ((eGrid->array().pow(2)*eWeights->array()).matrix());
+
+            this->mPolEWeights(i,n) *= correctNorm;
          }  
       }
    }
