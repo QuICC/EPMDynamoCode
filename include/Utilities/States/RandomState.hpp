@@ -150,6 +150,9 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
+      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
+      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
          magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
@@ -158,7 +161,8 @@ namespace EPMDynamo {
 
          for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
          {
-            magB.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->sTh(th, n));
+            magB.rOc().rRTP().rTheta().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n) * sPh;
+            magB.rOc().rRTP().rPhi().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n) * cPh;
          }
       }
    }
@@ -179,8 +183,8 @@ namespace EPMDynamo {
 
          for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
          {
-            velV.rOc().rRTP().rTheta().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*sPh;
-            velV.rOc().rRTP().rPhi().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n)*cPh;
+            velV.rOc().rRTP().rTheta().rShell(n).col(th) = pTrunc->local()->rtp()->radGrid(n) * cPh;
+            velV.rOc().rRTP().rPhi().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n) * sPh;
          }
       }
    }

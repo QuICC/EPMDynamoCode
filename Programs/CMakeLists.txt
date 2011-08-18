@@ -45,3 +45,10 @@ add_executable(${RunName} ${SrcsList})
 set(RunName ComputeIntegral)
 set(SrcsList ${RunName} ${All_Srcs})
 add_executable(${RunName} ${SrcsList})
+
+#
+# analyse stored state 
+#
+set(RunName AnalyseState)
+set(SrcsList ${RunName} ${All_Srcs})
+add_executable(${RunName} ${SrcsList})
