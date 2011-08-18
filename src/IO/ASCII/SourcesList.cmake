@@ -13,6 +13,7 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       ControlInterface.cpp
       ControlInterfaceDefs.cpp
       EnergyFileDefs.cpp
+      LibrationFileDefs.cpp
       FDSHSplittingFile.cpp
       ParametersFileDefs.cpp
       ParametersFile.cpp
