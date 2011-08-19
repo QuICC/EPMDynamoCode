@@ -7,6 +7,8 @@
 
 // Configuration includes
 //
+#include "Config/SimulationConfig.hpp"
+#include "Config/NumericalSchemeInc.hpp"
 
 // System includes
 //
@@ -31,6 +33,9 @@ namespace EPMDynamo {
    template <typename TFieldType> class LibrationFile: public ASCIIFieldWriter<TFieldType, ASCIIEWriter>
    {
       public:
+         /// Typedef for the Spectral radial Transform data type
+         typedef typename SimulationConfig::NumericalScheme::RadialTransformType::PolynomialBasis RadialBasisType;
+
          /**
          * @brief Constructor
          *
@@ -38,7 +43,7 @@ namespace EPMDynamo {
          * @param name File name
          * @param tsParams Timestep parameters
          */
-         LibrationFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, const int format = 0);
+         LibrationFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, const int format = 0);
 
          /**
          * @brief Destructor
@@ -59,11 +64,6 @@ namespace EPMDynamo {
          void computePoincareMode();
 
          /**
-          * @brief Setup the computation
-          */
-         void setup();
-
-         /**
           * @brief Reference to a TimestepParameters object to get access to time and timestep
           */
          const TimestepParameters&  mrTSParams;
@@ -78,13 +78,16 @@ namespace EPMDynamo {
           */
          Array mAmplitude;
 
+         /**
+          * @brief Reference to the radial basis
+          */
+         const RadialBasisType&   mrBasis;
+
    };
 
-   template <typename TFieldType> LibrationFile<TFieldType>::LibrationFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, int format)
-      : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + LibrationFileDefs::BASENAME, LibrationFileDefs::EXTENSION, LibrationFileDefs::HEADER, LibrationFileDefs::VERSION), mrTSParams(tsParams), mFormat(format), mAmplitude(3)
+   template <typename TFieldType> LibrationFile<TFieldType>::LibrationFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, int format)
+      : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + LibrationFileDefs::BASENAME, LibrationFileDefs::EXTENSION, LibrationFileDefs::HEADER, LibrationFileDefs::VERSION), mrTSParams(tsParams), mFormat(format), mAmplitude(3), mrBasis(basis)
    {
-      // Setup the computation
-      this->setup();
    }
 
    template <typename TFieldType> void LibrationFile<TFieldType>::write()
@@ -116,7 +119,7 @@ namespace EPMDynamo {
       this->mAmplitude.setConstant(0.0);
 
       // Get the stored ls
-      ArrayI ls = this->trunc()->local()->spec()->lArray();
+      ArrayI ls = pTrunc->local()->spec()->lArray();
       ArrayI ms;
       int l_ = -1;
       int m_ = -1;
@@ -137,7 +140,7 @@ namespace EPMDynamo {
          l_ = ls(l);
          if(l_ == 1)
          {
-            ms = this->trunc()->local()->spec()->mArray(l);
+            ms = pTrunc->local()->spec()->mArray(l);
             for(int m =0; m < ms.size(); m++)
             {
                m_ = ms(m);
@@ -151,8 +154,8 @@ namespace EPMDynamo {
                   {
                      for(int k = 0; k < nN; ++k)
                      {
-                        xProj += this->mTransform.radBasis().at(l).eWeights()(k,n) * (this->velV().oc().perturbation().tor().lshell(l)(n,m).real()*xAxis(k).real() + this->velV().oc().perturbation().tor().lshell(l)(n,m).imag()*xAxis(k).imag());
-                        yProj += this->mTransform.radBasis().at(l).eWeights()(k,n) * (this->velV().oc().perturbation().tor().lshell(l)(n,m).real()*yAxis(k).real() + this->velV().oc().perturbation().tor().lshell(l)(n,m).imag()*yAxis(k).imag());
+                        xProj += this->mrBasis.at(l).eWeights()(k,n) * (this->mrVar.oc().perturbation().tor().lshell(l)(n,m).real()*xAxis(k).real() + this->mrVar.oc().perturbation().tor().lshell(l)(n,m).imag()*xAxis(k).imag());
+                        yProj += this->mrBasis.at(l).eWeights()(k,n) * (this->mrVar.oc().perturbation().tor().lshell(l)(n,m).real()*yAxis(k).real() + this->mrVar.oc().perturbation().tor().lshell(l)(n,m).imag()*yAxis(k).imag());
                      }
                   }
 
@@ -169,6 +172,8 @@ namespace EPMDynamo {
       #ifdef EPMDYNAMO_MPI
          MPI_Allreduce(MPI_IN_PLACE, this->mAmplitude.data(), this->mAmplitude.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
+
+     this->mAmplitude(2) = std::sqrt(this->mAmplitude(0)*this->mAmplitude(0) + this->mAmplitude(1)*this->mAmplitude(1));
    }
 
 }

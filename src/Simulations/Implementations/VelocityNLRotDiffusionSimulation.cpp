@@ -17,6 +17,7 @@
 
 // Project includes
 //
+#include "IO/ASCII/LibrationFile.hpp"
 
 namespace EPMDynamo {
 
@@ -204,6 +205,16 @@ namespace EPMDynamo {
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
+
+      // Add libration output file if required
+      if(this->mIOSys.cfg()->aBC()(1) == 4)
+      {
+         // Create a libration ASCII diagnostic file for the velocity field
+         EPMSHARED_PTR<LibrationFile<VelocityNLRotDiffusionTraits::VelType> > pLibration(new LibrationFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+
+         // Add kinetic energy spectrum to ASCII output
+         this->mIOSys.addASCIIWriter(pLibration);
+      }
    }
 
 }
