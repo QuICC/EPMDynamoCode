@@ -79,6 +79,11 @@ namespace EPMDynamo {
          virtual Array energy() const;
 
          /**
+          * @brief Generic method to get the symmetric/anti-symmetric partition of energy
+          */
+         virtual Array parityEnergy() const;
+
+         /**
           * @brief Generic method to get the power spectrum per harmonic order
           */
          virtual Matrix spectrumM() const;
@@ -142,6 +147,28 @@ namespace EPMDynamo {
       energy(0) = torE(0) + polE(0); 
       energy(1) = torE(0); 
       energy(2) = polE(0); 
+
+      return energy;
+   }
+
+   template <typename TBase> Array PhysicalTorPolCurl<TBase>::parityEnergy() const
+   {
+      // Toroidal symmetric/anti-symmetric energy
+      EPMFloat evenTor = this->perturbation().tor().evenEnergy();
+      EPMFloat oddTor = this->perturbation().tor().oddEnergy();
+      // Poloidal symmetric/anti-symmetric energy
+      EPMFloat evenPol = this->perturbation().pol().evenEnergy();
+      EPMFloat oddPol = this->perturbation().pol().oddEnergy();
+
+      // Total energy
+      Array   energy(6);
+
+      energy(0) = oddTor + evenPol; 
+      energy(1) = evenTor + oddPol; 
+      energy(2) = oddTor; 
+      energy(3) = evenTor; 
+      energy(4) = evenPol; 
+      energy(5) = oddPol; 
 
       return energy;
    }

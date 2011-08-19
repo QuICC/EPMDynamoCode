@@ -68,6 +68,16 @@ namespace EPMDynamo {
          Array energy() const;
 
          /**
+          * @brief Get the energy in the even degrees of the scalar
+          */
+         EPMFloat evenEnergy() const;
+
+         /**
+          * @brief Get the energy in the odd degrees of the scalar
+          */
+         EPMFloat oddEnergy() const;
+
+         /**
           * @brief Get the (full)  energy spectrum on L
           */
          const Array& spectrumL() const;

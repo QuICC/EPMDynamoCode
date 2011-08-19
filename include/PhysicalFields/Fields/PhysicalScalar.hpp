@@ -69,6 +69,11 @@ namespace EPMDynamo {
          virtual Array energy() const;
 
          /**
+          * @brief Generic method to get the symmetric/anti-symmetric energy partition
+          */
+         virtual Array parityEnergy() const;
+
+         /**
           * @brief Generic method to get the power spectrum per harmonic order
           */
          virtual Matrix spectrumM() const;
@@ -108,6 +113,15 @@ namespace EPMDynamo {
    template <typename TBase> inline Array PhysicalScalar<TBase>::energy() const
    {
       Array energy = this->perturbation().energy();
+
+      return energy;
+   }
+
+   template <typename TBase> inline Array PhysicalScalar<TBase>::parityEnergy() const
+   {
+      Array energy(2);
+      energy(0) = this->perturbation().evenEnergy();
+      energy(1) = this->perturbation().oddEnergy();
 
       return energy;
    }

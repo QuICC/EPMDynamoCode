@@ -135,6 +135,30 @@ namespace EPMDynamo {
       return energy;
    }
 
+   EPMFloat SpectralSHScalar::evenEnergy() const
+   {
+      EPMFloat even = 0.0;
+
+      for(int i = 0; i < this->mSpectrumL.size()-2; i+=2)
+      {
+         even += this->mSpectrumL(i);
+      }
+
+      return even;
+   }
+
+   EPMFloat SpectralSHScalar::oddEnergy() const
+   {
+      EPMFloat odd = 0.0;
+
+      for(int i = 1; i < this->mSpectrumL.size()-2; i+=2)
+      {
+         odd += this->mSpectrumL(i);
+      }
+
+      return odd;
+   }
+
    const Array& SpectralSHScalar::spectrumL() const
    {
       return this->mSpectrumL;
