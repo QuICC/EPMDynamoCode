@@ -113,7 +113,7 @@ namespace EPMDynamo {
 
    template <typename TFieldType> void LibrationFile<TFieldType>::computePoincareMode()
    {
-      this->mAmplitude = this->mrVar.rOc().rPerturbation().computeXYSolidComputation(this->mrBasis);
+      this->mAmplitude = this->mrVar.rOc().rPerturbation().computeXYSolidProjection(this->mrBasis);
    }
 
 }
