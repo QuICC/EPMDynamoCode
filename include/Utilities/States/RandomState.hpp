@@ -44,10 +44,10 @@ namespace EPMDynamo {
          static const bool UseMagneticCurl = false;
 
          /// Requires RTP Velocity computations
-         static const bool UseRTPVelocity = true;
+         static const bool UseRTPVelocity = false;
 
          /// Requires Velocity computations
-         static const bool UseSpecVelocity = false;
+         static const bool UseSpecVelocity = true;
 
          /// Requires Velocity curl computations
          static const bool UseVelocityCurl = false;
@@ -257,6 +257,7 @@ namespace EPMDynamo {
             velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
          }
       }
+
    }
 
    template <typename TGenTraits> RandomState<TGenTraits>::RandomState()

@@ -156,8 +156,6 @@ namespace EPMDynamo {
 
    template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseSpecVelocity()
    {
-      SmartTruncation pTrunc = this->velV().oc().trunc();
-
       std::cout << "------ Velocity spectral field analysis ------" << std::endl;
 
       // Update the energy spectra
@@ -167,37 +165,13 @@ namespace EPMDynamo {
       // Compute scalar product with solid body rotations
       std::cout <<  "\t" << "Projection on solid body rotations " << std::endl;
 
-      // Compute scalar product with solid body rotation around x axis
-      ArrayZ xAxis = ArrayZ::Zero(pTrunc->sim()->rad()->nN());
-      xAxis(0).real() = -0.443113;
-      EPMFloat xProj = 0.0;
+      Array solidProjection;
 
-      // Compute scalar product with solid body rotation around y axis
-      ArrayZ yAxis = ArrayZ::Zero(pTrunc->sim()->rad()->nN());
-      yAxis(0).imag() = 0.443113;
-      EPMFloat yProj = 0.0;
+      solidProjection = this->velV.rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
 
-      int l = 1;
-      int l_ = 1;
-      int m = 1;
-      EPMFloat shFactor = 4.0*4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
-      EPMFloat lfactor = static_cast<EPMFloat>(l_*(l_+1));
-      int nN = pTrunc->sim()->rad()->nN();
-
-      for(int n = 0; n < nN; ++n)
-      {
-         for(int k = 0; k < nN; ++k)
-         {
-            xProj += this->mTransform.radBasis().at(l).eWeights()(k,n) * (this->velV().oc().perturbation().tor().lshell(l)(n,m).real()*xAxis(k).real() + this->velV().oc().perturbation().tor().lshell(l)(n,m).imag()*xAxis(k).imag());
-            yProj += this->mTransform.radBasis().at(l).eWeights()(k,n) * (this->velV().oc().perturbation().tor().lshell(l)(n,m).real()*yAxis(k).real() + this->velV().oc().perturbation().tor().lshell(l)(n,m).imag()*yAxis(k).imag());
-         }
-      }
-
-      xProj *= shFactor*lfactor;
-      yProj *= shFactor*lfactor;
-
-      std::cout <<  "\t" << "x axis: " << xProj << std::endl;
-      std::cout <<  "\t" << "y axis: " << yProj << std::endl;
+      std::cout <<  "\t" << "x axis: " << solidProjection(0) << std::endl;
+      std::cout <<  "\t" << "y axis: " << solidProjection(1) << std::endl;
+      std::cout <<  "\t" << "poincare: " << solidProjection(2) << std::endl;
    }
 }
 

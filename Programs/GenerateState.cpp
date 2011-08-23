@@ -18,6 +18,7 @@
 #include "Simulations/Traits/DynamoTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
+#include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Utilities/InitialStateGenerator.hpp"
 
 #include "Utilities/States/RandomState.hpp"
@@ -27,7 +28,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::VelocityDiffusionTraits
 
 typedef epm::RandomState<SIMTRAITS>  StateType;
 //typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;

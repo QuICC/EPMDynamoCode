@@ -114,6 +114,13 @@ namespace EPMDynamo {
           * @param filter Filter tag name
           */
          template <typename TVisTraits> void writeVisualisation(const std::string& filter);
+
+         /**
+          * @brief Write additional visualisation data to file
+          *
+          * @param filter Filter tag name
+          */
+         template <typename TVisTraits> void writeAdditional(const std::string& filter);
          
       protected:
          /**
@@ -248,12 +255,32 @@ namespace EPMDynamo {
          this->writeVectorField(CSCSFileDefs::VORTICITYTAG+filter, this->mpVelV->oc().curl().r().data(), this->mpVelV->oc().curl().theta().data(), this->mpVelV->oc().curl().phi().data());
       }
 
-      // Write the vorticity values
+      // Write the helicity values
       if(this->mpVelV != NULL && TVisTraits::VisHelicity)
       {
          RTPScalar tmp(this->mpVelV->oc().rtp().trunc());
          this->mpVelV->oc().rtp().template dot<0>(tmp, this->mpVelV->oc().curl(), 1.0);
          this->writeScalarField(CSCSFileDefs::HELICITYTAG+filter, tmp.data());
+      }
+   }
+
+   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeAdditional(const std::string&  filter = "")
+   {
+      // Write the codensity perturbation values
+      if(this->mpCodC != NULL && TVisTraits::VisCodPerturbation)
+      {
+         this->writeScalarField(CSCSFileDefs::CODPERTURBATIONTAG+filter, this->mpCodC->oc().rtp().data());
+      }
+
+      // Write the magnetic field values
+//      if(this->mpMagB != NULL && TVisTraits::VisMagnetic)
+//      {
+//      }
+
+      // Write the velocity inertial waves values
+      if(this->mpVelV != NULL && TVisTraits::VisInertial)
+      {
+         this->writeVectorField(CSCSFileDefs::VELINERTIALTAG+filter, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
       }
    }
 

@@ -79,6 +79,11 @@ namespace EPMDynamo {
          static const std::string   CODENSITYGRADTAG;
 
          /**
+          * @brief Codensity tag name for CSCS file
+          */
+         static const std::string   CODPERTURBATIONTAG;
+
+         /**
           * @brief Magnetic tag name for CSCS file
           */
          static const std::string   MAGNETICTAG;
@@ -92,6 +97,11 @@ namespace EPMDynamo {
           * @brief Velocity tag name for CSCS file
           */
          static const std::string   VELOCITYTAG;
+
+         /**
+          * @brief Velocity tag name for CSCS file
+          */
+         static const std::string   VELINERTIALTAG;
 
          /**
           * @brief Vorticity tag name for CSCS file

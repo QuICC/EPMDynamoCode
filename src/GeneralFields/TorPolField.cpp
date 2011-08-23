@@ -164,6 +164,69 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
    }
 
+   Array TorPolField::computeXYSolidProjection(const TorPolField::RadialBasisType &radBasis)
+   {
+      // Create storage for amplitudes
+      Array amplitude = Array::Zero(3);
+
+      // Get the stored ls
+      ArrayI ls = this->trunc()->local()->spec()->lArray();
+      ArrayI ms;
+      int l_ = -1;
+      int m_ = -1;
+
+      // Setup the x axis solid body rotation (has only a real component)
+      Array xAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
+      xAxis(0) = -0.443113;
+      EPMFloat xProj = 0.0;
+
+      // Setup the y axis solid body rotation (has only an imaginary component)
+      Array yAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
+      yAxis(0) = 0.443113;
+      EPMFloat yProj = 0.0;
+
+      // Loop over all stored l's
+      for(int l = 0; l < ls.size(); l++)
+      {
+         l_ = ls(l);
+         if(l_ == 1)
+         {
+            ms = this->trunc()->local()->spec()->mArray(l);
+            for(int m =0; m < ms.size(); m++)
+            {
+               m_ = ms(m);
+               if(m_ == 1)
+               {
+                  int nN = this->trunc()->sim()->rad()->nN();
+
+                  for(int n = 0; n < nN; ++n)
+                  {
+                     for(int k = 0; k < nN; ++k)
+                     {
+                        xProj += radBasis.at(l).eWeights()(k,n) * (this->tor().lshell(l)(n,m).real()*xAxis(k));
+                        yProj += radBasis.at(l).eWeights()(k,n) * ( this->tor().lshell(l)(n,m).imag()*yAxis(k));
+                     }
+                  }
+
+                  xProj /= xAxis.dot(radBasis.at(l).eWeights().col(0));
+                  yProj /= yAxis.dot(radBasis.at(l).eWeights().col(0));
+
+                  amplitude(0) += xProj;
+                  amplitude(1) += yProj;
+               }
+            }
+         }
+      }
+
+      #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, amplitude.data(), amplitude.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+      #endif // EPMDYNAMO_MPI
+
+     amplitude(2) = std::sqrt(amplitude(0)*amplitude(0) + amplitude(1)*amplitude(1));
+
+      return amplitude;
+   }
+
    void TorPolField::setEnergyScale(const EPMFloat& eFactor)
    {
       // Set normalisation for the toroidal component

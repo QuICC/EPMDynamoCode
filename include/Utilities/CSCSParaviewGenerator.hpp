@@ -61,17 +61,17 @@ namespace EPMDynamo {
          /**
           * @brief Write total field values
           */
-         template <typename TVisTraits> void writeTotal();
+         template <typename TVisTraits, typename TAddVisTraits> void writeTotal();
 
          /**
           * @brief Write toroidal component values
           */
-         template <typename TVisTraits> void writeToroidal();
+         template <typename TVisTraits, typename TAddVisTraits> void writeToroidal();
 
          /**
           * @brief Write poloidal component values
           */
-         template <typename TVisTraits> void writePoloidal();
+         template <typename TVisTraits, typename TAddVisTraits> void writePoloidal();
 
          /**
           * @brief Finalise the output cscs file
@@ -103,6 +103,11 @@ namespace EPMDynamo {
           * @param pFile Smart pointer to file
           */
          void initCSCSFile(SmartCSCSWriter  pFile);
+
+         /**
+          * @brief Write total field values
+          */
+         template <typename TAddVisTraits> void prepareAdditional();
 
       private:
    };
@@ -194,7 +199,50 @@ namespace EPMDynamo {
       this->mpOutFile->writeStart();
    }
 
-   template <typename TSimTraits> template <typename TVisTraits> void CSCSParaviewGenerator<TSimTraits>::writeTotal()
+   template <typename TSimTraits> template <typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::prepareAdditional()
+   {
+      if(this->mpVelV != NULL && TAddVisTraits::VisInertial)
+      {
+         Array amplitude;
+
+         amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
+
+         std::cerr << amplitude.transpose() << std::endl;
+
+         // Get truncation information
+         SmartTruncation pTrunc = this->velV().oc().trunc();
+
+         // Get the stored ls
+         ArrayI ls = pTrunc->local()->spec()->lArray();
+         ArrayI ms;
+         int l_ = -1;
+         int m_ = -1;
+         // Loop over all stored l's
+         for(int l = 0; l < ls.size(); l++)
+         {
+            l_ = ls(l);
+            if(l_ == 1)
+            {
+               ms = pTrunc->local()->spec()->mArray(l);
+               for(int m =0; m < ms.size(); m++)
+               {
+                  m_ = ms(m);
+                  if(m_ == 1)
+                  {
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).real() -= amplitude(0);
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).imag() -= amplitude(1);
+                  }
+               }
+            }
+         }
+
+         amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
+
+         std::cerr << amplitude.transpose() << std::endl;
+      }
+   }
+
+   template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writeTotal()
    {
       // Read data from file
       this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::FullField> >();
@@ -207,9 +255,25 @@ namespace EPMDynamo {
 
       // Write data to file
       this->mpOutFile->template writeVisualisation<TVisTraits>();
+
+
+
+      // Read data from file
+      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::FullField> >();
+
+      this->template prepareAdditional<TAddVisTraits>();
+
+      // Configure transforms
+      this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+
+      // Transform the fields
+      this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+
+      // Write data to file
+      this->mpOutFile->template writeAdditional<TAddVisTraits>();
    }
 
-   template <typename TSimTraits> template <typename TVisTraits> void CSCSParaviewGenerator<TSimTraits>::writeToroidal()
+   template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writeToroidal()
    {
       // Read data from file
       this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
@@ -222,9 +286,24 @@ namespace EPMDynamo {
 
       // Write data to file
       this->mpOutFile->template writeVisualisation<TVisTraits>(CSCSFileDefs::TOROIDALTAG);
+
+
+      // Read data from file
+      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
+
+      this->template prepareAdditional<TAddVisTraits>();
+
+      // Configure transforms
+      this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+
+      // Transform the fields
+      this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+
+      // Write data to file
+      this->mpOutFile->template writeAdditional<TAddVisTraits>(CSCSFileDefs::TOROIDALTAG);
    }
 
-   template <typename TSimTraits> template <typename TVisTraits> void CSCSParaviewGenerator<TSimTraits>::writePoloidal()
+   template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writePoloidal()
    {
       // Read data from file
       this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
@@ -237,6 +316,22 @@ namespace EPMDynamo {
 
       // Write data to file
       this->mpOutFile->template writeVisualisation<TVisTraits>(CSCSFileDefs::POLOIDALTAG);
+
+
+
+      // Read data from file
+      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
+
+      this->template prepareAdditional<TAddVisTraits>();
+
+      // Configure transforms
+      this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+
+      // Transform the fields
+      this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+
+      // Write data to file
+      this->mpOutFile->template writeAdditional<TAddVisTraits>(CSCSFileDefs::POLOIDALTAG);
    }
 
    template <typename TSimTraits> void CSCSParaviewGenerator<TSimTraits>::finalise()

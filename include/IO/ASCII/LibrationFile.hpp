@@ -113,67 +113,7 @@ namespace EPMDynamo {
 
    template <typename TFieldType> void LibrationFile<TFieldType>::computePoincareMode()
    {
-      // Get truncation information
-      SmartTruncation pTrunc = this->mrVar.oc().trunc();
-
-      this->mAmplitude.setConstant(0.0);
-
-      // Get the stored ls
-      ArrayI ls = pTrunc->local()->spec()->lArray();
-      ArrayI ms;
-      int l_ = -1;
-      int m_ = -1;
-
-      // Setup the x axis solid body rotation
-      ArrayZ xAxis = ArrayZ::Zero(pTrunc->sim()->rad()->nN());
-      xAxis(0).real() = -0.443113;
-      EPMFloat xProj = 0.0;
-
-      // Setup the y axis solid body rotation
-      ArrayZ yAxis = ArrayZ::Zero(pTrunc->sim()->rad()->nN());
-      yAxis(0).imag() = 0.443113;
-      EPMFloat yProj = 0.0;
-
-      // Loop over all stored l's
-      for(int l = 0; l < ls.size(); l++)
-      {
-         l_ = ls(l);
-         if(l_ == 1)
-         {
-            ms = pTrunc->local()->spec()->mArray(l);
-            for(int m =0; m < ms.size(); m++)
-            {
-               m_ = ms(m);
-               if(m_ == 1)
-               {
-                  EPMFloat shFactor = 4.0*4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
-                  EPMFloat lfactor = static_cast<EPMFloat>(l_*(l_+1));
-                  int nN = pTrunc->sim()->rad()->nN();
-
-                  for(int n = 0; n < nN; ++n)
-                  {
-                     for(int k = 0; k < nN; ++k)
-                     {
-                        xProj += this->mrBasis.at(l).eWeights()(k,n) * (this->mrVar.oc().perturbation().tor().lshell(l)(n,m).real()*xAxis(k).real() + this->mrVar.oc().perturbation().tor().lshell(l)(n,m).imag()*xAxis(k).imag());
-                        yProj += this->mrBasis.at(l).eWeights()(k,n) * (this->mrVar.oc().perturbation().tor().lshell(l)(n,m).real()*yAxis(k).real() + this->mrVar.oc().perturbation().tor().lshell(l)(n,m).imag()*yAxis(k).imag());
-                     }
-                  }
-
-                  xProj *= shFactor*lfactor;
-                  yProj *= shFactor*lfactor;
-
-                  this->mAmplitude(0) += xProj;
-                  this->mAmplitude(1) += yProj;
-               }
-            }
-         }
-      }
-
-      #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, this->mAmplitude.data(), this->mAmplitude.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-      #endif // EPMDYNAMO_MPI
-
-     this->mAmplitude(2) = std::sqrt(this->mAmplitude(0)*this->mAmplitude(0) + this->mAmplitude(1)*this->mAmplitude(1));
+      this->mAmplitude = this->mrVar.rOc().rPerturbation().computeXYSolidComputation(this->mrBasis);
    }
 
 }

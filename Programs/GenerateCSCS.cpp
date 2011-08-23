@@ -30,14 +30,14 @@ typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 /**
  * @brief Output traits for full field values
  */
-class FullFieldTraits
+class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = true;
+      static const bool VisCodensity = false;
 
       /// Output Codensity gradient visualisation
-      static const bool VisCodensityGrad = true;
+      static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation
       static const bool VisVelocity = true;
@@ -58,7 +58,7 @@ class FullFieldTraits
 /**
  * @brief Output traits for toroidal component values
  */
-class ToroidalTraits
+class TorVisTraits
 {
    public:
       /// Output Codensity visualisation (doesn't make sense to be true)
@@ -68,7 +68,7 @@ class ToroidalTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation of toroidal component only
-      static const bool VisVelocity = true;
+      static const bool VisVelocity = false;
 
       /// Output Vorticity visualisation of toroidal component only
       static const bool VisVorticity = false;
@@ -77,7 +77,7 @@ class ToroidalTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation of toroidal component only
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation of toroidal component only
       static const bool VisLorentz = false;
@@ -86,7 +86,7 @@ class ToroidalTraits
 /**
  * @brief Output traits for poloidal component values
  */
-class PoloidalTraits
+class PolVisTraits
 {
    public:
       /// Output Codensity visualisation (doesn't make sense to be true)
@@ -96,7 +96,7 @@ class PoloidalTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation of poloidal component only
-      static const bool VisVelocity = true;
+      static const bool VisVelocity = false;
 
       /// Output Vorticity visualisation of poloidal component only
       static const bool VisVorticity = false;
@@ -105,10 +105,49 @@ class PoloidalTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation of poloidal component only
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation of poloidal component only
       static const bool VisLorentz = false;
+};
+
+/**
+ * @brief Output traits for full field values
+ */
+class FullAddVisTraits
+{
+   public:
+      /// Output Codensity visualisation
+      static const bool VisCodPerturbation = false;
+
+      /// Output Velocity visualisation
+      static const bool VisInertial = true;
+};
+
+/**
+ * @brief Output traits for toroidal component values
+ */
+class TorAddVisTraits
+{
+   public:
+      /// Output Codensity visualisation (doesn't make sense to be true)
+      static const bool VisCodPerturbation = false;
+
+      /// Output Velocity visualisation of toroidal component only
+      static const bool VisInertial = false;
+};
+
+/**
+ * @brief Output traits for poloidal component values
+ */
+class PolAddVisTraits
+{
+   public:
+      /// Output Codensity visualisation (doesn't make sense to be true)
+      static const bool VisCodPerturbation = false;
+
+      /// Output Velocity visualisation of poloidal component only
+      static const bool VisInertial = false;
 };
 
 /**
@@ -126,13 +165,13 @@ int runProgram()
    generator.setupOutput("CSCSParaview");
 
    // Create visualisation output from total field
-   generator.writeTotal<FullFieldTraits>();
+   generator.writeTotal<FullVisTraits, FullAddVisTraits>();
 
    // Create visualisation output from toroidal component
-   generator.writeToroidal<ToroidalTraits>();
+   generator.writeToroidal<TorVisTraits, TorAddVisTraits>();
 
    // Create visualisation output from poloidal component
-   generator.writePoloidal<PoloidalTraits>();
+   generator.writePoloidal<PolVisTraits, PolAddVisTraits>();
 
    // Finalise the state file
    generator.finalise();

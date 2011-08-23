@@ -37,6 +37,8 @@ namespace EPMDynamo {
 
    const std::string CSCSFileDefs::CODENSITYTAG = "Codensity";
 
+   const std::string CSCSFileDefs::CODPERTURBATIONTAG = "CodPerturbation";
+
    const std::string CSCSFileDefs::CODENSITYGRADTAG = "CodensityGradient";
 
    const std::string CSCSFileDefs::MAGNETICTAG = "Magnetic";
@@ -44,6 +46,8 @@ namespace EPMDynamo {
    const std::string CSCSFileDefs::LORENTZTAG = "Lorentz";
 
    const std::string CSCSFileDefs::VELOCITYTAG = "Velocity";
+
+   const std::string CSCSFileDefs::VELINERTIALTAG = "VelInertial";
 
    const std::string CSCSFileDefs::VORTICITYTAG = "Vorticity";
 
