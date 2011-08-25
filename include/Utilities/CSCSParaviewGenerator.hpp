@@ -207,7 +207,8 @@ namespace EPMDynamo {
 
          amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
 
-         std::cerr << amplitude.transpose() << std::endl;
+         // Output solid body projection values before operation
+         std::cerr << "Solid body projection before: " << amplitude.transpose() << std::endl;
 
          // Get truncation information
          SmartTruncation pTrunc = this->velV().oc().trunc();
@@ -238,7 +239,8 @@ namespace EPMDynamo {
 
          amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
 
-         std::cerr << amplitude.transpose() << std::endl;
+         // Output solid body projection values after removal
+         std::cerr << "Solid body projection after: "  << amplitude.transpose() << std::endl;
       }
    }
 
