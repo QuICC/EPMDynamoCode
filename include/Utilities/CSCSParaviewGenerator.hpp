@@ -109,6 +109,11 @@ namespace EPMDynamo {
           */
          template <typename TAddVisTraits> void prepareAdditional();
 
+         /**
+          * @brief Write total field values
+          */
+         template <typename TAddVisTraits> void finaliseAdditional();
+
       private:
    };
 
@@ -207,8 +212,6 @@ namespace EPMDynamo {
 
          amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
 
-         std::cerr << amplitude.transpose() << std::endl;
-
          // Get truncation information
          SmartTruncation pTrunc = this->velV().oc().trunc();
 
@@ -237,8 +240,13 @@ namespace EPMDynamo {
          }
 
          amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
+      }
+   }
 
-         std::cerr << amplitude.transpose() << std::endl;
+   template <typename TSimTraits> template <typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::finaliseAdditional()
+   {
+      if(this->mpVelV != NULL && TAddVisTraits::VisInertial)
+      {
       }
    }
 
@@ -268,6 +276,8 @@ namespace EPMDynamo {
 
       // Transform the fields
       this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+
+      this->template finaliseAdditional<TAddVisTraits>();
 
       // Write data to file
       this->mpOutFile->template writeAdditional<TAddVisTraits>();
@@ -299,6 +309,8 @@ namespace EPMDynamo {
       // Transform the fields
       this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
+      this->template finaliseAdditional<TAddVisTraits>();
+
       // Write data to file
       this->mpOutFile->template writeAdditional<TAddVisTraits>(CSCSFileDefs::TOROIDALTAG);
    }
@@ -329,6 +341,8 @@ namespace EPMDynamo {
 
       // Transform the fields
       this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+
+      this->template finaliseAdditional<TAddVisTraits>();
 
       // Write data to file
       this->mpOutFile->template writeAdditional<TAddVisTraits>(CSCSFileDefs::POLOIDALTAG);
