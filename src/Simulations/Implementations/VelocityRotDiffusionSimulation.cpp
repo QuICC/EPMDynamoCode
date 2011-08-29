@@ -99,7 +99,7 @@ namespace EPMDynamo {
          this->mNavierStokes.addPolBC(pDBC);
       } else
       {
-         throw EPMException("VelocityNLRotDiffusionSimuation::initEquations", "Did not know what to do with Velocity BC");
+         throw EPMException("VelocityRotDiffusionSimuation::initEquations", "Did not know what to do with Velocity BC");
       }
 
       // Initialise the Navier-Stokes equation
@@ -209,7 +209,7 @@ namespace EPMDynamo {
       if(this->mIOSys.cfg()->aBC()(1) == 4)
       {
          // Create a libration ASCII diagnostic file for the velocity field
-         EPMSHARED_PTR<LibrationFile<VelocityNLRotDiffusionTraits::VelType> > pLibration(new LibrationFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+         EPMSHARED_PTR<LibrationFile<VelocityRotDiffusionTraits::VelType> > pLibration(new LibrationFile<VelocityRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
 
          // Add kinetic energy spectrum to ASCII output
          this->mIOSys.addASCIIWriter(pLibration);

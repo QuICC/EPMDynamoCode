@@ -17,7 +17,6 @@
 
 // Project includes
 //
-#include "IO/ASCII/LibrationFile.hpp"
 
 namespace EPMDynamo {
 
