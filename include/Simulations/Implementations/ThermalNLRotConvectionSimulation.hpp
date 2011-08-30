@@ -25,6 +25,7 @@
 #include "IO/HDF5/State/StateFileWriter.hpp"
 #include "IO/HDF5/Source/SourceFileReader.hpp"
 #include "IO/ASCII/EnergyFile.hpp"
+#include "IO/ASCII/FieldProbeFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 

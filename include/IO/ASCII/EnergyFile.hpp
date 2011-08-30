@@ -1,5 +1,5 @@
 /** \file EnergyFile.hpp
- *  \brief Implementation of an erngy diagnostic file
+ *  \brief Implementation of an energy diagnostic file
  */
 
 #ifndef ENERGYFILE_HPP

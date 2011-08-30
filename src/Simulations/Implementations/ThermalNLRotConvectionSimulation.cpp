@@ -195,10 +195,16 @@ namespace EPMDynamo {
       // Create a energy ASCII diagnostic file for the velocity field
       EPMSHARED_PTR<EnergyFile<ThermalNLRotConvectionTraits::VelType> > pVelEnergy(new EnergyFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
 
+
       // Add codensity energy to ASCII output
       this->mIOSys.addASCIIWriter(pCodEnergy);
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
+
+      // Create a velocity probe file
+      EPMSHARED_PTR<FieldProbeFile<ThermalNLRotConvectionTraits::VelType> > pVelProbe(new FieldProbeFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
+      // Add velocity probe to ASCII output
+      this->mIOSys.addASCIIWriter(pVelProbe);
 
       // Create a energy spectrum ASCII diagnostic file for the codensity scalar
       EPMSHARED_PTR<SpectrumFile<ThermalNLRotConvectionTraits::CodType> > pCodSpectrum(new SpectrumFile<ThermalNLRotConvectionTraits::CodType>(this->mCodC, "cod"));
