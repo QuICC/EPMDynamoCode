@@ -202,7 +202,11 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a velocity probe file
-      EPMSHARED_PTR<FieldProbeFile<ThermalNLRotConvectionTraits::VelType> > pVelProbe(new FieldProbeFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
+      Array ratios(3);
+      ratios(0) = 2.0/5.0;
+      ratios(1) = 1.0/2.0;
+      ratios(2) = 0.0;
+      EPMSHARED_PTR<FieldProbeFile<ThermalNLRotConvectionTraits::VelType> > pVelProbe(new FieldProbeFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), ratios));
       // Add velocity probe to ASCII output
       this->mIOSys.addASCIIWriter(pVelProbe);
 

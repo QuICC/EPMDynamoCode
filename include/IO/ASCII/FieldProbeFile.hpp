@@ -37,17 +37,18 @@ namespace EPMDynamo {
          enum FieldProbe {RADIALPROBE, THETAPROBE, PHIPROBE, FULLPROBE};
 
          /**
-         * @brief Constructor
-         *
-         * @param var Field variable
-         * @param name File name
-         * @param tsParams Timestep parameters
-         */
-         FieldProbeFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, FieldProbe probe = FULLPROBE);
+          * @brief Constructor
+          *
+          * @param var Field variable
+          * @param name File name
+          * @param posRatios Ratios of full grid defining position
+          * @param tsParams Timestep parameters
+          */
+         FieldProbeFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, const Array& posRatios, FieldProbe probe = FULLPROBE);
 
          /**
-         * @brief Destructor
-         */
+          * @brief Destructor
+          */
          virtual ~FieldProbeFile() {};
 
          /**
@@ -60,8 +61,10 @@ namespace EPMDynamo {
       private:
          /**
           * @brief Initialise the probe
+          *
+          * @param posRatios Ratios of full grid defining position
           */
-         void initProbe();
+         void initProbe(const Array& posRatios);
 
          /**
           * @brief Initialise the probe
@@ -94,13 +97,13 @@ namespace EPMDynamo {
          Array mData;
    };
 
-   template <typename TFieldType> FieldProbeFile<TFieldType>::FieldProbeFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, FieldProbe probe)
+   template <typename TFieldType> FieldProbeFile<TFieldType>::FieldProbeFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, const Array& posRatios, FieldProbe probe)
       : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + FieldProbeFileDefs::BASENAME, FieldProbeFileDefs::EXTENSION, FieldProbeFileDefs::HEADER, FieldProbeFileDefs::VERSION), mrTSParams(tsParams), mProbe(probe), mSimPos(3), mPos(3), mData(1)
    {
-      this->initProbe();
+      this->initProbe(posRatios);
    }
 
-   template <typename TFieldType> void FieldProbeFile<TFieldType>::initProbe()
+   template <typename TFieldType> void FieldProbeFile<TFieldType>::initProbe(const Array& posRatios)
    {
       // Resize data storage if full probe is required
       if(this->mProbe == FULLPROBE)
@@ -111,11 +114,11 @@ namespace EPMDynamo {
       SmartTruncation pTrunc = this->mrVar.oc().trunc();
 
       // Set radial position
-      this->mSimPos(0) = pTrunc->sim()->rad()->nR()/2;
+      this->mSimPos(0) = pTrunc->sim()->rad()->nR()*posRatios(0);
       // Set theta position
-      this->mSimPos(1) = pTrunc->sim()->hoz()->nTh()/2;
+      this->mSimPos(1) = pTrunc->sim()->hoz()->nTh()*posRatios(1);
       // Set phi position
-      this->mSimPos(2) = 0;
+      this->mSimPos(2) = pTrunc->sim()->hoz()->nPh()*posRatios(2);
 
       EPMFloat radius = pTrunc->sim()->rad()->radGrid()(this->mSimPos(0));
       EPMFloat cosTheta = pTrunc->sim()->hoz()->cosTheta()(this->mSimPos(1));
