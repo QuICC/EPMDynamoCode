@@ -28,7 +28,7 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/NavierStokes/NavierStokesNLPrecession.hpp"
+#include "Equations/NavierStokes/NavierStokesNLPrecessionFrame.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Inhomogeneous/PrecessionFrameBC.hpp"
@@ -118,7 +118,7 @@ namespace EPMDynamo {
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesNLPrecession<VelocityNLRotDiffusionTraits>    mNavierStokes;
+         NavierStokesNLPrecessionFrame<VelocityNLRotDiffusionTraits>    mNavierStokes;
    };
 
 }

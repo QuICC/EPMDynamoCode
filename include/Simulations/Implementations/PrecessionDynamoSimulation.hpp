@@ -1,9 +1,9 @@
-/** \file VelocityNLRotDiffusionSimulation.hpp
- *  \brief Implementation of a velocity diffusion simulation
+/** \file PrecessionDynamoSimulation.hpp
+ *  \brief Implementation of a dynamo simulation
  */
 
-#ifndef VELOCITYNLROTDIFFUSIONSIMULATION_HPP
-#define VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#ifndef PRECESSIONDYNAMOSIMULATION_HPP
+#define PRECESSIONDYNAMOSIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
+#include "Simulations/Traits/PrecessionDynamoTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
@@ -27,36 +27,35 @@
 #include "IO/ASCII/EnergyFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
-#include "IO/ASCII/LibrationFile.hpp"
+#include "IO/ASCII/CFLTimestepFile.hpp"
 
-#include "Equations/NavierStokes/NavierStokesNLRotDiffusion.hpp"
+#include "Equations/Induction/InductionMHD.hpp"
+#include "Equations/NavierStokes/NavierStokesPrecessionMHD.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/InsulatingBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
-#include "BoundaryConditions/Inhomogeneous/PrecessionFrameBC.hpp"
-#include "BoundaryConditions/TimeDependent/LongitudinalLibrationBC.hpp"
-#include "BoundaryConditions/TimeDependent/LatitudinalLibrationBC.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of a velocity diffusion simulation
+    * @brief Implementation of a dynamo simulation as a simulation policy class
     */
-   class VelocityNLRotDiffusionSimulation: public SimulationBase
+   class PrecessionDynamoSimulation: public SimulationBase
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~VelocityNLRotDiffusionSimulation() {};
+         virtual ~PrecessionDynamoSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         VelocityNLRotDiffusionSimulation();
+         PrecessionDynamoSimulation();
 
          /**
           * @brief Initialise the fields
@@ -114,16 +113,26 @@ namespace EPMDynamo {
 
       private:
          /**
+          * @brief Magnetic field
+          */
+         PrecessionDynamoTraits::MagType   mMagB;
+
+         /**
           * @brief Velocity field
           */
-         VelocityNLRotDiffusionTraits::VelType   mVelV;
+         PrecessionDynamoTraits::VelType   mVelV;
+
+         /**
+          * @brief Induction equation
+          */
+         InductionMHD<PrecessionDynamoTraits>    mInduction;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesNLRotDiffusion<VelocityNLRotDiffusionTraits>    mNavierStokes;
+         NavierStokesPrecessionMHD<PrecessionDynamoTraits>    mNavierStokes;
    };
 
 }
 
-#endif // VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#endif // PRECESSIONDYNAMOSIMULATION_HPP

@@ -1,9 +1,9 @@
-/** \file LibrationBC.hpp
- *  \brief Implementation of the time dependent toroidal libration boundary condition
+/** \file LatitudinalLibrationBC.hpp
+ *  \brief Implementation of the time dependent toroidal latitudinal libration boundary condition
  */
 
-#ifndef LIBRATIONBC_HPP
-#define LIBRATIONBC_HPP
+#ifndef LATITUDINALLIBRATIONBC_HPP
+#define LATITUDINALLIBRATIONBC_HPP
 
 // Configuration includes
 //
@@ -24,9 +24,9 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of the time dependent toroidal libration boundary condition
+    * \brief Implementation of the time dependent toroidal latitudinal libration boundary condition
     */
-   class LibrationBC: public TimeDependentBC
+   class LatitudinalLibrationBC: public TimeDependentBC
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -37,12 +37,12 @@ namespace EPMDynamo {
           *
           * @param basis   Radial basis
           */
-         LibrationBC(const BasisType &basis, const TimestepParameters &tsParams);
+         LatitudinalLibrationBC(const BasisType &basis, const TimestepParameters &tsParams);
 
          /**
           * @brief Destructor
           */
-         virtual ~LibrationBC() {};
+         virtual ~LatitudinalLibrationBC() {};
 
          /**
           * @brief Get boundary condition value RHS, real part
@@ -104,4 +104,4 @@ namespace EPMDynamo {
    };
 }
 
-#endif // LIBRATIONBC_HPP
+#endif // LATITUDINALLIBRATIONBC_HPP

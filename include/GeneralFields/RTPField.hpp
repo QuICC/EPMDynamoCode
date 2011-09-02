@@ -103,14 +103,31 @@ namespace EPMDynamo {
          template <int TOp> void crossZVect(RTPField &rField, const EPMFloat coeff = 1.0) const;
 
          /**
-          * @brief Compute the precession forcing with \f$\Omega_p\f$
+          * @brief Compute the precession forcing with \f$\Omega_p\f$ in the precession frame
           *
           * @param rField Resulting field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
           * @param coeff Multiplicative coefficient (with default value at 1.0)
           *
           * \tparam TOp Type of operation: (0) Set result, (1) Add result, (-1) Substract result
           */
-         template <int TOp> void precession(RTPField &rField, const EPMFloat coeff = 1.0) const;
+         template <int TOp> void precessionFrame(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat coeff = 1.0) const;
+
+         /**
+          * @brief Compute the coriolis and precession forcing
+          *
+          * @param rField Resulting field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient (with default value at 1.0)
+          *
+          * \tparam TOp Type of operation: (0) Set result, (1) Add result, (-1) Substract result
+          */
+         template <int TOp> void precession(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0) const;
 
          /**
           * @brief Initialise field to zeros
@@ -214,19 +231,35 @@ namespace EPMDynamo {
       }
    }
 
-   template <int TOp> inline void RTPField::precession(RTPField &rField, const EPMFloat coeff) const
+   template <int TOp> inline void RTPField::precessionFrame(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat coeff) const
    {
       if(TOp == 0)
       {
-         RTPOperators::precession(rField, *this, coeff);
+         RTPOperators::precessionFrame(rField, *this, omega, cosalpha, sinalpha, coeff);
       }
       else if(TOp > 0)
       {
-         RTPOperators::addPrecession(rField, *this, coeff);
+         RTPOperators::addPrecessionFrame(rField, *this, omega, cosalpha, sinalpha, coeff);
       }
       else if(TOp < 0)
       {
-         RTPOperators::subPrecession(rField, *this, coeff);
+         RTPOperators::subPrecessionFrame(rField, *this, omega, cosalpha, sinalpha, coeff);
+      }
+   }
+
+   template <int TOp> inline void RTPField::precession(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff) const
+   {
+      if(TOp == 0)
+      {
+         RTPOperators::precession(rField, *this, omega, cosalpha, sinalpha, time, coeff);
+      }
+      else if(TOp > 0)
+      {
+         RTPOperators::addPrecession(rField, *this, omega, cosalpha, sinalpha, time, coeff);
+      }
+      else if(TOp < 0)
+      {
+         RTPOperators::subPrecession(rField, *this, omega, cosalpha, sinalpha, time, coeff);
       }
    }
 }

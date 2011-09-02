@@ -1,5 +1,5 @@
-/** \file LibrationBC.cpp
- *  \brief Implementation of the time dependent poloidal libration boundary condition
+/** \file LongitudinalLibrationBC.cpp
+ *  \brief Implementation of the time dependent toroidal longitudinal libration boundary condition
  */
 
 // Configuration includes
@@ -13,7 +13,7 @@
 
 // Class include
 //
-#include "BoundaryConditions/TimeDependent/LibrationBC.hpp"
+#include "BoundaryConditions/TimeDependent/LongitudinalLibrationBC.hpp"
 
 // Project includes
 //
@@ -21,7 +21,7 @@
 
 namespace EPMDynamo {
 
-   LibrationBC::LibrationBC(const LibrationBC::BasisType &basis, const TimestepParameters &tsParams)
+   LongitudinalLibrationBC::LongitudinalLibrationBC(const LongitudinalLibrationBC::BasisType &basis, const TimestepParameters &tsParams)
       : TimeDependentBC(basis.basisN(), basis.polyN(), tsParams)
    {
       // Setup the parametrisation
@@ -31,7 +31,7 @@ namespace EPMDynamo {
       this->fillLHSBCValues(basis);
    }
 
-   void LibrationBC::setup()
+   void LongitudinalLibrationBC::setup()
    {
       std::vector<std::string>   integers;
       std::vector<std::string>   floats;
@@ -58,17 +58,17 @@ namespace EPMDynamo {
       this->mFrequency = cfg.floats()(1);
    }
 
-   EPMFloat LibrationBC::evolvingRealFactor() const
+   EPMFloat LongitudinalLibrationBC::evolvingRealFactor() const
    {
       return this->mEpsilon*std::cos(this->mFrequency*this->mrTSParams.time());
    }
 
-   EPMFloat LibrationBC::evolvingImagFactor() const
+   EPMFloat LongitudinalLibrationBC::evolvingImagFactor() const
    {
       return 0.0;
    }
 
-   void LibrationBC::fillLHSBCValues(const LibrationBC::BasisType &basis)
+   void LongitudinalLibrationBC::fillLHSBCValues(const LongitudinalLibrationBC::BasisType &basis)
    {
       int nL = this->nL();
       for(int l = 0; l < nL; ++l)
@@ -77,27 +77,27 @@ namespace EPMDynamo {
       }
    }
 
-   EPMFloat LibrationBC::getRealRHSBC(const int l, const int m) const
+   EPMFloat LongitudinalLibrationBC::getRealRHSBC(const int l, const int m) const
    {
-      if(l == 1 && m == 1)
+      if(l == 1 && m == 0)
       {
-         return -0.5*this->evolvingRealFactor();
+         return -1.0*this->evolvingRealFactor();
       } else
       {
          return 0.0;
       }
    }
 
-   EPMFloat LibrationBC::getImagRHSBC(const int l, const int m) const
+   EPMFloat LongitudinalLibrationBC::getImagRHSBC(const int l, const int m) const
    {
       return 0.0;
    }
 
-   EPMComplex LibrationBC::getRHSBC(const int l, const int m) const
+   EPMComplex LongitudinalLibrationBC::getRHSBC(const int l, const int m) const
    {
-      if(l == 1 && m == 1)
+      if(l == 1 && m == 0)
       {
-         return EPMComplex(-0.5*this->evolvingRealFactor(), 0.0);
+         return EPMComplex(-1.0*this->evolvingRealFactor(), 0.0);
       } else
       {
          return EPMComplex(0.0);

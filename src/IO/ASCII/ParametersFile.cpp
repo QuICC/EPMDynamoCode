@@ -59,6 +59,10 @@ namespace EPMDynamo {
       {
          // Resize equation array to correct size
          this->mEqArray.resize(1);
+      } else if(this->mType == "EPm")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(2);
       }
 
    }
@@ -264,6 +268,14 @@ namespace EPMDynamo {
 
                // Read the Rayleigh number
                this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSRAYLEIGHXML);
+            } else if(this->mType == "EPm")
+            {
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+               // Read the magnetic Prandtl number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSMAGNETICPRANDTLXML);
+
             } else if(this->mType == "E")
             {
                // Read the Ekman number
@@ -420,6 +432,10 @@ namespace EPMDynamo {
             std::cout << "  " << "Ek: " << this->mEqArray(1) << std::endl;
             std::cout << "  " << "Em: " << this->mEqArray(2) << std::endl;
             std::cout << "  " << "Ra: " << this->mEqArray(3) << std::endl;
+         } else if(this->mType == "EPm")
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "Pm: " << this->mEqArray(1) << std::endl;
          } else if(this->mType == "E")
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;

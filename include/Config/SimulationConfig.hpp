@@ -36,6 +36,7 @@ namespace EPMDynamo {
    class EPmPrRaParameters;
    class EPmQRaParameters;
    class PrRaParameters;
+   class EPmParameters;
    class EParameters;
    class InvPrRaParameters;
 
@@ -82,6 +83,7 @@ namespace EPMDynamo {
          
          /// Typedef for the equation parameters
          typedef EQRaRoParameters  EquationParametersType;
+         //typedef EPmParameters  EquationParametersType;
          //typedef EParameters  EquationParametersType;
          //typedef PrRaParameters  EquationParametersType;
          //typedef InvPrRaParameters  EquationParametersType;

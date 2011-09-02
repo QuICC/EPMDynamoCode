@@ -59,23 +59,10 @@ namespace EPMDynamo {
          this->mNavierStokes.addPolBC(pZeroBC);
          this->mNavierStokes.addPolBC(pDDBC);
 
-      // Set precession frame boundary condition
-      } else if(this->mIOSys.cfg()->aBC()(1) == 2)
-      {
-         SmartBC  pPrecBC(new PrecessionFrameBC(this->mTransform.radBasis()));
-         SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
-
-         // Toroidal velocity BC
-         this->mNavierStokes.addTorBC(pPrecBC);
-
-         // Order of Poloidal BCs is important
-         this->mNavierStokes.addPolBC(pZeroBC);
-         this->mNavierStokes.addPolBC(pDBC);
-
-      // Set time dependent precession boundary condition
+      // Set time dependent longitudinal libration boundary condition
       } else if(this->mIOSys.cfg()->aBC()(1) == 3)
       {
-         SmartBC  pPrecBC(new PrecessionBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
+         SmartBC  pPrecBC(new LongitudinalLibrationBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
          SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
 
          // Toroidal velocity BC
@@ -85,10 +72,10 @@ namespace EPMDynamo {
          this->mNavierStokes.addPolBC(pZeroBC);
          this->mNavierStokes.addPolBC(pDBC);
 
-      // Set time dependent libration boundary condition
+      // Set time dependent latitudinal libration boundary condition
       } else if(this->mIOSys.cfg()->aBC()(1) == 4)
       {
-         SmartBC  pPrecBC(new LibrationBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
+         SmartBC  pPrecBC(new LatitudinalLibrationBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
          SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
 
          // Toroidal velocity BC

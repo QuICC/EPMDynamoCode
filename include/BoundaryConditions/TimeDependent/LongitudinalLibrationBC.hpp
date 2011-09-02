@@ -1,9 +1,9 @@
-/** \file PrecessionBC.hpp
- *  \brief Implementation of the time dependent toroidal precession boundary condition
+/** \file LongitudinalLibrationBC.hpp
+ *  \brief Implementation of the time dependent toroidal longitudinal libration boundary condition
  */
 
-#ifndef PRECESSIONBC_HPP
-#define PRECESSIONBC_HPP
+#ifndef LONGITUDINALLIBRATIONBC_HPP
+#define LONGITUDINALLIBRATIONBC_HPP
 
 // Configuration includes
 //
@@ -24,9 +24,11 @@
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of the time dependent toroidal precession boundary condition
+    * \brief Implementation of the time dependent toroidal longitudinal libration boundary condition
+    *
+    * \epmBug Need to check the amplitude of the m=0 mode
     */
-   class PrecessionBC: public TimeDependentBC 
+   class LongitudinalLibrationBC: public TimeDependentBC 
    {
       public:
          /// Typedef from Simulation trait to local truncation type
@@ -37,12 +39,12 @@ namespace EPMDynamo {
           *
           * @param basis   Radial basis
           */
-         PrecessionBC(const BasisType &basis, const TimestepParameters &tsParams);
+         LongitudinalLibrationBC(const BasisType &basis, const TimestepParameters &tsParams);
 
          /**
           * @brief Destructor
           */
-         virtual ~PrecessionBC() {};
+         virtual ~LongitudinalLibrationBC() {};
 
          /**
           * @brief Get boundary condition value RHS, real part
@@ -80,6 +82,11 @@ namespace EPMDynamo {
          virtual EPMFloat evolvingImagFactor() const;
 
          /**
+          * @brief Setup the parametrisation
+          */
+         void setup();
+
+         /**
           * @brief Fill in values for the boundaries
           *
           * @param basis   Radial basis
@@ -87,7 +94,16 @@ namespace EPMDynamo {
          void fillLHSBCValues(const BasisType &basis);
 
       private:
+         /**
+          * @brief Epsilon parameter
+          */
+         EPMFloat mEpsilon;
+
+         /**
+          * @brief Frequency parameter
+          */
+         EPMFloat mFrequency;
    };
 }
 
-#endif // PRECESSIONBC_HPP
+#endif // LONGITUDINALLIBRATIONBC_HPP

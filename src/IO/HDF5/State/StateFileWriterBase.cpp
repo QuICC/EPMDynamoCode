@@ -98,6 +98,17 @@ namespace EPMDynamo {
 
          // Write Rayleigh scalar to file
          this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(3));
+      } else if(type == "EPm")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
+
+         // Write magnetic Prandtl scalar to file
+         this->writeScalar(StateFileDefs::MAGNETICPRANDTLTAG, params(1));
+      } else if(type == "E")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
       }
       
       // close group

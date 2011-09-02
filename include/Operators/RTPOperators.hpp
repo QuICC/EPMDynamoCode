@@ -175,31 +175,115 @@ namespace EPMDynamo {
          static void subCrossZVect(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
 
          /**
-          * @brief Precession forcing of given field with \f$\Omega_p\f$ vector
+          * @brief Precession forcing of given field with \f$\Omega_p\f$ vector in the precession frame
           *
           * @param rField Resulting vector field
           * @param inField Input field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
           * @param coeff Multiplicative coefficient
           */
-         static void precession(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
+         static void precessionFrame(RTPField &rField, const RTPField &inField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat coeff = 1.0);
 
          /**
-          * @brief Add precession forcing of given field with \f$\Omega_p\f$ vector
+          * @brief Add precession forcing of given field with \f$\Omega_p\f$ vector in the precession frame
           *
           * @param rField Resulting vector field
           * @param inField Input field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
           * @param coeff Multiplicative coefficient
           */
-         static void addPrecession(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
+         static void addPrecessionFrame(RTPField &rField, const RTPField &inField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat coeff = 1.0);
 
          /**
-          * @brief Substract precession forcing of given field with \f$\Omega_p\f$ vector
+          * @brief Substract precession forcing of given field with \f$\Omega_p\f$ vector in the precession frame
           *
           * @param rField Resulting vector field
           * @param inField Input field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
           * @param coeff Multiplicative coefficient
           */
-         static void subPrecession(RTPField &rField, const RTPField &inField, const EPMFloat coeff = 1.0);
+         static void subPrecessionFrame(RTPField &rField, const RTPField &inField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Coriolis and precession forcing
+          *
+          * @param rField Resulting vector field
+          * @param inField Input field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient
+          */
+         static void precession(RTPField &rField, const RTPField &inField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Add Coriolis and precession forcing
+          *
+          * @param rField Resulting vector field
+          * @param inField Input field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient
+          */
+         static void addPrecession(RTPField &rField, const RTPField &inField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Substract Coriolis and precession forcing
+          *
+          * @param rField Resulting vector field
+          * @param inField Input field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient
+          */
+         static void subPrecession(RTPField &rField, const RTPField &inField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Poincare force
+          *
+          * @param rField Resulting vector field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient
+          */
+         static void poincare(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief add Poincare force
+          *
+          * @param rField Resulting vector field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient
+          */
+         static void addPoincare(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0);
+
+         /**
+          * @brief Substract Poincare force
+          *
+          * @param rField Resulting vector field
+          * @param omega Precession rotation rate
+          * @param cosalpha Cosinus of the precession tilt angle
+          * @param sinalpha Sinus of the precession tilt angle
+          * @param time Current time
+          * @param coeff Multiplicative coefficient
+          */
+         static void subPoincare(RTPField &rField, const EPMFloat omega, const EPMFloat cosalpha, const EPMFloat sinalpha, const EPMFloat time, const EPMFloat coeff = 1.0);
 
       protected:
 

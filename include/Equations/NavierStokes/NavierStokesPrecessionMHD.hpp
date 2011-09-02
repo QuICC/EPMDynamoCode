@@ -1,0 +1,167 @@
+/** \file NavierStokesPrecessionMHD.hpp
+ *  General representation of the Navier-Stokes diffusion equation with non-linear and precession term in the precession frame
+ */
+
+#ifndef NAVIERSTOKESPRECESSIONMHD_HPP
+#define NAVIERSTOKESPRECESSIONMHD_HPP
+
+// Configuration includes
+//
+#include "Config/SimulationConfig.hpp"
+
+// System includes
+//
+
+// External includes
+//
+
+// Project includes
+//
+#include "General/EPMTypedefs.hpp"
+#include "Equations/NavierStokes/NavierStokesDiffusion.hpp"
+#include "IO/ASCII/ConfigurationFile.hpp"
+
+namespace EPMDynamo {
+
+   /**
+    * @brief General representation of the Navier-Stokes diffusion equation with non-linear and precession term in the precession frame
+    *
+    * \tparam TSimTraits Traits of the simulation implementation
+    */
+   template <typename TSimTraits> class NavierStokesPrecessionMHD : public NavierStokesDiffusion<TSimTraits>
+   {
+      public:
+         /// Typedef from Simulation trait to local transform type
+         typedef SimulationConfig::TransformType    TransformType;
+
+         /// Typedef from Simulation trait to local truncation type
+         typedef SimulationConfig::NumericalScheme::ScalarType    ScalarType;
+
+         /// Typedef for the EquationParameters type
+         typedef SimulationConfig::EquationParametersType EquationParametersType;
+
+         /**
+          * @brief Constructor
+          *
+          * @param rV Velocity field (stored as reference)
+          * @param rB Magnetic field (stored as reference)
+          * @param transform Transform object (stored as reference)
+          * \param tsteps Timestep parameters
+          * @param params Simulation equation paramters
+          */
+         NavierStokesPrecessionMHD(typename TSimTraits::VelType &rV, typename TSimTraits::MagType &rB, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+
+         /**
+          * @brief Simple empty destructor
+          */
+         virtual ~NavierStokesPrecessionMHD() {};
+
+         /**
+          * @brief Update RTP values of the equation
+          *
+          * \param step Current step in a multistep transform
+          */
+         void updateRTP(const int step);
+
+         /**
+          * @brief Update RHS of the equation
+          */
+         void updateRHS();
+         
+      protected:
+         /**
+          * @brief Const Reference variable to the magnetic field
+          */
+         typename TSimTraits::MagType&  mrB;
+
+
+      private:
+         /**
+          * @brief Setup precession forcing
+          */
+         void setupPrecession();
+
+         /**
+          * @brief Precession rotation rate
+          */
+         EPMFloat mOmega;
+
+         /**
+          * @brief Precession tilt angle cosinus
+          */
+         EPMFloat mCosAlpha;
+
+         /**
+          * @brief Precession tilt angle sinus
+          */
+         EPMFloat mSinAlpha;
+   };
+
+   template <typename TSimTraits> NavierStokesPrecessionMHD<TSimTraits>::NavierStokesPrecessionMHD(typename TSimTraits::VelType &rV,  typename TSimTraits::MagType &rB, typename NavierStokesPrecessionMHD<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesPrecessionMHD<TSimTraits>::EquationParametersType &params)
+      : NavierStokesDiffusion<TSimTraits>(rV, transform, tsteps, params), mrB(rB), mOmega(0.0), mCosAlpha(0.0), mSinAlpha(0.0)
+   {
+      // Setup precession forcing
+      this->setupPrecession();
+   }
+
+   template <typename TSimTraits> void NavierStokesPrecessionMHD<TSimTraits>::setupPrecession()
+   {
+      std::vector<std::string>   integers;
+      std::vector<std::string>   floats;
+
+      floats.push_back("omega");
+      floats.push_back("alpha");
+
+      ConfigurationFile cfg("precession", integers, floats);
+
+      // Initialise configuration file
+      cfg.init();
+
+      // Read data
+      cfg.read();
+
+      // Finalise configuration file reader
+      cfg.finalise();
+
+      // Print information
+      cfg.printInfo();
+
+      // Store values for configuration file
+      this->mOmega = cfg.floats()(0);
+      this->mCosAlpha = std::cos(cfg.floats()(1));
+      this->mSinAlpha = std::sin(cfg.floats()(1));
+   }
+
+   template <typename TSimTraits> void NavierStokesPrecessionMHD<TSimTraits>::updateRTP(const int step)
+   {
+      // Update real space values of velocity field
+      this->mrX.rOc().transform(step);
+
+      // Update real space values of the curl of the velocity field
+      this->mrX.rOc().curlTransform(step);
+
+      // Update real space values of magnetic field
+      this->mrB.rOc().transform(step);
+
+      // Update real space values of the curl of the magnetic field
+      this->mrB.rOc().curlTransform(step);
+   }
+
+   template <typename TSimTraits> void NavierStokesPrecessionMHD<TSimTraits>::updateRHS()
+   {
+      // Compute \f$u\times (\nabla \times u) \f$
+      this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
+
+      // Compute \f$(\nabla \times B)\times B\f$
+      this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
+
+      // Compute \f$\Omega_p\times\vec{u}\f$
+      this->mrX.oc().rtp().template precession<-1>(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), this->mrParams.nsCoriolis());
+
+      // Compute poincare force \f$\Omega\times\hat{z}\vec{r}\f$
+      RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
+   }
+
+}
+
+#endif // NAVIERSTOKESPRECESSIONMHD_HPP
