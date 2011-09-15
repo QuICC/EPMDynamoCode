@@ -23,12 +23,13 @@
 #include "Utilities/StateAnalyser.hpp"
 
 #include "Utilities/Analysis/LibrationAnalysis.hpp"
+#include "Utilities/Analysis/ExtractRadiusAnalysis.hpp"
 
 namespace epm = EPMDynamo;
 
 #define SIMTRAITS epm::VelocityDiffusionTraits
 
-typedef  epm::StateAnalyser<SIMTRAITS, epm::LibrationAnalysis>  Analyser;
+typedef  epm::StateAnalyser<SIMTRAITS, epm::ExtractRadiusAnalysis>  Analyser;
 
 /**
  * @brief Velocity diffusion simulation
@@ -45,7 +46,7 @@ int runProgram()
    analyser.configureTransform<Analyser::AnalysisTraits>();
 
    // Transform the fields
-   analyser.transformRTP<Analyser::AnalysisTraits>();
+   analyser.transformSpectral<Analyser::AnalysisTraits>();
 
    // Analyse the codensity field RTP decomposition
    if(SIMTRAITS::NeedCodensity && Analyser::AnalysisTraits::UseRTPCodensity)
