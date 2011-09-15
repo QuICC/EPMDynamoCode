@@ -33,12 +33,8 @@ namespace EPMDynamo {
       this->mInduction.addTorBC(pZeroBC);
       this->mInduction.addPolBC(pInsulatingBC);
 
-      // Set boundary condition to the Navier-Stokes equation
-      if(this->mIOSys.cfg()->aBC()(1) != 3 || this->mIOSys.cfg()->aBC()(1) != 4)
-      {
-         throw EPMException("LibrationDynamoSimulation::initEquations", "Simulation requires libration boundary condition!");
       // Set time dependent longitudinal libration boundary condition
-      } else if(this->mIOSys.cfg()->aBC()(1) == 3)
+      if(this->mIOSys.cfg()->aBC()(1) == 3)
       {
          SmartBC  pLibBC(new LongitudinalLibrationBC(this->mTransform.radBasis(), this->mSimControl.tsParams()));
          SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
@@ -62,6 +58,10 @@ namespace EPMDynamo {
          // Order of Poloidal BCs is important
          this->mNavierStokes.addPolBC(pZeroBC);
          this->mNavierStokes.addPolBC(pDBC);
+      // Stop if wrong BCs are set for the Navier-Stokes equation
+      } else
+      {
+         throw EPMException("LibrationDynamoSimulation::initEquations", "Simulation requires libration boundary condition!");
       }
 
       // Initialise the induction equation
