@@ -89,6 +89,11 @@ namespace EPMDynamo {
           * @brief Generic method to get the power spectrum per harmonic degree
           */
          virtual Matrix spectrumL() const;
+
+         /**
+          * @brief Generic method to get the power spectrum per radial polynomial
+          */
+         virtual Matrix spectrumN() const;
          
       protected:
 
@@ -143,6 +148,17 @@ namespace EPMDynamo {
       energy(1) = this->perturbation().oddEnergy();
 
       return energy;
+   }
+
+   template <typename TBase> inline Matrix PhysicalScalarGradient<TBase>::spectrumN() const
+   {
+      Matrix   spectrum(this->trunc()->sim()->rad()->nN(),this->trunc()->sim()->hoz()->nL()+1); 
+
+      spectrum.col(0) = Array::LinSpaced(this->trunc()->sim()->rad()->nN(), 0.0, this->trunc()->sim()->rad()->maxN());
+
+      spectrum.rightCols(this->trunc()->sim()->hoz()->nL()) = this->perturbation().spectrumN();
+
+      return spectrum;
    }
 
    template <typename TBase> inline Matrix PhysicalScalarGradient<TBase>::spectrumL() const

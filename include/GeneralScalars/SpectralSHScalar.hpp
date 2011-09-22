@@ -78,24 +78,34 @@ namespace EPMDynamo {
          EPMFloat oddEnergy() const;
 
          /**
-          * @brief Get the (full)  energy spectrum on L
-          */
-         const Array& spectrumL() const;
-
-         /**
           * @brief Set the (full) energy spectrum on M
           */
          Array& rSpectrumM();
 
          /**
-          * @brief Set the (full)  energy spectrum on L
+          * @brief Set the (full) energy spectrum on L
           */
          Array& rSpectrumL();
+
+         /**
+          * @brief Set the (full) energy spectrum on N
+          */
+         Matrix& rSpectrumN();
 
          /**
           * @brief Get the (full) energy spectrum on M
           */
          const Array& spectrumM() const;
+
+         /**
+          * @brief Get the (full) energy spectrum on L
+          */
+         const Array& spectrumL() const;
+
+         /**
+          * @brief Get the (full) energy spectrum on N
+          */
+         const Matrix& spectrumN() const;
 
          /**
           * @brief Compute energy spectra
@@ -135,10 +145,30 @@ namespace EPMDynamo {
          Array mSpectrumL;
 
          /**
+          * @brief Storage for the energy spectrum in N
+          */
+         Matrix mSpectrumN;
+
+         /**
           * @brief Energy non-dimensionalisation factor
           */
          EPMFloat mEFactor;
    };
+
+   inline const Array& SpectralSHScalar::spectrumL() const
+   {
+      return this->mSpectrumL;
+   }
+
+   inline const Array& SpectralSHScalar::spectrumM() const
+   {
+      return this->mSpectrumM;
+   }
+
+   inline const Matrix& SpectralSHScalar::spectrumN() const
+   {
+      return this->mSpectrumN;
+   }
 
    inline Array& SpectralSHScalar::rSpectrumL()
    {
@@ -150,8 +180,14 @@ namespace EPMDynamo {
       return this->mSpectrumM;
    }
 
+   inline Matrix& SpectralSHScalar::rSpectrumN()
+   {
+      return this->mSpectrumN;
+   }
+
    template <typename TPolynomial> void SpectralSHScalar::computeSpectra(const RadialBasis<TPolynomial> &radBasis)
    {
+      this->mSpectrumN.setConstant(0.0);
       this->mSpectrumL.setConstant(0.0);
       this->mSpectrumM.setConstant(0.0);
 
@@ -166,6 +202,7 @@ namespace EPMDynamo {
       EPMFloat tmpEnergy;
       EPMFloat shWeight;
       EPMFloat shFactor;
+      Array nSpec = Array::Zero(nN);
       int l_;
       for(int l = l0; l < nL; ++l)
       {
@@ -175,12 +212,17 @@ namespace EPMDynamo {
          for(int m = 0; m < this->nM(l); ++m)
          {
             tmpEnergy = 0.0;
+            nSpec.setConstant(0.0);
             for(int n = 0; n < nN; ++n)
             {
-               for(int k = 0; k < nN; ++k)
+               for(int k = 0; k < n; ++k)
                {
-                  tmpEnergy += radBasis.at(l).eWeights()(k,n) * (this->lshell(l)(n,m).real()*this->lshell(l)(k,m).real()+this->lshell(l)(n,m).imag()*this->lshell(l)(k,m).imag());
+                  nSpec(n) += 2.0*radBasis.at(l).eWeights()(k,n) * (this->lshell(l)(n,m).real()*this->lshell(l)(k,m).real()+this->lshell(l)(n,m).imag()*this->lshell(l)(k,m).imag());
                }
+
+               nSpec(n) += radBasis.at(l).eWeights()(n,n) * (this->lshell(l)(n,m).real()*this->lshell(l)(n,m).real()+this->lshell(l)(n,m).imag()*this->lshell(l)(n,m).imag());
+
+               tmpEnergy += nSpec(n);
             }
 
             if(ms(m) != 0)
@@ -193,6 +235,8 @@ namespace EPMDynamo {
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
             this->rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
+
+            this->rSpectrumN().col(l_) += shFactor*nSpec;
          }
 
          // Compute energy in L spectrum
@@ -207,6 +251,7 @@ namespace EPMDynamo {
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, this->mSpectrumN.data(), this->mSpectrumN.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->mSpectrumL.data(), this->mSpectrumL.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->mSpectrumM.data(), this->mSpectrumM.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI

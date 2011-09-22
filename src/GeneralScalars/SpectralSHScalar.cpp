@@ -19,7 +19,7 @@
 namespace EPMDynamo {
 
    SpectralSHScalar::SpectralSHScalar(const SmartTruncation pTrunc, const bool needsL0)
-      : SpectralSHScalarBase(pTrunc, needsL0), mSpectrumM(pTrunc->sim()->hoz()->nM()), mSpectrumL(pTrunc->sim()->hoz()->nL()), mEFactor(1.0)
+      : SpectralSHScalarBase(pTrunc, needsL0), mSpectrumM(pTrunc->sim()->hoz()->nM()), mSpectrumL(pTrunc->sim()->hoz()->nL()), mSpectrumN(pTrunc->sim()->rad()->nN(), pTrunc->sim()->hoz()->nL()), mEFactor(1.0) 
    {
    }
 
@@ -159,16 +159,6 @@ namespace EPMDynamo {
       return odd;
    }
 
-   const Array& SpectralSHScalar::spectrumL() const
-   {
-      return this->mSpectrumL;
-   }
-
-   const Array& SpectralSHScalar::spectrumM() const
-   {
-      return this->mSpectrumM;
-   }
-
    void SpectralSHScalar::setEnergyScale(const EPMFloat& eFactor)
    {
       // Se the energy normalisation
@@ -185,6 +175,9 @@ namespace EPMDynamo {
 
          // Rescale the L spectrum
          this->mSpectrumL *= this->mEFactor;
+
+         // Rescale the N spectrum
+         this->mSpectrumN *= this->mEFactor;
       }
    }
 

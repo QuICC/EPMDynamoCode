@@ -36,6 +36,7 @@ namespace EPMDynamo {
 
    void TorPolField::computeTorSpectra(const TorPolField::RadialBasisType &radBasis)
    {
+      this->rTor().rSpectrumN().setConstant(0.0);
       this->rTor().rSpectrumL().setConstant(0.0);
       this->rTor().rSpectrumM().setConstant(0.0);
 
@@ -51,6 +52,7 @@ namespace EPMDynamo {
       EPMFloat shWeight;
       EPMFloat shFactor;
       EPMFloat lfactor;
+      Array nSpec = Array::Zero(nN);
       int l_;
       for(int l = l0; l < nL; ++l)
       {
@@ -62,12 +64,17 @@ namespace EPMDynamo {
          for(int m = 0; m < this->nM(l); ++m)
          {
             tmpEnergy = 0.0;
+            nSpec.setConstant(0.0);
             for(int n = 0; n < nN; ++n)
             {
-               for(int k = 0; k < nN; ++k)
+               for(int k = 0; k < n; ++k)
                {
-                  tmpEnergy += radBasis.at(l).eWeights()(k,n) * (this->tor().lshell(l)(n,m).real()*this->tor().lshell(l)(k,m).real()+this->tor().lshell(l)(n,m).imag()*this->tor().lshell(l)(k,m).imag());
+                  nSpec(n) += 2.0*radBasis.at(l).eWeights()(k,n) * (this->tor().lshell(l)(n,m).real()*this->tor().lshell(l)(k,m).real()+this->tor().lshell(l)(n,m).imag()*this->tor().lshell(l)(k,m).imag());
                }
+
+               nSpec(n) += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*this->tor().lshell(l)(n,m).real()+this->tor().lshell(l)(n,m).imag()*this->tor().lshell(l)(n,m).imag());
+
+               tmpEnergy += nSpec(n);
             }
 
             if(ms(m) != 0)
@@ -80,6 +87,8 @@ namespace EPMDynamo {
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
             this->rTor().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
+
+            this->rTor().rSpectrumN().col(l_) += shFactor*nSpec;
          }
 
          // Compute energy in L spectrum
@@ -94,6 +103,7 @@ namespace EPMDynamo {
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumN().data(), this->tor().spectrumN().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumL().data(), this->tor().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumM().data(), this->tor().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
@@ -101,6 +111,7 @@ namespace EPMDynamo {
 
    void TorPolField::computePolSpectra(const TorPolField::RadialBasisType &radBasis)
    {
+      this->rPol().rSpectrumN().setConstant(0.0);
       this->rPol().rSpectrumL().setConstant(0.0);
       this->rPol().rSpectrumM().setConstant(0.0);
 
@@ -115,6 +126,7 @@ namespace EPMDynamo {
       EPMFloat tmpEnergy;
       EPMFloat shWeight;
       EPMFloat shFactor;
+      Array nSpec = Array::Zero(nN);
       int l_;
 
       for(int l = l0; l < nL; ++l)
@@ -126,12 +138,17 @@ namespace EPMDynamo {
          for(int m = 0; m < this->nM(l); ++m)
          {
             tmpEnergy = 0.0;
+            nSpec.setConstant(0.0);
             for(int n = 0; n < nN; ++n)
             {
-               for(int k = 0; k < nN; ++k)
+               for(int k = 0; k < n; ++k)
                {
-                  tmpEnergy += radBasis.at(l).polEWeights()(k,n) * (this->pol().lshell(l)(n,m).real()*this->pol().lshell(l)(k,m).real()+this->pol().lshell(l)(n,m).imag()*this->pol().lshell(l)(k,m).imag());
+                  nSpec(n) += 2.0*radBasis.at(l).polEWeights()(k,n) * (this->pol().lshell(l)(n,m).real()*this->pol().lshell(l)(k,m).real()+this->pol().lshell(l)(n,m).imag()*this->pol().lshell(l)(k,m).imag());
                }
+
+               nSpec(n) += radBasis.at(l).polEWeights()(n,n) * (this->pol().lshell(l)(n,m).real()*this->pol().lshell(l)(n,m).real()+this->pol().lshell(l)(n,m).imag()*this->pol().lshell(l)(n,m).imag());
+
+               tmpEnergy += nSpec(n);
             }
 
             if(ms(m) != 0)
@@ -145,6 +162,8 @@ namespace EPMDynamo {
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
 
             this->rPol().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
+
+            this->rPol().rSpectrumN().col(l_) += shFactor*nSpec;
          }
 
          // Compute energy in L spectrum
@@ -159,6 +178,7 @@ namespace EPMDynamo {
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumN().data(), this->pol().spectrumN().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumL().data(), this->pol().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumM().data(), this->pol().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI

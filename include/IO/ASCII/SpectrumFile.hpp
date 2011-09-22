@@ -37,7 +37,7 @@ namespace EPMDynamo {
          * @param var Field variable
          * @param name File name
          */
-         SpectrumFile(TFieldType& var, std::string name);
+         SpectrumFile(TFieldType& var, std::string name, const int format = 0);
 
          /**
          * @brief Destructor
@@ -52,10 +52,14 @@ namespace EPMDynamo {
       protected:
 
       private:
+         /**
+          * @brief Output format flag
+          */
+         const int mFormat;
    };
 
-   template <typename TFieldType> SpectrumFile<TFieldType>::SpectrumFile(TFieldType &var, std::string name)
-      : ASCIIFieldWriter<TFieldType, ASCIIRWriter>(var, name + SpectrumFileDefs::BASENAME, SpectrumFileDefs::EXTENSION, SpectrumFileDefs::HEADER, SpectrumFileDefs::VERSION)
+   template <typename TFieldType> SpectrumFile<TFieldType>::SpectrumFile(TFieldType &var, std::string name, const int format)
+      : ASCIIFieldWriter<TFieldType, ASCIIRWriter>(var, name + SpectrumFileDefs::BASENAME, SpectrumFileDefs::EXTENSION, SpectrumFileDefs::HEADER, SpectrumFileDefs::VERSION), mFormat(format)
    {
    }
 
@@ -67,6 +71,16 @@ namespace EPMDynamo {
       {
          //Do pre write operations
          this->preWrite();
+
+         if(this->mFormat == 1)
+         {
+            // Write N spectrum
+            this->mFile << "#N Spectrum" << std::endl;
+            this->mFile << this->mrVar.oc().spectrumN() << std::endl;
+
+            // Add newlines
+            this->mFile << std::endl << std::endl;
+         }
 
          // Write M spectrum
          this->mFile << "#M Spectrum" << std::endl;
