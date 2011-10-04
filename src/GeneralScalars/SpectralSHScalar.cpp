@@ -189,4 +189,18 @@ namespace EPMDynamo {
       }
    }
 
+   void SpectralSHScalar::checkInitialisation()
+   {
+      int l0 = this->minL();
+      int nL = this->nL();
+
+      for(int l = l0; l < nL; ++l)
+      {
+         if(this->trunc()->local()->spec()->mArray(l)(0) == 0)
+         {
+            this->rLShell(l).col(0).imag().setConstant(0.0);
+         }
+      }
+   }
+
 }

@@ -197,18 +197,24 @@ namespace EPMDynamo {
       if(TSimTraits::NeedCodensity)
       {
          this->readScalarField(StateFileDefs::CODENSITYTAG, this->mpCodC->rOc().rPerturbation().data());
+
+         this->mpCodC->rOc().rPerturbation().checkInitialisation();
       }
 
       // Read magnetic coefficients
       if(TSimTraits::NeedMagnetic)
       {
          this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
+
+         this->mpMagB->rOc().rPerturbation().checkInitialisation();
       }
       
       // Read velocity coefficients
       if(TSimTraits::NeedVelocity)
       {
          this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
+
+         this->mpVelV->rOc().rPerturbation().checkInitialisation();
       }
    }
 

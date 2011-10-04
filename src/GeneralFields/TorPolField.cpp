@@ -264,4 +264,26 @@ namespace EPMDynamo {
       // initialise Poloidal scalar to zero
       this->rPol().initialiseZeros();
    }
+
+   void TorPolField::checkInitialisation()
+   {
+      // check initialisation of Toroidal scalar
+      this->rTor().checkInitialisation();
+
+      // check initialisation of Poloidal scalar
+      this->rPol().checkInitialisation();
+
+      // Get the lowest harmonic degree
+      int l0 = this->trunc()->local()->spec()->lArray()(0);
+
+      // Set l=0 component to zero
+      if(l0 == 0)
+      {
+         // Toroidal component
+         this->rTor().rLShell(0).setConstant(EPMComplex(0.0,0.0));
+
+         // Poloidal component
+         this->rPol().rLShell(0).setConstant(EPMComplex(0.0,0.0));
+      }
+   }
 }

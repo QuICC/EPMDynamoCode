@@ -131,6 +131,11 @@ namespace EPMDynamo {
           */
          void initialiseZeros();
 
+         /**
+          * @brief Check field set during initialisation
+          */
+         void checkInitialisation();
+
       protected:
 
       private:
