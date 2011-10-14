@@ -23,7 +23,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::ThermalRotConvectionTraits
+#define SIMTRAITS epm::DynamoTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -34,7 +34,7 @@ class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = false;
+      static const bool VisCodensity = true;
 
       /// Output Codensity gradient visualisation
       static const bool VisCodensityGrad = false;
@@ -49,10 +49,10 @@ class FullVisTraits
       static const bool VisHelicity = true;
 
       /// Output Magnetic visualisation
-      static const bool VisMagnetic = false;
+      static const bool VisMagnetic = true;
 
       /// Output Lorentz visualisation
-      static const bool VisLorentz = false;
+      static const bool VisLorentz = true;
 };
 
 /**

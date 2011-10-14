@@ -28,7 +28,7 @@ namespace EPMDynamo {
          /**
          * @brief Constructor
          */
-         StateFileWriterBase(SmartTruncation   pTrunc);
+         StateFileWriterBase(SmartTruncation   pTrunc, const std::string prefix);
 
          /**
          * @brief Destructor

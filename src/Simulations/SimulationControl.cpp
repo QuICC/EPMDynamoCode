@@ -41,7 +41,7 @@ namespace EPMDynamo {
          this->tsCounter().increment();
 
          // Update runtime
-         this->runControl().update(this->tsParams().time());
+         this->runControl().update(this->tsParams().intgTime());
       }
 
       // Keep running simulation?

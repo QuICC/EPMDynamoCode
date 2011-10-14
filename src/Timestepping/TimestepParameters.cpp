@@ -19,7 +19,7 @@
 namespace EPMDynamo {
 
    TimestepParameters::TimestepParameters(EPMFloat time, EPMFloat timestep)
-      : mIsAdaptive(true), mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0), mGlobalCFLs(2), mRTPCFLs(2), mErrCFL(0.0), mRTPCFLPos(2)
+      : mIsAdaptive(true), mIsNextStep(true), mHasNewDt(true), mIsRejected(false), mTime(time), mTimeZero(time), mTimestep(timestep), mOldTimestep(timestep), mError(0.0), mGlobalCFLs(2), mRTPCFLs(2), mErrCFL(0.0), mRTPCFLPos(2)
    {
       // Check initial values
       this->checkValues();
@@ -60,6 +60,8 @@ namespace EPMDynamo {
       if(this->mTime < 0.0)
       {
          this->mTime = 0.0;
+
+         this->mTimeZero = 0.0;
       }
    }
 

@@ -19,7 +19,7 @@
 namespace EPMDynamo {
 
    RuntimeControl::RuntimeControl(EPMFloat wall, EPMFloat maxtime)
-      : mWallTime(wall), mMaxtime(maxtime), mRuntime(0.0), mTime(0.0)
+      : mWallTime(wall), mMaxtime(maxtime), mRuntime(0.0), mIntgTime(0.0)
    {
    }
 
@@ -30,7 +30,7 @@ namespace EPMDynamo {
          std::cout << "Wall time reached!" << std::endl;
 
          return false;
-      } else if(this->mMaxtime > 0 && this->mTime >= this->mMaxtime)
+      } else if(this->mMaxtime > 0 && this->mIntgTime >= this->mMaxtime)
       {
          std::cout << "Max integration time reached!" << std::endl;
 
@@ -41,11 +41,11 @@ namespace EPMDynamo {
       }
    }
 
-   void RuntimeControl::update(EPMFloat time)
+   void RuntimeControl::update(EPMFloat intgTime)
    {
       this->mRuntime += this->resetTimer()/3600.0;
 
-      this->mTime = time;
+      this->mIntgTime = intgTime;
    }
 
    void RuntimeControl::printInfo(const int steps) const

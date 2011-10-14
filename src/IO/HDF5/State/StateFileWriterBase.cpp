@@ -20,8 +20,8 @@
 
 namespace EPMDynamo {
 
-   StateFileWriterBase::StateFileWriterBase(SmartTruncation pTrunc)
-      : SpectralHDF5NWriter(StateFileDefs::BASENAME, StateFileDefs::EXTENSION, StateFileDefs::HEADER, StateFileDefs::VERSION, pTrunc)
+   StateFileWriterBase::StateFileWriterBase(SmartTruncation pTrunc, const std::string prefix)
+      : SpectralHDF5NWriter(prefix + StateFileDefs::BASENAME, StateFileDefs::EXTENSION, StateFileDefs::HEADER, StateFileDefs::VERSION, pTrunc)
    {
    }
 

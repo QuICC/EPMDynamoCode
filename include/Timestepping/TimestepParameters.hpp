@@ -79,6 +79,11 @@ namespace EPMDynamo {
          EPMFloat time() const;
 
          /**
+          * @brief Get integration time
+          */
+         EPMFloat intgTime() const;
+
+         /**
           * @brief Set the timestep rejection status
           */
          void rejectTimestep();
@@ -224,6 +229,11 @@ namespace EPMDynamo {
          EPMFloat   mTime;
 
          /**
+          * @brief Starting time
+          */
+         EPMFloat   mTimeZero;
+
+         /**
           * @brief Length of the timestep
           */
          EPMFloat   mTimestep;
@@ -304,6 +314,11 @@ namespace EPMDynamo {
       return this->mTime;
    }
 
+   inline EPMFloat TimestepParameters::intgTime() const
+   {
+      return this->mTime - this->mTimeZero;
+   }
+
    inline EPMFloat TimestepParameters::dt() const
    {
       return this->mTimestep;
@@ -322,6 +337,8 @@ namespace EPMDynamo {
    inline void TimestepParameters::setTime(const EPMFloat time)
    {
       this->mTime = time;
+
+      this->mTimeZero = time;
    }
 
    inline EPMFloat TimestepParameters::error() const

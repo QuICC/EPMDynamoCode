@@ -58,8 +58,10 @@ namespace EPMDynamo {
 
          /**
           * @brief Update run time
+          *
+          * @param intgTime Integration time
           */
-         void  update(const EPMFloat time);
+         void  update(const EPMFloat intgTime);
 
          /**
           * @brief Print some run info
@@ -77,7 +79,7 @@ namespace EPMDynamo {
          const EPMFloat mWallTime;
 
          /**
-          * @brief Wall time
+          * @brief Max integration time
           */
          const EPMFloat mMaxtime;
 
@@ -89,7 +91,7 @@ namespace EPMDynamo {
          /**
           * @brief Run time
           */
-         EPMFloat mTime;
+         EPMFloat mIntgTime;
    };
 
    inline EPMFloat RuntimeControl::runtime() const
