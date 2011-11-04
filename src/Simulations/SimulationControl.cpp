@@ -38,7 +38,7 @@ namespace EPMDynamo {
          this->tsParams().updateTime();
 
          // increment the number of performed timesteps
-         this->tsCounter().increment();
+         this->tsCounter().increment(this->tsParams().intgTime());
 
          // Update runtime
          this->runControl().update(this->tsParams().intgTime());

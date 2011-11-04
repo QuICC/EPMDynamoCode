@@ -295,9 +295,6 @@ namespace EPMDynamo {
 
    void TimestepControlBase::useTimestep(EPMFloat dt)
    {
-//      dt = 5e-3;
-//      std::cout << "TIMESTEP HAS BEEN LOCKED TO FIXED VALUE dt=" << dt << std::endl;
-
       // Store new timestep if different from old step
       if(dt != this->rTSParams().dt())
       {

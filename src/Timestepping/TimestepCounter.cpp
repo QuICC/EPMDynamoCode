@@ -18,7 +18,7 @@
 namespace EPMDynamo {
 
    TimestepCounter::TimestepCounter(int maxtstep, int asciiRate, int stateRate)
-      : mMaxtstep(maxtstep), mSteps(0), mARate(asciiRate), mSRate(stateRate)
+      : mUseASCIIStep((asciiRate > 0)), mUseStateStep((stateRate > 0)), mMaxtstep(maxtstep), mSteps(0), mIsATriggered(false), mIsSTriggered(false), mARate(std::abs(asciiRate)), mSRate(std::abs(stateRate))
    {
    }
 
@@ -45,25 +45,24 @@ namespace EPMDynamo {
       }
    }
 
-   bool TimestepCounter::triggerASCII() const
+   void TimestepCounter::increment(const EPMFloat time)
    {
-      if(this->mSteps % this->mARate == 0)
-      {
-         return true;
-      } else
-      {
-         return false;
-      }
-   }
+      ++this->mSteps;
 
-   bool TimestepCounter::triggerState() const
-   {
-      if(this->mSteps % this->mSRate == 0)
+      if(this->mUseASCIIStep)
       {
-         return true;
+         this->mIsATriggered = (this->mSteps % this->mARate == 0);
       } else
       {
-         return false;
+         this->mIsATriggered = false;
+      }
+
+      if(this->mUseStateStep)
+      {
+         this->mIsSTriggered = (this->mSteps % this->mSRate == 0);
+      } else
+      {
+         this->mIsSTriggered = false;
       }
    }
 

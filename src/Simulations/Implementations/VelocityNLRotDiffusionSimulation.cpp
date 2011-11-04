@@ -21,7 +21,7 @@
 namespace EPMDynamo {
 
    VelocityNLRotDiffusionSimulation::VelocityNLRotDiffusionSimulation()
-      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mTimeAverager(this->mVelV, this->mTransform, this->mSimControl.tsParams())
    {
    }
 
@@ -104,6 +104,9 @@ namespace EPMDynamo {
 
       // Initialise the Navier-Stokes equation
       this->mNavierStokes.init();
+
+      // Initialise the TimeAverager
+      this->mTimeAverager.init();
    }
 
    void VelocityNLRotDiffusionSimulation::configureTransforms()
@@ -163,6 +166,9 @@ namespace EPMDynamo {
 
    void VelocityNLRotDiffusionSimulation::timestepEquations()
    {
+      // Update the time average computation
+      this->mTimeAverager.timestep();
+
       // Timestep the Navier-Stokes equation
       this->mNavierStokes.timestep();
    }
@@ -184,6 +190,10 @@ namespace EPMDynamo {
       EPMSHARED_PTR<StateFileWriter<VelocityNLRotDiffusionTraits> >  pOutState(new StateFileWriter<VelocityNLRotDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
+
+      EPMSHARED_PTR<StateFileWriter<VelocityNLRotDiffusionTraits> >  pAvgState(new StateFileWriter<VelocityNLRotDiffusionTraits>(*this->mTimeAverager.pAvgVelV(), this->mEqParams, this->mSimControl.tsParams(), "Avg"));
+
+      this->mIOSys.addHDF5Writer(pAvgState);
    }
 
    void VelocityNLRotDiffusionSimulation::addASCIIOutput()
@@ -199,11 +209,23 @@ namespace EPMDynamo {
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
+      // Create a energy ASCII diagnostic file for the averaged velocity field
+      EPMSHARED_PTR<EnergyFile<VelocityRotDiffusionTraits::VelType> > pAvgVelEnergy(new EnergyFile<VelocityRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel", this->mSimControl.tsParams()));
+
+      // Add averaged kinetic energy to ASCII output
+      this->mIOSys.addASCIIWriter(pAvgVelEnergy);
+
       // Create a energy spectrum ASCII diagnostic file for the velocity field
       EPMSHARED_PTR<SpectrumFile<VelocityNLRotDiffusionTraits::VelType> > pVelSpectrum(new SpectrumFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel"));
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
+
+      // Create a averaged energy spectrum ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<SpectrumFile<VelocityRotDiffusionTraits::VelType> > pAvgVelSpectrum(new SpectrumFile<VelocityRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel"));
+
+      // Add averaged kinetic energy spectrum to ASCII output
+      this->mIOSys.addASCIIWriter(pAvgVelSpectrum);
 
       // Add libration output file if required
       if(this->mIOSys.cfg()->aBC()(1) == 4)

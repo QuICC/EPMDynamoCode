@@ -14,6 +14,7 @@
 
 // Project includes
 //
+#include "General/EPMTypedefs.hpp"
 
 namespace EPMDynamo {
 
@@ -44,8 +45,10 @@ namespace EPMDynamo {
 
          /**
           * @brief Increment counter
+          *
+          * @param time Time for time trigger
           */
-         void increment();
+         void increment(const EPMFloat time);
 
          /**
           * @brief Get the number of steps
@@ -77,6 +80,16 @@ namespace EPMDynamo {
       private:
 
          /**
+          * @brief Is IO step triggered or time for ASCII?
+          */
+         const bool mUseASCIIStep;
+
+         /**
+          * @brief Is IO step triggered or time for State?
+          */
+         const bool mUseStateStep;
+
+         /**
           * @brief Maxtstep
           */
          const int   mMaxtstep;
@@ -95,11 +108,36 @@ namespace EPMDynamo {
           * @brief Save rate for State files
           */
          int   mSRate;
+
+         /**
+          * @brief Has ASCII IO been triggered?
+          */
+         bool mIsATriggered;
+
+         /**
+          * @brief Has ASCII IO been triggered?
+          */
+         bool mIsSTriggered;
+
+         /**
+          * @brief Intermediate data for time trigger for ASCII
+          */
+         EPMFloat mAReminder;
+
+         /**
+          * @brief Intermediate data for time trigger for state
+          */
+         EPMFloat mSReminder;
    };
 
-   inline void TimestepCounter::increment()
+   inline bool TimestepCounter::triggerASCII() const
    {
-      ++this->mSteps;
+      return this->mIsATriggered;
+   }
+
+   inline bool TimestepCounter::triggerState() const
+   {
+      return this->mIsSTriggered;
    }
 
    inline int TimestepCounter::steps() const

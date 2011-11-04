@@ -35,10 +35,10 @@ namespace EPMDynamo {
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = false;
+         static const bool UseRTPMagnetic = true;
 
          /// Requires spectral Magnetic computations
-         static const bool UseSpecMagnetic = true;
+         static const bool UseSpecMagnetic = false;
 
          /// Requires Magnetic curl computations
          static const bool UseMagneticCurl = false;
@@ -157,11 +157,30 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
+      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
+      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+
+      EPMFloat radius;
+
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
          magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
+         
+         radius = pTrunc->local()->rtp()->radGrid(n);
+
+         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+         {
+            // Radial component
+            magB.rOc().rRTP().rR().rShell(n).col(th).setConstant(1.25*(4.0-3.0*radius)*pTrunc->local()->rtp()->cTh(th, n));
+
+            // Theta component
+            magB.rOc().rRTP().rTheta().rShell(n).col(th).setConstant(0.6125*(9.0*radius-8.0)*pTrunc->local()->rtp()->sTh(th, n));
+
+            // Phi component
+            magB.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(5.0*std::sin(std::acos(-1.0)*radius)*2.0*pTrunc->local()->rtp()->sTh(th, n)*pTrunc->local()->rtp()->cTh(th, n));
+         }
       }
    }
 
