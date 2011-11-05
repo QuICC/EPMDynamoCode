@@ -18,7 +18,7 @@
 namespace EPMDynamo {
 
    TimestepCounter::TimestepCounter(int maxtstep, int asciiRate, int stateRate)
-      : mUseASCIIStep((asciiRate > 0)), mUseStateStep((stateRate > 0)), mMaxtstep(maxtstep), mSteps(0), mIsATriggered(false), mIsSTriggered(false), mARate(std::abs(asciiRate)), mSRate(std::abs(stateRate))
+      : mUseASCIIStep((asciiRate > 0)), mUseStateStep((stateRate > 0)), mMaxtstep(maxtstep), mSteps(0), mIsATriggered(false), mIsSTriggered(false), mARate(std::abs(asciiRate)), mSRate(std::abs(stateRate)), mNextAWrite(0), mNextSWrite(0)
    {
    }
 
@@ -54,7 +54,12 @@ namespace EPMDynamo {
          this->mIsATriggered = (this->mSteps % this->mARate == 0);
       } else
       {
-         this->mIsATriggered = false;
+         this->mIsATriggered = (time > this->mNextAWrite);
+
+         if(this->mIsATriggered)
+         {
+            this->mNextAWrite += this->mARate;
+         }
       }
 
       if(this->mUseStateStep)
@@ -62,7 +67,12 @@ namespace EPMDynamo {
          this->mIsSTriggered = (this->mSteps % this->mSRate == 0);
       } else
       {
-         this->mIsSTriggered = false;
+         this->mIsSTriggered = (time > this->mNextSWrite);
+
+         if(this->mIsSTriggered)
+         {
+            this->mNextSWrite += this->mSRate;
+         }
       }
    }
 

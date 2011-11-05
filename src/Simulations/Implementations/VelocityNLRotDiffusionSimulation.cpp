@@ -17,6 +17,7 @@
 
 // Project includes
 //
+#include "IO/ASCII/ExtractRadiusFile.hpp"
 
 namespace EPMDynamo {
 
@@ -210,7 +211,7 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
       // Create a energy ASCII diagnostic file for the averaged velocity field
-      EPMSHARED_PTR<EnergyFile<VelocityRotDiffusionTraits::VelType> > pAvgVelEnergy(new EnergyFile<VelocityRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<VelocityNLRotDiffusionTraits::VelType> > pAvgVelEnergy(new EnergyFile<VelocityNLRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel", this->mSimControl.tsParams()));
 
       // Add averaged kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pAvgVelEnergy);
@@ -222,7 +223,7 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pVelSpectrum);
 
       // Create a averaged energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<VelocityRotDiffusionTraits::VelType> > pAvgVelSpectrum(new SpectrumFile<VelocityRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel"));
+      EPMSHARED_PTR<SpectrumFile<VelocityNLRotDiffusionTraits::VelType> > pAvgVelSpectrum(new SpectrumFile<VelocityNLRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel"));
 
       // Add averaged kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pAvgVelSpectrum);
