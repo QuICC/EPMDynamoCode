@@ -1,4 +1,4 @@
-/** \file VelocityRotDiffusionSimulation.cpp
+/** \file VelocityRotDiffusionAvgSimulation.cpp
  *  \brief Implementation of a velocity diffusion simulation
  */
 
@@ -13,19 +13,19 @@
 
 // Class include
 //
-#include "Simulations/Implementations/VelocityRotDiffusionSimulation.hpp"
+#include "Simulations/Implementations/VelocityRotDiffusionAvgSimulation.hpp"
 
 // Project includes
 //
 
 namespace EPMDynamo {
 
-   VelocityRotDiffusionSimulation::VelocityRotDiffusionSimulation()
-      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams)
+   VelocityRotDiffusionAvgSimulation::VelocityRotDiffusionAvgSimulation()
+      : mVelV(this->mpTrunc, this->mTransform), mNavierStokes(this->mVelV, this->mTransform, this->mSimControl.tsParams(), this->mEqParams), mTimeAverager(this->mVelV, this->mTransform, this->mSimControl.tsParams())
    {
    }
 
-   void VelocityRotDiffusionSimulation::initEquations()
+   void VelocityRotDiffusionAvgSimulation::initEquations()
    {
       // Create Zero boundary condition pointer
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
@@ -91,9 +91,12 @@ namespace EPMDynamo {
 
       // Initialise the Navier-Stokes equation
       this->mNavierStokes.init();
+
+      // Initialise the TimeAverager
+      this->mTimeAverager.init();
    }
 
-   void VelocityRotDiffusionSimulation::configureTransforms()
+   void VelocityRotDiffusionAvgSimulation::configureTransforms()
    {
       //
       // Setup the SSH transform data manipulator
@@ -123,13 +126,13 @@ namespace EPMDynamo {
       this->configureTransformNesting();
    }
 
-   void VelocityRotDiffusionSimulation::updateEquationsRTP(const int step)
+   void VelocityRotDiffusionAvgSimulation::updateEquationsRTP(const int step)
    {
       // Update RTP values of the Navier-Stokes equation
       this->mNavierStokes.updateRTP(step);
    }
 
-   void VelocityRotDiffusionSimulation::updateEquationsRHS()
+   void VelocityRotDiffusionAvgSimulation::updateEquationsRHS()
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.updateRHS();
@@ -138,23 +141,26 @@ namespace EPMDynamo {
       this->mSimControl.tsControl().updateRTPCFLTimestep(this->mVelV.oc().rtp());
    }
 
-   void VelocityRotDiffusionSimulation::transformEquationsRHS(const int step)
+   void VelocityRotDiffusionAvgSimulation::transformEquationsRHS(const int step)
    {
       // Update RHS of the Navier-Stokes equation
       this->mNavierStokes.transformRHS(step);
    }
 
-   void VelocityRotDiffusionSimulation::addExternalInfluence()
+   void VelocityRotDiffusionAvgSimulation::addExternalInfluence()
    {
    }
 
-   void VelocityRotDiffusionSimulation::timestepEquations()
+   void VelocityRotDiffusionAvgSimulation::timestepEquations()
    {
+      // Update the time average computation
+      this->mTimeAverager.timestep();
+
       // Timestep the Navier-Stokes equation
       this->mNavierStokes.timestep();
    }
 
-   void VelocityRotDiffusionSimulation::initFields()
+   void VelocityRotDiffusionAvgSimulation::initFields()
    {
       // Create a state file reader for the initial state
       EPMSHARED_PTR<StateFileReader<VelocityRotDiffusionTraits> > pInState(new StateFileReader<VelocityRotDiffusionTraits>(this->mVelV,  "_initial"));
@@ -166,14 +172,18 @@ namespace EPMDynamo {
       this->mVelV.rOc().rPerturbation().setEnergyScale(this->mEqParams.keFactor());
    }
 
-   void VelocityRotDiffusionSimulation::addHDF5Output()
+   void VelocityRotDiffusionAvgSimulation::addHDF5Output()
    {
       EPMSHARED_PTR<StateFileWriter<VelocityRotDiffusionTraits> >  pOutState(new StateFileWriter<VelocityRotDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
+
+      EPMSHARED_PTR<StateFileWriter<VelocityRotDiffusionTraits> >  pAvgState(new StateFileWriter<VelocityRotDiffusionTraits>(*this->mTimeAverager.pAvgVelV(), this->mEqParams, this->mSimControl.tsParams(), "Avg"));
+
+      this->mIOSys.addHDF5Writer(pAvgState);
    }
 
-   void VelocityRotDiffusionSimulation::addASCIIOutput()
+   void VelocityRotDiffusionAvgSimulation::addASCIIOutput()
    {
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
@@ -186,11 +196,23 @@ namespace EPMDynamo {
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
+      // Create a energy ASCII diagnostic file for the averaged velocity field
+      EPMSHARED_PTR<EnergyFile<VelocityRotDiffusionTraits::VelType> > pAvgVelEnergy(new EnergyFile<VelocityRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel", this->mSimControl.tsParams()));
+
+      // Add averaged kinetic energy to ASCII output
+      this->mIOSys.addASCIIWriter(pAvgVelEnergy);
+
       // Create a energy spectrum ASCII diagnostic file for the velocity field
       EPMSHARED_PTR<SpectrumFile<VelocityRotDiffusionTraits::VelType> > pVelSpectrum(new SpectrumFile<VelocityRotDiffusionTraits::VelType>(this->mVelV, "vel"));
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
+
+      // Create a averaged energy spectrum ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<SpectrumFile<VelocityRotDiffusionTraits::VelType> > pAvgVelSpectrum(new SpectrumFile<VelocityRotDiffusionTraits::VelType>(*this->mTimeAverager.pAvgVelV(), "avgVel"));
+
+      // Add averaged kinetic energy spectrum to ASCII output
+      this->mIOSys.addASCIIWriter(pAvgVelSpectrum);
 
       // Add libration output file if required
       if(this->mIOSys.cfg()->aBC()(1) == 4)

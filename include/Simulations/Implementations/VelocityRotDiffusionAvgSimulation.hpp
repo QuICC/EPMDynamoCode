@@ -1,9 +1,9 @@
-/** \file VelocityNLRotDiffusionSimulation.hpp
+/** \file VelocityRotDiffusionAvgSimulation.hpp
  *  \brief Implementation of a velocity diffusion simulation
  */
 
-#ifndef VELOCITYNLROTDIFFUSIONSIMULATION_HPP
-#define VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#ifndef VELOCITYROTDIFFUSIONAVGSIMULATION_HPP
+#define VELOCITYROTDIFFUSIONAVGSIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,7 +19,7 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
+#include "Simulations/Traits/VelocityRotDiffusionTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
@@ -29,13 +29,13 @@
 #include "IO/ASCII/TimeFile.hpp"
 #include "IO/ASCII/LibrationFile.hpp"
 
-#include "Equations/NavierStokes/NavierStokesNLRotDiffusion.hpp"
+#include "Equations/NavierStokes/NavierStokesRotDiffusion.hpp"
+#include "Equations/TimeAverager.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
-#include "BoundaryConditions/Inhomogeneous/PrecessionFrameBC.hpp"
 #include "BoundaryConditions/TimeDependent/LongitudinalLibrationBC.hpp"
 #include "BoundaryConditions/TimeDependent/LatitudinalLibrationBC.hpp"
 
@@ -44,19 +44,19 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a velocity diffusion simulation
     */
-   class VelocityNLRotDiffusionSimulation: public SimulationBase
+   class VelocityRotDiffusionAvgSimulation: public SimulationBase
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~VelocityNLRotDiffusionSimulation() {};
+         virtual ~VelocityRotDiffusionAvgSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         VelocityNLRotDiffusionSimulation();
+         VelocityRotDiffusionAvgSimulation();
 
          /**
           * @brief Initialise the fields
@@ -116,14 +116,19 @@ namespace EPMDynamo {
          /**
           * @brief Velocity field
           */
-         VelocityNLRotDiffusionTraits::VelType   mVelV;
+         VelocityRotDiffusionTraits::VelType   mVelV;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesNLRotDiffusion<VelocityNLRotDiffusionTraits>    mNavierStokes;
+         NavierStokesRotDiffusion<VelocityRotDiffusionTraits>    mNavierStokes;
+
+         /**
+          * @brief Time average computation
+          */
+         TimeAverager<VelocityRotDiffusionTraits>    mTimeAverager;
    };
 
 }
 
-#endif // VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#endif // VELOCITYROTDIFFUSIONAVGSIMULATION_HPP
