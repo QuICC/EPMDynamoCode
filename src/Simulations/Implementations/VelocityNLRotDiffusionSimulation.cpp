@@ -185,10 +185,6 @@ namespace EPMDynamo {
       EPMSHARED_PTR<StateFileWriter<VelocityNLRotDiffusionTraits> >  pOutState(new StateFileWriter<VelocityNLRotDiffusionTraits>(this->mVelV, this->mEqParams, this->mSimControl.tsParams()));
 
       this->mIOSys.addHDF5Writer(pOutState);
-
-      EPMSHARED_PTR<StateFileWriter<VelocityNLRotDiffusionTraits> >  pAvgState(new StateFileWriter<VelocityNLRotDiffusionTraits>(*this->mTimeAverager.pAvgVelV(), this->mEqParams, this->mSimControl.tsParams(), "Avg"));
-
-      this->mIOSys.addHDF5Writer(pAvgState);
    }
 
    void VelocityNLRotDiffusionSimulation::addASCIIOutput()
