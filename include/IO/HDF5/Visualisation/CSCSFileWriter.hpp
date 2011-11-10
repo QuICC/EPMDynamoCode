@@ -118,9 +118,10 @@ namespace EPMDynamo {
          /**
           * @brief Write additional visualisation data to file
           *
+          * @param type Type of data to write
           * @param filter Filter tag name
           */
-         template <typename TVisTraits> void writeAdditional(const std::string& filter);
+         template <typename TVisTraits> void writeAdditional(const int type, const std::string& filter);
          
       protected:
          /**
@@ -264,23 +265,35 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeAdditional(const std::string&  filter = "")
+   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeAdditional(const int type, const std::string&  filter = "")
    {
-      // Write the codensity perturbation values
-      if(this->mpCodC != NULL && TVisTraits::VisCodPerturbation)
+      if(type == 0)
       {
-         this->writeScalarField(CSCSFileDefs::CODPERTURBATIONTAG+filter, this->mpCodC->oc().rtp().data());
-      }
-
-      // Write the magnetic field values
-//      if(this->mpMagB != NULL && TVisTraits::VisMagnetic)
-//      {
-//      }
-
-      // Write the velocity inertial waves values
-      if(this->mpVelV != NULL && TVisTraits::VisInertial)
+         // Write the codensity perturbation values
+         if(this->mpCodC != NULL && TVisTraits::VisCodPerturbation)
+         {
+            this->writeScalarField(CSCSFileDefs::CODPERTURBATIONTAG+filter, this->mpCodC->oc().rtp().data());
+         }
+      } else if(type == 1)
       {
-         this->writeVectorField(CSCSFileDefs::VELINERTIALTAG+filter, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
+         // Write the velocity inertial waves values
+         if(this->mpVelV != NULL && TVisTraits::VisInertial)
+         {
+            this->writeVectorField(CSCSFileDefs::VELINERTIALTAG+filter, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
+         }
+      } else if(type == 2)
+      {
+         // Write the velocity restricted to m=0
+         if(this->mpVelV != NULL && TVisTraits::VisVelM0)
+         {
+            this->writeVectorField(CSCSFileDefs::VELM0TAG+filter, this->mpVelV->oc().rtp().r().data(), this->mpVelV->oc().rtp().theta().data(), this->mpVelV->oc().rtp().phi().data());
+         }
+
+         // Write the magnetic restricted to m=0
+         if(this->mpMagB != NULL && TVisTraits::VisMagM0)
+         {
+            this->writeVectorField(CSCSFileDefs::MAGM0TAG+filter, this->mpMagB->oc().rtp().r().data(), this->mpMagB->oc().rtp().theta().data(), this->mpMagB->oc().rtp().phi().data());
+         }
       }
    }
 

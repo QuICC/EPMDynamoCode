@@ -49,6 +49,10 @@ namespace EPMDynamo {
 
    const std::string CSCSFileDefs::VELINERTIALTAG = "VelInertial";
 
+   const std::string CSCSFileDefs::VELM0TAG = "VelM0";
+
+   const std::string CSCSFileDefs::MAGM0TAG = "MagM0";
+
    const std::string CSCSFileDefs::VORTICITYTAG = "Vorticity";
 
    const std::string CSCSFileDefs::HELICITYTAG = "Helicity";

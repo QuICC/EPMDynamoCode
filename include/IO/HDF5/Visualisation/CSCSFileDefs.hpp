@@ -99,9 +99,19 @@ namespace EPMDynamo {
          static const std::string   VELOCITYTAG;
 
          /**
-          * @brief Velocity tag name for CSCS file
+          * @brief Velocity without inertial part tag name for CSCS file
           */
          static const std::string   VELINERTIALTAG;
+
+         /**
+          * @brief Velocity only m=0 tag name for CSCS file
+          */
+         static const std::string   VELM0TAG;
+
+         /**
+          * @brief Magnetic only m=0 tag name for CSCS file
+          */
+         static const std::string   MAGM0TAG;
 
          /**
           * @brief Vorticity tag name for CSCS file

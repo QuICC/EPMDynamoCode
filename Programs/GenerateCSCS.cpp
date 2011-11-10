@@ -16,6 +16,7 @@
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
+#include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Simulations/Traits/CodensityDiffusionTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
@@ -23,7 +24,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::VelocityDiffusionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -43,10 +44,10 @@ class FullVisTraits
       static const bool VisVelocity = true;
 
       /// Output Vorticity visualisation
-      static const bool VisVorticity = true;
+      static const bool VisVorticity = false;
 
       /// Output Helicity visualisation
-      static const bool VisHelicity = true;
+      static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation
       static const bool VisMagnetic = true;
@@ -122,6 +123,12 @@ class FullAddVisTraits
 
       /// Output Velocity visualisation
       static const bool VisInertial = true;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisVelM0 = true;
+
+      /// Output Magnetic only m=0 component visualisation
+      static const bool VisMagM0 = false;
 };
 
 /**
@@ -135,6 +142,12 @@ class TorAddVisTraits
 
       /// Output Velocity visualisation of toroidal component only
       static const bool VisInertial = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisVelM0 = false;
+
+      /// Output Magnetic only m=0 component visualisation
+      static const bool VisMagM0 = false;
 };
 
 /**
@@ -148,6 +161,12 @@ class PolAddVisTraits
 
       /// Output Velocity visualisation of poloidal component only
       static const bool VisInertial = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisVelM0 = false;
+
+      /// Output Magnetic only m=0 component visualisation
+      static const bool VisMagM0 = false;
 };
 
 /**

@@ -106,13 +106,17 @@ namespace EPMDynamo {
 
          /**
           * @brief Write total field values
+          *
+          * @param type Type of the additional
           */
-         template <typename TAddVisTraits> void prepareAdditional();
+         template <typename TAddVisTraits> bool prepareAdditional(const int type);
 
          /**
           * @brief Write total field values
+          *
+          * @param type Type of the additional
           */
-         template <typename TAddVisTraits> void finaliseAdditional();
+         template <typename TAddVisTraits> void finaliseAdditional(const int type);
 
       private:
    };
@@ -204,9 +208,11 @@ namespace EPMDynamo {
       this->mpOutFile->writeStart();
    }
 
-   template <typename TSimTraits> template <typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::prepareAdditional()
+   template <typename TSimTraits> template <typename TAddVisTraits> bool CSCSParaviewGenerator<TSimTraits>::prepareAdditional(const int type)
    {
-      if(this->mpVelV != NULL && TAddVisTraits::VisInertial)
+      bool needSave = false;
+
+      if(type == 1 && this->mpVelV != NULL && TAddVisTraits::VisInertial)
       {
          Array amplitude;
 
@@ -246,12 +252,88 @@ namespace EPMDynamo {
 
          // Output solid body projection values after removal
          std::cerr << "Solid body projection after: "  << amplitude.transpose() << std::endl;
+
+         needSave = true;
       }
+
+      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisVelM0)
+      {
+         // Get truncation information
+         SmartTruncation pTrunc = this->velV().oc().trunc();
+
+         // Get the stored ls
+         ArrayI ls = pTrunc->local()->spec()->lArray();
+         ArrayI ms;
+         int l_ = -1;
+         int m_ = -1;
+         // Loop over all stored l's
+         for(int l = 0; l < ls.size(); l++)
+         {
+            l_ = ls(l);
+            if(l_ == 1)
+            {
+               ms = pTrunc->local()->spec()->mArray(l);
+               for(int m =0; m < ms.size(); m++)
+               {
+                  m_ = ms(m);
+                  if(m_ != 0)
+                  {
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m).setConstant(0.0);
+                    this->velV().rOc().rPerturbation().rPol().rLShell(l).col(m).setConstant(0.0);
+                  }
+               }
+            }
+         }
+
+         needSave = true;
+      }
+
+      if(type == 2 && this->mpMagB != NULL && TAddVisTraits::VisMagM0)
+      {
+         // Get truncation information
+         SmartTruncation pTrunc = this->magB().oc().trunc();
+
+         // Get the stored ls
+         ArrayI ls = pTrunc->local()->spec()->lArray();
+         ArrayI ms;
+         int l_ = -1;
+         int m_ = -1;
+         // Loop over all stored l's
+         for(int l = 0; l < ls.size(); l++)
+         {
+            l_ = ls(l);
+            if(l_ == 1)
+            {
+               ms = pTrunc->local()->spec()->mArray(l);
+               for(int m =0; m < ms.size(); m++)
+               {
+                  m_ = ms(m);
+                  if(m_ != 0)
+                  {
+                    this->magB().rOc().rPerturbation().rTor().rLShell(l).col(m).setConstant(0.0);
+                    this->magB().rOc().rPerturbation().rPol().rLShell(l).col(m).setConstant(0.0);
+                  }
+               }
+            }
+         }
+
+         needSave = true;
+      }
+
+      return needSave;
    }
 
-   template <typename TSimTraits> template <typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::finaliseAdditional()
+   template <typename TSimTraits> template <typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::finaliseAdditional(const int type)
    {
-      if(this->mpVelV != NULL && TAddVisTraits::VisInertial)
+      if(type == 1 && this->mpVelV != NULL && TAddVisTraits::VisInertial)
+      {
+      }
+
+      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisVelM0)
+      {
+      }
+
+      if(type == 2 && this->mpMagB != NULL && TAddVisTraits::VisMagM0)
       {
       }
    }
@@ -271,22 +353,28 @@ namespace EPMDynamo {
       this->mpOutFile->template writeVisualisation<TVisTraits>();
 
 
+      bool hasAdditional;
+      for(int i=0; i < 3; i++)
+      {
+         // initialise flag
+         hasAdditional = false;
 
-      // Read data from file
-      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::FullField> >();
+         // Read data from file
+         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::FullField> >();
 
-      this->template prepareAdditional<TAddVisTraits>();
+         hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
-      // Configure transforms
-      this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+         // Configure transforms
+         this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
-      // Transform the fields
-      this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+         // Transform the fields
+         this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
-      this->template finaliseAdditional<TAddVisTraits>();
+         this->template finaliseAdditional<TAddVisTraits>(i);
 
-      // Write data to file
-      this->mpOutFile->template writeAdditional<TAddVisTraits>();
+         // Write data to file
+         this->mpOutFile->template writeAdditional<TAddVisTraits>(i);
+      }
    }
 
    template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writeToroidal()
@@ -304,21 +392,28 @@ namespace EPMDynamo {
       this->mpOutFile->template writeVisualisation<TVisTraits>(CSCSFileDefs::TOROIDALTAG);
 
 
-      // Read data from file
-      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
+      bool hasAdditional;
+      for(int i=0; i < 3; i++)
+      {
+         // initialise flag
+         hasAdditional = false;
 
-      this->template prepareAdditional<TAddVisTraits>();
+         // Read data from file
+         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
 
-      // Configure transforms
-      this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+         hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
-      // Transform the fields
-      this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+         // Configure transforms
+         this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
-      this->template finaliseAdditional<TAddVisTraits>();
+         // Transform the fields
+         this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
-      // Write data to file
-      this->mpOutFile->template writeAdditional<TAddVisTraits>(CSCSFileDefs::TOROIDALTAG);
+         this->template finaliseAdditional<TAddVisTraits>(i);
+
+         // Write data to file
+         this->mpOutFile->template writeAdditional<TAddVisTraits>(i,CSCSFileDefs::TOROIDALTAG);
+      }
    }
 
    template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writePoloidal()
@@ -336,22 +431,28 @@ namespace EPMDynamo {
       this->mpOutFile->template writeVisualisation<TVisTraits>(CSCSFileDefs::POLOIDALTAG);
 
 
+      bool hasAdditional;
+      for(int i=0; i < 3; i++)
+      {
+         // initialise flag
+         hasAdditional = false;
 
-      // Read data from file
-      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
+         // Read data from file
+         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
 
-      this->template prepareAdditional<TAddVisTraits>();
+         hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
-      // Configure transforms
-      this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+         // Configure transforms
+         this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
-      // Transform the fields
-      this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+         // Transform the fields
+         this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
-      this->template finaliseAdditional<TAddVisTraits>();
+         this->template finaliseAdditional<TAddVisTraits>(i);
 
-      // Write data to file
-      this->mpOutFile->template writeAdditional<TAddVisTraits>(CSCSFileDefs::POLOIDALTAG);
+         // Write data to file
+         this->mpOutFile->template writeAdditional<TAddVisTraits>(i,CSCSFileDefs::POLOIDALTAG);
+      }
    }
 
    template <typename TSimTraits> void CSCSParaviewGenerator<TSimTraits>::finalise()

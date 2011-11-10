@@ -35,10 +35,10 @@ namespace EPMDynamo {
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = true;
+         static const bool UseRTPMagnetic = false;
 
          /// Requires spectral Magnetic computations
-         static const bool UseSpecMagnetic = false;
+         static const bool UseSpecMagnetic = true;
 
          /// Requires Magnetic curl computations
          static const bool UseMagneticCurl = false;
@@ -214,12 +214,13 @@ namespace EPMDynamo {
       }
 
       // Create basic state to generate basic -b r gradient (including normalisation factors)
-      codC.rOc().rPerturbation().rLShell(0)(0,0) += 0.313329;
-      codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.221557;
+      codC.rOc().rPerturbation().rLShell(0)(0,0) += 0.25*(std::sqrt(MathConstants::PI/2.0));
+      codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.5*(std::sqrt(MathConstants::PI)/4.0);
 
-      // Create basic state to generate basic -b r gradient (without normalisation factors)
-      //codC.rOc().rPerturbation().rLShell(0)(0,0) += 1.0/4.0;
-      //codC.rOc().rPerturbation().rLShell(0)(1,0) += -1.0/2.0;
+      // Include perturbation of degree and order 4
+      EPMFloat amp = 1.0;
+      codC.rOc().rPerturbation().rLShell(4)(0,4) += 0.25*(std::sqrt(35.0*MathConstants::PI)/64.0)*amp;
+      codC.rOc().rPerturbation().rLShell(4)(1,4) += -0.5*(std::sqrt(105.0*MathConstants::PI/2.0)/64.0)*amp;
    }
 
    template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecMagnetic(typename BenchmarkState<TGenTraits>::Magnetic &magB)
@@ -241,6 +242,22 @@ namespace EPMDynamo {
             magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
          }
       }
+
+      // Toroidal perturbation of degree 2
+      EPMFloat ampTor = 1.0;
+      magB.rOc().rPerturbation().rTor().rLShell(2)(0,0) += 0.25*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(2)(1,0) += -0.5*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(2)(0,1) += 0.25*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(2)(1,1) += -0.5*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(2)(0,2) += 0.25*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(2)(1,2) += -0.5*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
+
+      // Poloidal perturbation of degree 2
+      EPMFloat ampPol = 1.0;
+      magB.rOc().rPerturbation().rPol().rLShell(1)(0,0) += 0.25*(std::sqrt(MathConstants::PI)/2.0)*ampPol;
+      magB.rOc().rPerturbation().rPol().rLShell(1)(1,0) += -0.5*(std::sqrt(MathConstants::PI)/4.0)*ampPol;
+      magB.rOc().rPerturbation().rPol().rLShell(1)(0,1) += 0.25*(std::sqrt(MathConstants::PI)/2.0)*ampPol;
+      magB.rOc().rPerturbation().rPol().rLShell(1)(1,1) += -0.5*(std::sqrt(MathConstants::PI)/4.0)*ampPol;
    }
 
    template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecVelocity(typename BenchmarkState<TGenTraits>::Velocity &velV)
