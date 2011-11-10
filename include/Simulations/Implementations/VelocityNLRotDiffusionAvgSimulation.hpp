@@ -1,9 +1,9 @@
-/** \file VelocityNLRotDiffusionSimulation.hpp
+/** \file VelocityNLRotDiffusionAvgSimulation.hpp
  *  \brief Implementation of a velocity diffusion simulation
  */
 
-#ifndef VELOCITYNLROTDIFFUSIONSIMULATION_HPP
-#define VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#ifndef VELOCITYNLROTDIFFUSIONAVGSIMULATION_HPP
+#define VELOCITYNLROTDIFFUSIONAVGSIMULATION_HPP
 
 // Configuration includes
 //
@@ -30,6 +30,7 @@
 #include "IO/ASCII/LibrationFile.hpp"
 
 #include "Equations/NavierStokes/NavierStokesNLRotDiffusion.hpp"
+#include "Equations/TimeAverager.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
@@ -44,19 +45,19 @@ namespace EPMDynamo {
    /**
     * \brief Implementation of a velocity diffusion simulation
     */
-   class VelocityNLRotDiffusionSimulation: public SimulationBase
+   class VelocityNLRotDiffusionAvgSimulation: public SimulationBase
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~VelocityNLRotDiffusionSimulation() {};
+         virtual ~VelocityNLRotDiffusionAvgSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         VelocityNLRotDiffusionSimulation();
+         VelocityNLRotDiffusionAvgSimulation();
 
          /**
           * @brief Initialise the fields
@@ -122,8 +123,13 @@ namespace EPMDynamo {
           * @brief Navier Stokes equation
           */
          NavierStokesNLRotDiffusion<VelocityNLRotDiffusionTraits>    mNavierStokes;
+
+         /**
+          * @brief Time average computation
+          */
+         TimeAverager<VelocityNLRotDiffusionTraits>    mTimeAverager;
    };
 
 }
 
-#endif // VELOCITYNLROTDIFFUSIONSIMULATION_HPP
+#endif // VELOCITYNLROTDIFFUSIONAVGSIMULATION_HPP

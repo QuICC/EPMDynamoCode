@@ -20,6 +20,7 @@
 #include "Simulations/Traits/CodensityDiffusionTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
+#include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Utilities/CSCSParaviewGenerator.hpp"
 
 namespace epm = EPMDynamo;

@@ -30,7 +30,6 @@
 #include "IO/ASCII/LibrationFile.hpp"
 
 #include "Equations/NavierStokes/NavierStokesRotDiffusion.hpp"
-#include "Equations/TimeAverager.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
@@ -122,11 +121,6 @@ namespace EPMDynamo {
           * @brief Navier Stokes equation
           */
          NavierStokesRotDiffusion<VelocityRotDiffusionTraits>    mNavierStokes;
-
-         /**
-          * @brief Time average computation
-          */
-         TimeAverager<VelocityRotDiffusionTraits>    mTimeAverager;
    };
 
 }

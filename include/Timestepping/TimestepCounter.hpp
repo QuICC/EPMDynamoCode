@@ -122,12 +122,12 @@ namespace EPMDynamo {
          /**
           * @brief Intermediate data for time trigger for ASCII
           */
-         EPMFloat mAReminder;
+         int mNextAWrite;
 
          /**
           * @brief Intermediate data for time trigger for state
           */
-         EPMFloat mSReminder;
+         int mNextSWrite;
    };
 
    inline bool TimestepCounter::triggerASCII() const
