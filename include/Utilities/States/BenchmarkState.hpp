@@ -245,19 +245,26 @@ namespace EPMDynamo {
 
       // Toroidal perturbation of degree 2
       EPMFloat ampTor = 1.0;
-      magB.rOc().rPerturbation().rTor().rLShell(2)(0,0) += 0.25*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
-      magB.rOc().rPerturbation().rTor().rLShell(2)(1,0) += -0.5*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
-      magB.rOc().rPerturbation().rTor().rLShell(2)(0,1) += 0.25*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
-      magB.rOc().rPerturbation().rTor().rLShell(2)(1,1) += -0.5*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
-      magB.rOc().rPerturbation().rTor().rLShell(2)(0,2) += 0.25*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
-      magB.rOc().rPerturbation().rTor().rLShell(2)(1,2) += -0.5*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
+      int torL = 2;
+      EPMFloat torN = (1.0)/(1.0 + static_cast<EPMFloat>(torL));
+      EPMFloat torN0 = 0.5*torN;
+      EPMFloat torN1 = torN;
+      magB.rOc().rPerturbation().rTor().rLShell(torL)(0,0) += torN0*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(torL)(1,0) += -torN1*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(torL)(0,1) += torN0*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(torL)(1,1) += -torN1*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(torL)(0,2) += torN0*(std::sqrt(3.0*MathConstants::PI)/4.0)*ampTor;
+      magB.rOc().rPerturbation().rTor().rLShell(torL)(1,2) += -torN1*(std::sqrt(15.0*MathConstants::PI)/16.0)*ampTor;
 
-      // Poloidal perturbation of degree 2
+      // Poloidal perturbation of degree 1
       EPMFloat ampPol = 1.0;
-      magB.rOc().rPerturbation().rPol().rLShell(1)(0,0) += 0.25*(std::sqrt(MathConstants::PI)/2.0)*ampPol;
-      magB.rOc().rPerturbation().rPol().rLShell(1)(1,0) += -0.5*(std::sqrt(MathConstants::PI)/4.0)*ampPol;
-      magB.rOc().rPerturbation().rPol().rLShell(1)(0,1) += 0.25*(std::sqrt(MathConstants::PI)/2.0)*ampPol;
-      magB.rOc().rPerturbation().rPol().rLShell(1)(1,1) += -0.5*(std::sqrt(MathConstants::PI)/4.0)*ampPol;
+      int polL = 1;
+      EPMFloat polN0 = (5.0 + 6.0*static_cast<EPMFloat>(polL))/(6.0 + 10.0*static_cast<EPMFloat>(polL) + 4.0*static_cast<EPMFloat>(polL)*static_cast<EPMFloat>(polL));
+      EPMFloat polN1 = (1.0 + 2.0*static_cast<EPMFloat>(polL))/(3.0 + 5.0*static_cast<EPMFloat>(polL) + 2.0*static_cast<EPMFloat>(polL)*static_cast<EPMFloat>(polL));
+      magB.rOc().rPerturbation().rPol().rLShell(polL)(0,0) += polN0*(std::sqrt(MathConstants::PI)/2.0)*ampPol;
+      magB.rOc().rPerturbation().rPol().rLShell(polL)(1,0) += -polN1*(std::sqrt(MathConstants::PI)/4.0)*ampPol;
+      magB.rOc().rPerturbation().rPol().rLShell(polL)(0,1) += polN0*(std::sqrt(MathConstants::PI)/2.0)*ampPol;
+      magB.rOc().rPerturbation().rPol().rLShell(polL)(1,1) += -polN1*(std::sqrt(MathConstants::PI)/4.0)*ampPol;
    }
 
    template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecVelocity(typename BenchmarkState<TGenTraits>::Velocity &velV)

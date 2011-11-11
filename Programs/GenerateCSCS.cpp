@@ -25,7 +25,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::VelocityDiffusionTraits
+#define SIMTRAITS epm::DynamoTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -79,7 +79,7 @@ class TorVisTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation of toroidal component only
-      static const bool VisMagnetic = false;
+      static const bool VisMagnetic = true;
 
       /// Output Lorentz visualisation of toroidal component only
       static const bool VisLorentz = false;
@@ -107,7 +107,7 @@ class PolVisTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation of poloidal component only
-      static const bool VisMagnetic = false;
+      static const bool VisMagnetic = true;
 
       /// Output Lorentz visualisation of poloidal component only
       static const bool VisLorentz = false;
