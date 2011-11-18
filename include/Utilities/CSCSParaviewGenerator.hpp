@@ -25,6 +25,9 @@
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/Visualisation/CSCSFileDefs.hpp"
 
+
+#include <fstream>
+
 namespace EPMDynamo {
 
    /**
@@ -331,6 +334,42 @@ namespace EPMDynamo {
 
       if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisVelM0)
       {
+         SmartTruncation pTrunc = this->velV().oc().trunc();
+         std::ofstream file;
+
+         file.open("VelM0_gridR.dat");
+         file << pTrunc->sim()->rad()->radGrid();
+         file.close();
+         file.open("VelM0_gridTh.dat");
+         file << pTrunc->sim()->hoz()->thGrid();
+         file.close();
+
+         file.open("VelM0_radial.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().r().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
+
+         file.open("VelM0_theta.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().theta().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
+
+         file.open("VelM0_phi.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().phi().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
       }
 
       if(type == 2 && this->mpMagB != NULL && TAddVisTraits::VisMagM0)
