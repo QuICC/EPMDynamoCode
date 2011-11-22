@@ -218,7 +218,7 @@ namespace EPMDynamo {
       codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.5*(std::sqrt(MathConstants::PI)/4.0);
 
       // Include perturbation of degree and order 4
-      EPMFloat amp = 1.0;
+      EPMFloat amp = 0.0;
       codC.rOc().rPerturbation().rLShell(4)(0,4) += 0.25*(std::sqrt(35.0*MathConstants::PI)/64.0)*amp;
       codC.rOc().rPerturbation().rLShell(4)(1,4) += -0.5*(std::sqrt(105.0*MathConstants::PI/2.0)/64.0)*amp;
    }

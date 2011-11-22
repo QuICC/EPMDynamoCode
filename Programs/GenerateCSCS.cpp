@@ -130,6 +130,15 @@ class FullAddVisTraits
 
       /// Output Magnetic only m=0 component visualisation
       static const bool VisMagM0 = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVel = true;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVelM0 = true;
+
+      /// Output Magnetic only m=0 component visualisation
+      static const bool VisASCIIMagM0 = false;
 };
 
 /**
@@ -149,6 +158,15 @@ class TorAddVisTraits
 
       /// Output Magnetic only m=0 component visualisation
       static const bool VisMagM0 = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVel = true;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVelM0 = true;
+
+      /// Output Magnetic only m=0 component visualisation
+      static const bool VisASCIIMagM0 = false;
 };
 
 /**
@@ -168,6 +186,15 @@ class PolAddVisTraits
 
       /// Output Magnetic only m=0 component visualisation
       static const bool VisMagM0 = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVel = true;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVelM0 = true;
+
+      /// Output Magnetic only m=0 component visualisation
+      static const bool VisASCIIMagM0 = false;
 };
 
 /**

@@ -334,6 +334,10 @@ namespace EPMDynamo {
 
       if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisVelM0)
       {
+      }
+
+      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVelM0)
+      {
          SmartTruncation pTrunc = this->velV().oc().trunc();
          std::ofstream file;
 
@@ -367,6 +371,49 @@ namespace EPMDynamo {
          for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
          {
             file << this->velV().oc().rtp().phi().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
+      }
+
+      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVel)
+      {
+         SmartTruncation pTrunc = this->velV().oc().trunc();
+         std::ofstream file;
+
+         file.open("Vel_gridR.dat");
+         file << pTrunc->sim()->rad()->radGrid();
+         file.close();
+         file.open("Vel_gridTh.dat");
+         file << pTrunc->sim()->hoz()->thGrid();
+         file.close();
+         file.open("Vel_gridPh.dat");
+         file << pTrunc->sim()->hoz()->phGrid();
+         file.close();
+
+         file.open("Vel_radial.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().r().shell(r) << std::endl;
+         }
+
+         file.close();
+
+         file.open("Vel_theta.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().theta().shell(r) << std::endl;
+         }
+
+         file.close();
+
+         file.open("Vel_phi.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().phi().shell(r) << std::endl;
          }
 
          file.close();
