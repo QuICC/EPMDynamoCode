@@ -82,9 +82,9 @@ namespace EPMDynamo {
 //         typedef  ETDSchemeTraits  TimestepTraits;
          
          /// Typedef for the equation parameters
-         typedef EQRaRoParameters  EquationParametersType;
+         //typedef EQRaRoParameters  EquationParametersType;
          //typedef EPmParameters  EquationParametersType;
-         //typedef EParameters  EquationParametersType;
+         typedef EParameters  EquationParametersType;
          //typedef PrRaParameters  EquationParametersType;
          //typedef InvPrRaParameters  EquationParametersType;
    };

@@ -167,7 +167,7 @@ namespace EPMDynamo {
 
       Array solidProjection;
 
-      solidProjection = this->velV.rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
+      solidProjection = this->velV.rOc().rPerturbation().computeXYZSolidProjection(this->mTransform.radBasis());
 
       std::cout <<  "\t" << "x axis: " << solidProjection(0) << std::endl;
       std::cout <<  "\t" << "y axis: " << solidProjection(1) << std::endl;

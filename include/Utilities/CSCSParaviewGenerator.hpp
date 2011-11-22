@@ -219,7 +219,7 @@ namespace EPMDynamo {
       {
          Array amplitude;
 
-         amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
+         amplitude = this->velV().rOc().rPerturbation().computeXYZSolidProjection(this->mTransform.radBasis());
 
          // Output solid body projection values before operation
          std::cerr << "Solid body projection before: " << amplitude.transpose() << std::endl;
@@ -251,7 +251,7 @@ namespace EPMDynamo {
             }
          }
 
-         amplitude = this->velV().rOc().rPerturbation().computeXYSolidProjection(this->mTransform.radBasis());
+         amplitude = this->velV().rOc().rPerturbation().computeXYZSolidProjection(this->mTransform.radBasis());
 
          // Output solid body projection values after removal
          std::cerr << "Solid body projection after: "  << amplitude.transpose() << std::endl;

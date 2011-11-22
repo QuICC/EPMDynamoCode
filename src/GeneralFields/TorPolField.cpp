@@ -184,10 +184,10 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
    }
 
-   Array TorPolField::computeXYSolidProjection(const TorPolField::RadialBasisType &radBasis)
+   Array TorPolField::computeXYZSolidProjection(const TorPolField::RadialBasisType &radBasis)
    {
       // Create storage for amplitudes
-      Array amplitude = Array::Zero(3);
+      Array amplitude = Array::Zero(4);
 
       // Get the stored ls
       ArrayI ls = this->trunc()->local()->spec()->lArray();
@@ -204,6 +204,11 @@ namespace EPMDynamo {
       Array yAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
       yAxis(0) = 0.443113;
       EPMFloat yProj = 0.0;
+
+      // Setup the y axis solid body rotation (has only a real component)
+      Array zAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
+      zAxis(0) = 0.886227;
+      EPMFloat zProj = 0.0;
 
       // Loop over all stored l's
       for(int l = 0; l < ls.size(); l++)
@@ -234,6 +239,23 @@ namespace EPMDynamo {
                   amplitude(0) += xProj;
                   amplitude(1) += yProj;
                }
+
+               if(m_ == 0)
+               {
+                  int nN = this->trunc()->sim()->rad()->nN();
+
+                  for(int n = 0; n < nN; ++n)
+                  {
+                     for(int k = 0; k < nN; ++k)
+                     {
+                        zProj += radBasis.at(l).eWeights()(k,n) * (this->tor().lshell(l)(n,m).real()*zAxis(k));
+                     }
+                  }
+
+                  zProj /= zAxis.dot(radBasis.at(l).eWeights().col(0));
+
+                  amplitude(2) += zProj;
+               }
             }
          }
       }
@@ -242,7 +264,7 @@ namespace EPMDynamo {
          MPI_Allreduce(MPI_IN_PLACE, amplitude.data(), amplitude.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
 
-     amplitude(2) = std::sqrt(amplitude(0)*amplitude(0) + amplitude(1)*amplitude(1));
+      amplitude(3) = std::sqrt(amplitude(0)*amplitude(0) + amplitude(1)*amplitude(1)+ amplitude(2)*amplitude(2));
 
       return amplitude;
    }

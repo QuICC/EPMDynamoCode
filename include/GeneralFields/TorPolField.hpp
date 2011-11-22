@@ -86,11 +86,11 @@ namespace EPMDynamo {
          void computePolSpectra(const RadialBasisType &radBasis);
 
          /**
-          * @brief Compute the \f$\hat{x}\f$ and \f$\hat{y}\f$ solid body projections
+          * @brief Compute the \f$\hat{x}\f$, \f$\hat{y}\f$ and \f$\hat{z}\f$ solid body projections
           *
           * @param radBasis Radial basis 
           */
-         Array computeXYSolidProjection(const RadialBasisType &radBasis);
+         Array computeXYZSolidProjection(const RadialBasisType &radBasis);
 
          /**
           * @brief Get the energy in the toroidal component
