@@ -25,12 +25,13 @@
 #include "Utilities/States/MagneticDiffusionState.hpp"
 #include "Utilities/States/SakurabaState.hpp"
 #include "Utilities/States/BenchmarkState.hpp"
+#include "Utilities/States/SolidBodyRotationState.hpp"
 
 namespace epm = EPMDynamo;
 
 #define SIMTRAITS epm::DynamoTraits
 
-typedef epm::RandomState<SIMTRAITS>  StateType;
+typedef epm::SolidBodyRotationState<SIMTRAITS>  StateType;
 //typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
 //typedef epm::BenchmarkState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;

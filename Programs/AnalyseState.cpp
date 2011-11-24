@@ -29,7 +29,8 @@ namespace epm = EPMDynamo;
 
 #define SIMTRAITS epm::VelocityDiffusionTraits
 
-typedef  epm::StateAnalyser<SIMTRAITS, epm::ExtractRadiusAnalysis>  Analyser;
+//typedef  epm::StateAnalyser<SIMTRAITS, epm::ExtractRadiusAnalysis>  Analyser;
+typedef  epm::StateAnalyser<SIMTRAITS, epm::LibrationAnalysis>  Analyser;
 
 /**
  * @brief Velocity diffusion simulation

@@ -228,9 +228,9 @@ namespace EPMDynamo {
       // Create a energy ASCII diagnostic file for the codensity scalar
       EPMSHARED_PTR<EnergyFile<DynamoTraits::CodType> > pCodEnergy(new EnergyFile<DynamoTraits::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<EnergyFile<DynamoTraits::MagType> > pMagEnergy(new EnergyFile<DynamoTraits::MagType>(this->mMagB, "mag", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<DynamoTraits::MagType> > pMagEnergy(new EnergyFile<DynamoTraits::MagType>(this->mMagB, "mag", this->mSimControl.tsParams(), 3));
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<DynamoTraits::VelType> > pVelEnergy(new EnergyFile<DynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<DynamoTraits::VelType> > pVelEnergy(new EnergyFile<DynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), 3));
 
       // Add codensity energy to ASCII output
       this->mIOSys.addASCIIWriter(pCodEnergy);
@@ -242,9 +242,9 @@ namespace EPMDynamo {
       // Create a energy spectrum ASCII diagnostic file for the codensity scalar
       EPMSHARED_PTR<SpectrumFile<DynamoTraits::CodType> > pCodSpectrum(new SpectrumFile<DynamoTraits::CodType>(this->mCodC, "cod"));
       // Create a energy spectrum ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<SpectrumFile<DynamoTraits::MagType> > pMagSpectrum(new SpectrumFile<DynamoTraits::MagType>(this->mMagB, "mag"));
+      EPMSHARED_PTR<SpectrumFile<DynamoTraits::MagType> > pMagSpectrum(new SpectrumFile<DynamoTraits::MagType>(this->mMagB, "mag", 1));
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<DynamoTraits::VelType> > pVelSpectrum(new SpectrumFile<DynamoTraits::VelType>(this->mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<DynamoTraits::VelType> > pVelSpectrum(new SpectrumFile<DynamoTraits::VelType>(this->mVelV, "vel", 1));
 
       // Add codensity energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pCodSpectrum);

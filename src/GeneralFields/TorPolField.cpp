@@ -233,8 +233,8 @@ namespace EPMDynamo {
                      }
                   }
 
-                  xProj /= xAxis.dot(radBasis.at(l).eWeights().col(0));
-                  yProj /= yAxis.dot(radBasis.at(l).eWeights().col(0));
+                  xProj /= xAxis.array().square().matrix().dot(radBasis.at(l).eWeights().col(0));
+                  yProj /= yAxis.array().square().matrix().dot(radBasis.at(l).eWeights().col(0));
 
                   amplitude(0) += xProj;
                   amplitude(1) += yProj;
@@ -252,7 +252,7 @@ namespace EPMDynamo {
                      }
                   }
 
-                  zProj /= zAxis.dot(radBasis.at(l).eWeights().col(0));
+                  zProj /= zAxis.array().square().matrix().dot(radBasis.at(l).eWeights().col(0));
 
                   amplitude(2) += zProj;
                }

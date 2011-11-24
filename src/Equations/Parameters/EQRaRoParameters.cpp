@@ -128,7 +128,7 @@ namespace EPMDynamo {
 
    EPMFloat EQRaRoParameters::torsionalCFL() const
    {
-      return std::sqrt(this->E()/10.0);
+      return std::sqrt(this->E())/10.0;
    }
 
    EPMFloat EQRaRoParameters::codSourceScale() const

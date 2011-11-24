@@ -224,6 +224,11 @@ namespace EPMDynamo {
          // Output solid body projection values before operation
          std::cerr << "Solid body projection before: " << amplitude.transpose() << std::endl;
 
+         Array norm(3);
+         norm(0) = -0.443113;
+         norm(1) = 0.443113;
+         norm(2) = 0.886227;
+
          // Get truncation information
          SmartTruncation pTrunc = this->velV().oc().trunc();
 
@@ -244,8 +249,15 @@ namespace EPMDynamo {
                   m_ = ms(m);
                   if(m_ == 1)
                   {
-                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).real() -= amplitude(0);
-                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).imag() -= amplitude(1);
+                     // Remove rotation about the x axis
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).real() -= amplitude(0)*norm(0);
+                     // Remove rotation about the y axis
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).imag() -= amplitude(1)*norm(1);
+                  }
+                  if(m_ == 0)
+                  {
+                     // Remove rotation about the z axis
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).real() -= amplitude(2)*norm(2);
                   }
                }
             }

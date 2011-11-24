@@ -1,9 +1,9 @@
-/** \file RandomState.hpp
+/** \file SolidBodyRotationState.hpp
  *  \brief Initial state definition function for a random perturbation state
  */
 
-#ifndef RANDOMSTATE_HPP
-#define RANDOMSTATE_HPP
+#ifndef SOLIDBODYROTATIONSTATE_HPP
+#define SOLIDBODYROTATIONSTATE_HPP
 
 // Configuration includes
 //
@@ -22,7 +22,7 @@ namespace EPMDynamo {
    /**
     * @brief Traits of random perturbation state generator
     */
-   class RandomTraits
+   class SolidBodyRotationTraits
    {
       public:
          /// Requires RTP Codensity computations
@@ -35,7 +35,7 @@ namespace EPMDynamo {
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = true;
+         static const bool UseRTPMagnetic = false;
 
          /// Requires spectral Magnetic computations
          static const bool UseSpecMagnetic = false;
@@ -58,11 +58,11 @@ namespace EPMDynamo {
     *
     * \epmBug State generation is not aware of parallelisation
     */
-   template <typename TGenTraits> class RandomState
+   template <typename TGenTraits> class SolidBodyRotationState
    {
       public:
          /// Typdef for the StateTraits type
-         typedef RandomTraits  StateTraits;
+         typedef SolidBodyRotationTraits  StateTraits;
 
          /**
           * @brief Perturbation amplitude
@@ -122,21 +122,21 @@ namespace EPMDynamo {
          /**
           * @brief Private constructor
           */
-         RandomState();
+         SolidBodyRotationState();
 
          /**
           * @brief Destructor
           */
-         virtual ~RandomState() {};
+         virtual ~SolidBodyRotationState() {};
    };
 
-   template <typename TGenTraits> const EPMFloat RandomState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
+   template <typename TGenTraits> const EPMFloat SolidBodyRotationState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
 
-   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_LRATIO = 2;
+   template <typename TGenTraits> const int SolidBodyRotationState<TGenTraits>::PERTURBATION_LRATIO = 2;
 
-   template <typename TGenTraits> const int RandomState<TGenTraits>::PERTURBATION_NRATIO = 4;
+   template <typename TGenTraits> const int SolidBodyRotationState<TGenTraits>::PERTURBATION_NRATIO = 4;
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setRTPCodensity(typename RandomState<TGenTraits>::Codensity &codC)
+   template <typename TGenTraits> void SolidBodyRotationState<TGenTraits>::setRTPCodensity(typename SolidBodyRotationState<TGenTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
@@ -146,12 +146,16 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setRTPMagnetic(typename RandomState<TGenTraits>::Magnetic &magB)
+   template <typename TGenTraits> void SolidBodyRotationState<TGenTraits>::setRTPMagnetic(typename SolidBodyRotationState<TGenTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
       Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
       Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+
+      EPMFloat xAmp = 1.0;
+      EPMFloat yAmp = 1.0;
+      EPMFloat zAmp = 1.0;
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
@@ -161,23 +165,30 @@ namespace EPMDynamo {
 
          for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
          {
-            magB.rOc().rRTP().rTheta().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n) * sPh;
-            magB.rOc().rRTP().rPhi().rShell(n).col(th) = -pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n) * cPh;
+            // Create solid body rotation around x axis
+            magB.rOc().rRTP().rTheta().rShell(n).col(th) += -xAmp*pTrunc->local()->rtp()->radGrid(n) * sPh;
+            magB.rOc().rRTP().rPhi().rShell(n).col(th) += -xAmp*pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n) * cPh;
+
+            // Add solid body rotation around y axis
+            magB.rOc().rRTP().rTheta().rShell(n).col(th) += yAmp*pTrunc->local()->rtp()->radGrid(n) * cPh;
+            magB.rOc().rRTP().rPhi().rShell(n).col(th) += -yAmp*pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->cTh(th, n) * sPh;
+
+            // Add solid body rotation around z axis
+            magB.rOc().rRTP().rPhi().rShell(n).col(th).array() += zAmp*pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->sTh(th, n);
          }
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setRTPVelocity(typename RandomState<TGenTraits>::Velocity &velV)
+   template <typename TGenTraits> void SolidBodyRotationState<TGenTraits>::setRTPVelocity(typename SolidBodyRotationState<TGenTraits>::Velocity &velV)
    {
-
       SmartTruncation pTrunc = velV.oc().trunc();
 
       Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
       Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
 
       EPMFloat xAmp = 1.0;
-      EPMFloat yAmp = 1.0;
-      EPMFloat zAmp = 1.0;
+      EPMFloat yAmp = 0.0;
+      EPMFloat zAmp = 0.0;
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
@@ -201,15 +212,15 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setSpecCodensity(typename RandomState<TGenTraits>::Codensity &codC)
+   template <typename TGenTraits> void SolidBodyRotationState<TGenTraits>::setSpecCodensity(typename SolidBodyRotationState<TGenTraits>::Codensity &codC)
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
       // Set some perturbation random energy
-      for(int l=0; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      for(int l=0; l < pTrunc->local()->spec()->nL()/SolidBodyRotationState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
-         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         codC.rOc().rPerturbation().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/SolidBodyRotationState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         codC.rOc().rPerturbation().rLShell(l) *= EPMComplex(SolidBodyRotationState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -225,19 +236,19 @@ namespace EPMDynamo {
       codC.rOc().rPerturbation().rLShell(0)(1,0) += -0.221557;
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setSpecMagnetic(typename RandomState<TGenTraits>::Magnetic &magB)
+   template <typename TGenTraits> void SolidBodyRotationState<TGenTraits>::setSpecMagnetic(typename SolidBodyRotationState<TGenTraits>::Magnetic &magB)
    {
       SmartTruncation pTrunc = magB.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      for(int l=1; l < pTrunc->local()->spec()->nL()/SolidBodyRotationState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
          // Set some perturbation random energy in Toroidal component
-         magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         magB.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/SolidBodyRotationState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         magB.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(SolidBodyRotationState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Set some perturbation random energy in Poloidal component
-         magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         magB.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/SolidBodyRotationState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         magB.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(SolidBodyRotationState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -248,19 +259,19 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TGenTraits> void RandomState<TGenTraits>::setSpecVelocity(typename RandomState<TGenTraits>::Velocity &velV)
+   template <typename TGenTraits> void SolidBodyRotationState<TGenTraits>::setSpecVelocity(typename SolidBodyRotationState<TGenTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
-      for(int l=1; l < pTrunc->local()->spec()->nL()/RandomState<TGenTraits>::PERTURBATION_LRATIO; ++l)
+      for(int l=1; l < pTrunc->local()->spec()->nL()/SolidBodyRotationState<TGenTraits>::PERTURBATION_LRATIO; ++l)
       {
          // Set some perturbation random energy in Toroidal component
-         velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         velV.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
+         velV.rOc().rPerturbation().rTor().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/SolidBodyRotationState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         velV.rOc().rPerturbation().rTor().rLShell(l) *= EPMComplex(SolidBodyRotationState<TGenTraits>::PERTURBATION_AMPLITUDE,0.0);
 
          // Set some perturbation random energy in Poloidal component
-         velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/RandomState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
-         velV.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(RandomState<TGenTraits>::PERTURBATION_AMPLITUDE, 0.0);
+         velV.rOc().rPerturbation().rPol().rLShell(l).block(0,0,pTrunc->sim()->rad()->nN()/SolidBodyRotationState<TGenTraits>::PERTURBATION_NRATIO, std::max(pTrunc->local()->spec()->nM(l),1)).setRandom();
+         velV.rOc().rPerturbation().rPol().rLShell(l) *= EPMComplex(SolidBodyRotationState<TGenTraits>::PERTURBATION_AMPLITUDE, 0.0);
 
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
@@ -272,9 +283,9 @@ namespace EPMDynamo {
 
    }
 
-   template <typename TGenTraits> RandomState<TGenTraits>::RandomState()
+   template <typename TGenTraits> SolidBodyRotationState<TGenTraits>::SolidBodyRotationState()
    {
    }
 }
 
-#endif // RANDOMSTATE_HPP
+#endif // SOLIDBODYROTATIONSTATE_HPP
