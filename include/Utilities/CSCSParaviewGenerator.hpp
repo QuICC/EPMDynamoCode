@@ -340,55 +340,7 @@ namespace EPMDynamo {
 
    template <typename TSimTraits> template <typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::finaliseAdditional(const int type)
    {
-      if(type == 1 && this->mpVelV != NULL && TAddVisTraits::VisInertial)
-      {
-      }
-
-      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisVelM0)
-      {
-      }
-
-      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVelM0)
-      {
-         SmartTruncation pTrunc = this->velV().oc().trunc();
-         std::ofstream file;
-
-         file.open("VelM0_gridR.dat");
-         file << pTrunc->sim()->rad()->radGrid();
-         file.close();
-         file.open("VelM0_gridTh.dat");
-         file << pTrunc->sim()->hoz()->thGrid();
-         file.close();
-
-         file.open("VelM0_radial.dat");
-
-         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
-         {
-            file << this->velV().oc().rtp().r().shell(r).row(0) << std::endl;
-         }
-
-         file.close();
-
-         file.open("VelM0_theta.dat");
-
-         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
-         {
-            file << this->velV().oc().rtp().theta().shell(r).row(0) << std::endl;
-         }
-
-         file.close();
-
-         file.open("VelM0_phi.dat");
-
-         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
-         {
-            file << this->velV().oc().rtp().phi().shell(r).row(0) << std::endl;
-         }
-
-         file.close();
-      }
-
-      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVel)
+      if(type == 0 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVel)
       {
          SmartTruncation pTrunc = this->velV().oc().trunc();
          std::ofstream file;
@@ -431,6 +383,89 @@ namespace EPMDynamo {
          file.close();
       }
 
+      if(type == 1 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVelNoQ)
+      {
+         SmartTruncation pTrunc = this->velV().oc().trunc();
+         std::ofstream file;
+
+         file.open("Vel_gridR.dat");
+         file << pTrunc->sim()->rad()->radGrid();
+         file.close();
+         file.open("Vel_gridTh.dat");
+         file << pTrunc->sim()->hoz()->thGrid();
+         file.close();
+         file.open("Vel_gridPh.dat");
+         file << pTrunc->sim()->hoz()->phGrid();
+         file.close();
+
+         file.open("VelNoQ_radial.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().r().shell(r) << std::endl;
+         }
+
+         file.close();
+
+         file.open("VelNoQ_theta.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().theta().shell(r) << std::endl;
+         }
+
+         file.close();
+
+         file.open("VelNoQ_phi.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().phi().shell(r) << std::endl;
+         }
+
+         file.close();
+      }
+
+      if(type == 2 && this->mpVelV != NULL && TAddVisTraits::VisASCIIVelM0)
+      {
+         SmartTruncation pTrunc = this->velV().oc().trunc();
+         std::ofstream file;
+
+         file.open("VelM0_gridR.dat");
+         file << pTrunc->sim()->rad()->radGrid();
+         file.close();
+         file.open("VelM0_gridTh.dat");
+         file << pTrunc->sim()->hoz()->thGrid();
+         file.close();
+
+         file.open("VelM0_radial.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().r().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
+
+         file.open("VelM0_theta.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().theta().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
+
+         file.open("VelM0_phi.dat");
+
+         for(int r = 0; r < pTrunc->local()->rtp()->nR(); r++)
+         {
+            file << this->velV().oc().rtp().phi().shell(r).row(0) << std::endl;
+         }
+
+         file.close();
+      }
+
       if(type == 2 && this->mpMagB != NULL && TAddVisTraits::VisMagM0)
       {
       }
@@ -447,12 +482,13 @@ namespace EPMDynamo {
       // Transform the fields
       this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
+      this->template finaliseAdditional<TAddVisTraits>(0);
+
       // Write data to file
       this->mpOutFile->template writeVisualisation<TVisTraits>();
 
-
       bool hasAdditional;
-      for(int i=0; i < 3; i++)
+      for(int i=1; i < 3; i++)
       {
          // initialise flag
          hasAdditional = false;
@@ -462,16 +498,19 @@ namespace EPMDynamo {
 
          hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
-         // Configure transforms
-         this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+         if(hasAdditional)
+         {
+            // Configure transforms
+            this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
-         // Transform the fields
-         this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+            // Transform the fields
+            this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
-         this->template finaliseAdditional<TAddVisTraits>(i);
+            this->template finaliseAdditional<TAddVisTraits>(i);
 
-         // Write data to file
-         this->mpOutFile->template writeAdditional<TAddVisTraits>(i);
+            // Write data to file
+            this->mpOutFile->template writeAdditional<TAddVisTraits>(i);
+         }
       }
    }
 
@@ -486,12 +525,14 @@ namespace EPMDynamo {
       // Transform the fields
       this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
+      this->template finaliseAdditional<TAddVisTraits>(0);
+
       // Write data to file
       this->mpOutFile->template writeVisualisation<TVisTraits>(CSCSFileDefs::TOROIDALTAG);
 
 
       bool hasAdditional;
-      for(int i=0; i < 3; i++)
+      for(int i=1; i < 3; i++)
       {
          // initialise flag
          hasAdditional = false;
@@ -501,16 +542,17 @@ namespace EPMDynamo {
 
          hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
-         // Configure transforms
-         this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+         if(hasAdditional)
+         {
+            // Configure transforms
+            this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
-         // Transform the fields
-         this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+            // Transform the fields
+            this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
-         this->template finaliseAdditional<TAddVisTraits>(i);
-
-         // Write data to file
-         this->mpOutFile->template writeAdditional<TAddVisTraits>(i,CSCSFileDefs::TOROIDALTAG);
+            // Write data to file
+            this->mpOutFile->template writeAdditional<TAddVisTraits>(i,CSCSFileDefs::TOROIDALTAG);
+         }
       }
    }
 
@@ -525,12 +567,14 @@ namespace EPMDynamo {
       // Transform the fields
       this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
+      this->template finaliseAdditional<TAddVisTraits>(0);
+
       // Write data to file
       this->mpOutFile->template writeVisualisation<TVisTraits>(CSCSFileDefs::POLOIDALTAG);
 
 
       bool hasAdditional;
-      for(int i=0; i < 3; i++)
+      for(int i=1; i < 3; i++)
       {
          // initialise flag
          hasAdditional = false;
@@ -540,16 +584,19 @@ namespace EPMDynamo {
 
          hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
-         // Configure transforms
-         this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
+         if(hasAdditional)
+         {
+            // Configure transforms
+            this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
-         // Transform the fields
-         this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
+            // Transform the fields
+            this->template transformSpectral<VisGeneratorTraits<TVisTraits> >();
 
-         this->template finaliseAdditional<TAddVisTraits>(i);
+            this->template finaliseAdditional<TAddVisTraits>(i);
 
-         // Write data to file
-         this->mpOutFile->template writeAdditional<TAddVisTraits>(i,CSCSFileDefs::POLOIDALTAG);
+            // Write data to file
+            this->mpOutFile->template writeAdditional<TAddVisTraits>(i,CSCSFileDefs::POLOIDALTAG);
+         }
       }
    }
 

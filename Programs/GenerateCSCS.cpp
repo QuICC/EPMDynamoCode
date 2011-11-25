@@ -132,7 +132,10 @@ class FullAddVisTraits
       static const bool VisMagM0 = false;
 
       /// Output Velocity only m=0 component visualisation
-      static const bool VisASCIIVel = false;
+      static const bool VisASCIIVel = true;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVelNoQ = true;
 
       /// Output Velocity only m=0 component visualisation
       static const bool VisASCIIVelM0 = false;
@@ -161,6 +164,9 @@ class TorAddVisTraits
 
       /// Output Velocity only m=0 component visualisation
       static const bool VisASCIIVel = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVelNoQ = false;
 
       /// Output Velocity only m=0 component visualisation
       static const bool VisASCIIVelM0 = false;
@@ -192,6 +198,9 @@ class PolAddVisTraits
 
       /// Output Velocity only m=0 component visualisation
       static const bool VisASCIIVelM0 = false;
+
+      /// Output Velocity only m=0 component visualisation
+      static const bool VisASCIIVelNoQ = false;
 
       /// Output Magnetic only m=0 component visualisation
       static const bool VisASCIIMagM0 = false;
