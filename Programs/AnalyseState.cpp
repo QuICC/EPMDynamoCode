@@ -24,13 +24,15 @@
 
 #include "Utilities/Analysis/LibrationAnalysis.hpp"
 #include "Utilities/Analysis/ExtractRadiusAnalysis.hpp"
+#include "Utilities/Analysis/DipoleAnalysis.hpp"
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::VelocityDiffusionTraits
+#define SIMTRAITS epm::DynamoTraits
 
 //typedef  epm::StateAnalyser<SIMTRAITS, epm::ExtractRadiusAnalysis>  Analyser;
-typedef  epm::StateAnalyser<SIMTRAITS, epm::LibrationAnalysis>  Analyser;
+//typedef  epm::StateAnalyser<SIMTRAITS, epm::LibrationAnalysis>  Analyser;
+typedef  epm::StateAnalyser<SIMTRAITS, epm::DipoleAnalysis>  Analyser;
 
 /**
  * @brief Velocity diffusion simulation

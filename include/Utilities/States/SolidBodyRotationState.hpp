@@ -187,8 +187,8 @@ namespace EPMDynamo {
       Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
 
       EPMFloat xAmp = 1.0;
-      EPMFloat yAmp = 0.0;
-      EPMFloat zAmp = 0.0;
+      EPMFloat yAmp = 1.0;
+      EPMFloat zAmp = 1.0;
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {

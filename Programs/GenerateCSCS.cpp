@@ -25,7 +25,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::VelocityDiffusionTraits
+#define SIMTRAITS epm::DynamoTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -45,10 +45,10 @@ class FullVisTraits
       static const bool VisVelocity = true;
 
       /// Output Vorticity visualisation
-      static const bool VisVorticity = false;
+      static const bool VisVorticity = true;
 
       /// Output Helicity visualisation
-      static const bool VisHelicity = false;
+      static const bool VisHelicity = true;
 
       /// Output Magnetic visualisation
       static const bool VisMagnetic = true;
@@ -132,10 +132,10 @@ class FullAddVisTraits
       static const bool VisMagM0 = false;
 
       /// Output Velocity only m=0 component visualisation
-      static const bool VisASCIIVel = true;
+      static const bool VisASCIIVel = false;
 
       /// Output Velocity only m=0 component visualisation
-      static const bool VisASCIIVelNoQ = true;
+      static const bool VisASCIIVelNoQ = false;
 
       /// Output Velocity only m=0 component visualisation
       static const bool VisASCIIVelM0 = false;

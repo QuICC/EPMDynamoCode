@@ -124,6 +124,9 @@ namespace EPMDynamo {
 
       // Read setup information from file
       this->mpInFile->read();
+
+      // Set time from state file
+      this->mTSParams.setTime(this->mpInFile->time());
    }
 
    template <typename TSimTraits, template <typename> class TAnalysis> void StateAnalyser<TSimTraits,TAnalysis>::finalise()

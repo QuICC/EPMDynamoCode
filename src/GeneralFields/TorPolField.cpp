@@ -184,6 +184,88 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
    }
 
+   Array TorPolField::dipole(const TorPolField::RadialBasisType &radBasis) const
+   {
+      Array    dipole(8);
+
+      // Get the stored ls
+      ArrayI ls = this->trunc()->local()->spec()->lArray();
+      ArrayI ms;
+      int l_ = -1;
+      int m_ = -1;
+
+      // Loop over all stored l's
+      for(int l = 0; l < ls.size(); l++)
+      {
+         l_ = ls(l);
+         if(l_ == 1)
+         {
+            ms = this->trunc()->local()->spec()->mArray(l);
+            for(int m =0; m < ms.size(); m++)
+            {
+               m_ = ms(m);
+               if(m_ == 0)
+               {
+                  // Get g10
+                  dipole(0) = radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).real());
+               }
+               if(m_ == 1)
+               {
+                  // Get g11
+                  dipole(1) = -2.0*radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).real());
+                  // Get h11
+                  dipole(2) = 2.0*radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).imag());
+               }
+            }
+         }
+      }
+
+      // Get tilt angle
+      dipole(3) = std::sqrt(dipole(0)*dipole(0) + dipole(1)*dipole(1) + dipole(2)*dipole(2));
+      if(dipole(3) != 0.0)
+      {
+         dipole(3) = std::acos(dipole(0)/std::max(dipole(3),dipole(0)));
+      }
+      // Get longitude
+      if(std::abs(dipole(1)) < 1e-12)
+      {
+         if(dipole(2) >= 0.0)
+         {
+            dipole(4) = 0.5*MathConstants::PI;
+         } else
+         {
+            dipole(4) = 1.5*MathConstants::PI;
+         }
+      }
+      else
+      {
+         dipole(4) = std::atan(dipole(2)/dipole(1));
+         if(dipole(1) < 0.0)
+         {
+            dipole(4) = dipole(4) + MathConstants::PI;
+         }
+         if(dipole(4) < 0.0)
+         {
+            dipole(4) = dipole(4) + 2.0*MathConstants::PI;
+         }
+      }
+
+      // Get total l=1 energy
+      dipole(5) =this->tor().spectrumL()(1) + this->pol().spectrumL()(1);
+      // Get toroidal l=1 energy
+      dipole(6) = this->tor().spectrumL()(1);
+      // Get poloidal l=1 energy
+      dipole(7) = this->pol().spectrumL()(1);
+
+      // Get the "global" spectra for MPI code
+      #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, dipole.data(), dipole.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+      #endif // EPMDYNAMO_MPI
+
+      return dipole;
+   }
+
+
    Array TorPolField::computeXYZSolidProjection(const TorPolField::RadialBasisType &radBasis)
    {
       // Create storage for amplitudes

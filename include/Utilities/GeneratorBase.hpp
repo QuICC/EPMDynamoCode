@@ -164,6 +164,9 @@ namespace EPMDynamo {
 
          // Initialise to zero spectral values
          this->mpMagB->initialiseZeros();
+
+         // Set the energy scale for the magnetic field
+         this->mpMagB->rOc().rPerturbation().setEnergyScale(this->mEqParams.meFactor());
       }
 
       // Create velocity field storage
@@ -173,6 +176,9 @@ namespace EPMDynamo {
 
          // Initialise to zero
          this->mpVelV->initialiseZeros();
+
+         // Set the energy scale for the magnetic field
+         this->mpVelV->rOc().rPerturbation().setEnergyScale(this->mEqParams.keFactor());
       }
    }
 

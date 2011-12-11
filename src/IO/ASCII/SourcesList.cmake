@@ -12,6 +12,7 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       CFLTimestepFile.cpp
       ControlInterface.cpp
       ControlInterfaceDefs.cpp
+      DipoleFileDefs.cpp
       EnergyFileDefs.cpp
       ExtractRadiusFileDefs.cpp
       FieldProbeFileDefs.cpp

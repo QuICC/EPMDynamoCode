@@ -1,9 +1,9 @@
-/** \file LibrationAnalysis.hpp
+/** \file DipoleAnalysis.hpp
  *  \brief Defines possible analysis to be done on state field
  */
 
-#ifndef LIBRATIONANALYSIS_HPP
-#define LIBRATIONANALYSIS_HPP
+#ifndef DIPOLEANALYSIS_HPP
+#define DIPOLEANALYSIS_HPP
 
 // Configuration includes
 //
@@ -18,13 +18,14 @@
 #include "Domain/Truncation.hpp"
 #include "Utilities/GeneratorBase.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
+#include "IO/ASCII/DipoleFile.hpp"
 
 namespace EPMDynamo {
 
    /**
     * @brief Traits for libration analysis
     */
-   class LibrationTraits
+   class DipoleTrits
    {
       public:
          /// Requires RTP Codensity computations
@@ -49,7 +50,7 @@ namespace EPMDynamo {
          static const bool UseRTPVelocity = false;
 
          /// Requires Velocity computations
-         static const bool UseSpecVelocity = true;
+         static const bool UseSpecVelocity = false;
 
          /// Requires Velocity curl computations
          static const bool UseVelocityCurl = false;
@@ -58,21 +59,21 @@ namespace EPMDynamo {
    /**
     * \brief Defines possible analysis to be done on state field
     */
-   template <typename TSimTraits> class LibrationAnalysis: public GeneratorBase<TSimTraits>
+   template <typename TSimTraits> class DipoleAnalysis: public GeneratorBase<TSimTraits>
    {
       public:
          /// Typdef for the AnalysisTraits type
-         typedef LibrationTraits  AnalysisTraits;
+         typedef DipoleTrits  AnalysisTraits;
 
          /**
           * @brief Private constructor
           */
-         LibrationAnalysis();
+         DipoleAnalysis();
 
          /**
           * @brief Destructor
           */
-         virtual ~LibrationAnalysis() {};
+         virtual ~DipoleAnalysis() {};
 
          /**
           * @brief Analyse RTP value for the codensity scalar
@@ -107,58 +108,52 @@ namespace EPMDynamo {
       private:
    };
 
-   template <typename TSimTraits> LibrationAnalysis<TSimTraits>::LibrationAnalysis()
+   template <typename TSimTraits> DipoleAnalysis<TSimTraits>::DipoleAnalysis()
       : GeneratorBase<TSimTraits>()
    {
    }
 
-   template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseRTPCodensity()
+   template <typename TSimTraits> void DipoleAnalysis<TSimTraits>::analyseRTPCodensity()
    {
       SmartTruncation pTrunc = this->codC().oc().trunc();
 
       std::cout << "------ Codensity RTP field analysis ------" << std::endl;
    }
 
-   template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseRTPMagnetic()
+   template <typename TSimTraits> void DipoleAnalysis<TSimTraits>::analyseRTPMagnetic()
    {
       SmartTruncation pTrunc = this->magB().oc().trunc();
 
       std::cout << "------ Magnetic RTP field analysis ------" << std::endl;
    }
 
-   template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseRTPVelocity()
+   template <typename TSimTraits> void DipoleAnalysis<TSimTraits>::analyseRTPVelocity()
    {
       SmartTruncation pTrunc = this->velV().oc().trunc();
 
       std::cout << "------ Velocity RTP field analysis ------" << std::endl;
    }
 
-   template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseSpecCodensity()
+   template <typename TSimTraits> void DipoleAnalysis<TSimTraits>::analyseSpecCodensity()
    {
       SmartTruncation pTrunc = this->codC().oc().trunc();
 
       std::cout << "------ Codensity spectral field analysis ------" << std::endl;
-
-      // Update and output the energy spectra
-      this->codC().rOc().updateSpectra();
-      std::cout << "\t" << "Ecod: " << this->codC().oc().energy().transpose() << std::endl;
    }
 
-   template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseSpecMagnetic()
+   template <typename TSimTraits> void DipoleAnalysis<TSimTraits>::analyseSpecMagnetic()
    {
       SmartTruncation pTrunc = this->magB().oc().trunc();
 
       std::cout << "------ Magnetic spectral field analysis ------" << std::endl;
 
-      // Update the energy spectra
-      this->magB().rOc().updateSpectra();
-      Array energy;
-      Matrix lSpec;
-      energy = this->magB().oc().energy();
-      lSpec = this->magB().oc().spectrumL();
+      SmartASCIIWriter pOutFile;
+      
+      pOutFile.reset(new DipoleFile<typename TSimTraits::MagType>(this->magB(), "mag", this->mTSParams, this->mTransform.radBasis(), 0));
 
-      std::cout << "\t" << "Emag: " << energy.transpose() << std::endl;
-      std::cout << "\t" << "Edip: " << lSpec(1,1) << " " << lSpec(1,2) << " " << lSpec(1,3) << std::endl;
+      pOutFile->init();
+      pOutFile->write();
+      pOutFile->finalise();
 
       // Create a energy spectrum ASCII diagnostic file for the magnetic field
       EPMSHARED_PTR<SpectrumFile<typename TSimTraits::MagType> > pMagSpectrum(new SpectrumFile<typename TSimTraits::MagType>(this->magB(), "mag", 1));
@@ -166,36 +161,12 @@ namespace EPMDynamo {
       pMagSpectrum->init();
       pMagSpectrum->write();
       pMagSpectrum->finalise();
-
    }
 
-   template <typename TSimTraits> void LibrationAnalysis<TSimTraits>::analyseSpecVelocity()
+   template <typename TSimTraits> void DipoleAnalysis<TSimTraits>::analyseSpecVelocity()
    {
       std::cout << "------ Velocity spectral field analysis ------" << std::endl;
-
-      // Update the energy spectra
-      this->velV().rOc().updateSpectra();
-      std::cout <<  "\t" << "Ekin: " << this->velV().oc().energy().transpose() << std::endl;
-      // Create a energy spectrum ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<SpectrumFile<typename TSimTraits::VelType> > pVelSpectrum(new SpectrumFile<typename TSimTraits::VelType>(this->velV(), "vel", 1));
-
-      pVelSpectrum->init();
-      pVelSpectrum->write();
-      pVelSpectrum->finalise();
-
-      // Compute scalar product with solid body rotations
-      std::cout <<  "\t" << "Projection on solid body rotations " << std::endl;
-
-      Array solidProjection;
-
-      solidProjection = this->velV().rOc().rPerturbation().computeXYZSolidProjection(this->mTransform.radBasis());
-
-      std::cout <<  "\t" << "x axis: " << solidProjection(0) << std::endl;
-      std::cout <<  "\t" << "y axis: " << solidProjection(1) << std::endl;
-      std::cout <<  "\t" << "z axis: " << solidProjection(2) << std::endl;
-      std::cout <<  "\t" << "norm: " << solidProjection(3) << std::endl;
-      std::cout <<  "\t" << "poincare: " << std::sqrt(solidProjection(0)*solidProjection(0) + solidProjection(1)*solidProjection(1)) << std::endl;
    }
 }
 
-#endif // LIBRATIONANALYSIS_HPP
+#endif // DIPOLEANALYSIS_HPP

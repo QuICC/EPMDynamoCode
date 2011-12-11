@@ -86,6 +86,13 @@ namespace EPMDynamo {
          void computePolSpectra(const RadialBasisType &radBasis);
 
          /**
+          * @brief Compute the information about dipole component
+          *
+          * @param radBasis Radial basis 
+          */
+         Array dipole(const RadialBasisType &radBasis) const;
+
+         /**
           * @brief Compute the \f$\hat{x}\f$, \f$\hat{y}\f$ and \f$\hat{z}\f$ solid body projections
           *
           * @param radBasis Radial basis 
