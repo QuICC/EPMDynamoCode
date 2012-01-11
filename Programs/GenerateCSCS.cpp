@@ -42,19 +42,19 @@ class FullVisTraits
       static const bool VisCodensityGrad = false;
 
       /// Output Velocity visualisation
-      static const bool VisVelocity = true;
+      static const bool VisVelocity = false;
 
       /// Output Vorticity visualisation
-      static const bool VisVorticity = true;
+      static const bool VisVorticity = false;
 
       /// Output Helicity visualisation
-      static const bool VisHelicity = true;
+      static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation
-      static const bool VisLorentz = true;
+      static const bool VisLorentz = false;
 };
 
 /**

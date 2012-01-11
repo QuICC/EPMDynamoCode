@@ -28,11 +28,11 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::VelocityDiffusionTraits
 
 //typedef  epm::StateAnalyser<SIMTRAITS, epm::ExtractRadiusAnalysis>  Analyser;
-//typedef  epm::StateAnalyser<SIMTRAITS, epm::LibrationAnalysis>  Analyser;
-typedef  epm::StateAnalyser<SIMTRAITS, epm::DipoleAnalysis>  Analyser;
+typedef  epm::StateAnalyser<SIMTRAITS, epm::LibrationAnalysis>  Analyser;
+//typedef  epm::StateAnalyser<SIMTRAITS, epm::DipoleAnalysis>  Analyser;
 
 /**
  * @brief Velocity diffusion simulation
