@@ -127,7 +127,7 @@ namespace EPMDynamo {
       hid_t filespace = H5Screate_simple(this->mFileDims.size(), &this->mFileDims.front(), NULL);
 
       // Create dataset in file
-      mDataset = H5Dcreate(this->mGroup, dsname.c_str(), type, filespace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+      this->mDataset = H5Dcreate(this->mGroup, dsname.c_str(), type, filespace, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
 
       // Memory dataspace 
       hid_t  memspace;
@@ -154,7 +154,7 @@ namespace EPMDynamo {
          H5Sselect_hyperslab(filespace, H5S_SELECT_SET, pOffsets, NULL, dims, NULL);
 
          // Write memory into hyperslab
-         H5Dwrite(this->mDataset, type, memspace, filespace, mDatasetPList, storage.at(i).data());
+         H5Dwrite(this->mDataset, type, memspace, filespace, this->mDatasetPList, storage.at(i).data());
 
          // Reset hyperslab to whole dataset
          H5Sselect_all(filespace);

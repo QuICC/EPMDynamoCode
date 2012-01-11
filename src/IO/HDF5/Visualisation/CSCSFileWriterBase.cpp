@@ -81,7 +81,8 @@ namespace EPMDynamo {
             offR.at(1) = 0;
          } else
          {
-            offR.at(1) = totNth - (th0(i)+nTh(i)) + 1;
+            //offR.at(1) = totNth - (th0(i)+nTh(i)) + 1;
+            offR.at(1) = totNth - (th0(i)+nTh(i));
          }
 
          // add offsets to vector

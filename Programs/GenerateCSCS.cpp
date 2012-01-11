@@ -79,7 +79,7 @@ class TorVisTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation of toroidal component only
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation of toroidal component only
       static const bool VisLorentz = false;
@@ -107,7 +107,7 @@ class PolVisTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation of poloidal component only
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation of poloidal component only
       static const bool VisLorentz = false;
@@ -123,7 +123,7 @@ class FullAddVisTraits
       static const bool VisCodPerturbation = false;
 
       /// Output Velocity visualisation
-      static const bool VisInertial = true;
+      static const bool VisInertial = false;
 
       /// Output Velocity only m=0 component visualisation
       static const bool VisVelM0 = false;
