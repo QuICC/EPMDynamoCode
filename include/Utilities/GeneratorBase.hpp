@@ -350,7 +350,7 @@ namespace EPMDynamo {
             {
                for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
                {
-                  this->codC().rOc().rRTP().rShell(n).setConstant(pTrunc->para().id());
+                  this->codC().rOc().rRTP().rShell(n).col(th).setConstant(pTrunc->para().id());
                }
             }
          }
