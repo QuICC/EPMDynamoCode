@@ -343,16 +343,16 @@ namespace EPMDynamo {
          {
             this->codC().rOc().transform(i);
 
-            // Replace codensity by CPU id
-            SmartTruncation pTrunc = this->codC().oc().trunc();
-
-            for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
-            {
-               for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
-               {
-                  this->codC().rOc().rRTP().rShell(n).col(th).setConstant(pTrunc->para().id());
-               }
-            }
+//            // Replace codensity by CPU id
+//            SmartTruncation pTrunc = this->codC().oc().trunc();
+//
+//            for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
+//            {
+//               for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+//               {
+//                  this->codC().rOc().rRTP().rShell(n).col(th).setConstant(pTrunc->para().id());
+//               }
+//            }
          }
 
          // Transform the codensity gradient
