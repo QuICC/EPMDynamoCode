@@ -15,6 +15,7 @@
 #include "General/EPMTypedefs.hpp"
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
+#include "Simulations/Traits/PrecessionDynamoTraits.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Simulations/Traits/CodensityDiffusionTraits.hpp"
@@ -25,7 +26,7 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::VelocityDiffusionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -36,7 +37,7 @@ class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = true;
+      static const bool VisCodensity = false;
 
       /// Output Codensity gradient visualisation
       static const bool VisCodensityGrad = false;
@@ -51,7 +52,7 @@ class FullVisTraits
       static const bool VisHelicity = false;
 
       /// Output Magnetic visualisation
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation
       static const bool VisLorentz = false;

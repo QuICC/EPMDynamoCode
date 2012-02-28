@@ -229,10 +229,10 @@ namespace EPMDynamo {
 
       for(int l=1; l < pTrunc->local()->spec()->nL(); ++l)
       {
-         // Set some perturbation random energy in Toroidal component
+         // Make sure toroidal components are initialised to zero
          magB.rOc().rPerturbation().rTor().rLShell(l).setConstant(EPMComplex(0.0,0.0));
 
-         // Set some perturbation random energy in Poloidal component
+         // Make sure poloidal components are initialised to zero
          magB.rOc().rPerturbation().rPol().rLShell(l).setConstant(EPMComplex(0.0,0.0));
 
          // Make sure the m=0 imaginary part is zero!
