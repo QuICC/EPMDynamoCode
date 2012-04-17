@@ -11,6 +11,7 @@
 // System includes
 //
 #include <string>
+#include <iomanip>
 
 // External includes
 //
@@ -80,7 +81,7 @@ namespace EPMDynamo {
          this->preWrite();
 
          // Write energy
-         this->mFile << this->mrTSParams.time() << "  " << this->mrVar.oc().energy().transpose();
+         this->mFile << std::setprecision(16) << this->mrTSParams.time() << "  " << this->mrVar.oc().energy().transpose();
 
          // If format = 1 output the energy harmonic degree spectrum evolution
          if(this->mFormat == 1)
