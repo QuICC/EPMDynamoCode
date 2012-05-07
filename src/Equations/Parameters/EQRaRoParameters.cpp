@@ -118,7 +118,7 @@ namespace EPMDynamo {
 
    EPMFloat EQRaRoParameters::meFactor() const
    {
-      return 1.0/this->Ro();
+      return 1.0/(2.0*this->Ro());
    }
 
    EPMFloat EQRaRoParameters::inertialCFL() const
