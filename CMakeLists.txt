@@ -439,7 +439,7 @@ if(EPMDYNAMO_ON_CORE2)
    endif(EPMDYNAMO_USE_GCC)
 
    # Link to lapack library
-   link_libraries(cblas)
+   #link_libraries(cblas)
    link_libraries(blas)
    link_libraries(lapack)
    # Link to FFTW3 library

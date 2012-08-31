@@ -26,28 +26,28 @@ namespace EPMDynamo {
    {
       public:
          /// Requires RTP Codensity computations
-         static const bool UseRTPCodensity = false;
+         static const bool UseRTPCodensity = true;
 
          /// Requires spectral Codensity computations
-         static const bool UseSpecCodensity = true;
+         static const bool UseSpecCodensity = false;
 
          /// Requires Codensity gradient computations
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = false;
+         static const bool UseRTPMagnetic = true;
 
          /// Requires spectral Magnetic computations
-         static const bool UseSpecMagnetic = true;
+         static const bool UseSpecMagnetic = false;
 
          /// Requires Magnetic curl computations
          static const bool UseMagneticCurl = false;
 
          /// Requires RTP Velocity computations
-         static const bool UseRTPVelocity = false;
+         static const bool UseRTPVelocity = true;
 
          /// Requires Velocity computations
-         static const bool UseSpecVelocity = true;
+         static const bool UseSpecVelocity = false;
 
          /// Requires Velocity curl computations
          static const bool UseVelocityCurl = false;
@@ -137,7 +137,7 @@ namespace EPMDynamo {
 
    template <typename TGenTraits> const int BenchmarkState<TGenTraits>::BENCHMARK_CASE = 0;
 
-   template <typename TGenTraits> const EPMFloat BenchmarkState<TGenTraits>::PERTURBATION_AMPLITUDE = 1.0e-10;
+   template <typename TGenTraits> const EPMFloat BenchmarkState<TGenTraits>::PERTURBATION_AMPLITUDE = 0.0;
 
    template <typename TGenTraits> const int BenchmarkState<TGenTraits>::PERTURBATION_LRATIO = 1;
 
@@ -147,9 +147,64 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
+      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
+      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+      Array s2Ph = (2.*pTrunc->sim()->hoz()->phGrid()).array().sin();
+      Array c2Ph = (2.*pTrunc->sim()->hoz()->phGrid()).array().cos();
+      Array s3Ph = (3.*pTrunc->sim()->hoz()->phGrid()).array().sin();
+      Array c3Ph = (3.*pTrunc->sim()->hoz()->phGrid()).array().cos();
+
+      EPMFloat r;
+      EPMFloat r2;
+      EPMFloat r3;
+
+      EPMFloat ampl = 1e-8;
+      EPMFloat norm = (1./8.)*std::sqrt(35./MathConstants::PI);
+
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
-         codC.rOc().rRTP().rShell(n).setConstant(0.0);
+         r = pTrunc->local()->rtp()->radGrid(n);
+         r2 = r*r;
+         r3 = r*r*r;
+
+         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+         {
+            for(int ph=0; ph < sPh.size(); ++ph)
+            {
+               /////////////////////////////////////////////////////////////////////////////////////////////////////
+               // 
+               // FSBenchmark: Thermal convection at E=3e-4, Ra=95, Pr=1, no-slip, fixed temperature
+               //
+               // Extact approximation
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) = 0.48397401786548866-0.4810054713494751*r2;
+               
+               // Conducting state
+               codC.rOc().rRTP().rShell(n).col(th)(ph) = 0.5-0.5*r2;
+
+               // Y_2^2 perturbation
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*s2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*c2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
+               
+               // Y_3^3 perturbation
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*s3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*c3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+
+               //
+               /////////////////////////////////////////////////////////////////////////////////////////////////////
+               
+               /////////////////////////////////////////////////////////////////////////////////////////////////////
+               // 
+               // FSBenchmark: Thermal convection at E=3e-4, Ra=95, Pr=1, stress-free, fixed temperature
+               //
+               // Extact approximation
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) = 0.49386130276515167-0.4925442767121938*r2;
+
+               // Coarse approximation
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) = 0.5-0.5*r2;
+               //
+               /////////////////////////////////////////////////////////////////////////////////////////////////////
+            }
+         }
       }
    }
 
@@ -160,7 +215,9 @@ namespace EPMDynamo {
       Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
       Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
 
-      EPMFloat radius;
+      EPMFloat r;
+      EPMFloat r2;
+      EPMFloat ampl = 1e-5;
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
@@ -168,31 +225,206 @@ namespace EPMDynamo {
          magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
          
-         radius = pTrunc->local()->rtp()->radGrid(n);
+         r = pTrunc->local()->rtp()->radGrid(n);
+         r2 = r*r;
 
          for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
          {
-            // Radial component
-            magB.rOc().rRTP().rR().rShell(n).col(th).setConstant(1.25*(4.0-3.0*radius)*pTrunc->local()->rtp()->cTh(th, n));
+            for(int ph=0; ph < sPh.size(); ++ph)
+            {
+               // Radial component
+               magB.rOc().rRTP().rR().rShell(n).col(th)(ph) = ampl*std::sqrt(3./MathConstants::PI)*(1.-3./5.*r2)*pTrunc->local()->rtp()->cTh(th,n);
+               magB.rOc().rRTP().rR().rShell(n).col(th)(ph) += ampl*1./5.*std::sqrt(3./(2.*MathConstants::PI))*(-5.+3.*r2)*pTrunc->local()->rtp()->sTh(th,n)*cPh(ph);
+               magB.rOc().rRTP().rR().rShell(n).col(th)(ph) += ampl*1./5.*std::sqrt(3./(2.*MathConstants::PI))*(-5.+3.*r2)*pTrunc->local()->rtp()->sTh(th,n)*sPh(ph);
 
-            // Theta component
-            magB.rOc().rRTP().rTheta().rShell(n).col(th).setConstant(0.6125*(9.0*radius-8.0)*pTrunc->local()->rtp()->sTh(th, n));
+               // Theta component
+               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = ampl*1./5.*std::sqrt(3./MathConstants::PI)*(-5.+6.*r2)*pTrunc->local()->rtp()->sTh(th,n);
+               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ampl*1./5.*std::sqrt(3./(2.*MathConstants::PI))*(-5.+6.*r2)*pTrunc->local()->rtp()->cTh(th,n)*cPh(ph);
+               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ampl*1./5.*std::sqrt(3./(2.*MathConstants::PI))*(-5.+6.*r2)*pTrunc->local()->rtp()->cTh(th,n)*sPh(ph);
+               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += -ampl*1./2.*std::sqrt(3./(2.*MathConstants::PI))*r*(-1.+r2)*sPh(ph);
+               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ampl*1./2.*std::sqrt(3./(2.*MathConstants::PI))*r*(-1.+r2)*cPh(ph);
 
-            // Phi component
-            magB.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(5.0*std::sin(std::acos(-1.0)*radius)*2.0*pTrunc->local()->rtp()->sTh(th, n)*pTrunc->local()->rtp()->cTh(th, n));
+               // Phi component
+               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = -ampl*1./2.*std::sqrt(3./MathConstants::PI)*r*(-1.+r2)*pTrunc->local()->rtp()->sTh(th,n);
+               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ampl*1./5.*std::sqrt(3./(2.*MathConstants::PI))*(-5.+6.*r2)*cPh(ph);
+               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ampl*1./5.*std::sqrt(3./(2.*MathConstants::PI))*(-5.+6.*r2)*sPh(ph);
+               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += -ampl*1./2.*std::sqrt(3./(2.*MathConstants::PI))*r*(-1.+r2)*pTrunc->local()->rtp()->cTh(th,n)*cPh(ph);
+               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += -ampl*1./2.*std::sqrt(3./(2.*MathConstants::PI))*r*(-1.+r2)*pTrunc->local()->rtp()->cTh(th,n)*sPh(ph);
+
+//               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = (-1.09974 + 4.39897*std::pow(radius,2.0) - 3.51917*std::pow(radius,4.0))*cPh(ph);
+//               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += (-0.329923 + 0.4398978*std::pow(radius,2.0))*sPh(ph);
+//               magB.rOc().rRTP().rTheta().rShell(n).col(th)(ph) *= radius;
+//
+//
+//               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-0.329923 + 0.4398978*std::pow(radius,2.0))*cPh(ph);
+//               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += (1.09974 - 4.39897*std::pow(radius,2.0) + 3.51917*std::pow(radius,4.0))*sPh(ph);
+//               magB.rOc().rRTP().rPhi().rShell(n).col(th)(ph) *= radius*pTrunc->local()->rtp()->cTh(th,n);
+            }
          }
       }
+      // Use approximate toroidal solution (>1e-2)
+      // l=1, m=1
+//      magB.rOc().rPerturbation().rTor().rLShell(1)(2,1) += -0.0213*MathConstants::cI;
+//      magB.rOc().rPerturbation().rTor().rLShell(1)(3,1) += 0.0173*MathConstants::cI;
+//      // l=2, m=0
+//      magB.rOc().rPerturbation().rTor().rLShell(2)(0,0) += 0.0429;
+//      magB.rOc().rPerturbation().rTor().rLShell(2)(1,0) += -0.0445;
+//      magB.rOc().rPerturbation().rTor().rLShell(2)(3,0) += -0.0201;
+//      magB.rOc().rPerturbation().rTor().rLShell(2)(4,0) += 0.0162;
+//      // l=3, m=1
+//      magB.rOc().rPerturbation().rTor().rLShell(3)(1,1) += -0.0105;
+//      // l=4, m=0
+//      magB.rOc().rPerturbation().rTor().rLShell(4)(0,0) += -0.0126;
+//      // l=5, m=1
+//      magB.rOc().rPerturbation().rTor().rLShell(5)(1,1) += -0.0116*MathConstants::cI;
+
+      // Use approximate poloidal solution (>1e-2)
+      // l=1, m=0
+//      magB.rOc().rPerturbation().rPol().rLShell(1)(0,0) += 0.0190;
    }
 
    template <typename TGenTraits> void BenchmarkState<TGenTraits>::setRTPVelocity(typename BenchmarkState<TGenTraits>::Velocity &velV)
    {
       SmartTruncation pTrunc = velV.oc().trunc();
 
+      EPMFloat r;
+      EPMFloat r2;
+      EPMFloat r4;
+      EPMFloat r6;
+
+      EPMFloat sTh;
+      EPMFloat cTh;
+      EPMFloat s2Th;
+      EPMFloat c2Th;
+      EPMFloat s3Th;
+      EPMFloat c3Th;
+      EPMFloat s4Th;
+      EPMFloat c4Th;
+
+      EPMFloat sPh;
+      EPMFloat cPh;
+      EPMFloat s2Ph;
+      EPMFloat c2Ph;
+      EPMFloat s3Ph;
+      EPMFloat c3Ph;
+      EPMFloat s4Ph;
+      EPMFloat c4Ph;
+
+      EPMFloat tmp;
+
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
-         velV.rOc().rRTP().rR().rShell(n).setConstant(0.);
-         velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.);
-         velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.);
+         velV.rOc().rRTP().rR().rShell(n).setConstant(1e-16);
+         velV.rOc().rRTP().rTheta().rShell(n).setConstant(1e-16);
+         velV.rOc().rRTP().rPhi().rShell(n).setConstant(1e-16);
+//         
+//         r = pTrunc->local()->rtp()->radGrid(n);
+//         r2 = r*r;
+//         r4 = r2*r2;
+//         r6 = r4*r2;
+//
+//         for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
+//         {
+//            // Radial component
+//            velV.rOc().rRTP().rR().rShell(n).col(th).setConstant(0.0);
+//
+//            sTh = pTrunc->local()->rtp()->sTh(th,n);
+//            cTh = pTrunc->local()->rtp()->cTh(th,n);
+//            tmp = std::acos(pTrunc->local()->rtp()->cTh(th,n));
+//            s2Th = std::sin(2.0*tmp);
+//            c2Th = std::cos(2.0*tmp);
+//            s3Th = std::sin(3.0*tmp);
+//            c3Th = std::cos(3.0*tmp);
+//            s4Th = std::sin(4.0*tmp);
+//            c4Th = std::cos(4.0*tmp);
+//
+//            for(int ph=0; ph < pTrunc->sim()->hoz()->phGrid().size(); ++ph)
+//            {
+//               sPh = pTrunc->sim()->hoz()->phGrid().array().sin()(ph);
+//               cPh = pTrunc->sim()->hoz()->phGrid().array().cos()(ph);
+//               s2Ph = (2.0*pTrunc->sim()->hoz()->phGrid().array()).sin()(ph);
+//               c2Ph = (2.0*pTrunc->sim()->hoz()->phGrid().array()).cos()(ph);
+//               s3Ph = (3.0*pTrunc->sim()->hoz()->phGrid().array()).sin()(ph);
+//               c3Ph = (3.0*pTrunc->sim()->hoz()->phGrid().array()).cos()(ph);
+//               s4Ph = (4.0*pTrunc->sim()->hoz()->phGrid().array()).sin()(ph);
+//               c4Ph = (4.0*pTrunc->sim()->hoz()->phGrid().array()).cos()(ph);
+//
+//               //   velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = (22.56758334191025 - 90.270333367641*r2 + 72.21626669411279*r4)*cPh(ph);
+//               //   velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += (-6.770275002573076 + 9.0270333367641*r2)*sPh(ph);
+//               //   velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) *= r;
+//
+//
+//               //   velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-6.770275002573076 + 9.0270333367641*r2)*cPh(ph);
+//               //   velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += (-22.56758334191025 + 90.270333367641*r2 - 72.21626669411279*r4)*sPh(ph);
+//               //   velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += r*(-7.047567299381681 + 25.691387272599908*r2)*pTrunc->local()->rtp()->sTh(th,n);
+//               //   velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) *= r*pTrunc->local()->rtp()->cTh(th,n);
+//               
+//
+//               /////////////////////////////////////////////////////////////////////////////////////////////////////
+//               // 
+//               // FSBenchmark: Thermal convection at E=3e-4, Ra=95, Pr=1, no-slip, fixed temperature
+//               //
+//
+//               // Add exact approximation for T10
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-1.17079 - 2.15284*r2+10.1407*r4-6.89408*r6)*r*sTh;
+//               // Add coars approximation for T10
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-1.0- 2.0*r2+10.0*r4-7.0*r6)*r*sTh;
+//
+//               // Add exact approximation for T43
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = ((-13.056755791851756 +144.99068361538232*r2-131.5648250792794*r4)*c3Ph + (-197.3295714713154 + 360.8499574657975*r2 - 165.31110461974518*r4)*s3Ph)*r4*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((-65.7765238237718+120.28331915526583*r2-55.103701539915065*r4 + (-131.55304764754362+240.5666383105317*r2-110.20740307983012*r4)*c2Th)*c3Ph+(4.3522519306172525-48.33022787179411*r2+43.854941693093124*r4 + (8.704503861234507-96.66045574358822*r2+87.70988338618626*r4)*c2Th)*s3Ph)*r4*sTh*sTh;
+//               // Add coarse approximation for T43
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = ((-13.0 +145.0*r2-131.5*r4)*c3Ph + (-197.5 + 361.0*r2 - 165.5*r4)*s3Ph)*r4*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((-66.0+120.5*r2-55.0*r4 + (-131.5+240.5*r2-110.0*r4)*c2Th)*c3Ph+(4.5-48.5*r2+44.0*r4 + (8.5-96.5*r2+87.5*r4)*c2Th)*s3Ph)*r4*sTh*sTh;
+//
+//               // Add exact approximation for P33
+//               //velV.rOc().rRTP().rR().rShell(n).col(th)(ph) = ((-1.0764226057208708+6.463135000221041*r2-5.537149051028024*r4 + (1.0764226057208703-6.463135000221041*r2+5.537149051028024*r4)*c2Th)*c3Ph + (-20.01647737226051+43.9553626667923*r2-24.070096465811883*r4 + (20.01647737226051-43.9553626667923*r2+24.070096465811886*r4)*c2Th)*s3Ph)*r2*sTh;
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ((-2.152845211441741+19.389405000663125*r2-22.148596204112096*r4)*c3Ph + (-40.032954744521014+131.8660880003769*r2-96.28038586324755*r4)*s3Ph)*r2*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((-40.032954744521014+131.8660880003769*r2-96.28038586324755*r4)*c3Ph + (2.152845211441741-19.389405000663125*r2+22.148596204112096*r4)*s3Ph)*r2*sTh*sTh;
+//               // Add coarse approximation for P33
+//               //velV.rOc().rRTP().rR().rShell(n).col(th)(ph) = ((-1.0+6.5*r2-5.5*r4 + (1.0-6.5*r2+5.5*r4)*c2Th)*c3Ph + (-20.0+44.0*r2-24.0*r4 + (20.0-44.0*r2+24.0*r4)*c2Th)*s3Ph)*r2*sTh;
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ((-2.0+19.5*r2-22.0*r4)*c3Ph + (-40.0+132.0*r2-96.5*r4)*s3Ph)*r2*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((-40.0+132.0*r2-96.5*r4)*c3Ph + (2.0-19.5*r2+22.0*r4)*s3Ph)*r2*sTh*sTh;
+//               //
+//               /////////////////////////////////////////////////////////////////////////////////////////////////////
+//               
+//
+//               /////////////////////////////////////////////////////////////////////////////////////////////////////
+//               // 
+//               // FSBenchmark: Thermal convection at E=3e-4, Ra=95, Pr=1, stress-free, fixed temperature
+//               //
+//
+//               // Add exact approximation for T10
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-4.533003573673263 +9.884312649745155*r2-3.281465479238873*r4-1.5395925564120991*r6)*r*sTh;
+//               // Add coars approximation for T10
+//               velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-4.5 +10.0*r2-3.5*r4-1.5*r6)*r*sTh;
+//               // Add very coarse approximation for T10
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (-5.0 +10.0*r2-3.0*r4-2.0*r6)*r*sTh;
+//               
+//               // Add exact approximation for T43
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = ((209.92895118333936 - 461.6697520692621*r2 + 247.7470969880216*r4)*c3Ph + (56.54695912827047- 61.71811873181641*r2 + 8.72871818002742*r4)*s3Ph)*r4*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((18.84898637609016- 20.572706243938804*r2 + 2.9095727266758065*r4 + (37.69797275218031- 41.14541248787761*r2 + 5.819145453351613*r4)*c2Th)*c3Ph + (-69.97631706111312 + 153.8899173564207*r2 - 82.58236566267388*r4 + (-139.95263412222624 + 307.77983471284136*r2 - 165.16473132534773*r4)*c2Th)*s3Ph)*r4*sTh*sTh;
+//               // Add coarse approximation for T43
+//               velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = ((210.0 - 461.5*r2 + 247.5*r4)*c3Ph + (56.5- 61.5*r2 + 8.5*r4)*s3Ph)*r4*cTh*sTh*sTh;
+//               velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((19.0- 20.5*r2 + 3.0*r4 + (37.5- 41.0*r2 + 6.0*r4)*c2Th)*c3Ph + (-70.0 + 154.0*r2 - 82.5*r4 + (-140.0 + 308.0*r2 - 165.0*r4)*c2Th)*s3Ph)*r4*sTh*sTh;
+//               // Add very coarse approximation for T43
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = ((210.0 - 462.0*r2 + 248.0*r4)*c3Ph + (57.0- 62.0*r2 + 9.0*r4)*s3Ph)*r4*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((19.0- 21.0*r2 + 3.0*r4 + (38.0- 41.0*r2 + 6.0*r4)*c2Th)*c3Ph + (-70.0 + 154.0*r2 - 83.0*r4 + (-140.0 + 308.0*r2 - 165.0*r4)*c2Th)*s3Ph)*r4*sTh*sTh;
+//
+//               // Add exact approximation for P33
+//               //velV.rOc().rRTP().rR().rShell(n).col(th)(ph) = ((16.724188175612316-41.82620487290966*r2 +25.31016065081357*r4 + (-16.724188175612316 + 41.82620487290966*r2 - 25.31016065081357*r4)*c2Th)*c3Ph + (5.773795540354367- 10.069578281170955*r2 +4.236773196132059*r4 + (-5.773795540354367 + 10.069578281170955*r2 - 4.236773196132059*r4)*c2Th)*s3Ph)*r2*sTh;
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ((33.44837635122463- 125.47861461872898*r2 +101.24064260325429*r4)*c3Ph + (11.547591080708735- 30.208734843512858*r2 + 16.947092784528238*r4)*s3Ph)*r2*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((11.547591080708735-30.208734843512858*r2 + 16.947092784528238*r4)*c3Ph + (-33.44837635122463 + 125.47861461872898*r2 - 101.24064260325429*r4)*s3Ph)*r2*sTh*sTh;
+//               // Add coarse approximation for P33
+//               velV.rOc().rRTP().rR().rShell(n).col(th)(ph) = ((16.5-42.0*r2 +25.5*r4 + (-16.5 + 42.0*r2 - 25.5*r4)*c2Th)*c3Ph + (6.0- 10.0*r2 +4.0*r4 + (-6.0 + 10.0*r2 - 4.0*r4)*c2Th)*s3Ph)*r2*sTh;
+//               velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ((33.5- 125.5*r2 +101.0*r4)*c3Ph + (11.5- 30.0*r2 + 17.0*r4)*s3Ph)*r2*cTh*sTh*sTh;
+//               velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((11.5-30.0*r2 + 17.0*r4)*c3Ph + (-33.5 + 125.5*r2 - 101.0*r4)*s3Ph)*r2*sTh*sTh;
+//               // Add very coarse approximation for P33
+//               //velV.rOc().rRTP().rR().rShell(n).col(th)(ph) = ((17.0-42.0*r2 +25.0*r4 + (-17.0 + 42.0*r2 - 25.0*r4)*c2Th)*c3Ph + (6.0- 10.0*r2 +4.0*r4 + (-6.0 + 10.0*r2 - 4.0*r4)*c2Th)*s3Ph)*r2*sTh;
+//               //velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) += ((33.0- 125.0*r2 +101.0*r4)*c3Ph + (12.0- 30.0*r2 + 17.0*r4)*s3Ph)*r2*cTh*sTh*sTh;
+//               //velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) += ((12.0-30.0*r2 + 17.0*r4)*c3Ph + (-33.0 + 125.0*r2 - 101.0*r4)*s3Ph)*r2*sTh*sTh;
+//            }
+//         }
       }
    }
 
@@ -272,8 +504,8 @@ namespace EPMDynamo {
       
       // Use approximate toroidal solution (>1e-2)
       // l=1, m=1
-      magB.rOc().rPerturbation().rTor().rLShell(1)(2,1) += -0.0213*MathConstants::cI;
-      magB.rOc().rPerturbation().rTor().rLShell(1)(3,1) += 0.0173*MathConstants::cI;
+//      magB.rOc().rPerturbation().rTor().rLShell(1)(2,1) += -0.0213*MathConstants::cI;
+//      magB.rOc().rPerturbation().rTor().rLShell(1)(3,1) += 0.0173*MathConstants::cI;
 //      // l=2, m=0
 //      magB.rOc().rPerturbation().rTor().rLShell(2)(0,0) += 0.0429;
 //      magB.rOc().rPerturbation().rTor().rLShell(2)(1,0) += -0.0445;
@@ -288,7 +520,7 @@ namespace EPMDynamo {
 
       // Use approximate poloidal solution (>1e-2)
       // l=1, m=0
-      magB.rOc().rPerturbation().rPol().rLShell(1)(0,0) += 0.0190;
+//      magB.rOc().rPerturbation().rPol().rLShell(1)(0,0) += 0.0190;
    }
 
    template <typename TGenTraits> void BenchmarkState<TGenTraits>::setSpecVelocity(typename BenchmarkState<TGenTraits>::Velocity &velV)
