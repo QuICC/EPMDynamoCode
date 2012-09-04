@@ -139,14 +139,13 @@ namespace EPMDynamo {
          {
             tmpEnergy = 0.0;
             nSpec.setConstant(0.0);
+
             for(int n = 0; n < nN; ++n)
             {
-               for(int k = 0; k < n; ++k)
+               for(int k = 0; k < nN; ++k)
                {
-                  nSpec(n) += 2.0*radBasis.at(l).polEWeights()(k,n) * (this->pol().lshell(l)(n,m).real()*this->pol().lshell(l)(k,m).real()+this->pol().lshell(l)(n,m).imag()*this->pol().lshell(l)(k,m).imag());
+                  nSpec(n) += radBasis.at(l).polEWeights()(k,n) * (this->pol().lshell(l)(n,m).real()*this->pol().lshell(l)(k,m).real()+this->pol().lshell(l)(n,m).imag()*this->pol().lshell(l)(k,m).imag());
                }
-
-               nSpec(n) += radBasis.at(l).polEWeights()(n,n) * (this->pol().lshell(l)(n,m).real()*this->pol().lshell(l)(n,m).real()+this->pol().lshell(l)(n,m).imag()*this->pol().lshell(l)(n,m).imag());
 
                tmpEnergy += nSpec(n);
             }
@@ -263,6 +262,91 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
 
       return dipole;
+   }
+
+   Array TorPolField::computeXYZAngularMomentum(const TorPolField::RadialBasisType &radBasis)
+   {
+      // Create storage for angular momentum
+      Array momentum = Array::Zero(4);
+
+      // Setup the x axis solid body rotation (has only a real component)
+      Array xAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
+      xAxis(0) = -0.443113;
+      EPMFloat xMomentum = 0.0;
+
+      // Setup the y axis solid body rotation (has only an imaginary component)
+      Array yAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
+      yAxis(0) = 0.443113;
+      EPMFloat yMomentum = 0.0;
+
+      // Setup the y axis solid body rotation (has only a real component)
+      Array zAxis = Array::Zero(this->trunc()->sim()->rad()->nN());
+      zAxis(0) = 0.886227;
+      EPMFloat zMomentum = 0.0;
+
+      int l0 = this->tor().minL();
+      int nL = this->nL();
+      int nN = this->nN();
+      ArrayI   ls = this->trunc()->local()->spec()->lArray();
+      ArrayI   ms;
+
+      EPMFloat shWeight;
+      EPMFloat shFactor;
+      EPMFloat lfactor;
+      int l_;
+      int m_;
+      for(int l = l0; l < nL; ++l)
+      {
+         l_ = ls(l);
+         if(l_ == 1)
+         {
+            ms = this->trunc()->local()->spec()->mArray(l);
+            shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
+            lfactor = static_cast<EPMFloat>(l_*(l_+1));
+
+            for(int m = 0; m < this->nM(l); ++m)
+            {
+               m_ = ms(m);
+               if(m_ == 1)
+               {
+                  for(int n = 0; n < nN; ++n)
+                  {
+                     xMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*xAxis(0));
+                     yMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).imag()*yAxis(0));
+                  }
+
+                  shFactor = 4.0*shWeight*lfactor;
+
+                  xMomentum = shFactor*xMomentum;
+                  yMomentum = shFactor*yMomentum;
+               }
+
+               if(m_ == 0)
+               {
+                  for(int n = 0; n < nN; ++n)
+                  {
+                     zMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*zAxis(0));
+                  }
+
+                  shFactor = shWeight*lfactor;
+
+                  zMomentum = shFactor*zMomentum;
+               }
+            }
+         }
+      }
+
+      momentum(0) = xMomentum;
+      momentum(1) = yMomentum;
+      momentum(2) = zMomentum;
+      momentum(3) = xMomentum + yMomentum + zMomentum;
+
+      // Get the "global" spectra for MPI code
+      #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, momentum.data(), momentum.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+      #endif // EPMDYNAMO_MPI
+
+      return momentum;
    }
 
 

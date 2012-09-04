@@ -201,6 +201,11 @@ namespace EPMDynamo {
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
 
+      // Create a energy ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<AngularMomentumFile<ThermalNLRotConvectionTraits::VelType> > pVelMom(new AngularMomentumFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+      // Add kinetic energy to ASCII output
+      this->mIOSys.addASCIIWriter(pVelMom);
+
       // Create a velocity probe file
       Array ratios(3);
       ratios(0) = 2.0/5.0;

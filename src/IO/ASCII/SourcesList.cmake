@@ -16,6 +16,7 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       EnergyFileDefs.cpp
       ExtractRadiusFileDefs.cpp
       FieldProbeFileDefs.cpp
+      AngularMomentumFileDefs.cpp
       LibrationFileDefs.cpp
       FDSHSplittingFile.cpp
       ParametersFileDefs.cpp

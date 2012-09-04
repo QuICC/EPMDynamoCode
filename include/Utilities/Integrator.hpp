@@ -68,12 +68,14 @@ namespace EPMDynamo {
       {
          this->velV().rOc().updateSpectra();
          std::cerr << "Velocity: " << this->velV().oc().energy().transpose() << std::endl;
+	 std::cerr << "Velocity Momentum: " << this->velV().rOc().rPerturbation().computeXYZAngularMomentum(this->mTransform.radBasis()).transpose() << std::endl;
       }
 
       if(TSimTraits::NeedMagnetic)
       {
          this->magB().rOc().updateSpectra();
          std::cerr << "Magnetic: " << this->magB().oc().energy().transpose() << std::endl;
+	 std::cerr << "Magnetic momentum: " << this->magB().rOc().rPerturbation().computeXYZAngularMomentum(this->mTransform.radBasis()).transpose() << std::endl;
       }
    }
 

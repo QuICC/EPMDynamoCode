@@ -28,6 +28,7 @@
 #include "IO/ASCII/FieldProbeFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
+#include "IO/ASCII/AngularMomentumFile.hpp"
 
 #include "Equations/Transport/TransportMHD.hpp"
 #include "Equations/NavierStokes/NavierStokesNLRotConvection.hpp"

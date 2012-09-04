@@ -172,8 +172,25 @@ namespace EPMDynamo {
 
       SmartTruncation pTrunc = velV.oc().trunc();
 
-      Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
-      Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
+      EPMFloat r;
+      EPMFloat r2;
+      EPMFloat r4;
+      EPMFloat r8;
+
+      EPMFloat sTh;
+      EPMFloat cTh;
+
+      EPMFloat sPh;
+      EPMFloat cPh;
+      EPMFloat s2Ph;
+      EPMFloat c2Ph;
+      EPMFloat s3Ph;
+      EPMFloat c3Ph;
+
+      EPMFloat tmp;
+
+      // Initialise field with   Tor = r^3(1+r^2+r^4+r^6)Y_3^3
+      // ... and                 Pol = r^3(1+r^2+r^4+r^6)Y_3^3
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
@@ -181,11 +198,32 @@ namespace EPMDynamo {
          velV.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
          velV.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
 
+         r = pTrunc->local()->rtp()->radGrid(n);
+         r2 = r*r;
+         r4 = r2*r2;
+         r8 = r4*r4;
+
          for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
          {
-            velV.rOc().rRTP().rR().rShell(n).col(th).setConstant(2.0*pTrunc->local()->rtp()->cTh(th, n));
-            velV.rOc().rRTP().rTheta().rShell(n).col(th).setConstant(-2.0*pTrunc->local()->rtp()->sTh(th, n));
-            velV.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(pTrunc->local()->rtp()->radGrid(n)*pTrunc->local()->rtp()->sTh(th, n));
+            sTh = pTrunc->local()->rtp()->sTh(th,n);
+            cTh = pTrunc->local()->rtp()->cTh(th,n);
+
+            for(int ph=0; ph < pTrunc->sim()->hoz()->phGrid().size(); ++ph)
+            {
+               tmp = pTrunc->sim()->hoz()->phGrid()(ph);
+               sPh = std::sin(tmp);
+               cPh = std::cos(tmp);
+               s2Ph = std::sin(2.0*tmp);
+               c2Ph = std::cos(2.0*tmp);
+               s3Ph = std::sin(3.0*tmp);
+               c3Ph = std::cos(3.0*tmp);
+
+               velV.rOc().rRTP().rR().rShell(n).col(th)(ph) = -3.0*std::sqrt(35/MathConstants::PI)*r2*(1.0+r2+r4+r8)*sTh*sTh*sTh*c3Ph;
+
+               velV.rOc().rRTP().rTheta().rShell(n).col(th)(ph) = (3.0/4.0)*std::sqrt(35/MathConstants::PI)*r2*sTh*sTh*((-2.0)*(2.0+3.0*r2+4.0*r4+6.0*r8)*cTh*c3Ph+r*(1.0+r2+r4+r8)*s3Ph);
+
+               velV.rOc().rRTP().rPhi().rShell(n).col(th)(ph) = (3.0/4.0)*std::sqrt(35/MathConstants::PI)*r2*sTh*sTh*(r*(1.0+r2+r4+r8)*cTh*c3Ph+2.0*(2.0+3.0*r2+4.0*r4+6.0*r8)*s3Ph);
+            }
          }
       }
    }
