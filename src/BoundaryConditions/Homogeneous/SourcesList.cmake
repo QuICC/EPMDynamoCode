@@ -6,5 +6,6 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       DRadialBC.cpp
       InsulatingBC.cpp
       StressFreeTorBC.cpp
+      StressFreeTorAngMomBC.cpp
       ZeroBC.cpp
       )

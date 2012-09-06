@@ -311,8 +311,8 @@ namespace EPMDynamo {
                {
                   for(int n = 0; n < nN; ++n)
                   {
-                     xMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*xAxis(0));
-                     yMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).imag()*yAxis(0));
+                     xMomentum += radBasis.at(l).eWeights()(0,n) * (this->tor().lshell(l)(n,m).real()*xAxis(0));
+                     yMomentum += radBasis.at(l).eWeights()(0,n) * (this->tor().lshell(l)(n,m).imag()*yAxis(0));
                   }
 
                   shFactor = 4.0*shWeight*lfactor;
@@ -325,7 +325,7 @@ namespace EPMDynamo {
                {
                   for(int n = 0; n < nN; ++n)
                   {
-                     zMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*zAxis(0));
+                     zMomentum += radBasis.at(l).eWeights()(0,n) * (this->tor().lshell(l)(n,m).real()*zAxis(0));
                   }
 
                   shFactor = shWeight*lfactor;

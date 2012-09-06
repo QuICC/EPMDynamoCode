@@ -153,8 +153,12 @@ namespace EPMDynamo {
       Array sPh = pTrunc->sim()->hoz()->phGrid().array().sin();
       Array cPh = pTrunc->sim()->hoz()->phGrid().array().cos();
 
+      EPMFloat r;
+
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
+         r = pTrunc->local()->rtp()->radGrid(n);
+
          magB.rOc().rRTP().rR().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rTheta().rShell(n).setConstant(0.0);
          magB.rOc().rRTP().rPhi().rShell(n).setConstant(0.0);
@@ -163,6 +167,7 @@ namespace EPMDynamo {
          {
             magB.rOc().rRTP().rR().rShell(n).col(th).setConstant(2.0*pTrunc->local()->rtp()->cTh(th, n));
             magB.rOc().rRTP().rTheta().rShell(n).col(th).setConstant(-2.0*pTrunc->local()->rtp()->sTh(th, n));
+            magB.rOc().rRTP().rPhi().rShell(n).col(th).setConstant(r*pTrunc->local()->rtp()->sTh(th, n));
          }
       }
    }

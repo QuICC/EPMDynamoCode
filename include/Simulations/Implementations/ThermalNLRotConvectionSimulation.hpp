@@ -37,6 +37,7 @@
 #include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
+#include "BoundaryConditions/Homogeneous/StressFreeTorAngMomBC.hpp"
 
 namespace EPMDynamo {
 

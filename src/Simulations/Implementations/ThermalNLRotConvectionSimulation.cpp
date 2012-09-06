@@ -44,7 +44,8 @@ namespace EPMDynamo {
       // Set boundary condition to the Navier-Stokes equation
       if(this->mIOSys.cfg()->aBC()(1) == 1)
       {
-         SmartBC  pSFBC(new StressFreeTorBC(this->mTransform.radBasis()));
+         SmartBC  pSFBC(new StressFreeTorAngMomBC(this->mTransform.radBasis()));
+         //SmartBC  pSFBC(new StressFreeTorBC(this->mTransform.radBasis()));
          SmartBC  pDDBC(new DDRadialBC(this->mTransform.radBasis()));
 
          // Toroidal velocity BC
