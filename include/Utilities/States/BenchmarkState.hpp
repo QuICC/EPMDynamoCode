@@ -153,10 +153,13 @@ namespace EPMDynamo {
       Array c2Ph = (2.*pTrunc->sim()->hoz()->phGrid()).array().cos();
       Array s3Ph = (3.*pTrunc->sim()->hoz()->phGrid()).array().sin();
       Array c3Ph = (3.*pTrunc->sim()->hoz()->phGrid()).array().cos();
+      Array s4Ph = (4.*pTrunc->sim()->hoz()->phGrid()).array().sin();
+      Array c4Ph = (4.*pTrunc->sim()->hoz()->phGrid()).array().cos();
 
       EPMFloat r;
       EPMFloat r2;
       EPMFloat r3;
+      EPMFloat r4;
 
       EPMFloat ampl = 1e-8;
       EPMFloat norm = (1./8.)*std::sqrt(35./MathConstants::PI);
@@ -165,7 +168,8 @@ namespace EPMDynamo {
       {
          r = pTrunc->local()->rtp()->radGrid(n);
          r2 = r*r;
-         r3 = r*r*r;
+         r3 = r2*r;
+         r4 = r2*r2;
 
          for(int th=0; th < pTrunc->local()->rtp()->nTh(n); ++th)
          {
@@ -182,12 +186,16 @@ namespace EPMDynamo {
                codC.rOc().rRTP().rShell(n).col(th)(ph) = 0.5-0.5*r2;
 
                // Y_2^2 perturbation
-               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*s2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
-               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*c2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*s2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*c2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
                
                // Y_3^3 perturbation
-               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*s3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
-               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*c3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*s3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*c3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+               
+               // Y_4^4 perturbation
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r4*(1.0 - r2)*s4Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),4);
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r4*(1.0 - r2)*c4Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),4);
 
                //
                /////////////////////////////////////////////////////////////////////////////////////////////////////

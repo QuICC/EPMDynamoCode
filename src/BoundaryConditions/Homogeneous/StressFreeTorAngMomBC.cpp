@@ -35,11 +35,14 @@ namespace EPMDynamo {
          this->rLHSBCValues(l) = basis.at(l).bdiff(1) - basis.at(l).bpoly();
          if(basis.at(l).l() == 1)
          {
+            this->rLHSBCValues(l).array() *= 0.25;
+
             for(int n = 0; n < basis.polyN(); ++n)
             {
-               this->rLHSBCValues(l)(n) += (1.0/3e-4)*basis.at(l).eWeights()(0,n);
+               this->rLHSBCValues(l)(n) += basis.at(l).eWeights()(0,n);
             }
          }
+         std::cerr << this->rLHSBCValues(l).transpose() << std::endl;
       }
    }
 
