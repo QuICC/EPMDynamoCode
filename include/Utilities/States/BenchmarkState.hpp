@@ -491,8 +491,8 @@ namespace EPMDynamo {
          }
       }
 
-      EPMFloat ampT = 2.0;
-      EPMFloat ampP = 2.0;
+      EPMFloat ampT = 3.0;
+      EPMFloat ampP = 0.0;
 
       magB.rOc().rPerturbation().rTor().rLShell(1)(0,1) = ampT*EPMComplex(0.0242328,0.0242328);
       magB.rOc().rPerturbation().rTor().rLShell(1)(1,1) = ampT*EPMComplex(-0.0242328,-0.0242328);
@@ -502,10 +502,10 @@ namespace EPMDynamo {
       magB.rOc().rPerturbation().rTor().rLShell(2)(1,0) = ampT*EPMComplex(-0.0250275,0.0);
       magB.rOc().rPerturbation().rTor().rLShell(2)(2,0) = ampT*EPMComplex(0.0105328,0.0);
       magB.rOc().rPerturbation().rTor().rLShell(2)(3,0) = ampT*EPMComplex(-0.00785068,0.0);
-      magB.rOc().rPerturbation().rTor().rLShell(2)(0,1) = ampT*EPMComplex(-0.00239842,0.0000799474);
-      magB.rOc().rPerturbation().rTor().rLShell(2)(1,1) = ampT*EPMComplex(0.00321782,0.000393289);
-      magB.rOc().rPerturbation().rTor().rLShell(2)(2,1) = ampT*EPMComplex(0.000234062,-0.000257468);
-      magB.rOc().rPerturbation().rTor().rLShell(2)(3,1) = ampT*EPMComplex(-0.000785068,-0.00023552);
+      //magB.rOc().rPerturbation().rTor().rLShell(2)(0,1) = ampT*EPMComplex(-0.00239842,0.0000799474);
+      //magB.rOc().rPerturbation().rTor().rLShell(2)(1,1) = ampT*EPMComplex(0.00321782,0.000393289);
+      //magB.rOc().rPerturbation().rTor().rLShell(2)(2,1) = ampT*EPMComplex(0.000234062,-0.000257468);
+      //magB.rOc().rPerturbation().rTor().rLShell(2)(3,1) = ampT*EPMComplex(-0.000785068,-0.00023552);
 
       magB.rOc().rPerturbation().rPol().rLShell(1)(0,0) = ampP*EPMComplex(0.00249251,0.0);
       magB.rOc().rPerturbation().rPol().rLShell(1)(1,0) = ampP*EPMComplex(-0.00249251,0.0);
@@ -585,7 +585,7 @@ namespace EPMDynamo {
       }
 
       EPMFloat ampT = 1.0;
-      EPMFloat ampP = 1.0;
+      EPMFloat ampP = 0.0;
 
       velV.rOc().rPerturbation().rTor().rLShell(1)(0,0) = ampT*EPMComplex(3.71709,0.0);
       velV.rOc().rPerturbation().rTor().rLShell(1)(1,0) = ampT*EPMComplex(69.5827,0.0);
