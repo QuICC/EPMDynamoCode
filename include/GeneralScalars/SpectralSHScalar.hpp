@@ -78,6 +78,16 @@ namespace EPMDynamo {
          EPMFloat oddEnergy() const;
 
          /**
+          * @brief Set the even l-m energy component
+          */
+         EPMFloat& rEEven();
+
+         /**
+          * @brief Set the odd l-m energy component
+          */
+         EPMFloat& rEOdd();
+
+         /**
           * @brief Set the (full) energy spectrum on M
           */
          Array& rSpectrumM();
@@ -140,6 +150,16 @@ namespace EPMDynamo {
 
       private:
          /**
+          * @brief Energy in l-m even modes
+          */
+         EPMFloat mEEven;
+
+         /**
+          * @brief Energy in l-m odd modes
+          */
+         EPMFloat mEOdd;
+
+         /**
           * @brief Storage for the energy spectrum in M
           */
          Array mSpectrumM;
@@ -173,6 +193,16 @@ namespace EPMDynamo {
    inline const Matrix& SpectralSHScalar::spectrumN() const
    {
       return this->mSpectrumN;
+   }
+
+   inline EPMFloat& SpectralSHScalar::rEEven()
+   {
+      return this->mEEven;
+   }
+
+   inline EPMFloat& SpectralSHScalar::rEOdd()
+   {
+      return this->mEOdd;
    }
 
    inline Array& SpectralSHScalar::rSpectrumL()
@@ -236,6 +266,14 @@ namespace EPMDynamo {
             } else
             {
                shFactor = shWeight;
+            }
+
+            if((l_ - ms(m)) % 2 == 0)
+            {
+               this->mEEven += shFactor*tmpEnergy;
+            } else
+            {
+               this->mOEven += shFactor*tmpEnergy;
             }
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;

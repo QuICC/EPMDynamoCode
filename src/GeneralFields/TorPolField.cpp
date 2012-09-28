@@ -85,6 +85,14 @@ namespace EPMDynamo {
                shFactor = shWeight*lfactor;
             }
 
+            if((l_ - ms(m)) % 2 == 0)
+            {
+               this->rTor().rEEven() += shFactor*tmpEnergy;
+            } else
+            {
+               this->rTor().rEOdd() += shFactor*tmpEnergy;
+            }
+
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
             this->rTor().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
 
@@ -156,6 +164,14 @@ namespace EPMDynamo {
             } else
             {
                shFactor = shWeight;
+            }
+
+            if((l_ - ms(m)) % 2 == 0)
+            {
+               this->rPol().rEEven() += shFactor*tmpEnergy;
+            } else
+            {
+               this->rPol().rEOdd() += shFactor*tmpEnergy;
             }
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
