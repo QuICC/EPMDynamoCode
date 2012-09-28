@@ -273,7 +273,7 @@ namespace EPMDynamo {
                this->mEEven += shFactor*tmpEnergy;
             } else
             {
-               this->mOEven += shFactor*tmpEnergy;
+               this->mEOdd += shFactor*tmpEnergy;
             }
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
