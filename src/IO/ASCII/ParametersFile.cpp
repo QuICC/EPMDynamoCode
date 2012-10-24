@@ -63,6 +63,10 @@ namespace EPMDynamo {
       {
          // Resize equation array to correct size
          this->mEqArray.resize(2);
+      } else if(this->mType == "ON")
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(2);
       }
 
    }
@@ -276,6 +280,14 @@ namespace EPMDynamo {
                // Read the magnetic Prandtl number
                this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSMAGNETICPRANDTLXML);
 
+            } else if(this->mType == "ON")
+            {
+               // Read omega
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSOMEGAXML);
+
+               // Read viscosity
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSNUXML);
+
             } else if(this->mType == "E")
             {
                // Read the Ekman number
@@ -323,7 +335,7 @@ namespace EPMDynamo {
       }
 
       // Check for defined BC values for velocity
-      if(this->mBCArray(1) < 0 || this->mBCArray(1) > 4)
+      if(this->mBCArray(1) < 0 || this->mBCArray(1) > 5)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for velocity");
       }
@@ -436,6 +448,10 @@ namespace EPMDynamo {
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
             std::cout << "  " << "Pm: " << this->mEqArray(1) << std::endl;
+         } else if(this->mType == "ON")
+         {
+            std::cout << "  " << "Omega: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "nu: " << this->mEqArray(1) << std::endl;
          } else if(this->mType == "E")
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;

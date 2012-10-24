@@ -35,6 +35,16 @@ namespace EPMDynamo {
          static const std::string   EKMANTAG;
 
          /**
+          * @brief Omega tag for state file
+          */
+         static const std::string   OMEGATAG;
+
+         /**
+          * @brief Viscosity tag for state file
+          */
+         static const std::string   NUTAG;
+
+         /**
           * @brief Elsasser number tag for state file
           */
          static const std::string   ELSASSERTAG;
