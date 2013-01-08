@@ -265,6 +265,50 @@ namespace EPMDynamo {
 
          // Set toroidal component to zero
          this->setZero(this->mpMagB->rOc().rPerturbation().rTor().data());
+      } else if(TSimTraits::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::SymmetricOnly)
+      {
+         // Read toroidal and poloidal field
+         this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
+
+         int l0 = this->mpMagB->rOc().rPerturbation().rTor().minL();
+         int nL = this->mpMagB->rOc().trunc()->local()->spec()->nL();
+         ArrayI ls = this->mpMagB->rOc().trunc()->local()->spec()->lArray();
+         int l_;
+         for(int l = l0; l < nL; ++l)
+         {
+            l_ = ls(l);
+            if(l_ % 2 == 0)
+            {
+               // Set toroidal component to zero
+               this->mpMagB->rOc().rPerturbation().rTor().rLShell(l).setConstant(0.0);
+            } else
+            {
+               // Set poloidal poloidal component to zero
+               this->mpMagB->rOc().rPerturbation().rPol().rLShell(l).setConstant(0.0);
+            }
+         }
+      } else if(TSimTraits::NeedMagnetic && TFilter::ReadMagnetic == StateFileDefs::AntisymmetricOnly)
+      {
+         // Read toroidal and poloidal field
+         this->readTorPolField(StateFileDefs::MAGNETICTAG, this->mpMagB->rOc().rPerturbation().rTor().data(), this->mpMagB->rOc().rPerturbation().rPol().data());
+
+         int l0 = this->mpMagB->rOc().rPerturbation().rTor().minL();
+         int nL = this->mpMagB->rOc().trunc()->local()->spec()->nL();
+         ArrayI ls = this->mpMagB->rOc().trunc()->local()->spec()->lArray();
+         int l_;
+         for(int l = l0; l < nL; ++l)
+         {
+            l_ = ls(l);
+            if(l_ % 2 == 1)
+            {
+               // Set toroidal component to zero
+               this->mpMagB->rOc().rPerturbation().rTor().rLShell(l).setConstant(0.0);
+            } else
+            {
+               // Set poloidal poloidal component to zero
+               this->mpMagB->rOc().rPerturbation().rPol().rLShell(l).setConstant(0.0);
+            }
+         }
       }
       
       // Read requested velocity coefficients
@@ -285,6 +329,50 @@ namespace EPMDynamo {
 
          // Set toroidal component to zero
          this->setZero(this->mpVelV->rOc().rPerturbation().rTor().data());
+      } else if(TSimTraits::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::SymmetricOnly)
+      {
+         // Read toroidal and poloidal field
+         this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
+
+         int l0 = this->mpVelV->rOc().rPerturbation().rTor().minL();
+         int nL = this->mpVelV->rOc().trunc()->local()->spec()->nL();
+         ArrayI ls = this->mpVelV->rOc().trunc()->local()->spec()->lArray();
+         int l_;
+         for(int l = l0; l < nL; ++l)
+         {
+            l_ = ls(l);
+            if(l_ % 2 == 0)
+            {
+               // Set toroidal component to zero
+               this->mpVelV->rOc().rPerturbation().rTor().rLShell(l).setConstant(0.0);
+            } else
+            {
+               // Set poloidal poloidal component to zero
+               this->mpVelV->rOc().rPerturbation().rPol().rLShell(l).setConstant(0.0);
+            }
+         }
+      } else if(TSimTraits::NeedVelocity && TFilter::ReadVelocity == StateFileDefs::AntisymmetricOnly)
+      {
+         // Read toroidal and poloidal field
+         this->readTorPolField(StateFileDefs::VELOCITYTAG, this->mpVelV->rOc().rPerturbation().rTor().data(), this->mpVelV->rOc().rPerturbation().rPol().data());
+
+         int l0 = this->mpVelV->rOc().rPerturbation().rTor().minL();
+         int nL = this->mpVelV->rOc().trunc()->local()->spec()->nL();
+         ArrayI ls = this->mpVelV->rOc().trunc()->local()->spec()->lArray();
+         int l_;
+         for(int l = l0; l < nL; ++l)
+         {
+            l_ = ls(l);
+            if(l_ % 2 == 1)
+            {
+               // Set toroidal component to zero
+               this->mpVelV->rOc().rPerturbation().rTor().rLShell(l).setConstant(0.0);
+            } else
+            {
+               // Set poloidal poloidal component to zero
+               this->mpVelV->rOc().rPerturbation().rPol().rLShell(l).setConstant(0.0);
+            }
+         }
       }
 
    }
