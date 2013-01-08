@@ -40,7 +40,7 @@ namespace EPMDynamo {
    {
       if(l == 1 && m == 1)
       {
-         return 0.69099*1.0364;
+         return 0.25*std::sqrt(3./(2.*MathConstants::PI));
       } else
       {
          return 0.0;
@@ -62,7 +62,7 @@ namespace EPMDynamo {
    {
       if(l == 1 && m == 1)
       {
-         return EPMComplex(0.69099*1.0364, 0.0);
+         return EPMComplex(0.25*std::sqrt(3./(2.*MathConstants::PI)), 0.0);
       } else
       {
          return EPMComplex(0.0);

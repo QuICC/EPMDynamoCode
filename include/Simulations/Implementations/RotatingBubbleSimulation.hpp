@@ -28,6 +28,7 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 #include "IO/ASCII/LibrationFile.hpp"
+#include "IO/ASCII/AngularMomentumFile.hpp"
 
 #include "Equations/NavierStokes/NavierStokesNLRotDiffusion.hpp"
 

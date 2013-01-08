@@ -121,7 +121,8 @@ namespace EPMDynamo {
 
    EPMFloat ONParameters::inertialCFL() const
    {
-      return 0.5/(10.*this->omega());
+      // 1/2 * Ekman
+      return (0.5)*this->nu()/(2.*this->omega());
    }
 
    EPMFloat ONParameters::torsionalCFL() const

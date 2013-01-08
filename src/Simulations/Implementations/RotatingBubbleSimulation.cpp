@@ -220,6 +220,12 @@ namespace EPMDynamo {
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
 
+      // Create a energy ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<AngularMomentumFile<VelocityNLRotDiffusionTraits::VelType> > pVelMom(new AngularMomentumFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+
+      // Add angular momentum to ASCII output
+      this->mIOSys.addASCIIWriter(pVelMom);
+
       // Add libration output file if required
       if(this->mIOSys.cfg()->aBC()(1) == 4)
       {
