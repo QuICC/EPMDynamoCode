@@ -19,7 +19,7 @@
 namespace EPMDynamo {
 
    SpectralSHScalar::SpectralSHScalar(const SmartTruncation pTrunc, const bool needsL0)
-      : SpectralSHScalarBase(pTrunc, needsL0), mSpectrumM(pTrunc->sim()->hoz()->nM()), mSpectrumL(pTrunc->sim()->hoz()->nL()), mSpectrumN(pTrunc->sim()->rad()->nN(), pTrunc->sim()->hoz()->nL()), mEFactor(1.0) 
+      : SpectralSHScalarBase(pTrunc, needsL0), mEEven(0.0), mEOdd(0.0), mSpectrumM(pTrunc->sim()->hoz()->nM()), mSpectrumL(pTrunc->sim()->hoz()->nL()), mSpectrumN(pTrunc->sim()->rad()->nN(), pTrunc->sim()->hoz()->nL()), mEFactor(1.0) 
    {
    }
 
@@ -137,26 +137,12 @@ namespace EPMDynamo {
 
    EPMFloat SpectralSHScalar::evenEnergy() const
    {
-      EPMFloat even = 0.0;
-
-      for(int i = 0; i < this->mSpectrumL.size()-2; i+=2)
-      {
-         even += this->mSpectrumL(i);
-      }
-
-      return even;
+      return this->mEEven;
    }
 
    EPMFloat SpectralSHScalar::oddEnergy() const
    {
-      EPMFloat odd = 0.0;
-
-      for(int i = 1; i < this->mSpectrumL.size()-2; i+=2)
-      {
-         odd += this->mSpectrumL(i);
-      }
-
-      return odd;
+      return this->mEOdd;
    }
 
    void SpectralSHScalar::setEnergyScale(const EPMFloat& eFactor)

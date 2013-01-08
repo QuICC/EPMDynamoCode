@@ -105,6 +105,13 @@ namespace EPMDynamo {
 
          // Write magnetic Prandtl scalar to file
          this->writeScalar(StateFileDefs::MAGNETICPRANDTLTAG, params(1));
+      } else if(type == "ON")
+      {
+         // Write Ekman scalar to file
+         this->writeScalar(StateFileDefs::OMEGATAG, params(0));
+
+         // Write magnetic Prandtl scalar to file
+         this->writeScalar(StateFileDefs::NUTAG, params(1));
       } else if(type == "E")
       {
          // Write Ekman scalar to file

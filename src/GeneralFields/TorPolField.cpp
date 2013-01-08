@@ -85,6 +85,14 @@ namespace EPMDynamo {
                shFactor = shWeight*lfactor;
             }
 
+            if((l_ - ms(m)) % 2 == 0)
+            {
+               this->rTor().rEEven() += shFactor*tmpEnergy;
+            } else
+            {
+               this->rTor().rEOdd() += shFactor*tmpEnergy;
+            }
+
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
             this->rTor().rSpectrumM()(ms(m)) += tmpSpectrum(ms(m));
 
@@ -156,6 +164,14 @@ namespace EPMDynamo {
             } else
             {
                shFactor = shWeight;
+            }
+
+            if((l_ - ms(m)) % 2 == 0)
+            {
+               this->rPol().rEEven() += shFactor*tmpEnergy;
+            } else
+            {
+               this->rPol().rEOdd() += shFactor*tmpEnergy;
             }
 
             tmpSpectrum(ms(m)) = shFactor*tmpEnergy;
@@ -311,8 +327,8 @@ namespace EPMDynamo {
                {
                   for(int n = 0; n < nN; ++n)
                   {
-                     xMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*xAxis(0));
-                     yMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).imag()*yAxis(0));
+                     xMomentum += radBasis.at(l).eWeights()(0,n) * (this->tor().lshell(l)(n,m).real()*xAxis(0));
+                     yMomentum += radBasis.at(l).eWeights()(0,n) * (this->tor().lshell(l)(n,m).imag()*yAxis(0));
                   }
 
                   shFactor = 4.0*shWeight*lfactor;
@@ -325,7 +341,7 @@ namespace EPMDynamo {
                {
                   for(int n = 0; n < nN; ++n)
                   {
-                     zMomentum += radBasis.at(l).eWeights()(n,n) * (this->tor().lshell(l)(n,m).real()*zAxis(0));
+                     zMomentum += radBasis.at(l).eWeights()(0,n) * (this->tor().lshell(l)(n,m).real()*zAxis(0));
                   }
 
                   shFactor = shWeight*lfactor;

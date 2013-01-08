@@ -1,9 +1,9 @@
-/** \file ThermalNLRotConvectionSimulation.hpp
- *  \brief Implementation of a thermal convection simulation
+/** \file RotatingBubbleSimulation.hpp
+ *  \brief Implementation of the rotating bubble simulation
  */
 
-#ifndef THERMALNLROTCONVECTIONSIMULATION_HPP
-#define THERMALNLROTCONVECTIONSIMULATION_HPP
+#ifndef ROTATINGBUBBLESIMULATION_HPP
+#define ROTATINGBUBBLESIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,44 +19,47 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/ThermalNLRotConvectionTraits.hpp"
+#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
 
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
 #include "IO/HDF5/Source/SourceFileReader.hpp"
 #include "IO/ASCII/EnergyFile.hpp"
-#include "IO/ASCII/FieldProbeFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
+#include "IO/ASCII/LibrationFile.hpp"
 #include "IO/ASCII/AngularMomentumFile.hpp"
 
-#include "Equations/Transport/TransportMHD.hpp"
-#include "Equations/NavierStokes/NavierStokesNLRotConvection.hpp"
+#include "Equations/NavierStokes/NavierStokesNLRotDiffusion.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
+#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
-#include "BoundaryConditions/Homogeneous/StressFreeTorAngMomBC.hpp"
+#include "BoundaryConditions/Inhomogeneous/PrecessionFrameBC.hpp"
+#include "BoundaryConditions/TimeDependent/LongitudinalLibrationBC.hpp"
+#include "BoundaryConditions/TimeDependent/LatitudinalLibrationBC.hpp"
+#include "BoundaryConditions/Inhomogeneous/RotatingBubbleNSBC.hpp"
+#include "BoundaryConditions/Inhomogeneous/RotatingBubbleDRBC.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of a thermal convection simulation
+    * \brief Implementation of a rotating bubble simulation
     */
-   class ThermalNLRotConvectionSimulation: public SimulationBase
+   class RotatingBubbleSimulation: public SimulationBase
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~ThermalNLRotConvectionSimulation() {};
+         virtual ~RotatingBubbleSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         ThermalNLRotConvectionSimulation();
+         RotatingBubbleSimulation();
 
          /**
           * @brief Initialise the fields
@@ -114,26 +117,16 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Codensity scalar
-          */
-         ThermalNLRotConvectionTraits::CodType   mCodC;
-
-         /**
           * @brief Velocity field
           */
-         ThermalNLRotConvectionTraits::VelType   mVelV;
-
-         /**
-          * @brief Transport equation
-          */
-         TransportMHD<ThermalNLRotConvectionTraits>    mTransport;
+         VelocityNLRotDiffusionTraits::VelType   mVelV;
 
          /**
           * @brief Navier Stokes equation
           */
-         NavierStokesNLRotConvection<ThermalNLRotConvectionTraits>    mNavierStokes;
+         NavierStokesNLRotDiffusion<VelocityNLRotDiffusionTraits>    mNavierStokes;
    };
 
 }
 
-#endif // THERMALNLROTCONVECTIONSIMULATION_HPP
+#endif // ROTATINGBUBBLESIMULATION_HPP
