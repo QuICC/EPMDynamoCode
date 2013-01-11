@@ -37,7 +37,7 @@ class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = false;
+      static const bool VisCodensity = true;
 
       /// Output Codensity gradient visualisation
       static const bool VisCodensityGrad = false;
@@ -46,7 +46,7 @@ class FullVisTraits
       static const bool VisVelocity = true;
 
       /// Output Vorticity visualisation
-      static const bool VisVorticity = true;
+      static const bool VisVorticity = false;
 
       /// Output Helicity visualisation
       static const bool VisHelicity = false;

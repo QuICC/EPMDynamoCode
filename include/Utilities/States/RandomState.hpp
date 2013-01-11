@@ -29,25 +29,25 @@ namespace EPMDynamo {
          static const bool UseRTPCodensity = false;
 
          /// Requires spectral Codensity computations
-         static const bool UseSpecCodensity = false;
+         static const bool UseSpecCodensity = true;
 
          /// Requires Codensity gradient computations
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = true;
+         static const bool UseRTPMagnetic = false;
 
          /// Requires spectral Magnetic computations
-         static const bool UseSpecMagnetic = false;
+         static const bool UseSpecMagnetic = true;
 
          /// Requires Magnetic curl computations
          static const bool UseMagneticCurl = false;
 
          /// Requires RTP Velocity computations
-         static const bool UseRTPVelocity = true;
+         static const bool UseRTPVelocity = false;
 
          /// Requires Velocity computations
-         static const bool UseSpecVelocity = false;
+         static const bool UseSpecVelocity = true;
 
          /// Requires Velocity curl computations
          static const bool UseVelocityCurl = false;
@@ -178,6 +178,7 @@ namespace EPMDynamo {
       EPMFloat xAmp = 1.0;
       EPMFloat yAmp = 1.0;
       EPMFloat zAmp = 1.0;
+      EPMFloat u0 = 0.69099;
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
       {
