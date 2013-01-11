@@ -540,7 +540,8 @@ namespace EPMDynamo {
    template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writeToroidal()
    {
       // Read data from file
-      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
+      //this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
+      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::SymmetricOnly> >();
 
       // Configure transforms
       this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
@@ -561,7 +562,8 @@ namespace EPMDynamo {
          hasAdditional = false;
 
          // Read data from file
-         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
+         //this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::ToroidalOnly> >();
+         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::SymmetricOnly> >();
 
          hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 
@@ -582,7 +584,8 @@ namespace EPMDynamo {
    template <typename TSimTraits> template <typename TVisTraits, typename TAddVisTraits> void CSCSParaviewGenerator<TSimTraits>::writePoloidal()
    {
       // Read data from file
-      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
+      //this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
+      this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::AntisymmetricOnly> >();
 
       // Configure transforms
       this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
@@ -603,7 +606,8 @@ namespace EPMDynamo {
          hasAdditional = false;
 
          // Read data from file
-         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
+         //this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::PoloidalOnly> >();
+         this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::AntisymmetricOnly> >();
 
          hasAdditional = this->template prepareAdditional<TAddVisTraits>(i);
 

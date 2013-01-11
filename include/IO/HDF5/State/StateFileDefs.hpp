@@ -169,6 +169,16 @@ namespace EPMDynamo {
           */
          static const int  PoloidalOnly = 3;
 
+         /**
+          * @brief Filter id for using only symmetric component of field
+          */
+         static const int  SymmetricOnly = 4;
+
+         /**
+          * @brief Filter id for using only anti-symmetric component of field
+          */
+         static const int  AntisymmetricOnly = 5;
+
       private:
          /**
          * @brief Empty destructor
