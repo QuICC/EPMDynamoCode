@@ -44,8 +44,8 @@ namespace EPMDynamo {
       // Set boundary condition to the Navier-Stokes equation
       if(this->mIOSys.cfg()->aBC()(1) == 1)
       {
-         SmartBC  pSFBC(new StressFreeTorAngMomBC(this->mTransform.radBasis()));
-         //SmartBC  pSFBC(new StressFreeTorBC(this->mTransform.radBasis()));
+         //SmartBC  pSFBC(new StressFreeTorAngMomBC(this->mTransform.radBasis()));
+         SmartBC  pSFBC(new StressFreeTorBC(this->mTransform.radBasis()));
          SmartBC  pDDBC(new DDRadialBC(this->mTransform.radBasis()));
 
          // Toroidal velocity BC
@@ -186,6 +186,11 @@ namespace EPMDynamo {
 
    void ThermalNLRotConvectionSimulation::addASCIIOutput()
    {
+      // Create a energy ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<AngularMomentumFile<ThermalNLRotConvectionTraits::VelType> > pVelMom(new AngularMomentumFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+      // Add kinetic energy to ASCII output
+      this->mIOSys.addASCIIWriter(pVelMom);
+
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
       // Add time file to ASCII output
@@ -201,11 +206,6 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pCodEnergy);
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
-
-      // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<AngularMomentumFile<ThermalNLRotConvectionTraits::VelType> > pVelMom(new AngularMomentumFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
-      // Add kinetic energy to ASCII output
-      this->mIOSys.addASCIIWriter(pVelMom);
 
       // Create a velocity probe file
       Array ratios(3);

@@ -100,6 +100,13 @@ namespace EPMDynamo {
          Array computeXYZAngularMomentum(const RadialBasisType &radBasis);
 
          /**
+          * @brief Cancel the \f$\hat{x}\f$, \f$\hat{y}\f$ and \f$\hat{z}\f$ angular momentum projections
+          *
+          * @param radBasis Radial basis 
+          */
+         Array cancelXYZAngularMomentum(const RadialBasisType &radBasis);
+
+         /**
           * @brief Compute the \f$\hat{x}\f$, \f$\hat{y}\f$ and \f$\hat{z}\f$ solid body projections
           *
           * @param radBasis Radial basis 

@@ -365,6 +365,70 @@ namespace EPMDynamo {
       return momentum;
    }
 
+   Array TorPolField::cancelXYZAngularMomentum(const TorPolField::RadialBasisType &radBasis)
+   {
+      // Create storage for angular momentum
+      Array momentum = Array::Zero(4);
+      Array axis = Array::Zero(3);
+      axis(0) = -0.443113;
+      axis(1) = 0.443113;
+      axis(2) = 0.886227;
+
+      // Compute current angular momentum
+      momentum = this->computeXYZAngularMomentum(radBasis);
+
+      int l0 = this->tor().minL();
+      int nL = this->nL();
+      int nN = this->nN();
+      ArrayI   ls = this->trunc()->local()->spec()->lArray();
+      ArrayI   ms;
+
+      EPMFloat shWeight;
+      EPMFloat shFactor;
+      EPMFloat lfactor;
+      Array corr = Array::Zero(3);
+      int l_;
+      int m_;
+      for(int l = l0; l < nL; ++l)
+      {
+         l_ = ls(l);
+         if(l_ == 1)
+         {
+            ms = this->trunc()->local()->spec()->mArray(l);
+            shWeight = 4.0 * MathConstants::PI / static_cast<EPMFloat>(2*l_+1);
+            lfactor = static_cast<EPMFloat>(l_*(l_+1));
+
+            for(int m = 0; m < this->nM(l); ++m)
+            {
+               m_ = ms(m);
+               if(m_ == 1)
+               {
+                  shFactor = 4.0*shWeight*lfactor;
+
+                  corr(0) = momentum(0)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(0));
+                  this->rTor().rLShell(l)(0,m).real() -= corr(0);
+                  corr(1) = momentum(1)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(1));
+                  this->rTor().rLShell(l)(0,m).imag() -= corr(1);
+               }
+
+               if(m_ == 0)
+               {
+                  shFactor = shWeight*lfactor;
+
+                  corr(2) = momentum(2)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(2));
+                  this->rTor().rLShell(l)(0,m).real() -= corr(2);
+               }
+            }
+         }
+      }
+
+      // Get the "global" spectra for MPI code
+      #ifdef EPMDYNAMO_MPI
+         MPI_Allreduce(MPI_IN_PLACE, corr.data(), corr.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+      #endif // EPMDYNAMO_MPI
+
+      return corr;
+   }
 
    Array TorPolField::computeXYZSolidProjection(const TorPolField::RadialBasisType &radBasis)
    {

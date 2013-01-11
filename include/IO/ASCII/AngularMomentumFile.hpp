@@ -87,6 +87,8 @@ namespace EPMDynamo {
 
    template <typename TFieldType> void AngularMomentumFile<TFieldType>::write()
    {
+      Array corr = Array::Zero(3);
+      corr = this->mrVar.rOc().rPerturbation().cancelXYZAngularMomentum(this->mrBasis);
       this->mMomentum = this->mrVar.rOc().rPerturbation().computeXYZAngularMomentum(this->mrBasis);
 
       if(this->doesIO())
@@ -94,8 +96,11 @@ namespace EPMDynamo {
          //Do pre write operations
          this->preWrite();
 
-         // Write energy
+         // Write angular momentum
          this->mFile << this->mrTSParams.time() << "  " << this->mMomentum.transpose();
+
+         // Write correction to conserve angular momentum
+         this->mFile << "  " << corr.transpose();
 
          // Add newline at the end of ouput
          this->mFile << std::endl;
