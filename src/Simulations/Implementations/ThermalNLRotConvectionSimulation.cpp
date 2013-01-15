@@ -187,7 +187,7 @@ namespace EPMDynamo {
    void ThermalNLRotConvectionSimulation::addASCIIOutput()
    {
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<AngularMomentumFile<ThermalNLRotConvectionTraits::VelType> > pVelMom(new AngularMomentumFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+      EPMSHARED_PTR<ConserveAngularMomentumFile<ThermalNLRotConvectionTraits::VelType> > pVelMom(new ConserveAngularMomentumFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelMom);
 
