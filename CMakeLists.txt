@@ -436,7 +436,7 @@ if(EPMDYNAMO_ON_CORE2)
 
    # Set up platform specific compiler flags
    if(EPMDYNAMO_USE_GCC)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse3 -march=core2" CACHE STRING "" FORCE)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native" CACHE STRING "" FORCE)
    endif(EPMDYNAMO_USE_GCC)
 
    # Link to lapack library

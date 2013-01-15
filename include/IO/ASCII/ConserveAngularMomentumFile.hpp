@@ -1,9 +1,9 @@
-/** \file AngularMomentumFile.hpp
+/** \file ConserveAngularMomentumFile.hpp
  *  \brief Implementation of a angular momentum diagnostic file
  */
 
-#ifndef ANGULARMOMENTUMFILE_HPP
-#define ANGULARMOMENTUMFILE_HPP
+#ifndef CONSERVEANGULARMOMENTUMFILE_HPP
+#define CONSERVEANGULARMOMENTUMFILE_HPP
 
 // Configuration includes
 //
@@ -30,7 +30,7 @@ namespace EPMDynamo {
     *
     * \param TFieldType Type of the field
     */
-   template <typename TFieldType> class AngularMomentumFile: public ASCIIFieldWriter<TFieldType, ASCIIEWriter>
+   template <typename TFieldType> class ConserveAngularMomentumFile: public ASCIIFieldWriter<TFieldType, ASCIIEWriter>
    {
       public:
          /// Typedef for the Spectral radial Transform data type
@@ -43,12 +43,12 @@ namespace EPMDynamo {
          * @param name File name
          * @param tsParams Timestep parameters
          */
-         AngularMomentumFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, const int format = 0);
+         ConserveAngularMomentumFile(TFieldType& var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, const int format = 0);
 
          /**
          * @brief Destructor
          */
-         virtual ~AngularMomentumFile() {};
+         virtual ~ConserveAngularMomentumFile() {};
 
          /**
           * @brief Write angular momentum to file
@@ -80,14 +80,15 @@ namespace EPMDynamo {
 
    };
 
-   template <typename TFieldType> AngularMomentumFile<TFieldType>::AngularMomentumFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, int format)
+   template <typename TFieldType> ConserveAngularMomentumFile<TFieldType>::ConserveAngularMomentumFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, int format)
       : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + AngularMomentumFileDefs::BASENAME, AngularMomentumFileDefs::EXTENSION, AngularMomentumFileDefs::HEADER, AngularMomentumFileDefs::VERSION), mrTSParams(tsParams), mFormat(format), mMomentum(4), mrBasis(basis)
    {
    }
 
-   template <typename TFieldType> void AngularMomentumFile<TFieldType>::write()
+   template <typename TFieldType> void ConserveAngularMomentumFile<TFieldType>::write()
    {
       Array corr = Array::Zero(3);
+      corr = this->mrVar.rOc().rPerturbation().cancelXYZAngularMomentum(this->mrBasis);
       this->mMomentum = this->mrVar.rOc().rPerturbation().computeXYZAngularMomentum(this->mrBasis);
 
       if(this->doesIO())
@@ -97,6 +98,9 @@ namespace EPMDynamo {
 
          // Write angular momentum
          this->mFile << this->mrTSParams.time() << "  " << this->mMomentum.transpose();
+
+         // Write correction to conserve angular momentum
+         this->mFile << "  " << corr.transpose();
 
          // Add newline at the end of ouput
          this->mFile << std::endl;
@@ -108,4 +112,4 @@ namespace EPMDynamo {
 
 }
 
-#endif // ANGULARMOMENTUMFILE_HPP
+#endif // CONSERVEANGULARMOMENTUMFILE_HPP
