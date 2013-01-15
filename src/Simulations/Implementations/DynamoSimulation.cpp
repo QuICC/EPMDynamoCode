@@ -215,6 +215,11 @@ namespace EPMDynamo {
 
    void DynamoSimulation::addASCIIOutput()
    {
+      // Create a angular momentum ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<AngularMomentumFile<DynamoTraits::VelType> > pVelMom(new AngularMomentumFile<DynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+      // Add angular momentum to ASCII output
+      this->mIOSys.addASCIIWriter(pVelMom);
+
       // Create a CFL timestep ASCII logging file
       EPMSHARED_PTR<CFLTimestepFile> pCFLFile(new CFLTimestepFile("cfl_timestep", this->mSimControl.tsParams()));
       // Add time file to ASCII output
@@ -238,12 +243,6 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pMagEnergy);
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
-
-      // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<AngularMomentumFile<DynamoTraits::VelType> > pVelMom(new AngularMomentumFile<DynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
-
-      // Add angular momentum to ASCII output
-      this->mIOSys.addASCIIWriter(pVelMom);
 
       // Create a energy spectrum ASCII diagnostic file for the codensity scalar
       EPMSHARED_PTR<SpectrumFile<DynamoTraits::CodType> > pCodSpectrum(new SpectrumFile<DynamoTraits::CodType>(this->mCodC, "cod"));

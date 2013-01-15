@@ -204,7 +204,7 @@ namespace EPMDynamo {
          EPMFloat phi = pTrunc->sim()->hoz()->phGrid()(this->mSimPos(2));
 
          // Write energy
-         this->mFile << this->mrTSParams.time() << "  " << radius << "  " << theta << "  " << phi << "  " << this->mData.transpose();
+         this->mFile << std::setprecision(16) << this->mrTSParams.time() << "  " << radius << "  " << theta << "  " << phi << "  " << this->mData.transpose();
 
          // Add newline at the end of ouput
          this->mFile << std::endl;
