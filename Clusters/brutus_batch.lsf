@@ -1,0 +1,10 @@
+#!/bin/bash
+#BSUB -J FANCYNAME
+#BSUB -o Logs/%J.out
+#BSUB -e Logs/%J.err
+#BSUB -W 2:00
+#BSUB -n NCPU 
+#BSUB -R "rusage[mem=1000]"
+#BSUB -R lustre
+
+mpirun MY_SIMULATION_BINARY
