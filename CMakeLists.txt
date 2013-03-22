@@ -120,9 +120,9 @@ elseif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "TR1")
 elseif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "c++0x")
    add_definitions("-DEPMDYNAMO_CXX0X_SMARTPTR")
    set(EPMDYNAMO_USE_CXX0X ON)
-# Use Boost shared_ptr implementation by default
+# Use TR1 shared_ptr implementation by default
 else(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
-   add_definitions("-DEPMDYNAMO_BOOST_SMARTPTR")
+   add_definitions("-DEPMDYNAMO_TR1_SMARTPTR")
 endif(EPMDYNAMO_SHAREDPTR_IMPLEMENTATION STREQUAL "Boost")
 
 
@@ -483,7 +483,7 @@ if(EPMDYNAMO_ON_BRUTUS)
    else(EPMDYNAMO_MPI)
       # Set up GCC compiler
       if(EPMDYNAMO_USE_GCC)
-         set(CMAKE_CXX_COMPILER "g++")
+         set(CMAKE_CXX_COMPILER "mpic++")
       # Set up Intel compiler
       elseif(EPMDYNAMO_USE_INTEL)
          set(CMAKE_CXX_COMPILER "icc")

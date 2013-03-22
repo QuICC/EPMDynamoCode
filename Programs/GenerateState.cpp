@@ -29,7 +29,9 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::ThermalRotConvectionTraits
+//#define SIMTRAITS epm::ThermalRotConvectionTraits
+//#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::PrecessionDynamoTraits
 
 //typedef epm::SolidBodyRotationState<SIMTRAITS>  StateType;
 //typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
@@ -39,7 +41,7 @@ typedef epm::BenchmarkState<SIMTRAITS>  StateType;
 
 typedef StateType::StateTraits  StateTraits;
 
-typedef  epm::InitialStateGenerator<SIMTRAITS>  IStateGenerator;
+typedef epm::InitialStateGenerator<SIMTRAITS>  IStateGenerator;
 
 /**
  * @brief Velocity diffusion simulation

@@ -96,7 +96,7 @@ namespace EPMDynamo {
          this->preWrite();
 
          // Write angular momentum
-         this->mFile << this->mrTSParams.time() << "  " << this->mMomentum.transpose();
+         this->mFile << std::setprecision(16) << this->mrTSParams.time() << "  " << this->mMomentum.transpose();
 
          // Add newline at the end of ouput
          this->mFile << std::endl;
