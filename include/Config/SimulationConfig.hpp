@@ -42,9 +42,11 @@ namespace EPMDynamo {
    class InvPrRaParameters;
 
    // Transforms
-   class MPISpectralSHTTraits;
+   #ifdef EPMDYNAMO_MPI
+      class MPISpectralSHTTraits;
+      class MPISHTTraits;
+   #endif //EPMDYNAMO_MPI
    class SerialSpectralSHTTraits;
-   class MPISHTTraits;
    class SerialSHTTraits;
    template <typename , typename > class TorPolSpectralSHTransform;
 

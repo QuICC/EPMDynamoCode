@@ -15,9 +15,12 @@
 //
 #include "Transforms/SpectralSH/TorPolSpectralSHTransform.hpp"
 #include "Transforms/SpectralSH/SerialSpectralSHTTraits.hpp"
-#include "Transforms/SpectralSH/MPISpectralSHTTraits.hpp"
+
+#ifdef EPMDYNAMO_MPI
+   #include "Transforms/SpectralSH/MPISpectralSHTTraits.hpp"
+   #include "Transforms/SphericalHarmonics/MPISHTTraits.hpp"
+#endif //EPMDYNAMO_MPI
 #include "Transforms/SphericalHarmonics/SerialSHTTraits.hpp"
-#include "Transforms/SphericalHarmonics/MPISHTTraits.hpp"
 
 namespace EPMDynamo {
 }

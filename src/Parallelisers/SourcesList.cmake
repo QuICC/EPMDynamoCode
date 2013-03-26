@@ -3,10 +3,13 @@
 #
 set(${SrcSubDir}_Srcs
       LoadSplitterBase.cpp
-      MPIWorkflow.cpp
-      SerialWorkflow.cpp
       WorkflowBase.cpp
       )
+if(EPMDYNAMO_MPI)
+   list(APPEND ${SrcSubDir}_Srcs MPIWorkflow.cpp)
+else(EPMDYNAMO_MPI)
+   list(APPEND ${SrcSubDir}_Srcs SerialWorkflow.cpp)
+endif(EPMDYNAMO_MPI)
 
 #
 # include source files from subdirectories

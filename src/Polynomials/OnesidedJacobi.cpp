@@ -229,7 +229,7 @@ namespace EPMDynamo {
       // This supposes that the second derivative already intialised it
       for(int n = 1; n < this->polyN(); ++n)
       {
-         this->rDiff(1).row(n).array() *= 2.0*this->grid().array();
+         this->rDiff(1).row(n).array() *= 2.0*this->grid().transpose().array();
       }
    }
 
@@ -252,7 +252,7 @@ namespace EPMDynamo {
 
       for(int n = 1; n < polyN(); ++n)
       {
-         this->rDiff(2).row(n).array() *= 4.0*this->grid().array().pow(2).transpose();
+         this->rDiff(2).row(n).array() *= 4.0*this->grid().array().pow(2).matrix().transpose().array();
          this->rDiff(2).row(n) += 2.0*this->diff(1).row(n);
       }
    }

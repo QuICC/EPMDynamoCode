@@ -180,10 +180,10 @@ namespace EPMDynamo {
          rn = static_cast<EPMFloat>(n);
 
          // Compute dr part
-         this->rDiff(1).row(n).array() = 4.0*(0.5*x).array().cos().transpose();
+         this->rDiff(1).row(n).array() = 4.0*(0.5*x).array().cos().matrix().transpose().array();
 
          // Compute the trigonometric derivative part
-         this->rDiff(1).row(n).array() *= (rn*((rn*x).array().sin()/x.array().sin())).transpose();
+         this->rDiff(1).row(n).array() *= (rn*((rn*x).array().sin()/x.array().sin())).matrix().transpose().array();
       }
    }
 
@@ -219,11 +219,11 @@ namespace EPMDynamo {
       {
          rn = static_cast<EPMFloat>(n);
 
-         this->rDiff(2).row(n).array() = (-2.0*rn*(rn*x).array().cos()).transpose();
+         this->rDiff(2).row(n).array() = (-2.0*rn*(rn*x).array().cos()).matrix().transpose();
 
-         this->rDiff(2).row(n).array() += (((0.5*x).array().sin()/(0.5*x).array().cos())*(rn*x).array().sin()).transpose();
+         this->rDiff(2).row(n).array() += (((0.5*x).array().sin()/(0.5*x).array().cos())*(rn*x).array().sin()).matrix().transpose().array();
 
-         this->rDiff(2).row(n).array() *= (4.0*rn*(((0.5*x).array().sin()/(0.5*x).array().cos())/x.array().sin())).transpose();
+         this->rDiff(2).row(n).array() *= (4.0*rn*(((0.5*x).array().sin()/(0.5*x).array().cos())/x.array().sin())).matrix().transpose().array();
       }
    }
 

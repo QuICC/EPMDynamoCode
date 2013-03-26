@@ -430,7 +430,6 @@ if(EPMDYNAMO_ON_CORE2)
    else(EPMDYNAMO_MPI)
       if(EPMDYNAMO_USE_GCC)
          set(CMAKE_CXX_COMPILER "g++")
-      set(CMAKE_CXX_COMPILER "mpicxx")
       endif(EPMDYNAMO_USE_GCC)
    endif(EPMDYNAMO_MPI)
 
