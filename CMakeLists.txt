@@ -504,12 +504,6 @@ if(EPMDYNAMO_ON_BRUTUS)
    # Link to ZLib library
    link_libraries(z)
 
-   # Set special link libraries for GCC
-   if(EPMDYNAMO_USE_GCC)
-	   include_directories("/cluster/home/erdw/phmarti/myProgs/bin/include")
-	   link_directories("/cluster/home/erdw/phmarti/myProgs/bin/lib")
-   endif(EPMDYNAMO_USE_GCC)
-
    # Set special link libraries for Intel
    if(EPMDYNAMO_USE_INTEL)
 	   include_directories("/cluster/apps/fftw/x86_64/intel/include")
