@@ -151,8 +151,14 @@ namespace EPMDynamo {
    {
       SmartTruncation pTrunc = codC.oc().trunc();
 
-      //codC.rOcSrc().rLShell(0)(0,0) = 3.0;
-      codC.rOcSrc().rLShell(0)(0,0) = 3.75994;
+      if(pTrunc->local()->spec()->lArray()(0) == 0)
+      {
+         if(pTrunc->local()->spec()->mArray(0)(0) == 0)
+         {
+            //codC.rOcSrc().rLShell(0)(0,0) = 3.0;
+            codC.rOcSrc().rLShell(0)(0,0) = 3.75994;
+         }
+      }
    }
 
    template <typename TSimTraits> void HomogeneousSource<TSimTraits>::setSpecMagnetic(typename HomogeneousSource<TSimTraits>::Magnetic &magB)
