@@ -476,29 +476,6 @@ namespace EPMDynamo {
       // Read data from file
       this->mpInFile->template readPartial<VisStateFilterTraits<TVisTraits, StateFileDefs::FullField> >();
 
-         // Get truncation information
-         SmartTruncation pTrunc = this->codC().oc().trunc();
-
-         // Get the stored ls
-         ArrayI ls = pTrunc->local()->spec()->lArray();
-         ArrayI ms;
-         int l_ = -1;
-         int m_ = -1;
-         // Loop over all stored l's
-         for(int l = 0; l < ls.size(); l++)
-         {
-            l_ = ls(l);
-            if(l_ != 0)
-            {
-               //this->codC().rOc().rPerturbation().rLShell(l).setConstant(0.0);
-            } else
-            {
-               this->codC().rOc().rPerturbation().rLShell(l)(0,0) -= EPMComplex(0.313329);
-               this->codC().rOc().rPerturbation().rLShell(l)(1,0) -= EPMComplex(-0.221557);
-            }
-
-         }
-
       // Configure transforms
       this->template configureTransform<VisGeneratorTraits<TVisTraits> >();
 
