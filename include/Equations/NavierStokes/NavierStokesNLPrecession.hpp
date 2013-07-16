@@ -123,8 +123,8 @@ namespace EPMDynamo {
 
       // Store values for configuration file
       this->mOmega = cfg.floats()(0);
-      this->mCosAlpha = std::cos(cfg.floats()(1));
-      this->mSinAlpha = std::sin(cfg.floats()(1));
+      this->mCosAlpha = std::cos(cfg.floats()(1)*(MathConstants::PI/180.));
+      this->mSinAlpha = std::sin(cfg.floats()(1)*(MathConstants::PI/180.));
    }
 
    template <typename TSimTraits> void NavierStokesNLPrecession<TSimTraits>::updateRTP(const int step)

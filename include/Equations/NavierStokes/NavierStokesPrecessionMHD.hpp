@@ -130,8 +130,8 @@ namespace EPMDynamo {
       // Store values for configuration file
       this->mOmega = cfg.floats()(0);
       // read angle and convert to radians
-      this->mCosAlpha = std::cos(cfg.floats()(1))*(MathConstants::PI/180.);
-      this->mSinAlpha = std::sin(cfg.floats()(1))*(MathConstants::PI/180.);
+      this->mCosAlpha = std::cos(cfg.floats()(1)*(MathConstants::PI/180.));
+      this->mSinAlpha = std::sin(cfg.floats()(1)*(MathConstants::PI/180.));
    }
 
    template <typename TSimTraits> void NavierStokesPrecessionMHD<TSimTraits>::updateRTP(const int step)
