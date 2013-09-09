@@ -164,6 +164,12 @@ namespace EPMDynamo {
 
          // Rescale the N spectrum
          this->mSpectrumN *= this->mEFactor;
+
+         // Rescale the even spectrum
+         this->mEEven *= this->mEFactor;
+
+         // Rescale the odd spectrum
+         this->mEOdd *= this->mEFactor;
       }
    }
 
