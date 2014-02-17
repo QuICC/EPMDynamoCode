@@ -16,6 +16,7 @@
 #include "Domain/Truncation.hpp"
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
+#include "Simulations/Traits/PrecessionDynamoTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"

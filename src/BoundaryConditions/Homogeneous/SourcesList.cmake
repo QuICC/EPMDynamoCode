@@ -8,4 +8,6 @@ set(${SrcSubDir}_${SrcSubSubDir}_Srcs
       StressFreeTorBC.cpp
       StressFreeTorAngMomBC.cpp
       ZeroBC.cpp
+      ConductorTorBC.cpp
+      ConductorPolBC.cpp
       )

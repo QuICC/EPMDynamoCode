@@ -27,11 +27,30 @@ namespace EPMDynamo {
 
    void MagneticDiffusionSimulation::initEquations()
    {
-      // Set boundary condition to the Induction equation
-      SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
-      SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
-      this->mInduction.addTorBC(pZeroBC);
-      this->mInduction.addPolBC(pInsulatingBC);
+      // Set boundary condition to the induction equation
+      //
+
+      // Set insulator boundary condition
+      if(this->mIOSys.cfg()->aBC()(2) == 0)
+      {
+         // Set boundary condition to the Induction equation
+         SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
+         SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
+
+         this->mInduction.addTorBC(pZeroBC);
+         this->mInduction.addPolBC(pInsulatingBC);
+      } else if(this->mIOSys.cfg()->aBC()(2) == 1)
+      {
+         // Set boundary condition to the Induction equation
+         SmartBC  pConductorTorBC(new ConductorTorBC(this->mTransform.radBasis()));
+         SmartBC  pConductorPolBC(new ConductorPolBC(this->mTransform.radBasis()));
+
+         this->mInduction.addTorBC(pConductorTorBC);
+         this->mInduction.addPolBC(pConductorPolBC);
+      } else
+      {
+         throw EPMException("MagneticDiffusionSimulation::initEquations", "Did not know what to do with Magnetic BC");
+      }
 
       // Initialise the Induction equation
       this->mInduction.init();
