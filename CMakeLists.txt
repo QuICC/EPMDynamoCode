@@ -440,8 +440,8 @@ if(EPMDYNAMO_ON_CORE2)
 
    # Link to lapack library
    #link_libraries(cblas)
-   link_libraries(refblas)
-   link_libraries(reflapack)
+   link_libraries(blas)
+   link_libraries(lapack)
    # Link to FFTW3 library
    link_libraries(fftw3)
    # Link to rt library

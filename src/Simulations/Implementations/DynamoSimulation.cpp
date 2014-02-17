@@ -28,23 +28,23 @@ namespace EPMDynamo {
 
    void DynamoSimulation::initEquations()
    {
-      // Set boundary condition to the transport equation
-      // Set constant temperature
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
-      SmartBC  pFluxBC(new HeatFluxBC(-1.0, this->mTransform.radBasis()));
+
+      // Set boundary condition to the transport equation
       if(this->mIOSys.cfg()->aBC()(0) == 0)
       {
+         // Set constant temperature
          this->mTransport.addBC(pZeroBC);
-      // Set constant flux
       } else if(this->mIOSys.cfg()->aBC()(0) == 1)
       {
-         this->mTransport.addBC(pFluxBC);
-      }
+         // Set constant flux
+         SmartBC  pFluxBC(new HeatFluxBC(-1.0, this->mTransform.radBasis()));
 
-      // Set boundary condition to the Induction equation
-      SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
-      this->mInduction.addTorBC(pZeroBC);
-      this->mInduction.addPolBC(pInsulatingBC);
+         this->mTransport.addBC(pFluxBC);
+      } else
+      {
+         throw EPMException("DynamoSimulation::initEquations", "Did not know what to do with Codensity BC");
+      }
 
       // Set boundary condition to the Navier-Stokes equation
       if(this->mIOSys.cfg()->aBC()(1) == 1)
@@ -58,7 +58,7 @@ namespace EPMDynamo {
          // Order of Poloidal BCs is important
          this->mNavierStokes.addPolBC(pZeroBC);
          this->mNavierStokes.addPolBC(pDDBC);
-      } else
+      } else if(this->mIOSys.cfg()->aBC()(1) == 0)
       {
          SmartBC  pNSBC(new ZeroBC(this->mTransform.radBasis()));
          SmartBC  pDBC(new DRadialBC(this->mTransform.radBasis()));
@@ -69,6 +69,30 @@ namespace EPMDynamo {
          // Order of Poloidal BCs is important
          this->mNavierStokes.addPolBC(pZeroBC);
          this->mNavierStokes.addPolBC(pDBC);
+      } else
+      {
+         throw EPMException("DynamoSimulation::initEquations", "Did not know what to do with Velocity BC");
+      }
+
+      // Set boundary condition to the induction equation
+      if(this->mIOSys.cfg()->aBC()(2) == 0)
+      {
+         // Set insulator boundary condition
+         SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
+
+         this->mInduction.addTorBC(pZeroBC);
+         this->mInduction.addPolBC(pInsulatingBC);
+      } else if(this->mIOSys.cfg()->aBC()(2) == 1)
+      {
+         // Set  conductor boundary condition
+         SmartBC  pConductorTorBC(new ConductorTorBC(this->mTransform.radBasis()));
+         SmartBC  pConductorPolBC(new ConductorPolBC(this->mTransform.radBasis()));
+
+         this->mInduction.addTorBC(pConductorTorBC);
+         this->mInduction.addPolBC(pConductorPolBC);
+      } else
+      {
+         throw EPMException("DynamoSimulation::initEquations", "Did not know what to do with Magnetic BC");
       }
 
       // Initialise the induction equation
