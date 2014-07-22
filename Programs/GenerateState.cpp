@@ -20,6 +20,7 @@
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"
+#include "Simulations/Traits/KinematicInductionTraits.hpp"
 #include "Utilities/InitialStateGenerator.hpp"
 
 #include "Utilities/States/RandomState.hpp"
@@ -27,18 +28,21 @@
 #include "Utilities/States/SakurabaState.hpp"
 #include "Utilities/States/BenchmarkState.hpp"
 #include "Utilities/States/SolidBodyRotationState.hpp"
+#include "Utilities/States/KinematicInductionState.hpp"
 
 namespace epm = EPMDynamo;
 
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::DynamoTraits
-#define SIMTRAITS epm::PrecessionDynamoTraits
+//#define SIMTRAITS epm::PrecessionDynamoTraits
+#define SIMTRAITS epm::KinematicInductionTraits
 
 //typedef epm::SolidBodyRotationState<SIMTRAITS>  StateType;
 //typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
-typedef epm::BenchmarkState<SIMTRAITS>  StateType;
+//typedef epm::BenchmarkState<SIMTRAITS>  StateType;
 //typedef epm::RandomState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;
+typedef epm::KinematicInductionState<SIMTRAITS>  StateType;
 
 typedef StateType::StateTraits  StateTraits;
 
