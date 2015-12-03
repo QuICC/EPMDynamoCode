@@ -341,7 +341,7 @@ namespace EPMDynamo {
       }
 
       // Check for defined BC values for magnetic
-      if(this->mBCArray(2) < 0 || this->mBCArray(2) > 0)
+      if(this->mBCArray(2) < 0 || this->mBCArray(2) > 1)
       {
          throw EPMException("ParametersFile::readBoundary", "Unknown BC for magnetic");
       }

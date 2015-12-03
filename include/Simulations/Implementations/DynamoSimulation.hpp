@@ -38,6 +38,8 @@
 #include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/InsulatingBC.hpp"
+#include "BoundaryConditions/Homogeneous/ConductorTorBC.hpp"
+#include "BoundaryConditions/Homogeneous/ConductorPolBC.hpp"
 #include "BoundaryConditions/L0Harmonic/DifferentialHeatingBC.hpp"
 #include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 

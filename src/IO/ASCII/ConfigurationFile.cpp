@@ -26,7 +26,7 @@
 namespace EPMDynamo {
 
    ConfigurationFile::ConfigurationFile(const std::string type, const std::vector<std::string>& integers, const std::vector<std::string>& floats)
-      : XMLReader(type, ConfigurationFileDefs::BASENAME, ConfigurationFileDefs::EXTENSION, ConfigurationFileDefs::HEADER, ConfigurationFileDefs::VERSION), mIntegerIDs(integers), mFloatIDs(floats)
+      : XMLReader(type, type, ConfigurationFileDefs::EXTENSION, ConfigurationFileDefs::HEADER, ConfigurationFileDefs::VERSION), mIntegerIDs(integers), mFloatIDs(floats)
    {
       // Resize arrays depending
       this->setupStorage();

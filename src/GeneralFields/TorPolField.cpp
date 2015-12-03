@@ -36,9 +36,13 @@ namespace EPMDynamo {
 
    void TorPolField::computeTorSpectra(const TorPolField::RadialBasisType &radBasis)
    {
+      // Reset toroidal N,L,M spectra to zero
       this->rTor().rSpectrumN().setConstant(0.0);
       this->rTor().rSpectrumL().setConstant(0.0);
       this->rTor().rSpectrumM().setConstant(0.0);
+      // Reset toroidal even/odd spectra to zero
+      this->rTor().rEEven() = 0.0;
+      this->rTor().rEOdd() = 0.0;
 
       int l0 = this->tor().minL();
       int nL = this->nL();
@@ -111,17 +115,25 @@ namespace EPMDynamo {
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
+         // Sync toroidal N,L,M energy spectra across all MPI process
          MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumN().data(), this->tor().spectrumN().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumL().data(), this->tor().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rTor().rSpectrumM().data(), this->tor().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         // Sync toroidal even/odd energy spectra across all MPI process
+         MPI_Allreduce(MPI_IN_PLACE, &this->rTor().rEEven(), 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, &this->rTor().rEOdd(), 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
    }
 
    void TorPolField::computePolSpectra(const TorPolField::RadialBasisType &radBasis)
    {
+      // Reset poloidal N,L,M spectra to zero
       this->rPol().rSpectrumN().setConstant(0.0);
       this->rPol().rSpectrumL().setConstant(0.0);
       this->rPol().rSpectrumM().setConstant(0.0);
+      // Reset poloidal even/odd spectra to zero
+      this->rPol().rEEven() = 0.0;
+      this->rPol().rEOdd() = 0.0;
 
       int l0 = this->pol().minL();
       int nL = this->nL();
@@ -193,9 +205,13 @@ namespace EPMDynamo {
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
+         // Sync poloidal N,L,M energy spectra across all MPI process
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumN().data(), this->pol().spectrumN().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumL().data(), this->pol().spectrumL().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->rPol().rSpectrumM().data(), this->pol().spectrumM().size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         // Sync poloidal even/odd energy spectra across all MPI process
+         MPI_Allreduce(MPI_IN_PLACE, &this->rPol().rEEven(), 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, &this->rPol().rEOdd(), 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
    }
 

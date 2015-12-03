@@ -222,9 +222,13 @@ namespace EPMDynamo {
 
    template <typename TPolynomial> void SpectralSHScalar::computeSpectra(const RadialBasis<TPolynomial> &radBasis)
    {
+      // Reset scalar N,L,M spectra
       this->mSpectrumN.setConstant(0.0);
       this->mSpectrumL.setConstant(0.0);
       this->mSpectrumM.setConstant(0.0);
+      // Reset scalar even/odd spectra
+      this->mEEven = 0.0;
+      this->mEOdd = 0.0;
 
       int l0 = this->minL();
       int nL = this->nL();
@@ -294,9 +298,13 @@ namespace EPMDynamo {
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
+         // Sync scalar N,L,M energy spectra across all MPI process
          MPI_Allreduce(MPI_IN_PLACE, this->mSpectrumN.data(), this->mSpectrumN.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->mSpectrumL.data(), this->mSpectrumL.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, this->mSpectrumM.data(), this->mSpectrumM.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         // Sync scalar even/odd energy spectra across all MPI process
+         MPI_Allreduce(MPI_IN_PLACE, &this->mEEven, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, &this->mEOdd, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
    }
 

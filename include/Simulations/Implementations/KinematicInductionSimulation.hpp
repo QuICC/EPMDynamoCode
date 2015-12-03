@@ -1,9 +1,9 @@
-/** \file MagnetoConvectionSimulation.hpp
- *  \brief Implementation of the magneto-convection simulation
+/** \file KinematicInductionSimulation.hpp
+ *  \brief Implementation of a kinematic induction simulation
  */
 
-#ifndef MAGNETOCONVECTIONSIMULATION_HPP
-#define MAGNETOCONVECTIONSIMULATION_HPP
+#ifndef KINEMATICINDUCTIONSIMULATION_HPP
+#define KINEMATICINDUCTIONSIMULATION_HPP
 
 // Configuration includes
 //
@@ -19,45 +19,40 @@
 //
 #include "General/EPMTypedefs.hpp"
 #include "Simulations/SimulationBase.hpp"
-#include "Simulations/Traits/MagnetoConvectionTraits.hpp"
+#include "Simulations/Traits/KinematicInductionTraits.hpp"
 
-#include "IO/HDF5/Imposed/ImposedFieldReader.hpp"
 #include "IO/HDF5/State/StateFileReader.hpp"
 #include "IO/HDF5/State/StateFileWriter.hpp"
 #include "IO/HDF5/Source/SourceFileReader.hpp"
 #include "IO/ASCII/EnergyFile.hpp"
 #include "IO/ASCII/SpectrumFile.hpp"
+#include "IO/ASCII/TimeFile.hpp"
 
-#include "Equations/Induction/InductionMHD.hpp"
-#include "Equations/NavierStokes/NavierStokesMHD.hpp"
-#include "Equations/Transport/TransportMHD.hpp"
+#include "Equations/Induction/InductionKinematic.hpp"
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
-#include "BoundaryConditions/Homogeneous/DDRadialBC.hpp"
-#include "BoundaryConditions/Homogeneous/DRadialBC.hpp"
 #include "BoundaryConditions/Homogeneous/InsulatingBC.hpp"
 #include "BoundaryConditions/Homogeneous/ConductorTorBC.hpp"
 #include "BoundaryConditions/Homogeneous/ConductorPolBC.hpp"
-#include "BoundaryConditions/Homogeneous/StressFreeTorBC.hpp"
 
 namespace EPMDynamo {
 
    /**
-    * \brief Implementation of the magneto-convection simulation
+    * \brief Implementation of a kinematic induction simulation
     */
-   class MagnetoConvectionSimulation: public SimulationBase
+   class KinematicInductionSimulation: public SimulationBase
    {
       public:
          /**
           * @brief Simple empty destructor
           */
-         virtual ~MagnetoConvectionSimulation() {};
+         virtual ~KinematicInductionSimulation() {};
 
       protected:
          /**
           * @brief Constructor
           */
-         MagnetoConvectionSimulation();
+         KinematicInductionSimulation();
 
          /**
           * @brief Initialise the fields
@@ -115,36 +110,21 @@ namespace EPMDynamo {
 
       private:
          /**
-          * @brief Codensity scalar
+          * @brief Magnetic field
           */
-         MagnetoConvectionTraits::CodType   mCodC;
+         KinematicInductionTraits::MagType   mMagB;
 
          /**
           * @brief Magnetic field
           */
-         MagnetoConvectionTraits::MagType   mMagB;
-
-         /**
-          * @brief Velocity field
-          */
-         MagnetoConvectionTraits::VelType   mVelV;
+         KinematicInductionTraits::VelType   mVelV;
 
          /**
           * @brief Induction equation
           */
-         InductionMHD<MagnetoConvectionTraits>    mInduction;
-
-         /**
-          * @brief Transport equation
-          */
-         TransportMHD<MagnetoConvectionTraits>    mTransport;
-
-         /**
-          * @brief Navier Stokes equation
-          */
-         NavierStokesMHD<MagnetoConvectionTraits>    mNavierStokes;
+         InductionKinematic<KinematicInductionTraits>    mInduction;
    };
 
 }
 
-#endif // MAGNETOCONVECTIONSIMULATION_HPP
+#endif // KINEMATICINDUCTIONSIMULATION_HPP

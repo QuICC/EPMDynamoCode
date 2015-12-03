@@ -20,9 +20,9 @@ cmake_minimum_required(VERSION 2.6.2)
 
 #
 # Set platform
-# Possible platforms are: Core2 (Gentoo), Brutus, Rosa 
+# Possible platforms are: Core2 (Gentoo), Brutus, Rosa, Fortytwo 
 #
-set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa." FORCE)
+set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Fortytwo." FORCE)
 
 # Set Core2 platform
 if(EPMDYNAMO_PLATFORM STREQUAL "Core2")
@@ -36,6 +36,10 @@ elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Rosa")
    set(EPMDYNAMO_ON_ROSA ON)
    message(STATUS "***** Setup system for \"Rosa\" platform *****")
+   # Set Fortytwo platform
+elseif(EPMDYNAMO_PLATFORM STREQUAL "Fortytwo")
+   set(EPMDYNAMO_ON_FORTYTWO ON)
+   message(STATUS "***** Setup system for \"Fortytwo\" platform *****")
 # Error message if unknown platform is set
 else(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    message(SEND_ERROR "Unkown platform")
@@ -588,6 +592,64 @@ if(EPMDYNAMO_ON_ROSA)
    link_libraries(z)
 
 endif(EPMDYNAMO_ON_ROSA)
+
+#
+# Add libraries to link with
+#
+if(EPMDYNAMO_ON_FORTYTWO)
+   # Error message for unavailable PGI compiler
+   if(EPMDYNAMO_USE_PGI)
+      message(SEND_ERROR "PGI compiler is not available")
+   # Error message for unavailable Intel compiler
+   elseif(EPMDYNAMO_USE_INTEL)
+      message(SEND_ERROR "Intel compiler is not available")
+   # Error message for unavailable Pathscale compiler
+   elseif(EPMDYNAMO_USE_PATHSCALE)
+      message(SEND_ERROR "Pathscale compiler is not available")
+   # Error message for unavailable Cray compiler
+   elseif(EPMDYNAMO_USE_CRAY)
+      message(SEND_ERROR "Cray compiler is not available")
+   # Error message for unavailable Sun compiler
+   elseif(EPMDYNAMO_USE_SUN)
+      message(SEND_ERROR "Sun compiler is not available")
+   # Error message for unavailable TAU system
+   elseif(EPMDYNAMO_USE_TAU)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable TAU system with compiler instrumentation
+   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable Scalasca profiling system
+   elseif(EPMDYNAMO_USE_SCALASCA)
+      message(SEND_ERROR "Scalasca is not available")
+   endif(EPMDYNAMO_USE_PGI)
+
+   # Set MPI Wrapper if required
+   if(EPMDYNAMO_MPI)
+      set(CMAKE_CXX_COMPILER "mpicxx")
+   # Setup serial compilers
+   else(EPMDYNAMO_MPI)
+      if(EPMDYNAMO_USE_GCC)
+         set(CMAKE_CXX_COMPILER "g++")
+      endif(EPMDYNAMO_USE_GCC)
+   endif(EPMDYNAMO_MPI)
+
+   # Set up platform specific compiler flags
+   if(EPMDYNAMO_USE_GCC)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native" CACHE STRING "" FORCE)
+   endif(EPMDYNAMO_USE_GCC)
+
+   # Link to lapack library
+   #link_libraries(cblas)
+   link_libraries(atlas)
+   link_libraries(atllapack)
+   # Link to FFTW3 library
+   link_libraries(fftw3)
+   # Link to rt library
+   link_libraries(rt)
+   # Link to HDF5 library
+   link_libraries(hdf5)
+
+endif(EPMDYNAMO_ON_FORTYTWO)
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#

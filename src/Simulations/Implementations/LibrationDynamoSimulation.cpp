@@ -29,9 +29,6 @@ namespace EPMDynamo {
    {
       // Set boundary condition to the Induction equation
       SmartBC  pZeroBC(new ZeroBC(this->mTransform.radBasis()));
-      SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
-      this->mInduction.addTorBC(pZeroBC);
-      this->mInduction.addPolBC(pInsulatingBC);
 
       // Set time dependent longitudinal libration boundary condition
       if(this->mIOSys.cfg()->aBC()(1) == 3)
@@ -62,6 +59,27 @@ namespace EPMDynamo {
       } else
       {
          throw EPMException("LibrationDynamoSimulation::initEquations", "Simulation requires libration boundary condition!");
+      }
+
+      // Set boundary condition to the induction equation
+      if(this->mIOSys.cfg()->aBC()(2) == 0)
+      {
+         // Set insulator boundary condition
+         SmartBC  pInsulatingBC(new InsulatingBC(this->mTransform.radBasis()));
+
+         this->mInduction.addTorBC(pZeroBC);
+         this->mInduction.addPolBC(pInsulatingBC);
+      } else if(this->mIOSys.cfg()->aBC()(2) == 1)
+      {
+         // Set  conductor boundary condition
+         SmartBC  pConductorTorBC(new ConductorTorBC(this->mTransform.radBasis()));
+         SmartBC  pConductorPolBC(new ConductorPolBC(this->mTransform.radBasis()));
+
+         this->mInduction.addTorBC(pConductorTorBC);
+         this->mInduction.addPolBC(pConductorPolBC);
+      } else
+      {
+         throw EPMException("LibrationDynamoSimulation::initEquations", "Did not know what to do with Magnetic BC");
       }
 
       // Initialise the induction equation

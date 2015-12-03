@@ -32,6 +32,8 @@
 
 #include "BoundaryConditions/Homogeneous/ZeroBC.hpp"
 #include "BoundaryConditions/Homogeneous/InsulatingBC.hpp"
+#include "BoundaryConditions/Homogeneous/ConductorTorBC.hpp"
+#include "BoundaryConditions/Homogeneous/ConductorPolBC.hpp"
 
 namespace EPMDynamo {
 

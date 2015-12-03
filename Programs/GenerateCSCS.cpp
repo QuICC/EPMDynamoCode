@@ -22,13 +22,15 @@
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"
+#include "Simulations/Traits/KinematicInductionTraits.hpp"
 #include "Utilities/CSCSParaviewGenerator.hpp"
 
 namespace epm = EPMDynamo;
 
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::DynamoTraits
-#define SIMTRAITS epm::PrecessionDynamoTraits
+//#define SIMTRAITS epm::PrecessionDynamoTraits
+#define SIMTRAITS epm::KinematicInductionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -39,7 +41,7 @@ class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = true;
+      static const bool VisCodensity = false;
 
       /// Output Codensity gradient visualisation
       static const bool VisCodensityGrad = false;
