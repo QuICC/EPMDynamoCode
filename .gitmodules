@@ -1,3 +1,3 @@
 [submodule "External/eigen3"]
 	path = External/eigen3
-	url = gitosis@pmarti.nine.ch:SubmoduleEigen3.git
+	url = gitolite@base13.ch:SubmoduleEigen3.git
