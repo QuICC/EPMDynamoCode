@@ -22,12 +22,16 @@ cmake_minimum_required(VERSION 2.6.2)
 # Set platform
 # Possible platforms are: Core2 (Gentoo), Brutus, Rosa, APPLE 
 #
-set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Apple." FORCE)
+set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Apple, CU." FORCE)
 
 # Set Core2 platform
 if(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    set(EPMDYNAMO_ON_CORE2 ON)
    message(STATUS "***** Setup system for \"Core2\" platform *****")
+# Set Core2 platform
+elseif(EPMDYNAMO_PLATFORM STREQUAL "CU")
+   set(EPMDYNAMO_ON_CU ON)
+   message(STATUS "***** Setup system for \"CU\" platform *****")
 # Set Brutus platform
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
    set(EPMDYNAMO_ON_BRUTUS ON)
@@ -452,6 +456,61 @@ if(EPMDYNAMO_ON_CORE2)
    # Link to HDF5 library
    link_libraries(hdf5)
 endif(EPMDYNAMO_ON_CORE2)
+
+if(EPMDYNAMO_ON_CU)
+   # Error message for unavailable PGI compiler
+   if(EPMDYNAMO_USE_PGI)
+      message(SEND_ERROR "PGI compiler is not available")
+   # Error message for unavailable Intel compiler
+   elseif(EPMDYNAMO_USE_INTEL)
+      message(SEND_ERROR "Intel compiler is not available")
+   # Error message for unavailable Pathscale compiler
+   elseif(EPMDYNAMO_USE_PATHSCALE)
+      message(SEND_ERROR "Pathscale compiler is not available")
+   # Error message for unavailable Cray compiler
+   elseif(EPMDYNAMO_USE_CRAY)
+      message(SEND_ERROR "Cray compiler is not available")
+   # Error message for unavailable Sun compiler
+   elseif(EPMDYNAMO_USE_SUN)
+      message(SEND_ERROR "Sun compiler is not available")
+   # Error message for unavailable TAU system
+   elseif(EPMDYNAMO_USE_TAU)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable TAU system with compiler instrumentation
+   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable Scalasca profiling system
+   elseif(EPMDYNAMO_USE_SCALASCA)
+      message(SEND_ERROR "Scalasca is not available")
+   endif(EPMDYNAMO_USE_PGI)
+
+   # Set MPI Wrapper if required
+   if(EPMDYNAMO_MPI)
+      set(CMAKE_CXX_COMPILER "mpicxx")
+   # Setup serial compilers
+   else(EPMDYNAMO_MPI)
+      if(EPMDYNAMO_USE_GCC)
+         set(CMAKE_CXX_COMPILER "g++")
+      endif(EPMDYNAMO_USE_GCC)
+   endif(EPMDYNAMO_MPI)
+
+   # Set up platform specific compiler flags
+   if(EPMDYNAMO_USE_GCC)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -march=native" CACHE STRING "" FORCE)
+   endif(EPMDYNAMO_USE_GCC)
+
+   # Link to lapack library
+   #link_libraries(cblas)
+   link_libraries(f77blas)
+   link_libraries(atllapack)
+   link_libraries(atlas)
+   # Link to FFTW3 library
+   link_libraries(fftw3)
+   # Link to rt library
+   link_libraries(rt)
+   # Link to HDF5 library
+   link_libraries(hdf5)
+endif(EPMDYNAMO_ON_CU)
 
 if(EPMDYNAMO_ON_APPLE)
    # Error message for unavailable PGI compiler
