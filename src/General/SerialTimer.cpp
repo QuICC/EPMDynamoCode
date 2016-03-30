@@ -28,12 +28,20 @@ namespace EPMDynamo {
 
    void SerialTimer::start()
    {
+      #ifdef __APPLE__
+      mach_absolute_time();
+      #else
       clock_gettime(CLOCK_REALTIME, &this->mStart);
+      #endif
    }
 
    void SerialTimer::stop()
    {
+      #ifdef __APPLE__
+      mach_absolute_time();
+      #else 
       clock_gettime(CLOCK_REALTIME, &this->mStop);
+      #endif
    }
 
    EPMFloat SerialTimer::time() const
