@@ -61,13 +61,18 @@ namespace EPMDynamo {
          this->mEqArray.resize(1);
       } else if(this->mType == "EPm")
       {
-         // Resize equation array to correct size
+      // Resize equation array to correct size
          this->mEqArray.resize(2);
       } else if(this->mType == "ON")
       {
          // Resize equation array to correct size
          this->mEqArray.resize(2);
+      }else if(this->mType == "EPrRa") //Leo: size wasn't set properly
+      {
+         // Resize equation array to correct size
+         this->mEqArray.resize(3);
       }
+
 
    }
 
@@ -292,6 +297,17 @@ namespace EPMDynamo {
             {
                // Read the Ekman number
                this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+            } else if(this->mType == "EPrRa") //Leo: adding EPrRa case
+            {
+               // Read the Ekman number
+               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
+
+               // Read the Prandtl number
+               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSPRANDTLXML);
+
+               // Read the Rayleigh number
+               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSRAYLEIGHXML);
             } else
             {
                throw EPMException("ParametersFile::readPhysical", "The requested type is not implemented! (yet?)");
@@ -455,6 +471,11 @@ namespace EPMDynamo {
          } else if(this->mType == "E")
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+         } else if(this->mType == "EPrRa") //Leo: adding missing case
+         {
+            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
+            std::cout << "  " << "Pr: " << this->mEqArray(1) << std::endl;
+            std::cout << "  " << "Ra: " << this->mEqArray(2) << std::endl; //mEqArray(2) is Zero
          } else
          {
             std::cout << " !!!! UNKNOWN PHYSICAL PARAMETERS !!!! " << std::endl;
