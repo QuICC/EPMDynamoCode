@@ -17,6 +17,9 @@
 #include "Simulations/Simulation.hpp"
 #include "Simulations/Traits/DynamoTraits.hpp"
 #include "Simulations/Traits/ThermalConvectionTraits.hpp"
+#include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
+#include "Simulations/Traits/ThermalNLRotConvectionTraits.hpp"
+
 #include "Utilities/SourceGenerator.hpp"
 
 #include "Utilities/Sources/JonesSource.hpp"
@@ -25,7 +28,11 @@
 
 namespace epm = EPMDynamo;
 
-#define SIMTRAITS epm::ThermalConvectionTraits
+
+//#define SIMTRAITS epm::ThermalConvectionTraits
+//#define SIMTRAITS epm::ThermalRotConvectionTraits
+#define SIMTRAITS epm::ThermalNLRotConvectionTraits
+//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
 
 typedef epm::HomogeneousSource<SIMTRAITS>  SourceType;
 typedef SourceType::SourceTraits  SourceTraits;
