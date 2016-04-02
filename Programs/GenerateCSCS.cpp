@@ -21,8 +21,14 @@
 #include "Simulations/Traits/CodensityDiffusionTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
+#include "Simulations/Traits/ThermalNLRotConvectionTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Simulations/Traits/KinematicInductionTraits.hpp"
+#include "Simulations/Traits/VelocityRotDiffusionTraits.hpp"
+
+//Leo:adding missing headers
+#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
+
 #include "Utilities/CSCSParaviewGenerator.hpp"
 
 namespace epm = EPMDynamo;
@@ -30,7 +36,15 @@ namespace epm = EPMDynamo;
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::DynamoTraits
 //#define SIMTRAITS epm::PrecessionDynamoTraits
-#define SIMTRAITS epm::KinematicInductionTraits
+//#define SIMTRAITS epm::KinematicInductionTraits
+
+//Leo: non magnetic traits
+//#define SIMTRAITS epm::ThermalRotConvectionTraits
+//#define SIMTRAITS epm::VelocityRotDiffusionTraits
+//Thermal convection
+#define SIMTRAITS epm::ThermalNLRotConvectionTraits
+//Precession and pure rotation
+//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 

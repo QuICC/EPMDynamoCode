@@ -8,6 +8,10 @@
 // System includes
 //
 #include <time.h>
+#if defined(__APPLE__)
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#endif
 
 #if defined(__APPLE__)
 #include <mach/mach.h>
