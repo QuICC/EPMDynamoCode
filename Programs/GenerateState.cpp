@@ -44,12 +44,12 @@ namespace epm = EPMDynamo;
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //Thermal convection
-#define SIMTRAITS epm::ThermalNLRotConvectionTraits
+//#define SIMTRAITS epm::ThermalNLRotConvectionTraits
 
 //#define SIMTRAITS epm::VelocityRotDiffusionTraits
 
 //Pure rotation and precession
-//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
+#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
 
 //NL-Precession
 
@@ -65,6 +65,7 @@ namespace epm = EPMDynamo;
 //typedef epm::BenchmarkState<SIMTRAITS>  StateType;
 
 //Leo: non-magnetic
+//typedef epm::BenchmarkState<SIMTRAITS> StateType;
 typedef epm::RandomState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;
 //typedef epm::KinematicInductionState<SIMTRAITS>  StateType;

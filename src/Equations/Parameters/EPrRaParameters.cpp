@@ -57,12 +57,17 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::nsAdvection() const
    {
-      return 1.0;
+      //return 1.0;
+      //Leo: test
+      return this->E();
    }
 
    EPMFloat EPrRaParameters::nsBuoyancy() const
-   {
+   {  
+      //Leo: standard Rayleigh
       return this->E()*this->Ra();
+      //Leo: modified Rayleigh
+      //return this->Ra();
    }
 
    EPMFloat EPrRaParameters::nsCoriolis() const
@@ -122,11 +127,21 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::inertialCFL() const
    {
-      return 1.0;
+      //return 1.0;
+      //Leo
+      //Inertial waves
+      //EParameters.cpp
+      //1/(2*Omega)
+      //Delta Tg= C/10*1/(2*Omega)
+      //Precession: Time=1/Omega
+      //return 0.5/10.;
+      //Convection: Time = r^2/nu
+      return this->E()/10.;
    }
 
    EPMFloat EPrRaParameters::torsionalCFL() const
    {
+      //For magnetic
       return 1.0;
    }
 
