@@ -42,9 +42,9 @@ namespace epm = EPMDynamo;
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::VelocityRotDiffusionTraits
 //Thermal convection
-#define SIMTRAITS epm::ThermalNLRotConvectionTraits
+//#define SIMTRAITS epm::ThermalNLRotConvectionTraits
 //Precession and pure rotation
-//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
+#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
