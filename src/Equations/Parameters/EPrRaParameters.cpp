@@ -65,9 +65,9 @@ namespace EPMDynamo {
    EPMFloat EPrRaParameters::nsBuoyancy() const
    {  
       //Leo: standard Rayleigh
-      return this->E()*this->Ra();
+      //return this->E()*this->Ra();
       //Leo: modified Rayleigh
-      //return this->Ra();
+      return this->Ra();
    }
 
    EPMFloat EPrRaParameters::nsCoriolis() const
@@ -102,7 +102,8 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::tptAdvection() const
    {
-      return 1.0;
+      //return 1.0;
+	  return this->Pr();
    }
 
    EPMFloat EPrRaParameters::alfvenFactor() const

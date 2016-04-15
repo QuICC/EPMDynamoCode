@@ -44,12 +44,12 @@ namespace epm = EPMDynamo;
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //Thermal convection
-//#define SIMTRAITS epm::ThermalNLRotConvectionTraits
+#define SIMTRAITS epm::ThermalNLRotConvectionTraits
 
 //#define SIMTRAITS epm::VelocityRotDiffusionTraits
 
 //Pure rotation and precession
-#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
+//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
 
 //NL-Precession
 
