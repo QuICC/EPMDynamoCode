@@ -55,7 +55,9 @@ class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      static const bool VisCodensity = false;
+      //static const bool VisCodensity = false;
+	  //Leo: Getting hdf5 output for codensity
+	  static const bool VisCodensity = true;
 
       /// Output Codensity gradient visualisation
       static const bool VisCodensityGrad = false;
