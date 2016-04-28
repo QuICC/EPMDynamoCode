@@ -142,8 +142,8 @@ namespace EPMDynamo {
    //Kinetic energy factor
    EPMFloat EPrRaParameters::keFactor() const
    {
-	   //return 0.5;
-	   return 1.0;
+	   return 0.5;
+	   //return 1.0;
    }
    //Magnetic energy factor
    EPMFloat EPrRaParameters::meFactor() const

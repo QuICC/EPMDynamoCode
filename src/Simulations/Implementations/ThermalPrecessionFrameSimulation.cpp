@@ -186,6 +186,11 @@ namespace EPMDynamo {
 
    void ThermalPrecessionFrameSimulation::addASCIIOutput()
    {
+	  // Create a CFL timestep ASCII logging file
+	  //EPMSHARED_PTR<CFLTimestepFile> pCFLFile(new CFLTimestepFile("cfl_timestep", this->mSimControl.tsParams()));
+	  // Add time file to ASCII output
+	  //this->mIOSys.addASCIIWriter(pCFLFile);
+
       // Create a timestep ASCII logging file
       EPMSHARED_PTR<TimeFile> pTimeFile(new TimeFile("timestep", this->mSimControl.tsParams()));
       // Add time file to ASCII output
