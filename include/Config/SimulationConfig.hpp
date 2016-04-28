@@ -88,11 +88,17 @@ public:
 	//typedef EQRaRoParameters  EquationParametersType;
 	//typedef EPmParameters  EquationParametersType;
 	//typedef ONParameters  EquationParametersType;
-	//Leo: Pure rotation
+
+	//Leo:
+	//Pure rotation
 	//typedef EParameters  EquationParametersType;
-	//Leo: Thermal Rot Convection
+
+	//Thermal Convection no rotation
 	//typedef PrRaParameters EquationParametersType;
+
+	//Thermal Precession and Thermal Rot Convection
 	typedef EPrRaParameters EquationParametersType;
+
 	//typedef InvPrRaParameters  EquationParametersType;
 };
 

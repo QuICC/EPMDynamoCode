@@ -42,11 +42,17 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::nsDt() const
    {
+	  //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
       return this->E();
    }
 
    EPMFloat EPrRaParameters::nsDiffusion() const
    {
+	  //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
       return this->E();
    }
 
@@ -58,7 +64,9 @@ namespace EPMDynamo {
    EPMFloat EPrRaParameters::nsAdvection() const
    {
       //return 1.0;
-      //Leo: test
+      //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
       return this->E();
    }
 
@@ -66,13 +74,20 @@ namespace EPMDynamo {
    {  
       //Leo: standard Rayleigh
       //return this->E()*this->Ra();
-      //Leo: modified Rayleigh
+      //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
       return this->Ra();
+	  //return this->Ra()/this->E();
    }
 
    EPMFloat EPrRaParameters::nsCoriolis() const
    {
-      return 1.0;
+	  //Leo: Thermal Convection Benchmark 1
+      //return 1.0;
+
+	  //Thermal Precession
+	  return 2.0;
    }
 
    EPMFloat EPrRaParameters::indDt() const
@@ -92,17 +107,26 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::tptDt() const
    {
+	  //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
       return this->Pr();
    }
 
    EPMFloat EPrRaParameters::tptDiffusion() const
    {
+	  //Leo
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
       return 1.0;
    }
 
    EPMFloat EPrRaParameters::tptAdvection() const
    {
       //return 1.0;
+	  //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
 	  return this->Pr();
    }
 
@@ -115,12 +139,13 @@ namespace EPMDynamo {
    {
       return 0.0;
    }
-
+   //Kinetic energy factor
    EPMFloat EPrRaParameters::keFactor() const
    {
-      return 1.0;
+	   return 0.5;
+	   //return 1.0;
    }
-
+   //Magnetic energy factor
    EPMFloat EPrRaParameters::meFactor() const
    {
       return 0.0;
@@ -134,10 +159,17 @@ namespace EPMDynamo {
       //EParameters.cpp
       //1/(2*Omega)
       //Delta Tg= C/10*1/(2*Omega)
+
       //Precession: Time=1/Omega
       //return 0.5/10.;
-      //Convection: Time = r^2/nu
-      return this->E()/10.;
+
+	  //Thermal convection
+      //Thermal-Convection: Time = r^2/nu
+	  // T = 1/(2*Omega) = 1 / (2*Omega*r^2/nu) = E
+      //return this->E()/10.;
+
+	  //Thermal Precession
+	  return this->E()/20.;
    }
 
    EPMFloat EPrRaParameters::torsionalCFL() const

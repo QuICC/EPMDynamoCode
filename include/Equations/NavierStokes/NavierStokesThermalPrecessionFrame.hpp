@@ -1,9 +1,9 @@
-/** \file NavierStokesThermalPrecession.hpp
+/** \file NavierStokesThermalPrecessionFrame.hpp
  *  General representation of the Navier-Stokes diffusion equation with non-linear and precession term in the precession frame
  */
 
-#ifndef NAVIERSTOKESTHERMALPRECESSION_HPP
-#define NAVIERSTOKESTHERMALPRECESSION_HPP
+#ifndef NAVIERSTOKESTHERMALPRECESSIONFRAME_HPP
+#define NAVIERSTOKESTHERMALPRECESSIONFRAME_HPP
 
 // Configuration includes
 //
@@ -29,7 +29,7 @@ namespace EPMDynamo {
     *
     * \tparam TSimTraits Traits of the simulation implementation
     */
-   template <typename TSimTraits> class NavierStokesThermalPrecession : public NavierStokesDiffusion<TSimTraits>
+   template <typename TSimTraits> class NavierStokesThermalPrecessionFrame : public NavierStokesDiffusion<TSimTraits>
    {
       public:
          /// Typedef from Simulation trait to local transform type
@@ -50,12 +50,12 @@ namespace EPMDynamo {
           * \param tsteps Timestep parameters
           * @param params Simulation equation paramters
           */
-         NavierStokesThermalPrecession(typename TSimTraits::VelType &rV, typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
+         NavierStokesThermalPrecessionFrame(typename TSimTraits::VelType &rV, typename TSimTraits::CodType &rC, TransformType &transform, TimestepParameters &tsteps, EquationParametersType &params);
 
          /**
           * @brief Simple empty destructor
           */
-         virtual ~NavierStokesThermalPrecession() {};
+         virtual ~NavierStokesThermalPrecessionFrame() {};
 
          /**
           * @brief Update RTP values of the equation
@@ -105,14 +105,14 @@ namespace EPMDynamo {
          EPMFloat mSinAlpha;
    };
 
-   template <typename TSimTraits> NavierStokesThermalPrecession<TSimTraits>::NavierStokesThermalPrecession(typename TSimTraits::VelType &rV,  typename TSimTraits::CodType &rC, typename NavierStokesThermalPrecession<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesThermalPrecession<TSimTraits>::EquationParametersType &params)
+   template <typename TSimTraits> NavierStokesThermalPrecessionFrame<TSimTraits>::NavierStokesThermalPrecessionFrame(typename TSimTraits::VelType &rV,  typename TSimTraits::CodType &rC, typename NavierStokesThermalPrecessionFrame<TSimTraits>::TransformType &transform, TimestepParameters &tsteps,  typename NavierStokesThermalPrecessionFrame<TSimTraits>::EquationParametersType &params)
       : NavierStokesDiffusion<TSimTraits>(rV, transform, tsteps, params), mrC(rC), mOmega(0.0), mCosAlpha(0.0), mSinAlpha(0.0)
    {
       // Setup precession forcing
       this->setupPrecession();
    }
 
-   template <typename TSimTraits> void NavierStokesThermalPrecession<TSimTraits>::setupPrecession()
+   template <typename TSimTraits> void NavierStokesThermalPrecessionFrame<TSimTraits>::setupPrecession()
    {
       std::vector<std::string>   integers;
       std::vector<std::string>   floats;
@@ -141,7 +141,7 @@ namespace EPMDynamo {
       this->mSinAlpha = std::sin(cfg.floats()(1)*(MathConstants::PI/180.));
    }
 
-   template <typename TSimTraits> void NavierStokesThermalPrecession<TSimTraits>::updateRTP(const int step)
+   template <typename TSimTraits> void NavierStokesThermalPrecessionFrame<TSimTraits>::updateRTP(const int step)
    {
       // Update real space values of velocity field
       this->mrX.rOc().transform(step);
@@ -159,7 +159,7 @@ namespace EPMDynamo {
       //this->mrB.rOc().curlTransform(step);
    }
 
-   template <typename TSimTraits> void NavierStokesThermalPrecession<TSimTraits>::updateRHS()
+   template <typename TSimTraits> void NavierStokesThermalPrecessionFrame<TSimTraits>::updateRHS()
    {
       // Compute \f$u\times (\nabla \times u) \f$
       this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
@@ -171,14 +171,14 @@ namespace EPMDynamo {
       //this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
 
       // Compute \f$\Omega_p\times\vec{u}\f$
-      this->mrX.oc().rtp().template precession<-1>(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), this->mrParams.nsCoriolis());
+      this->mrX.oc().rtp().template precessionFrame<-1>(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrParams.nsCoriolis());
 
       // Compute poincare force \f$\Omega\times\hat{z}\vec{r}\f$
       //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
       //Leo: Thermal convection with diffusion time scale
-      RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
+      //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
    }
 
 }
 
-#endif // NAVIERSTOKESTHERMALPRECESSION_HPP
+#endif // NAVIERSTOKESTHERMALPRECESSIONFRAME_HPP
