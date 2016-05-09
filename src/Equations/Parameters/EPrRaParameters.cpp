@@ -77,8 +77,10 @@ namespace EPMDynamo {
       //Leo:
 	  //Thermal Convection Benchmark 1
 	  //Thermal Precession
-      return this->Ra();
-	  //return this->Ra()/this->E();
+      //Modified Rayleigh (Marti)
+      //return this->Ra();
+	  //Modified Rayleigh (Wei & Tilgner)
+      return this->Ra()/this->E();
    }
 
    EPMFloat EPrRaParameters::nsCoriolis() const
