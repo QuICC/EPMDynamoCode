@@ -162,21 +162,29 @@ namespace EPMDynamo {
    template <typename TSimTraits> void NavierStokesThermalPrecession<TSimTraits>::updateRHS()
    {
       // Compute \f$u\times (\nabla \times u) \f$
+	  // Advection term
       this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
 
       // Compute \f$C \vec{r}\f$
-      this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
+      // Buoyancy term
+      // this was clearing the radVect<0> sets the we need to add instead of setting
+      this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
 
       // Compute \f$(\nabla \times B)\times B\f$
       //this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
 
       // Compute \f$\Omega_p\times\vec{u}\f$
+      // Coriolis
       this->mrX.oc().rtp().template precession<-1>(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), this->mrParams.nsCoriolis());
 
       // Compute poincare force \f$\Omega\times\hat{z}\vec{r}\f$
+      // Leo: Thermal convection with rotation time scale
       //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
+
       //Leo: Thermal convection with diffusion time scale
       RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
+
+
    }
 
 }

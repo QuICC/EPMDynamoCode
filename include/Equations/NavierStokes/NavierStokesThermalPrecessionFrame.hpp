@@ -165,7 +165,8 @@ namespace EPMDynamo {
       this->mrX.oc().rtp().template cross<0>(this->mNTerms.rOc().rRTP(), this->mrX.oc().curl(), this->mrParams.nsAdvection());
 
       // Compute \f$C \vec{r}\f$
-      this->mrC.oc().rtp().template radVect<0>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
+      // Carefull with radVec<0> sets the value instead of adding
+      this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
 
       // Compute \f$(\nabla \times B)\times B\f$
       //this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
