@@ -170,6 +170,7 @@ namespace EPMDynamo {
       // this was clearing the radVect<0> sets the we need to add instead of setting
       this->mrC.oc().rtp().template radVect<1>(this->mNTerms.rOc().rRTP(), this->mrParams.nsBuoyancy());
 
+
       // Compute \f$(\nabla \times B)\times B\f$
       //this->mrB.oc().curl().template cross<1>(this->mNTerms.rOc().rRTP(), this->mrB.oc().rtp(), this->mrParams.nsLorentz());
 

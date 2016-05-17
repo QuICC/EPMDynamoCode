@@ -39,23 +39,22 @@
 namespace epm = EPMDynamo;
 
 //Velocity Diffution traits
-//Leo: non magnetics
+//non-magnetics Traits
 //Thermal
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
-//Thermal convection
+
+//Thermal convection and Thermal precession
 #define SIMTRAITS epm::ThermalNLRotConvectionTraits
 
 //#define SIMTRAITS epm::VelocityRotDiffusionTraits
 
 //Pure rotation and precession
+//NL-Precession:
 //#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
+//#define SIMTRAITS epm::VelocityNLRotConvectionTraits
 
-//NL-Precession
-
-//Thermal + Precession
-//#define SIMTRAITS epm:ThermalPrecessionTraits
-
+//Magnetic Traits
 //#define SIMTRAITS epm::DynamoTraits
 //#define SIMTRAITS epm::PrecessionDynamoTraits
 //#define SIMTRAITS epm::KinematicInductionTraits
