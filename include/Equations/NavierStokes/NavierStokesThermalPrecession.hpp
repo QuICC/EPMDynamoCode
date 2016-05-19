@@ -180,10 +180,10 @@ namespace EPMDynamo {
 
       // Compute poincare force \f$\Omega\times\hat{z}\vec{r}\f$
       // Leo: Thermal convection with rotation time scale
-      //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
+      RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
 
       //Leo: Thermal convection with diffusion time scale
-      RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
+      //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
 
 
    }
