@@ -96,12 +96,12 @@ namespace EPMDynamo {
    EPMFloat EPrRaParameters::nsCoriolis() const
    {
 	  //Leo: Thermal Convection Benchmark 1
-      //return 1.0;
+      return 1.0;
 
 
 	  //Thermal Precession
       //time:diffusion and rotation
-	  return 2.0;
+	  //return 2.0;
  
    }
 
@@ -183,13 +183,12 @@ namespace EPMDynamo {
 
 	  //Thermal convection
       //Thermal-Convection: Time = r^2/nu
-	  // T = 1/(2*Omega) = 1 / (2*Omega)/(r^2/nu) = E
-      //return this->E()/10.;
+	  // T = 1/(2*Omega) = 1 / (2*Omega*r^2/nu) = E
+      return this->E()/10.;
 
 	  //Thermal Precession
-      //time diffusion 
-      // T = 1/(2*Omega) = 1/(2*Omega/(r^2/nu) = E/2
-	  return this->E()/20.;
+      //time diffusion
+	  //return this->E()/20.;
       //time rotation
       //return 0.5/10.;
 
