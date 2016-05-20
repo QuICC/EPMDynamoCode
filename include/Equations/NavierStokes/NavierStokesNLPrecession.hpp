@@ -145,10 +145,10 @@ namespace EPMDynamo {
       this->mrX.oc().rtp().template precession<-1>(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), this->mrParams.nsCoriolis());
 
       // Compute poincare force \f$\Omega\times\hat{z}\vec{r}\f$
-      RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
+      //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
 
       //Leo: Thermal convection with diffusion time scale
-      //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
+      RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
 
    }
 
