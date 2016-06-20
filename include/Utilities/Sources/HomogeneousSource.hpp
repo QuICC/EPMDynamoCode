@@ -155,8 +155,8 @@ namespace EPMDynamo {
       {
          if(pTrunc->local()->spec()->mArray(0)(0) == 0)
          {
-            //codC.rOcSrc().rLShell(0)(0,0) = 3.0;
-            codC.rOcSrc().rLShell(0)(0,0) = 3.75994;
+            codC.rOcSrc().rLShell(0)(0,0) = 3.0;
+            //codC.rOcSrc().rLShell(0)(0,0) = 3.75994;
          }
       }
    }
