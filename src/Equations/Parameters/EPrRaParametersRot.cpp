@@ -1,7 +1,7 @@
 /** \file EPrRaParameters.cpp
  *  \brief Source of the implementation of the equation non dimensional parameters
  */
-
+//Leo: Parameters for Rotation timescale 
 // System includes
 //
 

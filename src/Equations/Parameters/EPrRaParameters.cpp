@@ -1,7 +1,7 @@
 /** \file EPrRaParameters.cpp
  *  \brief Source of the implementation of the equation non dimensional parameters
  */
-
+// Leo: Parameters with diffusion time scale 
 // System includes
 //
 
@@ -51,20 +51,6 @@ namespace EPMDynamo {
       //return 1.0;
    }
 
-   EPMFloat EPrRaParameters::nsDiffusion() const
-   {
-	  //Leo:
-	  //Thermal Convection Benchmark 1
-	  //Thermal Precession
-      //time: diffusion and rotation
-      return this->E();
-   }
-
-   EPMFloat EPrRaParameters::nsLorentz() const
-   {
-      return 0.0;
-   }
-
    EPMFloat EPrRaParameters::nsAdvection() const
    {
       //return 1.0;
@@ -75,6 +61,29 @@ namespace EPMDynamo {
       return this->E();
       //Time: rotation
       //return 1.0;
+   }
+
+
+   EPMFloat EPrRaParameters::nsCoriolis() const
+   {
+	  //Leo: Thermal Convection Benchmark 1
+      //return 1.0;
+
+
+	  //Thermal Precession
+      //time:diffusion and rotation
+	  return 2.0;
+ 
+   }
+
+
+   EPMFloat EPrRaParameters::nsDiffusion() const
+   {
+	  //Leo:
+	  //Thermal Convection Benchmark 1
+	  //Thermal Precession
+      //time: diffusion and rotation
+      return this->E();
    }
 
    EPMFloat EPrRaParameters::nsBuoyancy() const
@@ -93,29 +102,7 @@ namespace EPMDynamo {
       //return this->Ra();
    }
 
-   EPMFloat EPrRaParameters::nsCoriolis() const
-   {
-	  //Leo: Thermal Convection Benchmark 1
-      //return 1.0;
-
-
-	  //Thermal Precession
-      //time:diffusion and rotation
-	  return 2.0;
- 
-   }
-
-   EPMFloat EPrRaParameters::indDt() const
-   {
-      return 0.0;
-   }
-
-   EPMFloat EPrRaParameters::indDiffusion() const
-   {
-      return 0.0;
-   }
-
-   EPMFloat EPrRaParameters::indAdvection() const
+   EPMFloat EPrRaParameters::nsLorentz() const
    {
       return 0.0;
    }
@@ -146,6 +133,21 @@ namespace EPMDynamo {
 	  //Thermal Convection Benchmark 1
 	  //Thermal Precession
 	  return this->Pr();
+   }
+
+   EPMFloat EPrRaParameters::indDt() const
+   {
+      return 0.0;
+   }
+
+   EPMFloat EPrRaParameters::indDiffusion() const
+   {
+      return 0.0;
+   }
+
+   EPMFloat EPrRaParameters::indAdvection() const
+   {
+      return 0.0;
    }
 
    EPMFloat EPrRaParameters::alfvenFactor() const
