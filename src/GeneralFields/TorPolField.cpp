@@ -422,9 +422,8 @@ namespace EPMDynamo {
                   shFactor = 4.0*shWeight*lfactor;
 
                   corr(0) = momentum(0)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(0));
-                  this->rTor().rLShell(l)(0,m).real() -= corr(0);
                   corr(1) = momentum(1)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(1));
-                  this->rTor().rLShell(l)(0,m).imag() -= corr(1);
+                  this->rTor().rLShell(l)(0,m) -= EPMComplex(corr(0), corr(1));
                }
 
                if(m_ == 0)
@@ -432,7 +431,7 @@ namespace EPMDynamo {
                   shFactor = shWeight*lfactor;
 
                   corr(2) = momentum(2)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(2));
-                  this->rTor().rLShell(l)(0,m).real() -= corr(2);
+                  this->rTor().rLShell(l)(0,m) -= EPMComplex(corr(2));
                }
             }
          }

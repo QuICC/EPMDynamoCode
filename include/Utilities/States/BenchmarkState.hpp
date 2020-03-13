@@ -35,7 +35,7 @@ namespace EPMDynamo {
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = false;
+         static const bool UseRTPMagnetic = true;
 
          /// Requires spectral Magnetic computations
          static const bool UseSpecMagnetic = false;
@@ -44,7 +44,7 @@ namespace EPMDynamo {
          static const bool UseMagneticCurl = false;
 
          /// Requires RTP Velocity computations
-         static const bool UseRTPVelocity = false;
+         static const bool UseRTPVelocity = true;
 
          /// Requires Velocity computations
          static const bool UseSpecVelocity = false;
@@ -190,12 +190,12 @@ namespace EPMDynamo {
                //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r2*(1.0 - r2)*c2Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),2);
                
                // Y_3^3 perturbation
-               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*s3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
-               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*c3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*s3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
+               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r3*(1.0 - r2)*c3Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),3);
                
                // Y_4^4 perturbation
-               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r4*(1.0 - r2)*s4Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),4);
-               codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r4*(1.0 - r2)*c4Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),4);
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r4*(1.0 - r2)*s4Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),4);
+               //codC.rOc().rRTP().rShell(n).col(th)(ph) += ampl*norm*r4*(1.0 - r2)*c4Ph(ph)*std::pow(pTrunc->local()->rtp()->sTh(th,n),4);
 
                //
                /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -347,7 +347,7 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag() = 0.0;
+            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag(0.0);
          }
       }
 
@@ -380,8 +380,8 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
-            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
+            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag(0.0);
+            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag(0.0);
          }
       }
 
@@ -473,8 +473,8 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
-            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
+            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag(0.0);
+            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag(0.0);
          }
       }
 

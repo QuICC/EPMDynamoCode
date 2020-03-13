@@ -215,7 +215,7 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag() = 0.0;
+            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag(0.0);
          }
       }
 
@@ -243,8 +243,8 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
-            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
+            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag(0.0);
+            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag(0.0);
          }
       }
    }
@@ -266,8 +266,8 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
-            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
+            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag(0.0);
+            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag(0.0);
          }
       }
 
