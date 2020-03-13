@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 2.6.2)
 # Set platform
 # Possible platforms are: Core2 (Gentoo), Brutus, Rosa, APPLE 
 #
-set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Apple, CU." FORCE)
+set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Daint, Apple, CU." FORCE)
 
 # Set Core2 platform
 if(EPMDYNAMO_PLATFORM STREQUAL "Core2")
@@ -40,6 +40,10 @@ elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Rosa")
    set(EPMDYNAMO_ON_ROSA ON)
    message(STATUS "***** Setup system for \"Rosa\" platform *****")
+# Set Daint platform
+elseif(EPMDYNAMO_PLATFORM STREQUAL "Daint")
+   set(EPMDYNAMO_ON_DAINT ON)
+   message(STATUS "***** Setup system for \"Daint\" platform *****")
 # Set APPLE platform
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Apple")
    set(EPMDYNAMO_ON_APPLE ON)
@@ -713,6 +717,77 @@ if(EPMDYNAMO_ON_ROSA)
    link_libraries(z)
 
 endif(EPMDYNAMO_ON_ROSA)
+
+if(EPMDYNAMO_ON_DAINT)
+   # Error message for unavailable Intel compiler
+   if(EPMDYNAMO_USE_INTEL)
+      message(SEND_ERROR "Intel compiler is not available")
+   # Error message for unavailable Cray compiler
+   elseif(EPMDYNAMO_USE_CRAY)
+      message(SEND_ERROR "Cray compiler is not available")
+   # Error message for unavailable Sun compiler
+   elseif(EPMDYNAMO_USE_SUN)
+      message(SEND_ERROR "Sun compiler is not available")
+   endif(EPMDYNAMO_USE_INTEL)
+
+   # Change general compilation setup for scalasca
+   if(EPMDYNAMO_USE_SCALASCA)
+     message(SEND_ERROR "Scalasca compiler is not available")
+   endif(EPMDYNAMO_USE_SCALASCA)
+
+   # Set compiler wrapper independently of chose compiler
+   set(CMAKE_CXX_COMPILER "CC")
+
+   # Setup MPI specific variables
+   if(EPMDYNAMO_MPI)
+      # setup GCC specific variables
+      if(EPMDYNAMO_USE_GCC)
+         set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-parallel-gnu")
+      # setup Pathscale specific variables
+      elseif(EPMDYNAMO_USE_PATHSCALE)
+         set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-parallel-pathscale")
+      # setup PGI specific variables
+      elseif(EPMDYNAMO_USE_PGI)
+         set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
+         set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-parallel-pgi")
+      endif(EPMDYNAMO_USE_GCC)
+   # Setup MPI specific variables
+   else(EPMDYNAMO_MPI)
+      # setup GCC specific variables
+      if(EPMDYNAMO_USE_GCC)
+         set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-gnu")
+      # setup Pathscale specific variables
+      elseif(EPMDYNAMO_USE_PATHSCALE)
+         set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-pathscale")
+      # setup PGI specific variables
+      elseif(EPMDYNAMO_USE_PGI)
+         set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
+         set(HDF5_COMPILER_SPECIFIC_DIR "hdf5-pgi")
+      endif(EPMDYNAMO_USE_GCC)
+   endif(EPMDYNAMO_MPI)
+
+   # Set general tau specific settings
+   if(EPMDYNAMO_USE_TAU)
+      # Set up TAU compiler wrapper
+      set(CMAKE_CXX_COMPILER "tau_cxx.sh")
+      # add missing boost compilation flags
+	   add_definitions($ENV{BOOST_POST_COMPILE_OPTS})
+      # add missing FFTW compilation flags
+	   add_definitions($ENV{FFTW_INCLUDE_OPTS})
+      # add missing FFTW linking flags
+	   add_definitions($ENV{FFTW_POST_COMPILE_OPTS})
+      # Remove MPICH  SEEK TAU specific multiple definition error
+	   add_definitions("-DMPICH_IGNORE_CXX_SEEK")
+   endif(EPMDYNAMO_USE_TAU)
+
+   # Set HDF5 library definitions (due to C library for C++ code
+
+   # Link to HDF5 library
+   link_libraries(hdf5)
+   # Link to ZLib library
+   link_libraries(z)
+
+ endif(EPMDYNAMO_ON_DAINT)
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
