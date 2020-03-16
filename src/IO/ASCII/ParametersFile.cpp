@@ -61,13 +61,13 @@ namespace EPMDynamo {
          this->mEqArray.resize(1);
       } else if(this->mType == "EPm")
       {
-      // Resize equation array to correct size
+         // Resize equation array to correct size
          this->mEqArray.resize(2);
       } else if(this->mType == "ON")
       {
          // Resize equation array to correct size
          this->mEqArray.resize(2);
-      }else if(this->mType == "EPrRa") //Leo: size wasn't set properly
+      }else if(this->mType == "EPrRa")
       {
          // Resize equation array to correct size
          this->mEqArray.resize(3);
@@ -96,7 +96,7 @@ namespace EPMDynamo {
             // Read run parameters from file
             this->readRun();
          }
-         
+
          // Share Parameters with other CPUs (if applicatble)
          this->spreadParameters();
       }
@@ -146,7 +146,7 @@ namespace EPMDynamo {
    {
       return this->mRunArrayI;
    }
- 
+
    const Array& ParametersFile::aRun() const
    {
       return this->mRunArray;
@@ -589,7 +589,7 @@ namespace EPMDynamo {
 
       // Broadcast the information
       MPI_Bcast(MPI_BOTTOM, 1, paramType, this->ioRank(), MPI_COMM_WORLD);
-      
+
       // Free the datatype
       MPI_Type_free(&paramType);
 

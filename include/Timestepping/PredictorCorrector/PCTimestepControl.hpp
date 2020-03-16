@@ -227,15 +227,19 @@ namespace EPMDynamo {
 
          // Set timestep according to CFL condition
          this->testCFLCondition(dt);
+         std::cerr << "CFL dt: " << dt << std::endl;
 
          // Initialisation timestep
          this->testInitialisation(dt);
+         std::cerr << "Init dt: " << dt << std::endl;
 
          // Force maximum timestep
          this->testMaximumTimestep(dt);
+         std::cerr << "Max dt: " << dt << std::endl;
 
          // Use courant factor
          this->useCourantTimestep(dt);
+         std::cerr << "Courant dt: " << dt << std::endl;
 
          // Use windowed update scheme for timestep
          if(TMethodTraits::useWindowed)
