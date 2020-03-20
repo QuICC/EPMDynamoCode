@@ -719,11 +719,8 @@ if(EPMDYNAMO_ON_ROSA)
 endif(EPMDYNAMO_ON_ROSA)
 
 if(EPMDYNAMO_ON_DAINT)
-   # Error message for unavailable Intel compiler
-   if(EPMDYNAMO_USE_INTEL)
-      message(SEND_ERROR "Intel compiler is not available")
    # Error message for unavailable Cray compiler
-   elseif(EPMDYNAMO_USE_CRAY)
+   if(EPMDYNAMO_USE_CRAY)
       message(SEND_ERROR "Cray compiler is not available")
    # Error message for unavailable Sun compiler
    elseif(EPMDYNAMO_USE_SUN)
@@ -731,7 +728,7 @@ if(EPMDYNAMO_ON_DAINT)
    # Error message for unavailable Tau compiler
    elseif(EPMDYNAMO_USE_TAU)
       message(SEND_ERROR "Tau compiler is not available")
-   endif(EPMDYNAMO_USE_INTEL)
+   endif(EPMDYNAMO_USE_CRAY)
 
    # Change general compilation setup for scalasca
    if(EPMDYNAMO_USE_SCALASCA)
