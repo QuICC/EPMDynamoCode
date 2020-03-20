@@ -738,11 +738,6 @@ if(EPMDYNAMO_ON_DAINT)
    # Set compiler wrapper independently of chosen compiler
    set(CMAKE_CXX_COMPILER "CC")
 
-   # Set up platform specific compiler flags
-   #if(EPMDYNAMO_USE_GCC)
-     #   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native" CACHE STRING "" FORCE)
-     #endif(EPMDYNAMO_USE_GCC)
-
  endif(EPMDYNAMO_ON_DAINT)
 
 
