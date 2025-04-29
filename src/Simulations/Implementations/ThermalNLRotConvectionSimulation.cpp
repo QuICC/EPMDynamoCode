@@ -200,19 +200,24 @@ namespace EPMDynamo {
       EPMSHARED_PTR<EnergyFile<ThermalNLRotConvectionTraits::CodType> > pCodEnergy(new EnergyFile<ThermalNLRotConvectionTraits::CodType>(this->mCodC, "cod", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the velocity field
       EPMSHARED_PTR<EnergyFile<ThermalNLRotConvectionTraits::VelType> > pVelEnergy(new EnergyFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
+     
+      // Create a energy(in m) ASCII diagnostic file for the velocity field
+     EPMSHARED_PTR<EnergyFile<ThermalNLRotConvectionTraits::VelType> > pVelEnergy_m(new EnergyFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel_m", this->mSimControl.tsParams(),2));
 
 
       // Add codensity energy to ASCII output
       this->mIOSys.addASCIIWriter(pCodEnergy);
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
+      this->mIOSys.addASCIIWriter(pVelEnergy_m);
 
       // Create a velocity probe file
       Array ratios(3);
-      ratios(0) = 2.0/5.0;
+      ratios(0) = 0.4;
       ratios(1) = 1.0/2.0;
       ratios(2) = 0.0;
       EPMSHARED_PTR<FieldProbeFile<ThermalNLRotConvectionTraits::VelType> > pVelProbe(new FieldProbeFile<ThermalNLRotConvectionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), ratios));
+      //EPMSHARED_PTR<FieldProbeFile<ThermalNLRotConvectionTraits::CodType> > pVelProbe(new FieldProbeFile<ThermalNLRotConvectionTraits::CodType>(this->mCodC, "cod", this->mSimControl.tsParams(), ratios));
       // Add velocity probe to ASCII output
       this->mIOSys.addASCIIWriter(pVelProbe);
 

@@ -234,7 +234,7 @@ namespace EPMDynamo {
             rDt = TimestepConfig::MIN_TIMESTEP*TimestepConfig::TIMESTEP_MAX_RATIO;
          } else
          {
-            rDt = std::max(rDt/1.0e3, TimestepConfig::MIN_TIMESTEP*std::max(1.0/TimestepConfig::COURANT_NUMBER,TimestepConfig::TIMESTEP_MAX_RATIO));
+            rDt = std::max(rDt/1.0e3, TimestepConfig::MIN_TIMESTEP*TimestepConfig::TIMESTEP_MAX_RATIO);
          }
 
          // Set flag to forbid second entry

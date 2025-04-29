@@ -333,7 +333,7 @@ namespace EPMDynamo {
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
          {
-            rhs(j,m).real(this->mTmp(j));
+            rhs(j,m).real() = this->mTmp(j);
          }
 
          // Set tmp variable to imaginary part
@@ -345,7 +345,7 @@ namespace EPMDynamo {
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
          {
-            rhs(j,m).imag(this->mTmp(j));
+            rhs(j,m).imag() = this->mTmp(j);
          }
       }
    }
@@ -369,7 +369,7 @@ namespace EPMDynamo {
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
          {
-            rhs(j,m).real(this->mTmp(j));
+            rhs(j,m).real() = this->mTmp(j);
          }
 
          // Set tmp variable to imaginary part
@@ -381,7 +381,7 @@ namespace EPMDynamo {
          // Copy solution into field
          for(int j = 0; j < nVar; ++j)
          {
-            rhs(j,m).imag(this->mTmp(j));
+            rhs(j,m).imag() = this->mTmp(j);
          }
       }
    }

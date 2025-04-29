@@ -113,7 +113,7 @@ namespace EPMDynamo {
           *
           * @param filter Filter tag name
           */
-         template <typename TVisTraits> void writeVisualisation(const std::string& filter = "");
+         template <typename TVisTraits> void writeVisualisation(const std::string& filter);
 
          /**
           * @brief Write additional visualisation data to file
@@ -121,7 +121,7 @@ namespace EPMDynamo {
           * @param type Type of data to write
           * @param filter Filter tag name
           */
-         template <typename TVisTraits> void writeAdditional(const int type, const std::string& filter = "");
+         template <typename TVisTraits> void writeAdditional(const int type, const std::string& filter);
          
       protected:
          /**
@@ -216,7 +216,7 @@ namespace EPMDynamo {
       this->postWrite();
    }
 
-   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeVisualisation(const std::string&  filter)
+   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeVisualisation(const std::string&  filter = "")
    {
       // Write the codensity values
       if(this->mpCodC != NULL && TVisTraits::VisCodensity)
@@ -265,7 +265,7 @@ namespace EPMDynamo {
       }
    }
 
-   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeAdditional(const int type, const std::string&  filter)
+   template <typename TSimTraits> template <typename TVisTraits> void CSCSFileWriter<TSimTraits>::writeAdditional(const int type, const std::string&  filter = "")
    {
       if(type == 0)
       {

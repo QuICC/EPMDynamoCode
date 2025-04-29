@@ -249,13 +249,15 @@ namespace EPMDynamo {
                   m_ = ms(m);
                   if(m_ == 1)
                   {
-                     // Remove rotation about the x axis (real) and y axis (imag)
-                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0) -= EPMComplex(amplitude(0)*norm(0),amplitude(1)*norm(1));
+                     // Remove rotation about the x axis
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).real() -= amplitude(0)*norm(0);
+                     // Remove rotation about the y axis
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).imag() -= amplitude(1)*norm(1);
                   }
                   if(m_ == 0)
                   {
                      // Remove rotation about the z axis
-                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0) -= EPMComplex(amplitude(2)*norm(2),0);
+                    this->velV().rOc().rPerturbation().rTor().rLShell(l).col(m)(0).real() -= amplitude(2)*norm(2);
                   }
                }
             }

@@ -447,7 +447,7 @@ namespace EPMDynamo {
             {
                for(int i=0; i < nL; ++i)
                {
-                  rSHValues.rMShell(0)(i,j).imag(0.0);
+                  rSHValues.rMShell(0)(i,j).imag() = 0.0;
                }
             }
          }
@@ -558,8 +558,8 @@ namespace EPMDynamo {
             {
                for(int i=0; i < nL; ++i)
                {
-                  rSComp.rMShell(0)(i,j).imag(0.0);
-                  rTComp.rMShell(0)(i,j).imag(0.0);
+                  rSComp.rMShell(0)(i,j).imag() = 0.0;
+                  rTComp.rMShell(0)(i,j).imag() = 0.0;
                }
             }
          }
@@ -624,8 +624,8 @@ namespace EPMDynamo {
             {
                for(int i=0; i < nL; ++i)
                {
-                  rSComp.rMShell(0)(i,j).imag(0.0);
-                  rTComp.rMShell(0)(i,j).imag(0.0);
+                  rSComp.rMShell(0)(i,j).imag() = 0.0;
+                  rTComp.rMShell(0)(i,j).imag() = 0.0;
                }
             }
          }
@@ -805,7 +805,7 @@ namespace EPMDynamo {
             {
                for(int i=0; i < nL; ++i)
                {
-                  rTComp.rMShell(0)(i,j).imag(0.0);
+                  rTComp.rMShell(0)(i,j).imag() = 0.0;
                }
             }
          }

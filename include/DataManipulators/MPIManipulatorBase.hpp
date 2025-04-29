@@ -700,6 +700,8 @@ namespace EPMDynamo {
       this->mActiveBSendPacks = i0B;
       this->mActiveFSendPacks = i0F;
 
+      std::vector<MPI_Request> tmp;
+
       int grpMe;
       int dest;
       int grpDest;
@@ -711,7 +713,7 @@ namespace EPMDynamo {
       for(int packs = i0F; packs <= this->mMaxFPacks ; ++packs)
       {
          // Initialise Recv B with empty requests
-         this->mRecvBRequests.insert(std::make_pair(packs, std::vector<MPI_Request>()));
+         this->mRecvBRequests.insert(std::make_pair<int, std::vector<MPI_Request> >(packs, tmp));
 
          for(unsigned int id = 0; id < this->sizeGroupB(); ++id)
          {
@@ -719,7 +721,7 @@ namespace EPMDynamo {
          }
 
          // Initialise Send F with empty requests
-         this->mSendFRequests.insert(std::make_pair(packs, std::vector<MPI_Request>()));
+         this->mSendFRequests.insert(std::make_pair<int, std::vector<MPI_Request> >(packs, tmp));
 
          for(unsigned int id = 0; id < this->sizeGroupF(); ++id)
          {
@@ -751,7 +753,7 @@ namespace EPMDynamo {
       for(int packs = i0B; packs <= this->mMaxBPacks; ++packs)
       {
          // Initialise Recv F
-         this->mRecvFRequests.insert(std::make_pair(packs, std::vector<MPI_Request>()));
+         this->mRecvFRequests.insert(std::make_pair<int, std::vector<MPI_Request> >(packs, tmp));
 
          for(unsigned int id = 0; id < this->sizeGroupF(); ++id)
          {
@@ -759,7 +761,7 @@ namespace EPMDynamo {
          }
 
          // Initialise Send B
-         this->mSendBRequests.insert(std::make_pair(packs, std::vector<MPI_Request>()));
+         this->mSendBRequests.insert(std::make_pair<int, std::vector<MPI_Request> >(packs, tmp));
 
          for(unsigned int id = 0; id < this->sizeGroupB(); ++id)
          {

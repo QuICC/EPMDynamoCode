@@ -1,6 +1,7 @@
 /** \file EPrRaParameters.cpp
  *  \brief Source of the implementation of the equation non dimensional parameters
  */
+
 // System includes
 //
 
@@ -56,17 +57,17 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::nsAdvection() const
    {
-      return this->E();
+      return 1.0;
    }
 
    EPMFloat EPrRaParameters::nsBuoyancy() const
-   {  
-      return this->Ra();
+   {
+      return this->E()*this->Ra();
    }
 
    EPMFloat EPrRaParameters::nsCoriolis() const
    {
-	  return 2.0;
+      return 1.0;
    }
 
    EPMFloat EPrRaParameters::indDt() const
@@ -96,7 +97,7 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::tptAdvection() const
    {
-	  return this->Pr();
+      return 1.0;
    }
 
    EPMFloat EPrRaParameters::alfvenFactor() const
@@ -111,7 +112,7 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::keFactor() const
    {
-	   return 1.0;
+      return 1.0;
    }
 
    EPMFloat EPrRaParameters::meFactor() const
@@ -121,7 +122,7 @@ namespace EPMDynamo {
 
    EPMFloat EPrRaParameters::inertialCFL() const
    {
-	  return this->E()/20.;
+      return 1.0;
    }
 
    EPMFloat EPrRaParameters::torsionalCFL() const

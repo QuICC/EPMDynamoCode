@@ -181,7 +181,7 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<VelocityRotDiffusionTraits::VelType> > pVelEnergy(new EnergyFile<VelocityRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
+      EPMSHARED_PTR<EnergyFile<VelocityRotDiffusionTraits::VelType> > pVelEnergy(new EnergyFile<VelocityRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(),1));
 
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
@@ -201,6 +201,24 @@ namespace EPMDynamo {
          // Add kinetic energy spectrum to ASCII output
          this->mIOSys.addASCIIWriter(pLibration);
       }
-   }
+          // By Yufeng Lin
 
+           // Create a velocity probe file
+      Array ratios(3);
+      ratios(0) = 0.4;
+      ratios(1) = 0.5;
+      ratios(2) = 0.0;
+      EPMSHARED_PTR<FieldProbeFile<VelocityRotDiffusionTraits::VelType> > pVelProbe(new FieldProbeFile<VelocityRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), ratios));
+      // Add velocity probe to ASCII output
+      this->mIOSys.addASCIIWriter(pVelProbe);
+
+      ratios(0) = 0.8;
+      ratios(1) = 0.5;
+      ratios(2) = 0.0;
+      EPMSHARED_PTR<FieldProbeFile<VelocityRotDiffusionTraits::VelType> > pVelProbe1(new FieldProbeFile<VelocityRotDiffusionTraits::VelType>(this->mVelV, "vel1", this->mSimControl.tsParams(), ratios));
+      // Add velocity probe to ASCII output
+      this->mIOSys.addASCIIWriter(pVelProbe1);
+     //////////////////////////////////////////////////////////////////////// 
+  
+  }
 }

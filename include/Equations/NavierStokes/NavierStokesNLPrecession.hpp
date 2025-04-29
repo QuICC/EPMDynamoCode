@@ -146,10 +146,6 @@ namespace EPMDynamo {
 
       // Compute poincare force \f$\Omega\times\hat{z}\vec{r}\f$
       RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time());
-
-      //Leo: Precession convection with diffusion time scale
-      //RTPOperators::subPoincare(this->mNTerms.rOc().rRTP(), this->mOmega, this->mCosAlpha, this->mSinAlpha, this->mrTStepParams.time(), 1./this->mrParams.E());
-
    }
 
 }

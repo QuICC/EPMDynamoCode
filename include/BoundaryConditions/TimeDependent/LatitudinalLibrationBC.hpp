@@ -95,8 +95,13 @@ namespace EPMDynamo {
          /**
           * @brief Epsilon parameter
           */
-         EPMFloat mEpsilon;
+         EPMFloat mEpsilonx;
 
+         /**
+          * @brief Epsilon parameter
+          */
+         EPMFloat mEpsilony;
+         
          /**
           * @brief Frequency parameter
           */

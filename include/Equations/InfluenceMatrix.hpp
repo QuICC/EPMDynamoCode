@@ -177,14 +177,15 @@ namespace EPMDynamo {
             m_ = this->trunc()->local()->spec()->mArray(l)(m);
 
             // Compute the boundary values of the timestep RHS (real and imaginary parts)
-            bcVal.real(this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).real())); 
-            bcVal.imag(this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag()));
+            bcVal.real() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).real()); 
+            bcVal.imag() = this->mOtherBCs.at(0)->getLHSBC(l).dot(rVar.rLShell(l).col(m).imag());
 
             // Loop over all radial coefficients
             for(int n=0; n < nN; ++n)
             {
                // Substract the kernel influence to give the right boundary condition
-               rVar.rLShell(l).col(m)(n) += EPMComplex((this->mOtherBCs.at(0)->getRealRHSBC(l_,m_) - bcVal.real())*this->mSolutions.at(l)(n),(this->mOtherBCs.at(0)->getImagRHSBC(l_,m_) - bcVal.imag())*this->mSolutions.at(l)(n));
+               rVar.rLShell(l).col(m)(n).real() += (this->mOtherBCs.at(0)->getRealRHSBC(l_,m_) - bcVal.real())*this->mSolutions.at(l)(n);
+               rVar.rLShell(l).col(m)(n).imag() += (this->mOtherBCs.at(0)->getImagRHSBC(l_,m_) - bcVal.imag())*this->mSolutions.at(l)(n);
             }
          }
       }

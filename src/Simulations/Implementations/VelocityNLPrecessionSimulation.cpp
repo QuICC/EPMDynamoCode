@@ -17,6 +17,7 @@
 
 // Project includes
 //
+#include "IO/ASCII/ExtractRadiusFile.hpp"
 
 namespace EPMDynamo {
 
@@ -141,14 +142,52 @@ namespace EPMDynamo {
       // Create a energy ASCII diagnostic file for the velocity field
       EPMSHARED_PTR<EnergyFile<VelocityNLRotDiffusionTraits::VelType> > pVelEnergy(new EnergyFile<VelocityNLRotDiffusionTraits::VelType>(mVelV, "vel", this->mSimControl.tsParams(), 3));
 
+      // Create a energy ASCII diagnostic file for the velocity field
+      EPMSHARED_PTR<EnergyFile<VelocityNLRotDiffusionTraits::VelType> > pVelEnergy_M(new EnergyFile<VelocityNLRotDiffusionTraits::VelType>(mVelV, "vel_m", this->mSimControl.tsParams(), 2));
+      
       // Add kinetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pVelEnergy);
+      this->mIOSys.addASCIIWriter(pVelEnergy_M);
+
+      // Create a solib body rotation ASCII diagnostic file for the velocity field
+         EPMSHARED_PTR<LibrationFile<VelocityNLRotDiffusionTraits::VelType> > pLibration(new LibrationFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
+
+      // Add solid body rotation to ASCII output
+         this->mIOSys.addASCIIWriter(pLibration);
+
+
 
       // Create a energy spectrum ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<SpectrumFile<VelocityNLRotDiffusionTraits::VelType> > pVelSpectrum(new SpectrumFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel"));
+      EPMSHARED_PTR<SpectrumFile<VelocityNLRotDiffusionTraits::VelType> > pVelSpectrum(new SpectrumFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel",1));
 
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
-   }
 
+      // Add velocity probe
+      Array ratios(3);
+      ratios(0) = 0.4;
+      ratios(1) = 1.0/2.0;
+      ratios(2) = 0.0;
+      // Creat velocity probe file
+      EPMSHARED_PTR<FieldProbeFile<VelocityNLRotDiffusionTraits::VelType> > pVelProbe1(new FieldProbeFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel1", this->mSimControl.tsParams(), ratios));
+      // Add velocity probe to ASCII output
+      this->mIOSys.addASCIIWriter(pVelProbe1);
+
+      ratios(0) = 0.6;
+      ratios(1) = 1.0/2.0;
+      ratios(2) = 0.0;
+      // Creat velocity probe file
+      EPMSHARED_PTR<FieldProbeFile<VelocityNLRotDiffusionTraits::VelType> > pVelProbe2(new FieldProbeFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel2", this->mSimControl.tsParams(), ratios));
+      // Add velocity probe to ASCII output
+      this->mIOSys.addASCIIWriter(pVelProbe2);
+
+      
+      ratios(0) = 0.9;
+      ratios(1) = 1.0/2.0;
+      ratios(2) = 0.0;
+      // Creat velocity probe file
+      EPMSHARED_PTR<FieldProbeFile<VelocityNLRotDiffusionTraits::VelType> > pVelProbe3(new FieldProbeFile<VelocityNLRotDiffusionTraits::VelType>(this->mVelV, "vel3", this->mSimControl.tsParams(), ratios));
+      // Add velocity probe to ASCII output
+      this->mIOSys.addASCIIWriter(pVelProbe3);
+   }
 }

@@ -18,7 +18,7 @@
 // Project includes
 //
 #include "General/EPMTypedefs.hpp"
-#include "Equations/NavierStokes/NavierStokesConvection.hpp" //child of NSDiffusion
+#include "Equations/NavierStokes/NavierStokesConvection.hpp"
 
 namespace EPMDynamo {
 

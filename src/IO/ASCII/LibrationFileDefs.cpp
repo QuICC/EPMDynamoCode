@@ -17,11 +17,11 @@
 
 namespace EPMDynamo {
 
-   const std::string LibrationFileDefs::HEADER = "LibrationFile";
+   const std::string LibrationFileDefs::HEADER = "Uniform Vorticity";
 
    const std::string LibrationFileDefs::VERSION = "1.0";
 
-   const std::string LibrationFileDefs::BASENAME = "_libration";
+   const std::string LibrationFileDefs::BASENAME = "_solidbody";
 
    const std::string LibrationFileDefs::EXTENSION = ".dat";
 

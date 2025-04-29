@@ -28,7 +28,7 @@
 #include "IO/ASCII/SpectrumFile.hpp"
 #include "IO/ASCII/TimeFile.hpp"
 #include "IO/ASCII/CFLTimestepFile.hpp"
-
+#include "IO/ASCII/LibrationFile.hpp"
 #include "Equations/Induction/InductionMHD.hpp"
 #include "Equations/NavierStokes/NavierStokesPrecessionMHD.hpp"
 

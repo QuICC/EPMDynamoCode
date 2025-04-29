@@ -67,12 +67,7 @@ namespace EPMDynamo {
       {
          // Resize equation array to correct size
          this->mEqArray.resize(2);
-      }else if(this->mType == "EPrRa")
-      {
-         // Resize equation array to correct size
-         this->mEqArray.resize(3);
       }
-
 
    }
 
@@ -96,7 +91,7 @@ namespace EPMDynamo {
             // Read run parameters from file
             this->readRun();
          }
-
+         
          // Share Parameters with other CPUs (if applicatble)
          this->spreadParameters();
       }
@@ -146,7 +141,7 @@ namespace EPMDynamo {
    {
       return this->mRunArrayI;
    }
-
+ 
    const Array& ParametersFile::aRun() const
    {
       return this->mRunArray;
@@ -297,17 +292,6 @@ namespace EPMDynamo {
             {
                // Read the Ekman number
                this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
-
-            } else if(this->mType == "EPrRa") //Leo: adding EPrRa case
-            {
-               // Read the Ekman number
-               this->readValue(this->mEqArray(0), node, ParametersFileDefs::PHYSEKMANXML);
-
-               // Read the Prandtl number
-               this->readValue(this->mEqArray(1), node, ParametersFileDefs::PHYSPRANDTLXML);
-
-               // Read the Rayleigh number
-               this->readValue(this->mEqArray(2), node, ParametersFileDefs::PHYSRAYLEIGHXML);
             } else
             {
                throw EPMException("ParametersFile::readPhysical", "The requested type is not implemented! (yet?)");
@@ -471,11 +455,6 @@ namespace EPMDynamo {
          } else if(this->mType == "E")
          {
             std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
-         } else if(this->mType == "EPrRa") //Leo: adding missing case
-         {
-            std::cout << "  " << "E: " << this->mEqArray(0) << std::endl;
-            std::cout << "  " << "Pr: " << this->mEqArray(1) << std::endl;
-            std::cout << "  " << "Ra: " << this->mEqArray(2) << std::endl; //mEqArray(2) is Zero
          } else
          {
             std::cout << " !!!! UNKNOWN PHYSICAL PARAMETERS !!!! " << std::endl;
@@ -589,7 +568,7 @@ namespace EPMDynamo {
 
       // Broadcast the information
       MPI_Bcast(MPI_BOTTOM, 1, paramType, this->ioRank(), MPI_COMM_WORLD);
-
+      
       // Free the datatype
       MPI_Type_free(&paramType);
 

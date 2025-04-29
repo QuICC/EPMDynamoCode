@@ -107,25 +107,15 @@ namespace EPMDynamo {
          this->writeScalar(StateFileDefs::MAGNETICPRANDTLTAG, params(1));
       } else if(type == "ON")
       {
-         // Write Omega scalar to file
+         // Write Ekman scalar to file
          this->writeScalar(StateFileDefs::OMEGATAG, params(0));
 
-         // Write magnetic Nu scalar to file
+         // Write magnetic Prandtl scalar to file
          this->writeScalar(StateFileDefs::NUTAG, params(1));
       } else if(type == "E")
       {
          // Write Ekman scalar to file
          this->writeScalar(StateFileDefs::EKMANTAG, params(0));
-      } else if(type == "EPrRa") //Leo: adding missing case
-      {
-         // Write Ekman scalar to file
-         this->writeScalar(StateFileDefs::EKMANTAG, params(0));
-
-         // Write Prandtl scalar to file
-         this->writeScalar(StateFileDefs::PRANDTLTAG, params(1));
-
-         // Write Rayleigh scalar to file
-         this->writeScalar(StateFileDefs::RAYLEIGHTAG, params(2));
       }
       
       // close group

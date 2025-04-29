@@ -397,7 +397,7 @@ namespace EPMDynamo {
          FDSHForwardType &rMTmpQ = this->sshManipulator().provideFTmp();
 
          // Compute Q component out of r component
-         SHTransform::transformRTP2Spec(rMTmpQ, rtpField.r()); //Leo: error too many arguments
+         SHTransform::transformRTP2Spec(rMTmpQ, rtpField.r());
 
          // Transpose the FDSHForwardType values to a suitable order for radial transform
          this->sshManipulator().send(rMTmpQ);

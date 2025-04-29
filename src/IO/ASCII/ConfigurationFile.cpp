@@ -159,7 +159,13 @@ namespace EPMDynamo {
          blocks[idx] = this->mIntegers.size();
          types[idx] = MPI_INT;
          idx++;
+         //Leo: 1st Bcast for integers
+         MPI_Bcast(this->mIntegers.data(), this->mIntegers.size(), MPI_INT, this->ioRank(), MPI_COMM_WORLD);
       }
+
+      //Leo: Barrier just in case 
+
+      MPI_Barrier(MPI_COMM_WORLD);
 
       // Create floats part
       if(this->mFloats.size() > 0)
@@ -169,6 +175,8 @@ namespace EPMDynamo {
          blocks[idx] = this->mFloats.size();
          types[idx] = MPI_DOUBLE;
          idx++;
+       //Leo: 2nd Bcast for double
+         MPI_Bcast(this->mFloats.data(), this->mFloats.size(), MPI_DOUBLE, this->ioRank(), MPI_COMM_WORLD);
       }
 
       MPI_Datatype   paramType;
@@ -179,7 +187,7 @@ namespace EPMDynamo {
       MPI_Type_commit(&paramType);
 
       // Broadcast the information
-      MPI_Bcast(MPI_BOTTOM, 1, paramType, this->ioRank(), MPI_COMM_WORLD);
+      //MPI_Bcast(MPI_BOTTOM, 1, paramType, this->ioRank(), MPI_COMM_WORLD);
       
       // Free the datatype
       MPI_Type_free(&paramType);

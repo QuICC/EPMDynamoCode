@@ -20,18 +20,14 @@ cmake_minimum_required(VERSION 2.6.2)
 
 #
 # Set platform
-# Possible platforms are: Core2 (Gentoo), Brutus, Rosa, APPLE 
+# Possible platforms are: Core2 (Gentoo), Brutus, Rosa, Fortytwo 
 #
-set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Daint, Apple, CU." FORCE)
+set(EPMDYNAMO_PLATFORM "${EPMDYNAMO_PLATFORM}" CACHE STRING "Possible platforms: Core2, Brutus, Rosa, Fortytwo." FORCE)
 
 # Set Core2 platform
 if(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    set(EPMDYNAMO_ON_CORE2 ON)
    message(STATUS "***** Setup system for \"Core2\" platform *****")
-# Set Core2 platform
-elseif(EPMDYNAMO_PLATFORM STREQUAL "CU")
-   set(EPMDYNAMO_ON_CU ON)
-   message(STATUS "***** Setup system for \"CU\" platform *****")
 # Set Brutus platform
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
    set(EPMDYNAMO_ON_BRUTUS ON)
@@ -40,18 +36,15 @@ elseif(EPMDYNAMO_PLATFORM STREQUAL "Brutus")
 elseif(EPMDYNAMO_PLATFORM STREQUAL "Rosa")
    set(EPMDYNAMO_ON_ROSA ON)
    message(STATUS "***** Setup system for \"Rosa\" platform *****")
-# Set Daint platform
-elseif(EPMDYNAMO_PLATFORM STREQUAL "Daint")
-   set(EPMDYNAMO_ON_DAINT ON)
-   message(STATUS "***** Setup system for \"Daint\" platform *****")
-# Set APPLE platform
-elseif(EPMDYNAMO_PLATFORM STREQUAL "Apple")
-   set(EPMDYNAMO_ON_APPLE ON)
-   message(STATUS "***** Setup system for \"APPLE\" platform *****")
+   # Set Fortytwo platform
+elseif(EPMDYNAMO_PLATFORM STREQUAL "Fortytwo")
+   set(EPMDYNAMO_ON_FORTYTWO ON)
+   message(STATUS "***** Setup system for \"Fortytwo\" platform *****")
 # Error message if unknown platform is set
 else(EPMDYNAMO_PLATFORM STREQUAL "Core2")
    message(SEND_ERROR "Unkown platform")
 endif(EPMDYNAMO_PLATFORM STREQUAL "Core2")
+
 
 ###################################################
 #--------------------- COMPILER ------------------#
@@ -72,7 +65,7 @@ if(EPMDYNAMO_COMPILER STREQUAL "GCC")
 elseif(EPMDYNAMO_COMPILER STREQUAL "PGI")
    set(EPMDYNAMO_USE_PGI ON)
    message(STATUS "***** Setup system with \"PGI\" compiler *****")
-# Set Intel compiler
+# Set Inte; compiler
 elseif(EPMDYNAMO_COMPILER STREQUAL "Intel")
    set(EPMDYNAMO_USE_INTEL ON)
    message(STATUS "***** Setup system with \"Intel\" compiler *****")
@@ -315,7 +308,8 @@ endif(EPMDYNAMO_USE_PGI)
 #
 if(EPMDYNAMO_USE_INTEL)
    # Set basic flags
-   set(CMAKE_CXX_FLAGS "" CACHE STRING "" FORCE)
+   #set(CMAKE_CXX_FLAGS "-xCORE-AVX512 -mtune=skylake" CACHE STRING "" FORCE)
+   set(CMAKE_CXX_FLAGS "-xHOST" CACHE STRING "" FORCE)
    # Set debug flags
    set(CMAKE_CXX_FLAGS_DEBUG "" CACHE STRING "" FORCE)
    # Set release flags
@@ -440,7 +434,7 @@ if(EPMDYNAMO_ON_CORE2)
    # Setup serial compilers
    else(EPMDYNAMO_MPI)
       if(EPMDYNAMO_USE_GCC)
-         set(CMAKE_CXX_COMPILER "g++")
+         set(CMAKE_CXX_COMPILER "mpicxx")
       endif(EPMDYNAMO_USE_GCC)
    endif(EPMDYNAMO_MPI)
 
@@ -451,134 +445,23 @@ if(EPMDYNAMO_ON_CORE2)
 
    # Link to lapack library
    #link_libraries(cblas)
-   link_libraries(blas)
    link_libraries(lapack)
+   link_libraries(blas)
    # Link to FFTW3 library
    link_libraries(fftw3)
    # Link to rt library
    link_libraries(rt)
    # Link to HDF5 library
    link_libraries(hdf5)
+   #include_directories("/share/base/hdf5/1.10.4-gcc-4.8.5/include")
+   include_directories("/work/ess-linyf/libraries/hdf5_mvapich/hdf5/include")
+   include_directories("/share/base/fftw/3.3.8/include")
+   link_directories("/work/ess-linyf/libraries/hdf5_mvapich/hdf5/lib")
+   link_directories("/share/base/fftw/3.3.8/lib")
+   link_directories("/work/ess-linyf/libraries/BLAS-3.8.0")
+   link_directories("/work/ess-linyf/libraries/lapack-3.5.0")
+
 endif(EPMDYNAMO_ON_CORE2)
-
-if(EPMDYNAMO_ON_CU)
-   # Error message for unavailable PGI compiler
-   if(EPMDYNAMO_USE_PGI)
-      message(SEND_ERROR "PGI compiler is not available")
-   # Error message for unavailable Intel compiler
-   elseif(EPMDYNAMO_USE_INTEL)
-      message(SEND_ERROR "Intel compiler is not available")
-   # Error message for unavailable Pathscale compiler
-   elseif(EPMDYNAMO_USE_PATHSCALE)
-      message(SEND_ERROR "Pathscale compiler is not available")
-   # Error message for unavailable Cray compiler
-   elseif(EPMDYNAMO_USE_CRAY)
-      message(SEND_ERROR "Cray compiler is not available")
-   # Error message for unavailable Sun compiler
-   elseif(EPMDYNAMO_USE_SUN)
-      message(SEND_ERROR "Sun compiler is not available")
-   # Error message for unavailable TAU system
-   elseif(EPMDYNAMO_USE_TAU)
-      message(SEND_ERROR "Tau compiler is not available")
-   # Error message for unavailable TAU system with compiler instrumentation
-   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
-      message(SEND_ERROR "Tau compiler is not available")
-   # Error message for unavailable Scalasca profiling system
-   elseif(EPMDYNAMO_USE_SCALASCA)
-      message(SEND_ERROR "Scalasca is not available")
-   endif(EPMDYNAMO_USE_PGI)
-
-   # Set MPI Wrapper if required
-   if(EPMDYNAMO_MPI)
-      set(CMAKE_CXX_COMPILER "mpicxx")
-   # Setup serial compilers
-   else(EPMDYNAMO_MPI)
-      if(EPMDYNAMO_USE_GCC)
-         set(CMAKE_CXX_COMPILER "g++")
-      endif(EPMDYNAMO_USE_GCC)
-   endif(EPMDYNAMO_MPI)
-
-   # Set up platform specific compiler flags
-   if(EPMDYNAMO_USE_GCC)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -march=native" CACHE STRING "" FORCE)
-   endif(EPMDYNAMO_USE_GCC)
-
-   # Link to lapack library
-   #link_libraries(cblas)
-   link_libraries(f77blas)
-   link_libraries(atllapack)
-   link_libraries(atlas)
-   # Link to FFTW3 library
-   link_libraries(fftw3)
-   # Link to rt library
-   link_libraries(rt)
-   # Link to HDF5 library
-   link_libraries(hdf5)
-endif(EPMDYNAMO_ON_CU)
-
-if(EPMDYNAMO_ON_APPLE)
-   # Error message for unavailable PGI compiler
-   if(EPMDYNAMO_USE_PGI)
-      message(SEND_ERROR "PGI compiler is not available")
-   # Error message for unavailable Intel compiler
-   elseif(EPMDYNAMO_USE_INTEL)
-      message(SEND_ERROR "Intel compiler is not available")
-   # Error message for unavailable Pathscale compiler
-   elseif(EPMDYNAMO_USE_PATHSCALE)
-      message(SEND_ERROR "Pathscale compiler is not available")
-   # Error message for unavailable Cray compiler
-   elseif(EPMDYNAMO_USE_CRAY)
-      message(SEND_ERROR "Cray compiler is not available")
-   # Error message for unavailable Sun compiler
-   elseif(EPMDYNAMO_USE_SUN)
-      message(SEND_ERROR "Sun compiler is not available")
-   # Error message for unavailable TAU system
-   elseif(EPMDYNAMO_USE_TAU)
-      message(SEND_ERROR "Tau compiler is not available")
-   # Error message for unavailable TAU system with compiler instrumentation
-   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
-      message(SEND_ERROR "Tau compiler is not available")
-   # Error message for unavailable Scalasca profiling system
-   elseif(EPMDYNAMO_USE_SCALASCA)
-      message(SEND_ERROR "Scalasca is not available")
-   endif(EPMDYNAMO_USE_PGI)
-
-   # Set MPI Wrapper if required
-   if(EPMDYNAMO_MPI)
-      set(CMAKE_CXX_COMPILER "mpicxx")
-   # Setup serial compilers
-   else(EPMDYNAMO_MPI)
-      if(EPMDYNAMO_USE_GCC)
-         set(CMAKE_CXX_COMPILER "g++")
-      endif(EPMDYNAMO_USE_GCC)
-   endif(EPMDYNAMO_MPI)
-
-   # Set up platform specific compiler flags
-   if(EPMDYNAMO_USE_GCC)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native" CACHE STRING "" FORCE)
-   endif(EPMDYNAMO_USE_GCC)
-
-   # Link to lapack library
-   #link_libraries(cblas)
-   link_libraries(blas)
-   link_libraries(lapack)
-   # Link to FFTW3 library
-   link_libraries(fftw3)
-   # Link to rt library
-   # link_libraries(rt)
-   # Link to HDF5 library
-   link_libraries(hdf5)
-   link_libraries(z)
-   
-   include_directories("/Users/Stijn/Unix/openmpi-144-gnu/include/")
-   link_directories("/Users/Stijn/Unix/openmpi-144-gnu/lib/")
-   include_directories("/Users/Stijn/Unix/fftw3-openmpi144-gnu/include/")
-   link_directories("/Users/Stijn/Unix/fftw3-openmpi144-gnu/lib/")
-   include_directories("/Users/Stijn/Unix/hdf5187-openmpi144-gnu/include/")
-   link_directories("/Users/Stijn/Unix/hdf5187-openmpi144-gnu/lib/")
-   include_directories("/Users/Stijn/Unix/zlib125-openmpi144-gnu/include/")
-   link_directories("/Users/Stijn/Unix/zlib125-openmpi144-gnu/lib/")
-endif(EPMDYNAMO_ON_APPLE)
 
 if(EPMDYNAMO_ON_BRUTUS)
    # Error message for unavailable PGI compiler
@@ -603,7 +486,7 @@ if(EPMDYNAMO_ON_BRUTUS)
 
    # Setup MPIwrappers if required
    if(EPMDYNAMO_MPI)
-      set(CMAKE_CXX_COMPILER "mpic++")
+      set(CMAKE_CXX_COMPILER "mpiicc")
       if(EPMDYNAMO_USE_SUN)
          set(CMAKE_CXX_FLAGS "-DEIGEN_DONT_ALIGN")
       endif(EPMDYNAMO_USE_SUN)
@@ -622,8 +505,17 @@ if(EPMDYNAMO_ON_BRUTUS)
       endif(EPMDYNAMO_USE_GCC)
    endif(EPMDYNAMO_MPI)
 
-   # Link to lapack library
-   link_libraries(lapack)
+
+   link_libraries(mkl_scalapack_lp64)
+   link_libraries(mkl_intel_lp64)
+   link_libraries(mkl_intel_thread)
+   link_libraries(mkl_core)
+   link_libraries(mkl_blacs_intelmpi_lp64)
+   link_libraries(iomp5)
+   link_libraries(pthread)
+
+   #link_libraries(lapack)
+   #link_libraries(blas)
    # Link to FFTW3 library
    link_libraries(fftw3)
    # Link to rt library
@@ -632,12 +524,23 @@ if(EPMDYNAMO_ON_BRUTUS)
    link_libraries(hdf5)
    # Link to ZLib library
    link_libraries(z)
-
+    
+   # target hdf5
+   #include_directories($ENV{HDF5ROOT}/include)
+   #link_directories($ENV{HDF5ROOT}/lib)
+   include_directories("/work/ess-linyf/libraries/hdf5_1.10.4_intel_parallel/include")
+   link_directories("/work/ess-linyf/libraries/hdf5_1.10.4_intel_parallel/lib")
+   
+   
+   include_directories("/share/base/fftw/3.3.8-double-avx512/include")
+   link_directories("/share/base/fftw/3.3.8-double-avx512/lib")
+   #link_directories("/work/ess-linyf/libraries/BLAS-3.8.0")
+   #link_directories("/work/ess-linyf/libraries/lapack-3.5.0")
    # Set special link libraries for Intel
-   if(EPMDYNAMO_USE_INTEL)
-	   include_directories("/cluster/apps/fftw/x86_64/intel/include")
-	   link_directories("/cluster/apps/fftw/x86_64/intel/lib")
-   endif(EPMDYNAMO_USE_INTEL)
+   #if(EPMDYNAMO_USE_INTEL)
+   #	   include_directories("/cluster/apps/fftw/x86_64/intel/include")
+   #	   link_directories("/cluster/apps/fftw/x86_64/intel/lib")
+   #endif(EPMDYNAMO_USE_INTEL)
 endif(EPMDYNAMO_ON_BRUTUS)
 
 if(EPMDYNAMO_ON_ROSA)
@@ -718,27 +621,63 @@ if(EPMDYNAMO_ON_ROSA)
 
 endif(EPMDYNAMO_ON_ROSA)
 
-if(EPMDYNAMO_ON_DAINT)
+#
+# Add libraries to link with
+#
+if(EPMDYNAMO_ON_FORTYTWO)
+   # Error message for unavailable PGI compiler
+   if(EPMDYNAMO_USE_PGI)
+      message(SEND_ERROR "PGI compiler is not available")
+   # Error message for unavailable Intel compiler
+   elseif(EPMDYNAMO_USE_INTEL)
+      message(SEND_ERROR "Intel compiler is not available")
+   # Error message for unavailable Pathscale compiler
+   elseif(EPMDYNAMO_USE_PATHSCALE)
+      message(SEND_ERROR "Pathscale compiler is not available")
    # Error message for unavailable Cray compiler
-   if(EPMDYNAMO_USE_CRAY)
+   elseif(EPMDYNAMO_USE_CRAY)
       message(SEND_ERROR "Cray compiler is not available")
    # Error message for unavailable Sun compiler
    elseif(EPMDYNAMO_USE_SUN)
       message(SEND_ERROR "Sun compiler is not available")
-   # Error message for unavailable Tau compiler
+   # Error message for unavailable TAU system
    elseif(EPMDYNAMO_USE_TAU)
       message(SEND_ERROR "Tau compiler is not available")
-   endif(EPMDYNAMO_USE_CRAY)
+   # Error message for unavailable TAU system with compiler instrumentation
+   elseif(EPMDYNAMO_USE_TAU_INSTRUMENTED)
+      message(SEND_ERROR "Tau compiler is not available")
+   # Error message for unavailable Scalasca profiling system
+   elseif(EPMDYNAMO_USE_SCALASCA)
+      message(SEND_ERROR "Scalasca is not available")
+   endif(EPMDYNAMO_USE_PGI)
 
-   # Change general compilation setup for scalasca
-   if(EPMDYNAMO_USE_SCALASCA)
-     message(SEND_ERROR "Scalasca compiler is not available")
-   endif(EPMDYNAMO_USE_SCALASCA)
+   # Set MPI Wrapper if required
+   if(EPMDYNAMO_MPI)
+      set(CMAKE_CXX_COMPILER "mpicxx")
+   # Setup serial compilers
+   else(EPMDYNAMO_MPI)
+      if(EPMDYNAMO_USE_GCC)
+         set(CMAKE_CXX_COMPILER "g++")
+      endif(EPMDYNAMO_USE_GCC)
+   endif(EPMDYNAMO_MPI)
 
-   # Set compiler wrapper independently of chosen compiler
-   set(CMAKE_CXX_COMPILER "CC")
+   # Set up platform specific compiler flags
+   if(EPMDYNAMO_USE_GCC)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native" CACHE STRING "" FORCE)
+   endif(EPMDYNAMO_USE_GCC)
 
- endif(EPMDYNAMO_ON_DAINT)
+   # Link to lapack library
+   #link_libraries(cblas)
+   link_libraries(atlas)
+   link_libraries(atllapack)
+   # Link to FFTW3 library
+   link_libraries(fftw3)
+   # Link to rt library
+   link_libraries(rt)
+   # Link to HDF5 library
+   link_libraries(hdf5)
+
+endif(EPMDYNAMO_ON_FORTYTWO)
 
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#

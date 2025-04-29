@@ -90,7 +90,8 @@ namespace EPMDynamo {
           *
           * @param radBasis Radial basis 
           */
-         Array dipole(const RadialBasisType &radBasis) const;
+         //Array dipole(const RadialBasisType &radBasis) const;
+         Array dipole(const RadialBasisType &radBasis);
 
          /**
           * @brief Compute the \f$\hat{x}\f$, \f$\hat{y}\f$ and \f$\hat{z}\f$ angular momentum projections

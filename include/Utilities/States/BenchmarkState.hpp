@@ -35,7 +35,7 @@ namespace EPMDynamo {
          static const bool UseCodensityGrad = false;
 
          /// Requires RTP Magnetic computations
-         static const bool UseRTPMagnetic = true;
+         static const bool UseRTPMagnetic = false;
 
          /// Requires spectral Magnetic computations
          static const bool UseSpecMagnetic = false;
@@ -44,7 +44,7 @@ namespace EPMDynamo {
          static const bool UseMagneticCurl = false;
 
          /// Requires RTP Velocity computations
-         static const bool UseRTPVelocity = true;
+         static const bool UseRTPVelocity = false;
 
          /// Requires Velocity computations
          static const bool UseSpecVelocity = false;
@@ -161,7 +161,7 @@ namespace EPMDynamo {
       EPMFloat r3;
       EPMFloat r4;
 
-      EPMFloat ampl = 1e-10;
+      EPMFloat ampl = 1e-5;
       EPMFloat norm = (1./8.)*std::sqrt(35./MathConstants::PI);
 
       for(int n=0; n < pTrunc->local()->rtp()->nR(); ++n)
@@ -347,7 +347,7 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag(0.0);
+            codC.rOc().rPerturbation().rLShell(l).col(0)(n).imag() = 0.0;
          }
       }
 
@@ -380,8 +380,8 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag(0.0);
-            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag(0.0);
+            magB.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
+            magB.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
          }
       }
 
@@ -473,8 +473,8 @@ namespace EPMDynamo {
          // Make sure the m=0 imaginary part is zero!
          for(int n=0; n < pTrunc->sim()->rad()->nN(); ++n)
          {
-            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag(0.0);
-            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag(0.0);
+            velV.rOc().rPerturbation().rTor().rLShell(l).col(0)(n).imag() = 0.0;
+            velV.rOc().rPerturbation().rPol().rLShell(l).col(0)(n).imag() = 0.0;
          }
       }
 

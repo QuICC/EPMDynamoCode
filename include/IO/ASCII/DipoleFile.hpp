@@ -69,6 +69,10 @@ namespace EPMDynamo {
          const int mFormat;
 
          /**
+          * @brief Storage for the Dipole field
+          */
+         Array mDipole;
+         /**
           * @brief Reference to the radial basis
           */
          const RadialBasisType&   mrBasis;
@@ -76,22 +80,23 @@ namespace EPMDynamo {
    };
 
    template <typename TFieldType> DipoleFile<TFieldType>::DipoleFile(TFieldType &var, std::string name, const TimestepParameters &tsParams, const RadialBasisType &basis, int format)
-      : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + DipoleFileDefs::BASENAME, DipoleFileDefs::EXTENSION, DipoleFileDefs::HEADER, DipoleFileDefs::VERSION), mrTSParams(tsParams), mFormat(format), mrBasis(basis)
+      : ASCIIFieldWriter<TFieldType, ASCIIEWriter>(var, name + DipoleFileDefs::BASENAME, DipoleFileDefs::EXTENSION, DipoleFileDefs::HEADER, DipoleFileDefs::VERSION), mrTSParams(tsParams), mFormat(format), mDipole(3), mrBasis(basis)
    {
    }
 
    template <typename TFieldType> void DipoleFile<TFieldType>::write()
    {
-      // Compute poincare mode
-      this->mrVar.rOc().updateSpectra();
+      // Compute dipole field
+      //this->mrVar.rOc().updateSpectra();
+      this->mDipole = this->mrVar.rOc().rPerturbation().dipole(this->mrBasis);
 
       if(this->doesIO())
       {
          //Do pre write operations
          this->preWrite();
 
-         // Write energy
-         this->mFile << this->mrTSParams.time() << "  " << this->mrVar.oc().perturbation().dipole(this->mrBasis).transpose();
+         // Write dipole
+         this->mFile << std::setprecision(16) << this->mrTSParams.time() << "  " << this->mDipole.transpose();
 
          // Add newline at the end of ouput
          this->mFile << std::endl;

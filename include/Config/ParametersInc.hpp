@@ -24,8 +24,6 @@
 #include "Equations/Parameters/ONParameters.hpp"
 #include "Equations/Parameters/EParameters.hpp"
 #include "Equations/Parameters/InvPrRaParameters.hpp"
-//Leo: adding missing header
-#include "Equations/Parameters/EPrRaParameters.hpp"
 
 namespace EPMDynamo {
 }

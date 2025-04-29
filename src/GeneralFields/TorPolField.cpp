@@ -89,7 +89,8 @@ namespace EPMDynamo {
                shFactor = shWeight*lfactor;
             }
 
-            if((l_ - ms(m)) % 2 == 0)
+            // if((l_ - ms(m)) % 2 == 0)
+            if((l_) % 2 == 0) //Symmetry around the origin
             {
                this->rTor().rEEven() += shFactor*tmpEnergy;
             } else
@@ -178,7 +179,8 @@ namespace EPMDynamo {
                shFactor = shWeight;
             }
 
-            if((l_ - ms(m)) % 2 == 0)
+            //if((l_ - ms(m)) % 2 == 0) 
+            if((l_) % 2 == 0) // Symmetry around the origin
             {
                this->rPol().rEEven() += shFactor*tmpEnergy;
             } else
@@ -215,9 +217,10 @@ namespace EPMDynamo {
       #endif // EPMDYNAMO_MPI
    }
 
-   Array TorPolField::dipole(const TorPolField::RadialBasisType &radBasis) const
+   Array TorPolField::dipole(const TorPolField::RadialBasisType &radBasis) 
    {
-      Array    dipole(8);
+      //Array    dipo(6);
+      Array dipo = Array::Zero(3);
 
       // Get the stored ls
       ArrayI ls = this->trunc()->local()->spec()->lArray();
@@ -238,62 +241,74 @@ namespace EPMDynamo {
                if(m_ == 0)
                {
                   // Get g10
-                  dipole(0) = radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).real());
+                  dipo(0) += radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).real());
                }
                if(m_ == 1)
                {
                   // Get g11
-                  dipole(1) = -2.0*radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).real());
+                  dipo(1) += -2.0*radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).real());
                   // Get h11
-                  dipole(2) = 2.0*radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).imag());
+                  dipo(2) += 2.0*radBasis.at(l).bpoly().dot(this->pol().lshell(l).col(m).imag());
                }
             }
+            //dipo(3) = std::sqrt(dipo(0)*dipo(0) + dipo(1)*dipo(1) + dipo(2)*dipo(2));
+            //if(dipo(3) != 0.0)
+            //{
+            //   dipo(3) = std::acos(dipo(0)/std::max(dipo(3),dipo(0)));
+            //}
+            // Get total l=1 energy
+            //dipo(3) +=this->tor().spectrumL()(l_) + this->pol().spectrumL()(l_);
+            // Get toroidal l=1 energy
+            //dipo(4) += this->tor().spectrumL()(l_);
+            // Get poloidal l=1 energy
+            //dipo(5) += this->pol().spectrumL()(l_);
          }
+         //if(l_== 2 )
+         //{
+         //   dipo(3) +=this->tor().spectrumL()(l_) + this->pol().spectrumL()(l_);
+         //}
+
       }
 
       // Get tilt angle
-      dipole(3) = std::sqrt(dipole(0)*dipole(0) + dipole(1)*dipole(1) + dipole(2)*dipole(2));
-      if(dipole(3) != 0.0)
-      {
-         dipole(3) = std::acos(dipole(0)/std::max(dipole(3),dipole(0)));
-      }
       // Get longitude
-      if(std::abs(dipole(1)) < 1e-12)
-      {
-         if(dipole(2) >= 0.0)
-         {
-            dipole(4) = 0.5*MathConstants::PI;
-         } else
-         {
-            dipole(4) = 1.5*MathConstants::PI;
-         }
-      }
-      else
-      {
-         dipole(4) = std::atan(dipole(2)/dipole(1));
-         if(dipole(1) < 0.0)
-         {
-            dipole(4) = dipole(4) + MathConstants::PI;
-         }
-         if(dipole(4) < 0.0)
-         {
-            dipole(4) = dipole(4) + 2.0*MathConstants::PI;
-         }
-      }
+      //if(std::abs(dipole(1)) < 1e-12)
+      //{
+      //   if(dipole(2) >= 0.0)
+      //   {
+      //     dipole(4) = 0.5*MathConstants::PI;
+      //   } else
+      //   {
+      //      dipole(4) = 1.5*MathConstants::PI;
+      //   }
+      //}
+      //else
+      //{
+      //   dipole(4) = std::atan(dipole(2)/dipole(1));
+      //   if(dipole(1) < 0.0)
+      //   {
+      //      dipole(4) = dipole(4) + MathConstants::PI;
+       //  }
+       //  if(dipole(4) < 0.0)
+        // {
+        //    dipole(4) = dipole(4) + 2.0*MathConstants::PI;
+        // }
+      //}
 
       // Get total l=1 energy
-      dipole(5) =this->tor().spectrumL()(1) + this->pol().spectrumL()(1);
+      //dipo(3) =this->tor().spectrumL()(1) + this->pol().spectrumL()(1);
       // Get toroidal l=1 energy
-      dipole(6) = this->tor().spectrumL()(1);
+      //dipo(4) = this->tor().spectrumL()(1);
       // Get poloidal l=1 energy
-      dipole(7) = this->pol().spectrumL()(1);
+      //dipo(5) = this->pol().spectrumL()(1);
 
       // Get the "global" spectra for MPI code
       #ifdef EPMDYNAMO_MPI
-         MPI_Allreduce(MPI_IN_PLACE, dipole.data(), dipole.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         MPI_Allreduce(MPI_IN_PLACE, dipo.data(), dipo.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+         //MPI_Reduce(MPI_IN_PLACE, dipo.data(), dipo.size(), MPI_DOUBLE,MPI_SUM,0, MPI_COMM_WORLD);
       #endif // EPMDYNAMO_MPI
 
-      return dipole;
+      return dipo;
    }
 
    Array TorPolField::computeXYZAngularMomentum(const TorPolField::RadialBasisType &radBasis)
@@ -422,8 +437,9 @@ namespace EPMDynamo {
                   shFactor = 4.0*shWeight*lfactor;
 
                   corr(0) = momentum(0)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(0));
+                  this->rTor().rLShell(l)(0,m).real() -= corr(0);
                   corr(1) = momentum(1)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(1));
-                  this->rTor().rLShell(l)(0,m) -= EPMComplex(corr(0), corr(1));
+                  this->rTor().rLShell(l)(0,m).imag() -= corr(1);
                }
 
                if(m_ == 0)
@@ -431,7 +447,7 @@ namespace EPMDynamo {
                   shFactor = shWeight*lfactor;
 
                   corr(2) = momentum(2)/(radBasis.at(l).eWeights()(0,0)*shFactor*axis(2));
-                  this->rTor().rLShell(l)(0,m) -= EPMComplex(corr(2));
+                  this->rTor().rLShell(l)(0,m).real() -= corr(2);
                }
             }
          }

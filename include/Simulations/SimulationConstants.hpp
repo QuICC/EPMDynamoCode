@@ -25,8 +25,8 @@ namespace EPMDynamo {
    {
       public:
          /// Typedef for the radial worland polynomials traits to generate (either Chebyshev grid or Legendre grid)
-         typedef WorlandChebyshevTraits RadialGridTraits;
-         //typedef WorlandLegendreTraits RadialGridTraits;
+           typedef WorlandChebyshevTraits RadialGridTraits;
+         // typedef WorlandLegendreTraits RadialGridTraits;
 
          /**
           * @brief Check if grid is a CSCS grid

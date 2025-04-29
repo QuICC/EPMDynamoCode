@@ -101,7 +101,10 @@ namespace EPMDynamo {
          this->preWrite();
 
          // Write energy
-         this->mFile << this->mrTSParams.time() << "  " << this->mAmplitude.transpose();
+         //this->mFile << this->mrTSParams.time() << "  " << this->mAmplitude.transpose();
+        // Modified by Yufeng Lin in order to have double precision output 
+         this->mFile <<std::setprecision(16) <<  this->mrTSParams.time() << "  " << this->mAmplitude.transpose();
+
 
          // Add newline at the end of ouput
          this->mFile << std::endl;

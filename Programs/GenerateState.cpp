@@ -19,14 +19,8 @@
 #include "Simulations/Traits/PrecessionDynamoTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
-#include "Simulations/Traits/ThermalNLRotConvectionTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Simulations/Traits/KinematicInductionTraits.hpp"
-#include "Simulations/Traits/VelocityRotDiffusionTraits.hpp"
-#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
-//Leo: Project Precessional and convectional 
-//#include "Simulations/Traits/ThermalPrecessionTraits.hpp"
-
 #include "Utilities/InitialStateGenerator.hpp"
 
 #include "Utilities/States/RandomState.hpp"
@@ -38,33 +32,14 @@
 
 namespace epm = EPMDynamo;
 
-//Velocity Diffution traits
-//non-magnetics Traits
-//Thermal
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
-//#define SIMTRAITS epm::ThermalRotConvectionTraits
-
-//Thermal convection and Thermal precession
-#define SIMTRAITS epm::ThermalNLRotConvectionTraits
-
-//#define SIMTRAITS epm::VelocityRotDiffusionTraits
-
-//Pure rotation and precession
-//NL-Precession:
-//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
-//#define SIMTRAITS epm::VelocityNLRotConvectionTraits
-
-//Magnetic Traits
-//#define SIMTRAITS epm::DynamoTraits
+#define SIMTRAITS epm::DynamoTraits
 //#define SIMTRAITS epm::PrecessionDynamoTraits
 //#define SIMTRAITS epm::KinematicInductionTraits
 
 //typedef epm::SolidBodyRotationState<SIMTRAITS>  StateType;
 //typedef epm::MagneticDiffusionState<SIMTRAITS>  StateType;
 //typedef epm::BenchmarkState<SIMTRAITS>  StateType;
-
-//Leo: non-magnetic
-//typedef epm::BenchmarkState<SIMTRAITS> StateType;
 typedef epm::RandomState<SIMTRAITS>  StateType;
 //typedef epm::SakurabaState<SIMTRAITS>  StateType;
 //typedef epm::KinematicInductionState<SIMTRAITS>  StateType;

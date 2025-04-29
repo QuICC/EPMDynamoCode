@@ -17,6 +17,7 @@
 
 // Project includes
 //
+#include "IO/ASCII/ExtractRadiusFile.hpp"
 
 namespace EPMDynamo {
 
@@ -190,9 +191,9 @@ namespace EPMDynamo {
       this->mIOSys.addASCIIWriter(pTimeFile);
 
       // Create a energy ASCII diagnostic file for the magnetic field
-      EPMSHARED_PTR<EnergyFile<PrecessionDynamoTraits::MagType> > pMagEnergy(new EnergyFile<PrecessionDynamoTraits::MagType>(this->mMagB, "mag", this->mSimControl.tsParams(),3));
+      EPMSHARED_PTR<EnergyFile<PrecessionDynamoTraits::MagType> > pMagEnergy(new EnergyFile<PrecessionDynamoTraits::MagType>(this->mMagB, "mag", this->mSimControl.tsParams()));
       // Create a energy ASCII diagnostic file for the velocity field
-      EPMSHARED_PTR<EnergyFile<PrecessionDynamoTraits::VelType> > pVelEnergy(new EnergyFile<PrecessionDynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(),3));
+      EPMSHARED_PTR<EnergyFile<PrecessionDynamoTraits::VelType> > pVelEnergy(new EnergyFile<PrecessionDynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams()));
 
       // Add magnetic energy to ASCII output
       this->mIOSys.addASCIIWriter(pMagEnergy);
@@ -209,37 +210,11 @@ namespace EPMDynamo {
       // Add kinetic energy spectrum to ASCII output
       this->mIOSys.addASCIIWriter(pVelSpectrum);
 
-     /////////////////////////////////////////////////////////////////////
-     // By Yufeng Lin
+      // Create a solib body rotation ASCII diagnostic file for the velocity field
+         EPMSHARED_PTR<LibrationFile<PrecessionDynamoTraits::VelType> > pLibration(new LibrationFile<PrecessionDynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), this->mTransform.radBasis()));
 
-       // Create a velocity probe file
-      Array ratios(3);
-      ratios(0) = 0.4;
-      ratios(1) = 0.5;
-      ratios(2) = 0.0;
-      EPMSHARED_PTR<FieldProbeFile<PrecessionDynamoTraits::VelType> > pVelProbe(new FieldProbeFile<PrecessionDynamoTraits::VelType>(this->mVelV, "vel", this->mSimControl.tsParams(), ratios));
-
-      // Creat a magnetic probe file
-      EPMSHARED_PTR<FieldProbeFile<PrecessionDynamoTraits::MagType> > pMagProbe(new FieldProbeFile<PrecessionDynamoTraits::MagType>(this->mMagB, "mag", this->mSimControl.tsParams(), ratios));
-
-      // Add velocity probe to ASCII output
-      this->mIOSys.addASCIIWriter(pVelProbe);
-      // Add magnetic probe to ASCII output
-      this->mIOSys.addASCIIWriter(pMagProbe);
-
-      ratios(0) = 0.4;
-      ratios(1) = 0.5;
-      ratios(2) = 0.5;
-      EPMSHARED_PTR<FieldProbeFile<PrecessionDynamoTraits::VelType> > pVelProbe1(new FieldProbeFile<PrecessionDynamoTraits::VelType>(this->mVelV, "vel1", this->mSimControl.tsParams(), ratios));
-
-      // Creat a magnetic probe file
-      EPMSHARED_PTR<FieldProbeFile<PrecessionDynamoTraits::MagType> > pMagProbe1(new FieldProbeFile<PrecessionDynamoTraits::MagType>(this->mMagB, "mag1", this->mSimControl.tsParams(), ratios));
-
-      // Add velocity probe to ASCII output
-      this->mIOSys.addASCIIWriter(pVelProbe1);
-      // Add magnetic probe to ASCII output
-      this->mIOSys.addASCIIWriter(pMagProbe1);
-     //////////////////////////////////////////////////////////////////////// 
+      // Add solid body rotation to ASCII output
+         this->mIOSys.addASCIIWriter(pLibration);
    }
 
 }

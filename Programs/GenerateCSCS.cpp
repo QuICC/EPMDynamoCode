@@ -21,30 +21,17 @@
 #include "Simulations/Traits/CodensityDiffusionTraits.hpp"
 #include "Simulations/Traits/MagneticDiffusionTraits.hpp"
 #include "Simulations/Traits/ThermalRotConvectionTraits.hpp"
-#include "Simulations/Traits/ThermalNLRotConvectionTraits.hpp"
 #include "Simulations/Traits/VelocityDiffusionTraits.hpp"
 #include "Simulations/Traits/KinematicInductionTraits.hpp"
-#include "Simulations/Traits/VelocityRotDiffusionTraits.hpp"
-
-//Leo:adding missing headers
-#include "Simulations/Traits/VelocityNLRotDiffusionTraits.hpp"
-
 #include "Utilities/CSCSParaviewGenerator.hpp"
 
 namespace epm = EPMDynamo;
 
 //#define SIMTRAITS epm::ThermalRotConvectionTraits
 //#define SIMTRAITS epm::DynamoTraits
-//#define SIMTRAITS epm::PrecessionDynamoTraits
+#define SIMTRAITS epm::PrecessionDynamoTraits
+//#define SIMTRAITS epm::VelocityDiffusionTraits
 //#define SIMTRAITS epm::KinematicInductionTraits
-
-//Leo: non magnetic traits
-//#define SIMTRAITS epm::ThermalRotConvectionTraits
-//#define SIMTRAITS epm::VelocityRotDiffusionTraits
-//Thermal convection and Thermal precession
-#define SIMTRAITS epm::ThermalNLRotConvectionTraits
-//Precession and pure rotation
-//#define SIMTRAITS epm::VelocityNLRotDiffusionTraits
 
 typedef  epm::CSCSParaviewGenerator<SIMTRAITS>  CSCSGenerator;
 
@@ -55,9 +42,7 @@ class FullVisTraits
 {
    public:
       /// Output Codensity visualisation
-      //static const bool VisCodensity = false;
-	  //Leo: Getting hdf5 output for total codensity
-	  static const bool VisCodensity = true;
+      static const bool VisCodensity = false;
 
       /// Output Codensity gradient visualisation
       static const bool VisCodensityGrad = false;
@@ -69,10 +54,10 @@ class FullVisTraits
       static const bool VisVorticity = true;
 
       /// Output Helicity visualisation
-      static const bool VisHelicity = false;
+      static const bool VisHelicity = true;
 
       /// Output Magnetic visualisation
-      static const bool VisMagnetic = true;
+      static const bool VisMagnetic = false;
 
       /// Output Lorentz visualisation
       static const bool VisLorentz = false;
@@ -142,8 +127,6 @@ class FullAddVisTraits
    public:
       /// Output Codensity visualisation
       static const bool VisCodPerturbation = false;
-      //Perturbed Codensity
-      //static const bool VisCodPerturbation = true;
 
       /// Output Velocity visualisation
       static const bool VisInertial = false;
