@@ -44,8 +44,8 @@ Configure the build options as needed.
 ```
 make DynamoSimulation -j4  # Example for dynamo simulation with 4 cores
 ```
-### Running Simulations
-Basic Requirements
+## Running Simulations
+### Basic Requirements
 - parameters.cfg configuration file
 
 - Initial state file (state_initial.hdf5)
@@ -60,10 +60,10 @@ Basic Requirements
 # For precession dynamo simulation
 ./PrecessionDynamoSimulation
 ```
-### Documentation
+## Documentation
 - Technical documentation can be generated with make CodeDoc
 
 - Configuration examples in Config/ directory
 
-### Note
+## Note
 The code has been upgraded to the QuICC code https://github.com/QuICC/QuICC-Solver. This repository is not supported and updated anymore. 
