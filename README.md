@@ -1,5 +1,5 @@
 ## Overview
-EPMDynamoCode is a simulation framework for convection and dynamos in a full sphere using the fully spetral method. For the detail of the nuemrical scheme, please refere to the paper
+EPMDynamoCode is a simulation framework for convection and dynamos in a full sphere using a fully spetral method. For details of the nuemrical scheme, please refer to the paper
 - Marti, P., & Jackson, A. (2016). A fully spectral methodology for magnetohydrodynamic calculations in a whole sphere. Journal of Computational Physics, 305, 403–422. https://doi.org/10.1016/J.JCP.2015.10.056
 ## Key Features
 - Dynamo and precession dynamo simulations
